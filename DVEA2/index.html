@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>&lt;model-viewer&gt; template</title>
+    <meta charset="utf-8">
+    <meta name="description" content="&lt;model-viewer&gt; template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" href="./styles.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <!-- <model-viewer> HTML element -->
+    <model-viewer id="yay" src="testing101.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" poster="poster.webp" shadow-intensity="1">
+      <button class="Hotspot" slot="hotspot-1" data-surface="3 0 576 548 614 0.406 0.347 0.247" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Wireless Charging</div>
+      </button><button class="Hotspot" slot="hotspot-2" data-surface="7 0 3651 3652 3653 0.487 0.313 0.200" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Charging Dock</div>
+      </button><button class="Hotspot" slot="hotspot-3" data-surface="1 0 235 234 233 0.447 0.271 0.282" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Base</div>
+      </button><button class="Hotspot" slot="hotspot-4" data-surface="6 0 102 103 104 0.927 0.011 0.063" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Stationery Holder</div>
+      </button><button class="Hotspot" slot="hotspot-5" data-surface="5 0 676 704 706 0.199 0.431 0.369" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Fan</div>
+      </button><button class="Hotspot" slot="hotspot-6" data-surface="4 0 1679 1680 1681 0.333 0.511 0.155" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Turbine Inspired Blade</div>
+      </button><button class="Hotspot" slot="hotspot-7" data-surface="1 0 57 58 59 0.277 0.091 0.631" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Cubby Hole 1</div>
+      </button><button class="Hotspot" slot="hotspot-8" data-surface="1 0 37 38 36 0.085 0.902 0.013" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Cubby Hole 2</div>
+      </button><button class="Hotspot" slot="hotspot-10" data-surface="1 0 17 19 18 0.067 0.034 0.899" data-visibility-attribute="visible">
+          <div class="HotspotAnnotation">Cubby Hole 3</div>
+      </button>
+      <div class="progress-bar hide" slot="progress-bar">
+          <div class="update-bar"></div>
+      </div>
+      <button slot="ar-button" id="ar-button">
+          View in your space
+      </button>
+      <div id="ar-prompt">
+          <img src="ar_hand_prompt.png">
+      </div>
+      <div class="button-container">
+<button onClick="v1()" style="background-color: #3ba99c; color: #ffe5e5;">green</button>
+<button onClick="v2()" style="background-color: #03036a; color: #ffe5e5;">blue</button>
+<button onClick="v3()" style="background-color: #e56df0; color: #ffe5e5;">purple</button>
+</div>
+<style>
+ .button-container {
+   position: fixed;
+   bottom: 20px;
+   right: 20px;
+   display: flex;
+   gap: 10px;
+   z-index: 10;
+ }
+</style>
+<button onclick="setOrbit('744.6deg 0.0000573deg 0.3991m')" style="background-color: #8b27e3; color: #ffe5e5;">Top</button>
+<button onclick="setOrbit('570.6deg 179.6deg 0.3991m')" style="background-color: #8b27e3; color: #ffe5e5;">Bottom</button>
+<button onclick="setOrbit('-35.88deg 89.04deg 0.3991m')" style="background-color: #8b27e3; color: #ffe5e5;">Front View</button>
+<button onclick="setOrbit('-117.8deg 92.55deg 0.3991m')" style="background-color: #8b27e3; color: #ffe5e5;">Right View</button>
+<button onclick="setOrbit('-219.2deg 79.29deg 0.3991m')" style="background-color: #8b27e3; color: #ffe5e5;">Back View</button>
+<button onclick="setOrbit('-295.6deg 85.14deg 0.3991m')" style="background-color: #8b27e3; color: #ffe5e5;">Left View</button>
+</model-viewer>  
+<script>
+       function setOrbit(orbit){
+           document.getElementById('yay').cameraOrbit=orbit;
+       }
+</script>
+<script>
+   function v1() {
+     document.getElementById('yay').variantName="PURPLE"
+   }
+   function v2() {
+     document.getElementById('yay').variantName="GREEN"
+   }
+   function v3() {
+     document.getElementById('yay').variantName="BLUE"
+   }
+</script>
+    <script>
+ document.querySelectorAll('.Hotspot').forEach(button => {
+   const annotation = button.querySelector('.HotspotAnnotation');
+   if (annotation) {
+     annotation.style.display = 'none'; // hide initially
+     button.addEventListener('mouseenter', () => {
+       annotation.style.display = 'block';
+     });
+     button.addEventListener('mouseleave', () => {
+       annotation.style.display = 'none';
+     });
+   }
+ });
+</script>
+
+<div class="button-container">
+<button onclick="playMe('ArmatureAction')" style="background-color: rgb(93, 127, 231); color: white;">Come up</button>
+<button onclick="playMe('ArmatureAction.002')" style="background-color: rgb(77, 93, 175); color: white;">Get out</button>
+<button onclick="pauseMe()" style="background-color: rgb(168, 111, 195); color: white;">Pause</button>
+
+<script>
+function playMe(animationName) {
+ const bottle = document.getElementById('yay');
+ bottle.pause();
+ bottle.setAttribute('animation-name', animationName);
+ document.getElementById('yay').play({pingpong:true});
+}
+ function pauseMe() {
+   const bottle = document.getElementById('yay');
+   bottle.pause();
+ }
+</script>
+
+    <script src="script.js"></script>
+    <!-- Loads <model-viewer> for browsers: -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  </body>
+</html>
