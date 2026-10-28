@@ -206,6 +206,8 @@ p{margin:0}
 .card{display:block;text-decoration:none;color:inherit;transition:opacity .35s}
 .card.dim{opacity:.18;pointer-events:none}
 .card.hidden-card{display:none}
+.card.pop{animation:cardPop .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes cardPop{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .card .thumb{position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--plate);aspect-ratio:16/9}
 .card .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
 .card:hover .thumb img{transform:scale(1.045)}
@@ -947,7 +949,7 @@ function viewHome(){
 
   <section class="wrap" id="worksSec">
     <div class="sec-head">
-      <h2>Selected Works<sup>(07)</sup></h2>
+      <h2>Selected Works<sup id="workCount">(07)</sup></h2>
       <div class="filters" role="group" aria-label="Filter projects">
         <button class="chip" aria-pressed="true" data-f="all">All</button>
         <button class="chip" aria-pressed="false" data-f="product">Product Design</button>
@@ -998,7 +1000,11 @@ function initHome(){
   $$(".filters .chip").forEach(b => b.onclick = () => {
     $$(".filters .chip").forEach(x=>x.setAttribute("aria-pressed", x===b));
     const f = b.dataset.f;
-    $$("#workGrid .card").forEach(c => c.classList.toggle("dim", f!=="all" && !c.dataset.tags.includes(f)));
+    const cards = $$("#workGrid .card");
+    const shown = cards.filter(c => f==="all" || c.dataset.tags.split(" ").includes(f));
+    cards.forEach(c => { const on = shown.includes(c); c.classList.toggle("hidden-card", !on); c.classList.remove("wide"); if(on){ c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop","in"); } });
+    if (shown.length % 2 === 1 && shown[0]) shown[0].classList.add("wide");
+    $("#workCount").textContent = "(" + String(shown.length).padStart(2,"0") + ")";
   });
 }
 
