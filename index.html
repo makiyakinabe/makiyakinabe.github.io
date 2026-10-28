@@ -1154,9 +1154,9 @@ const CONTENT = {
   ${blk("Phase 1 · Ideation","Three ecosystems, one calmer day",`
     <p class="body-strong" style="margin-bottom:22px">My first round explored three ecosystems, each tackling a daily struggle parents told me about. Pick one to see it, and how parents rated it.</p>
     <div class="tabs" role="tablist" id="calmTabs">
-      <button class="tab" role="tab" aria-selected="true" data-t="0"><small>C1</small><span>Thought-to-Action Toolkit</span></button>
+      <button class="tab" role="tab" aria-selected="true" data-t="2"><small>C1</small><span>3-in-1 Skills Kit</span></button>
       <button class="tab" role="tab" aria-selected="false" data-t="1"><small>C2</small><span>CalmQuest Bath Set</span></button>
-      <button class="tab" role="tab" aria-selected="false" data-t="2"><small>C3</small><span>3-in-1 Skills Kit</span></button>
+      <button class="tab" role="tab" aria-selected="false" data-t="0"><small>C3</small><span>Thought-to-Action Toolkit</span></button>
     </div>
     <div class="tabpanel" id="calmPanel" role="tabpanel"></div>`)}
   ${blk("Refinement","Play is the highest form of research",`
@@ -1574,7 +1574,7 @@ const INIT = {
   const panel = $("#calmPanel");
   const show = i => {
     const c = C[i];
-    $$("#calmTabs .tab").forEach((b,j)=>b.setAttribute("aria-selected", i===j));
+    $$("#calmTabs .tab").forEach(b=>b.setAttribute("aria-selected", +b.dataset.t===i));
     panel.innerHTML = `<div class="fade-in">
       <div class="plate wideimg"${c.ar?` style="aspect-ratio:${c.ar}"`:""}><img class="zoom" src="${IMG(c.img)}" alt="${c.t}"></div>
       <div class="tp-head"><h3>${c.t}</h3><p>${c.s}</p></div>
@@ -1590,7 +1590,7 @@ const INIT = {
       bs.forEach(b=>b.onclick=()=>pick(+b.dataset.k)); }
   };
   $$("#calmTabs .tab").forEach(b => b.onclick = () => show(+b.dataset.t));
-  show(0);
+  show(2);
 
   const G = [
     {k:"snap", n:"Snapsticks", d:"Children choose activity cards to snap, connect and build specific shapes or story sequences.",
