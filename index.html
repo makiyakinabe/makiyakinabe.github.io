@@ -1204,13 +1204,13 @@ const protoHTML = id => `<div class="pstage" id="${id}">
 function initProto(id, screens, opts={}){
   const root = $("#"+id), track = $(".track", root), dev = $(".device", root), scr = $(".screen", root);
   track.innerHTML = screens.map((sc,i)=>{ const im = `<img src="${sc.src}" alt="${sc.label}" draggable="false" ${i>2?'loading="lazy"':''}>`; return sc.tall ? `<div class="tallshot">${im}</div>` : im; }).join("");
-  let i = 0, dx = 0, sx = null, moved = false;
+  let i = 0, dx = 0, sx = null, sy = 0, moved = false;
   const paint = (anim=true) => { track.style.transition = anim ? "" : "none"; track.style.transform = `translateX(calc(${-i*100}% + ${dx}px))`; };
   const go = (n, user=false) => { i = (n + screens.length) % screens.length; dx = 0; paint(); opts.onChange && opts.onChange(i, user); };
   $(".prev", root).onclick = () => go(i-1, true); $(".next", root).onclick = () => go(i+1, true);
-  scr.addEventListener("pointerdown", e => { sx = e.clientX; moved = false; scr.setPointerCapture(e.pointerId); });
-  scr.addEventListener("pointermove", e => { if (sx == null) return; dx = e.clientX - sx; if (Math.abs(dx) > 6) moved = true; paint(false); });
-  const end = e => { if (sx == null) return; const w = scr.clientWidth; const d = dx; sx = null; dx = 0;
+  scr.addEventListener("pointerdown", e => { sx = e.clientX; sy = e.clientY; moved = false; if (e.pointerType === "mouse") scr.setPointerCapture(e.pointerId); });
+  scr.addEventListener("pointermove", e => { if (sx == null) return; dx = e.clientX - sx; if (Math.abs(dx) > 6 || Math.abs(e.clientY - sy) > 6) moved = true; paint(false); });
+  const end = e => { if (sx == null) return; const w = scr.clientWidth; const d = dx; sx = null; dx = 0; if (e.type === "pointercancel") { paint(); return; }
     if (!moved) go(i+1, true); else if (d < -w*0.18) go(i+1, true); else if (d > w*0.18) go(i-1, true); else paint(); };
   scr.addEventListener("pointerup", end); scr.addEventListener("pointercancel", end);
   if (!reduce){
@@ -1251,13 +1251,14 @@ const appHTML = k => `<div class="proto-wrap">
         <h3 id="${k}Title"></h3>
         <p class="pdesc" id="${k}Desc" aria-live="polite"></p>
         <div class="chips" id="${k}Chips"></div>
-        <p class="phint">Tap the screen, swipe, or pick a screen above.</p>
+        <p class="phint" id="${k}Hint">Tap the screen, swipe, or pick a screen above.</p>
       </div>
     </div>`;
 function initApp(k, A){
   $("#"+k+"Chips").innerHTML = A.map((a,i)=>`<button class="chip" aria-pressed="false" data-i="${i}">${a[1]}</button>`).join("");
-  const show = i => { $("#"+k+"Step").textContent = `Screen ${i+1} of ${A.length}`; $("#"+k+"Title").textContent = A[i][1]; $("#"+k+"Desc").textContent = A[i][2]; $$("#"+k+"Chips .chip").forEach((c,j)=>c.setAttribute("aria-pressed", i===j)); };
-  const P = initProto(k+"Proto", A.map(a=>({src:IMG(a[0]), label:a[1]})), {onChange: show});
+  const show = i => { $("#"+k+"Step").textContent = `Screen ${i+1} of ${A.length}`; $("#"+k+"Title").textContent = A[i][1]; $("#"+k+"Desc").textContent = A[i][2]; $$("#"+k+"Chips .chip").forEach((c,j)=>c.setAttribute("aria-pressed", i===j));
+    $("#"+k+"Hint").textContent = A[i][3] ? "Scroll inside the phone to see the whole screen. Swipe or pick a screen above to move on." : "Tap the screen, swipe, or pick a screen above."; };
+  const P = initProto(k+"Proto", A.map(a=>({src:IMG(a[0]), label:a[1], tall:!!a[3]})), {onChange: show});
   $$("#"+k+"Chips .chip").forEach(c => c.onclick = () => P.go(+c.dataset.i, true));
 }
 
@@ -1734,10 +1735,7 @@ const CONTENT = {
         <li><span>AI marks are checked by teachers before they're final</span></li>
       </ul>
     </div>`)}
-  ${blk("Version 1","Where it started",`
-    <p class="body-strong" style="margin-bottom:18px">My original internship work: logo proposals, the first wireframes, and dashboards for students and teachers, refined after feedback from students.</p>
-    ${viewerHTML("oeV1", "", "16/10", "#FBF8EE")}`)}
-  ${blk("Version 2 · by age group","One app, four audiences",`
+  ${blk("Redesign · by age group","One app, four audiences",`
     <p class="body-strong" style="margin-bottom:18px">Pick an age group to see its screens on a laptop and on a phone.</p>
     <div class="phases" id="oeGroups" role="tablist"></div>
     <div id="oePanel" style="margin-top:22px"></div>`)}
@@ -2095,19 +2093,19 @@ const INIT = {
     {src:"ae-d-tv.webp", frame:"tv", who:"Waiting room", t:"Waiting-area TV", url:"cgh-ae / waiting-display", d:"Big, readable numbers for who's being called and to which room, who's up next and the estimated wait for each priority, plus three plain reminders for everyone waiting."}
   ]);
   initApp("ae", [
-    ["ae-p-arrive.webp","Before you come","Shows how busy A&E is right now and suggests faster options for non-emergencies. A 995 button stays at the top for real emergencies."],
+    ["ae-p-arrive-full.webp","Before you come","Shows how busy A&E is right now and suggests faster options for non-emergencies. A 995 button stays at the top for real emergencies.",1],
     ["ae-p-join.webp","Join the queue","Scan the QR code on your wristband or queue slip to follow your wait. No app download needed."],
-    ["ae-p-queue.webp","My queue","Your number, priority, how many people are ahead and the estimated wait, all live. Turn on an alert for when you're 2 away."],
+    ["ae-p-queue-full.webp","My queue","Your number, priority, how many people are ahead and the estimated wait, all live. Turn on an alert for when you're 2 away.",1],
     ["ae-p-called.webp","It's your turn","A full-screen alert with your room number and simple directions, plus a button if you need help getting there."],
-    ["ae-p-journey.webp","Visit journey","All seven steps of an A&E visit, from registration to pharmacy, so you always know what comes next."],
+    ["ae-p-journey-full.webp","Visit journey","All seven steps of an A&E visit, from registration to pharmacy, so you always know what comes next.",1],
     ["ae-p-worse.webp","I feel worse","A quick pain score and symptom check-in that goes straight to the triage nurse, without losing your place."],
-    ["ae-p-family.webp","Family & caregivers","Invite family to follow your visit and choose what they can see. Test results stay private by default."],
-    ["ae-p-familyview.webp","Family's view","What a family member sees: live status, updates, what to bring, and a button to say they're coming."],
-    ["ae-p-nearby.webp","Step out","Step-out mode lets you grab food or use the toilet without losing your place, with nearby facilities and walking times."],
+    ["ae-p-family-full.webp","Family & caregivers","Invite family to follow your visit and choose what they can see. Test results stay private by default.",1],
+    ["ae-p-familyview-full.webp","Family's view","What a family member sees: live status, updates, what to bring, and a button to say they're coming.",1],
+    ["ae-p-nearby-full.webp","Step out","Step-out mode lets you grab food or use the toilet without losing your place, with nearby facilities and walking times.",1],
     ["ae-p-help.webp","Help getting there","Your turn is held while a staff member comes to walk you to the room, or you can follow step-by-step directions."],
-    ["ae-p-community.webp","Read while you wait","Short reads, like why A&E isn't first come, first served, and questions from other patients."],
-    ["ae-p-settings.webp","Easier to use","Four languages, bigger text, read-aloud and strong vibration, so no one misses their turn."],
-    ["ae-p-visits.webp","After your visit","Discharge notes, medicine, follow-up appointments, MC and bill, all in one place."],
+    ["ae-p-community-full.webp","Read while you wait","Short reads, like why A&E isn't first come, first served, and questions from other patients.",1],
+    ["ae-p-settings-full.webp","Easier to use","Four languages, bigger text, read-aloud and strong vibration, so no one misses their turn.",1],
+    ["ae-p-visits-full.webp","After your visit","Discharge notes, medicine, follow-up appointments, MC and bill, all in one place.",1],
     ["ae-p-escort.webp","Staff escort app","Patient care assistants get escort requests on their phone, with notes like 'trouble hearing' so they know how to help."]
   ]);
 },
@@ -2122,21 +2120,14 @@ const INIT = {
   ]);
   initApp("lf", [
     ["lf-p-pair.webp","Set up your vest","Four simple steps to pair the vest, starting with turning it on."],
-    ["lf-p-home.webp","Home","Today's recording, the week's streak and the latest result from the doctor."],
-    ["lf-p-fitcheck.webp","Vest fit check","Shows which of the 11 sensors need adjusting, with plain directions for each one."],
+    ["lf-p-home-full.webp","Home","Today's recording, the week's streak and the latest result from the doctor.",1],
+    ["lf-p-fitcheck-full.webp","Vest fit check","Shows which of the 11 sensors need adjusting, with plain directions for each one.",1],
     ["lf-p-record.webp","Guided recording","A breathing circle guides each step (normal, deep, cough, speak) while the app checks every sensor is picking up."],
-    ["lf-p-results.webp","Results","Results appear only after the doctor reviews them, with a plain-language note and what to do next."],
-    ["lf-p-diary.webp","Symptom diary","A quick daily check-in for breathlessness, cough and fever, shared with the doctor's team."]
+    ["lf-p-results-full.webp","Results","Results appear only after the doctor reviews them, with a plain-language note and what to do next.",1],
+    ["lf-p-diary-full.webp","Symptom diary","A quick daily check-in for breathlessness, cough and fever, shared with the doctor's team.",1]
   ]);
 },
 "oral-exam"(){
-  initViewer("oeV1", [
-    {src:"intern/i69.jpg", t:"New logo proposals", c:"From the initial logo to speech-bubble marks"},
-    {src:"intern/i70.jpg", t:"New wireframe proposals", c:"Topic cards for English, Chinese, Malay and Tamil orals"},
-    {src:"intern/i78.jpg", t:"Dashboards for students and teachers", c:"Proposed to give both a clear overview of the platform"},
-    {src:"intern/i80.jpg", t:"User feedback and refinements", c:"Student dashboard, desktop and mobile"},
-    {src:"intern/i84.jpg", t:"Oral Exam Mastery refinements", c:"The full set of refined screens"}
-  ], {zoom:true});
   const G = [
     {k:"P1 – P3", t:"Lower primary", intro:"Playful and picture-led. Echo the mascot reads along, a talking trail turns practice into an adventure, and stars replace marks.",
      d:[["oe-d-p1-home.webp","Home","Aiden's home: today's talking adventure, his progress along the talking trail, and reading set by his teacher."],
@@ -2148,7 +2139,7 @@ const INIT = {
      p:[["oe-p-p1-home.webp","Home","The same adventure on a phone: one big Play mission button and the talking trail."],
         ["oe-p-p1-read.webp","Read aloud","One page at a time, with a big record button and help close by."],
         ["oe-p-p1-stars.webp","Stars","Stars, a cheerful mascot and the words to practise next."],
-        ["oe-p-p1-trail.webp","Talking trail","The trail map, with the next stop ready to start."],
+        ["oe-p-p1-trail-full.webp","Talking trail","The trail map, with the next stop ready to start.",1],
         ["oe-p-p1-picture.webp","看图说话","Chinese picture talk with pinyin, word cards and a thinking-time countdown."],
         ["oe-p-p1-holidays.webp","Holidays","Who, where, doing and feeling helpers, then start talking to win 3 stars."]]},
     {k:"P4 – P6", t:"Upper primary", intro:"PSLE-ready. Levels, XP and leagues keep it motivating, while practice mirrors the real stimulus-based conversation.",
