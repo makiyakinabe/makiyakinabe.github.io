@@ -527,15 +527,6 @@ p{margin:0}
 .bt-stage{background:#F3EDE4;border-radius:18px;padding:12px;color:#3A2A1C}
 .bt-stage svg{width:100%;height:auto;display:block;touch-action:none}
 .bt-ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-/* flat to 3d */
-.vz-stage{background:linear-gradient(#F4EFE7,#E6DCCB);border-radius:18px;padding:12px;color:#3A2A1C;user-select:none;-webkit-user-select:none}
-.vz-scene{position:relative;height:clamp(300px,42vw,400px);perspective:1100px;overflow:hidden;cursor:grab;touch-action:pan-y}
-.vz-obj{position:absolute;left:50%;top:36%;width:0;height:0;transform-style:preserve-3d}
-.vz-p{position:absolute;left:0;top:0;transform-style:preserve-3d}
-.vz-p svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.vz-p svg.back{transform:translateZ(-6px)}
-.vz-range{width:100%;accent-color:var(--pa);margin-top:16px}
-.vz-ticks{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:600;margin-top:4px}
 /* turbine */
 .tb-stage{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;background:radial-gradient(circle at 50% 40%,#2A3D8F,#121C46);border-radius:18px;padding:18px;color:#E6ECFF;position:relative;overflow:hidden}
 .tb-stage svg{width:min(320px,80%);height:auto;display:block;margin:0 auto;touch-action:none;cursor:grab}
@@ -1931,17 +1922,6 @@ const CONTENT = {
       </div>
       <div class="plate" style="aspect-ratio:1/1"><img class="zoom" src="img/vase-desk.jpg" alt="Render of the laser-cut flower vase on a desk" loading="lazy"></div>
     </div>`)}
-  ${blk("Feel the difference","Flat to 3D",`
-    <div class="feel" id="vz">
-      <div class="vz-stage"><div class="vz-scene" id="vzScene" aria-label="3D view of the vase pieces, drag to turn"><div class="vz-obj" id="vzObj"></div></div></div>
-      <div>
-        <p class="body-strong">Three flat pieces, one sheet of scrap wood. Drag the slider to slot them together, and drag the model to turn it.</p>
-        <input type="range" class="vz-range" id="vzR" min="0" max="100" value="0" aria-label="Assembly">
-        <div class="vz-ticks"><span>Flat sheet</span><span>Slotting</span><span>Standing vase</span></div>
-        <div style="margin-top:14px"><button class="fbtn2" id="vzPlay" type="button">Play it for me</button></div>
-        <p class="readout" id="vzRead" aria-live="polite"></p>
-      </div>
-    </div>`)}
   ${blk("Process","Flat sheet to 3D vase",`
     <p class="body-strong" style="margin-bottom:18px">Every piece was laid out on one sheet of scrap wood, cut with a laser, then slotted together into 3D.</p>
     <div class="vase">${[["img/vase-sheet.webp","Cut lines on the sheet"],["img/vase-assembled-render.webp","Cut and assembled"]].map(([f,t],i)=>`<figure><div class="plate"><img class="zoom" src="${f}" alt="Vase: ${t}" loading="lazy"></div><figcaption><i>0${i+1}</i>${t}</figcaption></figure>`).join('<span class="varr" aria-hidden="true">→</span>')}</div>`)}
@@ -2499,50 +2479,6 @@ function initTangle(){
   place(); draw();
 }
 
-function initVase(){
-  const root = $("#vz"); if (!root) return;
-  const obj = $("#vzObj"), scene = $("#vzScene"), range = $("#vzR");
-  const WOOD = `<defs><linearGradient id="vzw" x1="0" y1="0" x2="1" y2=".2"><stop offset="0" stop-color="#E2B57E"/><stop offset=".5" stop-color="#D3A26A"/><stop offset="1" stop-color="#E6BD88"/></linearGradient><linearGradient id="vzb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9A6A3A"/><stop offset="1" stop-color="#7E5428"/></linearGradient></defs>`;
-  const petals = (cx,cy,r) => [0,1,2,3,4].map(i=>{ const a = i*72*Math.PI/180 - Math.PI/2; return `<circle cx="${(cx+Math.cos(a)*r).toFixed(1)}" cy="${(cy+Math.sin(a)*r).toFixed(1)}" r="${(r*0.78).toFixed(1)}"/>`; }).join("") + `<circle cx="${cx}" cy="${cy}" r="${r*0.8}"/>`;
-  const A_SHAPE = `<g>${petals(62,62,26)}${petals(140,104,17)}<path d="M98 210 C92 160 80 120 64 88 L72 84 C88 116 100 156 104 206 Z"/><path d="M102 210 C110 170 124 140 138 120 L145 125 C132 144 118 172 110 212 Z"/><ellipse cx="70" cy="150" rx="16" ry="6" transform="rotate(-25 70 150)"/><ellipse cx="128" cy="160" rx="14" ry="5" transform="rotate(25 128 160)"/><path d="M84 200 L116 200 L114 236 C146 262 172 296 162 330 L150 352 L50 352 L38 330 C28 296 54 262 86 236 Z"/></g>`;
-  const A_CUT = `<path d="M84 200 L116 200 L114 236 C146 262 172 296 162 330 L150 352 L50 352 L38 330 C28 296 54 262 86 236 Z" fill="none" stroke="#5A3A1C" stroke-width="1.6"/><rect x="97" y="292" width="6" height="60" fill="#5A3A1C"/><circle cx="62" cy="62" r="9" fill="none" stroke="#5A3A1C" stroke-width="1.4"/><circle cx="140" cy="104" r="6" fill="none" stroke="#5A3A1C" stroke-width="1.4"/>`;
-  const B_PATH = `M86 6 L114 6 L112 44 C144 70 170 104 160 136 L150 156 L50 156 L40 136 C30 104 56 70 88 44 Z`;
-  const svgA = cls => `<svg viewBox="0 0 200 360" class="${cls}">${WOOD}<g fill="${cls?"url(#vzb)":"url(#vzw)"}" stroke="${cls?"none":"#6B4423"}" stroke-width="1.4">${A_SHAPE}</g>${cls?"":A_CUT}</svg>`;
-  const svgB = cls => `<svg viewBox="0 0 200 160" class="${cls}"><path d="${B_PATH}" fill="${cls?"#8A5C2E":"#DDAE76"}" stroke="${cls?"none":"#6B4423"}" stroke-width="1.4"/>${cls?"":`<rect x="97" y="6" width="6" height="66" fill="#5A3A1C"/>`}</svg>`;
-  const svgBase = cls => `<svg viewBox="0 0 200 200" class="${cls}"><circle cx="100" cy="100" r="96" fill="${cls?"#8A5C2E":"#DDAE76"}" stroke="${cls?"none":"#6B4423"}" stroke-width="1.4"/>${cls?"":`<rect x="97" y="40" width="6" height="120" fill="#5A3A1C"/><rect x="40" y="97" width="120" height="6" fill="#5A3A1C"/>`}</svg>`;
-  const FLOOR = 150;
-  const P = {
-    sheet:{w:520,h:360,html:`<div style="position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(8deg,#E4BC86 0 6px,#DDB27A 6px 13px,#E8C28E 13px 19px);box-shadow:0 0 0 1px #C9995F"></div>`},
-    base:{w:200,h:200,html:svgBase("back")+svgBase("")},
-    a:{w:200,h:360,html:svgA("back")+svgA("")},
-    b:{w:200,h:160,html:svgB("back")+svgB("")}
-  };
-  Object.entries(P).forEach(([k,v]) => { const d = document.createElement("div"); d.className = "vz-p"; d.style.width = v.w+"px"; d.style.height = v.h+"px"; d.style.marginLeft = (-v.w/2)+"px"; d.style.marginTop = (-v.h/2)+"px"; d.innerHTML = v.html; obj.appendChild(d); v.el = d; });
-  const L = (a,b,t) => a+(b-a)*t, E = t => t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2, seg = (t,a,b) => E(Math.min(1,Math.max(0,(t-a)/(b-a))));
-  let t = 0, spin = -28, auto = false, raf, user = false;
-  const tf = (x,y,z,rx,ry) => `translate3d(${x}px,${y}px,${z}px) rotateY(${ry}deg) rotateX(${rx}deg)`;
-  const apply = () => {
-    const sc = Math.min(0.92, scene.clientWidth/640, scene.clientHeight/420);
-    obj.style.transform = `scale(${sc}) rotateX(-22deg) rotateY(${spin}deg)`;
-    const kb = seg(t,0,.35), ka = seg(t,.2,.65), kB = seg(t,.5,.95);
-    P.sheet.el.style.transform = tf(0,FLOOR+2,0,90,0); P.sheet.el.style.opacity = 1 - seg(t,.25,.55);
-    P.base.el.style.transform = tf(L(150,0,kb), FLOOR, L(-80,0,kb), 90, 0);
-    P.a.el.style.transform = tf(L(-120,0,ka), L(FLOOR-1, FLOOR-170, ka), L(10,0,ka), L(90,0,ka), 0);
-    P.b.el.style.transform = tf(L(110,0,kB), L(FLOOR-1, FLOOR-72, kB), L(90,0,kB), L(90,0,kB), L(0,90,kB));
-    $("#vzRead").textContent = t < .2 ? "Every piece is laid out on one sheet of scrap wood: one vase half with both flowers, a second vase half and a round base." : t < .6 ? "The laser cuts them out, and the round base takes a cross-shaped slot so the vase can stand." : t < .95 ? "The second half slides down across the first, slot into slot, so two flat pieces become a 3D form." : "Done: a vase of flowers that stands on its own, made from wood that would have been thrown away.";
-  };
-  range.oninput = () => { t = range.value/100; auto = false; apply(); };
-  $("#vzPlay").onclick = () => { auto = true; t = 0; };
-  let dragX = null; scene.addEventListener("pointerdown", e => { dragX = e.clientX; user = true; scene.setPointerCapture(e.pointerId); });
-  scene.addEventListener("pointermove", e => { if (dragX==null) return; spin += (e.clientX - dragX)*0.5; dragX = e.clientX; apply(); });
-  scene.addEventListener("pointerup", () => dragX = null);
-  const loop = () => { if (auto){ t = Math.min(1, t + 0.004); range.value = Math.round(t*100); if (t>=1) auto = false; apply(); }
-    if (t > .97 && dragX==null && !reduce){ spin += 0.25; apply(); }
-    raf = requestAnimationFrame(loop); };
-  apply(); raf = requestAnimationFrame(loop); onCleanup(()=>cancelAnimationFrame(raf));
-  addEventListener("resize", apply); onCleanup(()=>removeEventListener("resize", apply));
-}
-
 function initTurbine(){
   const root = $("#turb"); if (!root) return;
   const svg = $("#tbSvg");
@@ -2897,7 +2833,7 @@ const INIT = {
     const shown = x ? $("#hotX") : $("#hot"); shown.classList.remove("swap"); void shown.offsetWidth; shown.classList.add("swap");
   });
 },
-"vase"(){ initVase(); },
+"vase"(){},
 "ae-queue"(){
   initQueueSim();
   initDx("aeDx", [
