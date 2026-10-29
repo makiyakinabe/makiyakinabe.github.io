@@ -482,28 +482,17 @@ p{margin:0}
 .cl-stars svg{width:38px;height:38px;transition:transform .3s}
 .cl-stars svg.on{transform:scale(1.15)}
 .cl-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-/* light the path */
-.gl-stage{position:relative;background:linear-gradient(#DDEFF7,#C7E2EE);border-radius:18px;padding:18px;min-height:340px;color:#1C2B3A;overflow:hidden}
-.gl-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 14px;position:relative;z-index:1;margin-top:8px}
-.gl-cube{font:inherit;border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px;color:#1C2B3A}
-.gl-box{position:relative;width:74px;height:74px;border-radius:18px;background:linear-gradient(145deg,#FFFFFF,#D8E1E8);box-shadow:inset 0 -8px 0 rgba(0,0,0,.08),0 8px 14px -6px rgba(0,0,0,.3);transition:all .35s}
-.gl-box b{position:absolute;inset:0;display:grid;place-items:center;font-size:22px;font-weight:800;color:#9AA8B5}
-.gl-lbl{font-size:13px;font-weight:700;line-height:1.2;min-height:2.4em}
-.gl-cube.next .gl-box{background:linear-gradient(145deg,#FFF5C4,var(--g));box-shadow:0 0 0 4px rgba(255,255,255,.7),0 0 30px 8px var(--g),inset 0 -8px 0 rgba(0,0,0,.08);animation:glPulse 1.4s ease-in-out infinite}
-.gl-cube.next .gl-box b{color:#1C2B3A}
-.gl-cube.done .gl-box{background:linear-gradient(145deg,#E6F8EC,#A8DDB8)}
-.gl-cube.done .gl-box b{color:#146B3A}
-.gl-cube.miss .gl-box{animation:tgShake .4s;box-shadow:0 0 0 4px #E5484D}
-@keyframes glPulse{50%{transform:translateY(-4px)}}
-.gl-scent{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--g);opacity:.0;pointer-events:none;animation:glScent 1.6s ease-out forwards}
-@keyframes glScent{0%{opacity:.8;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(var(--dx),-70px) scale(1.6)}}
-.gl-note{position:absolute;inset:18px;z-index:3;background:#FFFFFF;border-radius:16px;padding:18px 20px;box-shadow:0 20px 40px -20px rgba(0,0,0,.4);transition:opacity .4s}
-.gl-note h4{font-size:15px;margin:0 0 8px}
-.gl-note ol{margin:0;padding-left:20px;font-weight:600;line-height:1.7}
-.gl-note.gone{opacity:0;pointer-events:none}
-.gl-pop{position:absolute;z-index:2;background:#FFFFFF;border-radius:18px 18px 18px 4px;padding:8px 12px;font-weight:800;font-size:14px;box-shadow:0 10px 20px -8px rgba(0,0,0,.35);opacity:0;transform:scale(.6);transition:opacity .3s,transform .3s;pointer-events:none}
-.gl-pop.on{opacity:1;transform:scale(1)}
-.gl-msg{position:relative;z-index:1;margin-top:10px;font-weight:700;font-size:15px;min-height:1.4em}
+/* skills kit */
+.kit-stage{position:relative;background:#FFF6DA;border-radius:18px;padding:12px;color:#24306B}
+.kit-stage svg{width:100%;height:auto;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.kit-card{position:absolute;right:16px;top:16px;background:#FFFFFF;border-radius:12px;padding:8px 10px;box-shadow:0 6px 14px -8px rgba(36,48,107,.5);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#24306B;text-align:center}
+.kit-card svg{width:74px;height:58px;margin-top:4px}
+.kit-meter{display:flex;align-items:center;gap:10px;margin:8px 6px 2px;font-size:12px;font-weight:700}
+.kit-meter span{flex:1;height:8px;border-radius:4px;background:#EADFB8;overflow:hidden}
+.kit-meter i{display:block;height:100%;width:0;border-radius:4px;transition:width .12s,background .2s}
+.kit-msg{margin:6px 6px 2px;font-weight:800;font-size:15px;min-height:1.4em}
+.kit-stars{display:flex;gap:4px;margin-top:12px}
+.kit-stars svg{width:30px;height:30px}
 /* caregiver morning */
 .ccm-wrap{display:flex;justify-content:center}
 .ccm-phone{width:min(290px,78vw);aspect-ratio:9/18.5;border-radius:44px;padding:10px;background:#111;box-shadow:0 30px 50px -24px rgba(0,0,0,.6)}
@@ -1478,25 +1467,6 @@ const CONTENT = {
       <div><small>Secondary users</small><b>Neurotypical children</b></div>
       <div><small>Secondary users</small><b>Parents and caregivers</b></div>
     </div>`)}
-  ${blk("Feel the difference","Light the path",`
-    <div class="feel" id="glow">
-      <div class="gl-stage">
-        <div class="gl-note" id="glNote"><h4>Mum says: before bed, please</h4><ol id="glList"></ol></div>
-        <div class="gl-grid" id="glGrid"></div>
-        <span class="gl-pop" id="glPop"></span>
-        <p class="gl-msg" id="glMsg" aria-live="polite"></p>
-      </div>
-      <div>
-        <p class="body-strong">For a child with ADHD, bath time is six steps to remember while everything competes for attention. Tap the steps in order.</p>
-        <div class="seg" role="group" aria-label="Bath time">
-          <button aria-pressed="true" data-m="none">Without cues</button>
-          <button aria-pressed="false" data-m="cubes">With Glow Path Cubes</button>
-        </div>
-        <div style="margin-top:14px"><button class="fbtn2" id="glAgain" type="button">Start bath time again</button></div>
-        <div class="fstats"><div class="fstat"><small>Steps mixed up · without cues</small><b id="glA">0</b></div><div class="fstat"><small>Steps mixed up · with cubes</small><b id="glB">0</b></div></div>
-        <p class="readout" id="glRead" aria-live="polite"></p>
-      </div>
-    </div>`)}
   ${blk("Phase 1 · Ideation","Three ecosystems, one calmer day",`
     <p class="body-strong" style="margin-bottom:22px">My first round explored three ecosystems, each tackling a daily struggle parents told me about. Pick one to see it, and how parents rated it.</p>
     <div class="tabs" role="tablist" id="calmTabs">
@@ -1505,6 +1475,27 @@ const CONTENT = {
       <button class="tab" role="tab" aria-selected="false" data-t="0"><small>C3</small><span>Thought-to-Action Toolkit</span></button>
     </div>
     <div class="tabpanel" id="calmPanel" role="tabpanel"></div>`)}
+  ${blk("Feel the difference","Try the 3-in-1 Skills Kit",`
+    <div class="feel" id="kit">
+      <div class="kit-stage">
+        <div class="kit-card" id="kitCard" hidden></div>
+        <svg id="kitSvg" viewBox="0 0 420 300" role="img" aria-label="Skills kit game board"></svg>
+        <div class="kit-meter" id="kitMeter"><b>Calm</b><span><i id="kitBar"></i></span><b>Too fast</b></div>
+        <p class="kit-msg" id="kitMsg" aria-live="polite"></p>
+      </div>
+      <div>
+        <p class="body-strong">The kit parents liked most. Each game rewards patience over speed, with feedback the moment something goes wrong. Pick a game and try it.</p>
+        <div class="seg" role="group" aria-label="Game">
+          <button aria-pressed="true" data-g="dot">Dot-Path Slider</button>
+          <button aria-pressed="false" data-g="snap">Snap-Path Strips</button>
+          <button aria-pressed="false" data-g="thread">Thread &amp; Pattern Tiles</button>
+        </div>
+        <div style="margin-top:14px"><button class="fbtn2" id="kitNew" type="button">Start again</button></div>
+        <div class="kit-stars" id="kitStars" aria-label="Stars"></div>
+        <div class="fstats"><div class="fstat"><small id="kitLblA">Marble drops</small><b id="kitA">0</b></div><div class="fstat"><small>Skill it trains</small><b id="kitSkill" style="font-size:16px;line-height:1.25;margin-top:4px"></b></div></div>
+        <p class="readout" id="kitRead" aria-live="polite"></p>
+      </div>
+    </div>`)}
   ${blk("Refinement","Play is the highest form of research",`
     <div class="two">
       <div>
@@ -2317,37 +2308,117 @@ function initClap(){
   onCleanup(()=>{ clearTimeout(timer); try{ window.speechSynthesis && speechSynthesis.cancel(); }catch(e){} try{ ac && ac.close(); }catch(e){} });
 }
 
-function initGlow(){
-  const root = $("#glow"); if (!root) return;
-  const S = [["Turn on the shower","#C7B8F5"],["Wet your hair","#9FD8F0"],["Shampoo","#FFC2A8"],["Rinse it out","#A8E6C6"],["Soap up","#FFE08A"],["Towel dry","#F5B8D6"]];
-  const POPS = ["Ooh, bubbles!","Is that a toy boat?","The water's too cold!","I'm hungry...","Where's my duck?","Look, steam!"];
-  let mode = "none", step = 0, order = [], popT = null, noteT = null; const sc = {none:0, cubes:0};
-  const grid = $("#glGrid"), note = $("#glNote"), pop = $("#glPop");
-  $("#glList").innerHTML = S.map(s=>`<li>${s[0]}</li>`).join("");
-  const TXT = {none:"The list disappears, distractions keep popping up, and every step looks the same. It's easy to skip shampoo or rinse twice, and bath time turns into nagging.",
-    cubes:"Each Glow Path Cube lights up and releases a calming scent when it's time for that step, so the next thing to do is always obvious, with no nagging needed."};
-  const score = () => { $("#glA").textContent = sc.none; $("#glB").textContent = sc.cubes; };
-  const render = () => { grid.innerHTML = order.map(i=>{ const s = S[i]; const cls = i < step ? "done" : (mode==="cubes" && i===step ? "next" : "");
-      return `<button class="gl-cube ${cls}" data-i="${i}" style="--g:${s[1]}"><span class="gl-box"><b>${i < step ? "✓" : mode==="cubes" ? i+1 : "?"}</b></span><span class="gl-lbl">${s[0]}</span></button>`; }).join("");
-    $$(".gl-cube", grid).forEach(b => b.onclick = () => tap(b)); };
-  const scent = b => { const r = b.getBoundingClientRect(), st = root.querySelector(".gl-stage").getBoundingClientRect();
-    for (let k=0;k<6;k++){ const d = document.createElement("span"); d.className = "gl-scent"; d.style.setProperty("--g", b.style.getPropertyValue("--g")); d.style.setProperty("--dx", (Math.random()*50-25)+"px");
-      d.style.left = (r.left - st.left + r.width/2 - 5 + Math.random()*20-10)+"px"; d.style.top = (r.top - st.top + 20)+"px"; d.style.animationDelay = (k*0.12)+"s"; root.querySelector(".gl-stage").appendChild(d); setTimeout(()=>d.remove(), 2400); } };
-  const tap = b => { const i = +b.dataset.i;
-    if (i < step) return;
-    if (i === step){ step++; render(); if (mode==="cubes"){ const nb = $(`.gl-cube[data-i="${step}"]`, grid); if (nb) scent(nb); }
-      $("#glMsg").textContent = step===S.length ? (mode==="cubes" ? "All clean, no nagging needed!" : "Done, finally!") : ""; }
-    else { sc[mode]++; score(); b.classList.remove("miss"); void b.offsetWidth; b.classList.add("miss"); $("#glMsg").textContent = "Oops! Skipped “"+S[step][0]+"”."; } };
-  const start = () => { clearTimeout(noteT); clearInterval(popT); step = 0; $("#glMsg").textContent = "";
-    order = mode==="cubes" ? S.map((_,i)=>i) : S.map((_,i)=>i).sort(()=>Math.random()-.5);
-    render();
-    if (mode==="none"){ note.classList.remove("gone"); noteT = setTimeout(()=>{ note.classList.add("gone"); $("#glMsg").textContent = "Now, what was the order again?"; }, 3200);
-      popT = setInterval(()=>{ if (step>=S.length) return; pop.textContent = POPS[Math.floor(Math.random()*POPS.length)]; pop.style.left = (10+Math.random()*55)+"%"; pop.style.top = (8+Math.random()*60)+"%"; pop.classList.add("on"); setTimeout(()=>pop.classList.remove("on"), 1400); }, 2200); }
-    else { note.classList.add("gone"); pop.classList.remove("on"); setTimeout(()=>{ const nb = $(`.gl-cube[data-i="0"]`, grid); if (nb) scent(nb); }, 300); } };
-  $$(".seg button", root).forEach(b => b.onclick = () => { mode = b.dataset.m; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x===b)); $("#glRead").textContent = TXT[mode]; start(); });
-  $("#glAgain").onclick = start;
-  $("#glRead").textContent = TXT[mode]; score(); start();
-  onCleanup(()=>{ clearTimeout(noteT); clearInterval(popT); });
+function initKit(){
+  const root = $("#kit"); if (!root) return;
+  const svg = $("#kitSvg"), meter = $("#kitMeter"), bar = $("#kitBar"), msg = $("#kitMsg"), card = $("#kitCard");
+  const PAL = ["#F4A6C4","#FBE08C","#A9DCC3","#8FC5EE","#C7A7EC"], INK = "#24306B";
+  const star = on => `<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${on?"#FFC531":"#E7E2D3"}" stroke="${on?"#D99A00":"#D6D0BE"}" stroke-width="1.2"/></svg>`;
+  const stars = n => { $("#kitStars").innerHTML = [0,1,2].map(i=>star(i<n)).join(""); };
+  const INFO = {dot:{lbl:"Marble drops", skill:"Impulse control & working memory", txt:"Drag the magnetic pen to guide the marble along the dots. Rush it and the magnet loses the marble, which drops back to the last checkpoint. Slow, careful moves win."},
+    snap:{lbl:"Strips that wouldn't snap", skill:"Finger strength & two-handed coordination", txt:"Copy the shape on the task card. Tap one peg, then the next, to snap a strip between them. Only strips that match the card will snap in."},
+    thread:{lbl:"Threading mistakes", skill:"Pincer grip & patience", txt:"Follow the pattern card and tap the holes in order to thread the tile. A wrong hole pulls the last stitch back out, so mistakes are a chance to slow down, not to give up."}};
+  let game = "dot", cleanupGame = null, count = 0;
+  const pt = e => { const r = svg.getBoundingClientRect(); return [(e.clientX-r.left)*420/r.width, (e.clientY-r.top)*300/r.height]; };
+  const setCount = n => { count = n; $("#kitA").textContent = n; };
+
+  const dotGame = () => {
+    const P = [[40,250],[90,210],[70,150],[130,110],[200,140],[230,210],[300,230],[350,180],[320,110],[370,60]];
+    const pts = []; for (let i=0;i<P.length-1;i++){ const a = P[i], b = P[i+1], c = P[Math.max(0,i-1)], d = P[Math.min(P.length-1,i+2)];
+      for (let k=0;k<20;k++){ const t = k/20, t2=t*t, t3=t2*t; pts.push([0.5*((2*a[0])+(-c[0]+b[0])*t+(2*c[0]-5*a[0]+4*b[0]-d[0])*t2+(-c[0]+3*a[0]-3*b[0]+d[0])*t3), 0.5*((2*a[1])+(-c[1]+b[1])*t+(2*c[1]-5*a[1]+4*b[1]-d[1])*t2+(-c[1]+3*a[1]-3*b[1]+d[1])*t3)]); } }
+    pts.push(P[P.length-1]);
+    const L = [0]; for (let i=1;i<pts.length;i++) L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0], pts[i][1]-pts[i-1][1])); const TOT = L[L.length-1];
+    const at = s => { s = Math.max(0, Math.min(TOT, s)); let i = 1; while (i < L.length-1 && L[i] < s) i++; const k = (s-L[i-1])/Math.max(1e-6, L[i]-L[i-1]); return [pts[i-1][0]+(pts[i][0]-pts[i-1][0])*k, pts[i-1][1]+(pts[i][1]-pts[i-1][1])*k]; };
+    const NDOT = 26, CHECK = [0, TOT*0.25, TOT*0.5, TOT*0.75];
+    const d = "M"+pts.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" L");
+    let s = 0, check = 0, hold = false, lastT = 0, lastS = 0, done = false, drops = 0, anim = null, spd = 0;
+    svg.innerHTML = `<rect x="6" y="6" width="408" height="288" rx="18" fill="#FFFFFF" stroke="#F0E3B5" stroke-width="3"/>
+      <path d="${d}" fill="none" stroke="#F3EAD0" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${d}" fill="none" stroke="#E8DAB0" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
+      <g id="kDots">${Array.from({length:NDOT},(_,i)=>{ const p = at(TOT*i/(NDOT-1)); return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="5" fill="#E7DDBF"/>`; }).join("")}</g>
+      ${CHECK.slice(1).map(c=>{ const p = at(c); return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="9" fill="none" stroke="#C7A7EC" stroke-width="3"/>`; }).join("")}
+      <g transform="translate(${P[P.length-1][0]} ${P[P.length-1][1]})"><circle r="16" fill="#A9DCC3"/><path d="M-6 0l4 4 8-8" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <g id="kPen" opacity="0"><circle r="20" fill="rgba(143,197,238,.25)" stroke="#8FC5EE" stroke-width="2" stroke-dasharray="4 4"/></g>
+      <g id="kBall"><circle r="11" fill="#5B6BD6"/><circle cx="-3.5" cy="-3.5" r="4" fill="#FFFFFF" opacity=".75"/></g>`;
+    const ball = $("#kBall", svg), pen = $("#kPen", svg), dotsEl = $$("#kDots circle", svg);
+    const paint = () => { const p = at(s); ball.setAttribute("transform", `translate(${p[0].toFixed(1)} ${p[1].toFixed(1)})`);
+      dotsEl.forEach((c,i)=>c.setAttribute("fill", TOT*i/(NDOT-1) <= s+0.5 ? PAL[i%5] : "#E7DDBF")); };
+    const drop = why => { hold = false; drops++; setCount(drops); msg.textContent = why; msg.style.color = "#C2410C"; pen.setAttribute("opacity","0");
+      const from = s, to = CHECK[check], t0 = performance.now(); cancelAnimationFrame(anim);
+      const go = now => { const k = Math.min(1,(now-t0)/500); s = from + (to-from)*(1-Math.pow(1-k,3)); paint(); if (k<1) anim = requestAnimationFrame(go); }; anim = requestAnimationFrame(go); };
+    const down = e => { if (done) return; const q = pt(e), p = at(s); if (Math.hypot(q[0]-p[0], q[1]-p[1]) > 34){ msg.textContent = "Pick up the marble with the pen first."; msg.style.color = INK; return; }
+      hold = true; lastT = performance.now(); lastS = s; svg.setPointerCapture(e.pointerId); msg.textContent = "Nice and slow..."; msg.style.color = INK; };
+    const move = e => { const q = pt(e); pen.setAttribute("transform", `translate(${q[0].toFixed(1)} ${q[1].toFixed(1)})`); if (!hold) return; pen.setAttribute("opacity","1");
+      let best = s, bd = 1e9; for (let ss = Math.max(0,s-30); ss <= Math.min(TOT, s+45); ss += 2){ const p = at(ss), dd = Math.hypot(q[0]-p[0], q[1]-p[1]); if (dd < bd){ bd = dd; best = ss; } }
+      if (bd > 40) return drop("Oops, the pen slipped off the path. Back to the last checkpoint!");
+      const now = performance.now(), dt = Math.max(16, now-lastT); spd = spd*0.6 + (Math.abs(best-lastS)/dt*1000)*0.4; lastT = now; lastS = best;
+      bar.style.width = Math.min(100, spd/260*100)+"%"; bar.style.background = spd < 150 ? "#3BAA5C" : spd < 230 ? "#F2C94C" : "#E5484D";
+      if (spd > 260) return drop("Too fast! The magnet lost the marble.");
+      s = Math.max(s, best); CHECK.forEach((c,i)=>{ if (s >= c) check = Math.max(check, i); }); paint();
+      if (s >= TOT-2){ hold = false; done = true; pen.setAttribute("opacity","0"); const st = drops===0?3:drops<=2?2:1; stars(st); msg.style.color = "#146B3A";
+        msg.textContent = drops===0 ? "Perfect! Slow and steady, with no drops." : "Made it! "+drops+(drops===1?" drop":" drops")+" along the way. Try again for 3 stars."; } };
+    const up = () => { hold = false; pen.setAttribute("opacity","0"); spd = 0; bar.style.width = "0"; };
+    svg.addEventListener("pointerdown", down); svg.addEventListener("pointermove", move); svg.addEventListener("pointerup", up); svg.addEventListener("pointercancel", up);
+    paint(); msg.textContent = "Grab the blue marble and guide it along the dots."; msg.style.color = INK;
+    return () => { svg.removeEventListener("pointerdown", down); svg.removeEventListener("pointermove", move); svg.removeEventListener("pointerup", up); svg.removeEventListener("pointercancel", up); cancelAnimationFrame(anim); };
+  };
+
+  const snapGame = () => {
+    const COLS = 6, ROWS = 4, X0 = 42, Y0 = 66, DX = 46, DY = 58;
+    const SHAPES = [{n:"House", e:[[[1,3],[1,1]],[[1,1],[2,0]],[[2,0],[3,1]],[[3,1],[3,3]],[[3,3],[1,3]],[[1,1],[3,1]]]},
+      {n:"Lightning", e:[[[3,0],[1,2]],[[1,2],[3,2]],[[3,2],[1,3]]]},
+      {n:"Diamond", e:[[[3,0],[1,1]],[[1,1],[3,3]],[[3,3],[5,1]],[[5,1],[3,0]],[[1,1],[5,1]]]}];
+    let si = Math.floor(Math.random()*SHAPES.length), placed = [], sel = null, bad = 0;
+    const key = (a,b) => [a.join(","),b.join(",")].sort().join("|");
+    const pos = ([c,r]) => [X0+c*DX, Y0+r*DY];
+    const render = () => { const sh = SHAPES[si];
+      let s = `<rect x="6" y="6" width="408" height="288" rx="18" fill="#FFFFFF" stroke="#F0E3B5" stroke-width="3"/>`;
+      s += placed.map((k,i)=>{ const [a,b] = k.split("|").map(x=>pos(x.split(",").map(Number))); return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${PAL[i%5]}" stroke-width="14" stroke-linecap="round"/><line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round" transform="translate(0 -3)"/>`; }).join("");
+      for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++){ const [x,y] = pos([c,r]); const on = sel && sel[0]===c && sel[1]===r;
+        s += `<g class="kpeg" data-c="${c}" data-r="${r}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="18" fill="transparent"/><circle cx="${x}" cy="${y}" r="${on?10:7}" fill="${on?"#5B6BD6":"#D9CFB0"}" stroke="${on?"#FFFFFF":"none"}" stroke-width="3"/></g>`; }
+      svg.innerHTML = s;
+      card.hidden = false; card.innerHTML = `Task card<br><span style="font-size:13px;text-transform:none;letter-spacing:0">${sh.n}</span><svg viewBox="40 40 260 200">${sh.e.map(([a,b])=>{ const p=pos(a), q=pos(b); const k = key(a,b), got = placed.includes(k); return `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${got?"#A9DCC3":"#24306B"}" stroke-width="12" stroke-linecap="round"/>`; }).join("")}</svg>`;
+      $$(".kpeg", svg).forEach(g => g.onclick = () => tap([+g.dataset.c, +g.dataset.r])); };
+    const tap = p => { const sh = SHAPES[si];
+      if (!sel){ sel = p; render(); return; }
+      if (sel[0]===p[0] && sel[1]===p[1]){ sel = null; render(); return; }
+      const k = key(sel,p);
+      if (sh.e.some(([a,b])=>key(a,b)===k) && !placed.includes(k)){ placed.push(k); sel = p; msg.textContent = "Snap!"; msg.style.color = "#146B3A";
+        if (placed.length === sh.e.length){ sel = null; render(); stars(bad===0?3:bad<=2?2:1); msg.textContent = "You built the "+sh.n.toLowerCase()+"!"+(bad?" "+bad+" strips didn't fit along the way.":" Every strip fit first time."); return; } }
+      else { bad++; setCount(bad); msg.textContent = placed.includes(k) ? "That strip is already there." : "That strip won't snap there. Check the card."; msg.style.color = "#C2410C"; sel = p; }
+      render(); };
+    render(); msg.textContent = "Tap a peg, then the next one, to snap a strip between them."; msg.style.color = INK;
+    return () => { card.hidden = true; };
+  };
+
+  const threadGame = () => {
+    const N = 5, X0 = 90, Y0 = 50, D = 50;
+    const PATS = [[[0,0],[1,1],[2,0],[3,1],[4,0],[4,2],[3,3],[2,2],[1,3],[0,2],[0,4],[2,4],[4,4]],[[2,0],[1,1],[0,2],[1,3],[2,4],[3,3],[4,2],[3,1],[2,0],[2,2],[2,4]],[[0,0],[4,0],[0,1],[4,1],[0,2],[4,2],[0,3],[4,3],[0,4],[4,4]]];
+    let pi = Math.floor(Math.random()*PATS.length), k = 0, bad = 0, flash = null;
+    const pos = ([c,r]) => [X0+c*D, Y0+r*D];
+    const render = () => { const pat = PATS[pi];
+      let s = `<rect x="6" y="6" width="408" height="288" rx="18" fill="#FFFFFF" stroke="#F0E3B5" stroke-width="3"/><rect x="${X0-34}" y="${Y0-30}" width="${(N-1)*D+68}" height="${(N-1)*D+60}" rx="16" fill="#8FC5EE"/><rect x="${X0-34}" y="${Y0-30}" width="${(N-1)*D+68}" height="${(N-1)*D+60}" rx="16" fill="none" stroke="#5E93BC" stroke-width="3"/>`;
+      if (k > 1) s += `<polyline points="${pat.slice(0,k).map(p=>pos(p).join(",")).join(" ")}" fill="none" stroke="#E2558C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`;
+      for (let r=0;r<N;r++) for (let c=0;c<N;c++){ const [x,y] = pos([c,r]); const nx = pat[k] && pat[k][0]===c && pat[k][1]===r; const isF = flash && flash[0]===c && flash[1]===r;
+        s += `<g class="khole" data-c="${c}" data-r="${r}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="20" fill="transparent"/><circle cx="${x}" cy="${y}" r="9" fill="${isF?"#E5484D":"#24306B"}" stroke="${nx && k>0 ? "#FFFFFF" : "rgba(255,255,255,.35)"}" stroke-width="${nx && k>0 ? 3 : 2}"/></g>`; }
+      if (k>0){ const [x,y] = pos(pat[k-1]); s += `<circle cx="${x}" cy="${y}" r="7" fill="#E2558C"/>`; }
+      svg.innerHTML = s;
+      card.hidden = false; card.innerHTML = `Pattern card<svg viewBox="${X0-30} ${Y0-30} ${(N-1)*D+60} ${(N-1)*D+60}"><polyline points="${pat.map(p=>pos(p).join(",")).join(" ")}" fill="none" stroke="#E2558C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>${pat.slice(0,1).map(p=>`<circle cx="${pos(p)[0]}" cy="${pos(p)[1]}" r="14" fill="#24306B"/>`).join("")}</svg>`;
+      $$(".khole", svg).forEach(g => g.onclick = () => tap([+g.dataset.c, +g.dataset.r])); };
+    const tap = p => { const pat = PATS[pi]; if (k >= pat.length) return;
+      if (pat[k][0]===p[0] && pat[k][1]===p[1]){ k++; flash = null; msg.textContent = k===1 ? "Good start! Follow the card." : "Pulled through."; msg.style.color = "#146B3A";
+        if (k === pat.length){ stars(bad===0?3:bad<=2?2:1); msg.textContent = "Pattern done!"+(bad?" You fixed "+bad+(bad===1?" mistake":" mistakes")+" along the way.":" Not a single mistake."); } }
+      else { bad++; setCount(bad); flash = p; if (k > 1) k--; msg.textContent = "Wrong hole. The last stitch slides back out. Take your time."; msg.style.color = "#C2410C"; }
+      render(); };
+    render(); msg.textContent = "Start at the dark dot on the card, then follow the thread."; msg.style.color = INK;
+    return () => { card.hidden = true; };
+  };
+
+  const GAMES = {dot:dotGame, snap:snapGame, thread:threadGame};
+  const start = () => { if (cleanupGame) cleanupGame(); card.hidden = true; setCount(0); stars(0); bar.style.width = "0"; meter.style.visibility = game==="dot" ? "visible" : "hidden";
+    $("#kitLblA").textContent = INFO[game].lbl; $("#kitSkill").textContent = INFO[game].skill; $("#kitRead").textContent = INFO[game].txt; cleanupGame = GAMES[game](); };
+  $$(".seg button", root).forEach(b => b.onclick = () => { game = b.dataset.g; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x===b)); start(); });
+  $("#kitNew").onclick = start;
+  start(); onCleanup(()=>{ if (cleanupGame) cleanupGame(); });
 }
 
 function initMorning(){
@@ -2506,7 +2577,7 @@ function initTurbine(){
 /* ---------- project interactives ---------- */
 const INIT = {
 "synapsys"(){
-  initGlow();
+  initKit();
   const C = [
     {img:"calm-c1.jpg", t:"Thought-to-Action Toolkit", s:"Reimagining CBT therapy at home. Name a feeling, pause, then reframe negative thoughts.",
      fb:["Least preferred","syn-fb-3.jpg",["Parents appreciated the emotional-regulation support and clear structure","Less fun compared to skill games or bath play"]],
