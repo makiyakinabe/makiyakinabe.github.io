@@ -400,6 +400,66 @@ p{margin:0}
 .latte .readout{margin-top:14px;font-size:15px;color:var(--ink-2);min-height:3em}
 @media (max-width:760px){.latte{grid-template-columns:1fr;justify-items:center}}
 
+/* feel-the-difference demos */
+.feel{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(22px,4vw,48px);align-items:center;background:var(--plate);border-radius:var(--r-lg);padding:clamp(18px,3.5vw,40px)}
+.feel .readout{margin-top:14px;font-size:15px;color:var(--ink-2);min-height:4.5em}
+.feel .seg{margin-top:16px}
+@media (max-width:880px){.feel{grid-template-columns:1fr}}
+.fbtn2{font:inherit;font-weight:700;font-size:14px;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--chip);color:var(--ink);cursor:pointer;transition:transform .15s}
+.fbtn2:hover{transform:translateY(-1px)}
+.fbtn2:active{transform:translateY(1px)}
+.fstats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.fstat{background:var(--chip);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.fstat small{display:block;font-size:12px;color:var(--muted);font-weight:600}
+.fstat b{display:block;font-size:22px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+/* queue sim */
+.q-board{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:14px}
+.q-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;font-size:13px;color:var(--muted);font-weight:600}
+.q-head b{color:var(--ink);font-variant-numeric:tabular-nums}
+.q-list{position:relative;transition:height .4s ease}
+.q-item{position:absolute;left:0;right:0;height:48px;box-sizing:border-box;display:grid;grid-template-columns:22px 52px 118px minmax(0,1fr) 78px;align-items:center;gap:8px;padding:0 12px;border-radius:12px;background:var(--chip);border:1.5px solid var(--line);transition:top .55s cubic-bezier(.2,.8,.2,1),opacity .4s,transform .4s,background .3s,border-color .3s}
+.q-item.in{opacity:0;transform:translateX(24px)}
+.q-item.out{opacity:0;transform:translateX(-24px)}
+.q-pos{font-size:12px;color:var(--muted);font-weight:700}
+.q-no{font-size:16px;font-variant-numeric:tabular-nums}
+.q-pr{font-size:12px;font-weight:700;padding:4px 8px;border-radius:6px;justify-self:start;white-space:nowrap}
+.q-arr{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-wait{font-weight:700;text-align:right;font-variant-numeric:tabular-nums;font-size:14px}
+.q-item.danger{border-color:#E5484D;background:color-mix(in srgb,#E5484D 14%,var(--chip))}
+.q-item.danger .q-wait{color:#E5484D}
+.q-ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.q-ctrl .fbtn2[data-p="1"]{background:#A3201A;border-color:#A3201A;color:#fff}
+.q-doc{display:flex;align-items:center;gap:12px;margin-top:14px;font-weight:600;font-size:15px}
+.q-doc input{flex:1;max-width:220px;accent-color:var(--pa)}
+@media (max-width:520px){.q-item{grid-template-columns:20px 48px minmax(0,1fr) 64px;gap:6px;padding:0 10px}.q-arr{display:none}.q-pr{font-size:11px}}
+/* lung sim */
+.lsim-wrap canvas{width:100%;height:auto;display:block;border-radius:16px;background:#0E1626}
+.lsim-play{display:inline-flex;align-items:center;gap:8px}
+.lsim-play svg{width:16px;height:16px}
+.lsim-toggle{display:flex;align-items:center;gap:10px;margin-top:14px;font-weight:600;font-size:15px;cursor:pointer}
+.lsim-toggle input{width:20px;height:20px;accent-color:var(--pa)}
+.lsim-note{font-size:12px;color:var(--muted);margin-top:10px}
+/* tray game */
+.tg-stage{border-radius:18px;padding:16px;background:#D9DEE4;transition:background .4s}
+.tg-call{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#1C1917;color:#E7E2DA;border-radius:12px;padding:10px 16px;margin-bottom:14px;font-weight:600;font-size:14px}
+.tg-call b{font-family:"DejaVu Sans Mono",ui-monospace,monospace;font-size:28px;color:#FFB45E;letter-spacing:.06em}
+.tg-counter{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px;border-radius:14px;background:#B9C1CA;transition:all .4s}
+.tg-tray{position:relative;font:inherit;border:0;border-radius:14px;height:112px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;background:#8E97A1;box-shadow:inset 0 0 0 6px rgba(0,0,0,.1),0 5px 0 rgba(0,0,0,.18);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .3s,opacity .3s,background .3s}
+.tg-tray:hover{transform:translateY(-2px)}
+.tg-bowl{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--c2),var(--c));box-shadow:0 0 0 5px #F7F3EC,0 4px 8px rgba(0,0,0,.25)}
+.tg-cup{width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#E9D7B5,#9B6A3C);box-shadow:0 0 0 4px #F7F3EC}
+.tg-no{position:absolute;top:8px;left:10px;font-family:"DejaVu Sans Mono",ui-monospace,monospace;font-weight:700;font-size:13px;background:#111;color:#FFB45E;padding:2px 7px;border-radius:5px;opacity:0;transition:opacity .3s}
+.tg-stage.disp{background:#EFE6D6}
+.tg-stage.disp .tg-counter{background:#F7F0E4;border-left:14px solid #6B3F25;border-right:14px solid #6B3F25}
+.tg-stage.disp .tg-tray{background:#8A3A22}
+.tg-stage.disp .tg-no{opacity:1}
+.tg-stage.disp .tg-tray.lit{transform:translateY(-8px) scale(1.03);box-shadow:0 0 0 3px #FFB45E,0 16px 24px -8px rgba(0,0,0,.45)}
+.tg-stage.disp .tg-tray:not(.lit){opacity:.5}
+.tg-tray.ok{box-shadow:0 0 0 4px #22A35A,0 10px 20px -8px rgba(0,0,0,.4)!important;opacity:1!important}
+.tg-tray.bad{box-shadow:0 0 0 4px #E5484D!important;animation:tgShake .4s}
+@keyframes tgShake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.tg-msg{margin-top:12px;font-weight:700;font-size:15px;min-height:1.5em;color:#1C1917}
+
 /* gift set: product story + inspirations */
 .scrub.wide .stage{aspect-ratio:16/9}
 .scrub.wide .stage img{object-fit:contain}
@@ -1501,6 +1561,23 @@ const CONTENT = {
       ${img("tray-use.jpg","A guest collecting a tray from the dispenser").replace('class="plate"','class="plate" style="aspect-ratio:685/492"')}
     </div>
     <div class="plate" style="margin-top:20px;aspect-ratio:1400/234"><img class="zoom" src="${IMG('tray-strip.jpg')}" alt="Crowded collection counters at Mandai" loading="lazy"></div>`)}
+  ${blk("Feel the difference","Which tray is mine?",`
+    <div class="feel" id="tgame">
+      <div class="tg-stage">
+        <div class="tg-call"><span>Now ready</span><b id="tgNum">0126</b></div>
+        <div class="tg-counter" id="tgCounter"></div>
+        <p class="tg-msg" id="tgMsg" aria-live="polite"></p>
+      </div>
+      <div>
+        <p class="body-strong">You're a tourist at Ah Meng Restaurant and your number just came up. Grab your tray.</p>
+        <div class="seg" role="group" aria-label="Collection point">
+          <button aria-pressed="true" data-m="before">Shared counter</button>
+          <button aria-pressed="false" data-m="disp">With the dispenser</button>
+        </div>
+        <div class="fstats"><div class="fstat"><small>Wrong grabs · shared counter</small><b id="tgB">0 / 0</b></div><div class="fstat"><small>Wrong grabs · dispenser</small><b id="tgD">0 / 0</b></div></div>
+        <p class="readout" id="tgRead" aria-live="polite"></p>
+      </div>
+    </div>`)}
   ${blk("How it works","Three steps from kitchen to table",`
     <div class="stepper" id="stepper">
       <div class="stage">
@@ -1720,6 +1797,30 @@ const CONTENT = {
         <li><span>Family can follow the visit without endless texting</span></li>
       </ul>
     </div>`)}
+  ${blk("Feel the difference","Who gets seen first?",`
+    <div class="feel" id="qsim">
+      <div class="q-board">
+        <div class="q-head"><span>Waiting room · <b id="qClock"></b></span><span>Est. wait updates live</span></div>
+        <div class="q-list"></div>
+      </div>
+      <div>
+        <p class="body-strong">Add patients, then switch how the queue is ordered. Watch what happens when someone with a life-threatening condition walks in.</p>
+        <div class="seg" role="group" aria-label="Queue order">
+          <button aria-pressed="false" data-m="fcfs">First come, first served</button>
+          <button aria-pressed="true" data-m="priority">By medical priority</button>
+        </div>
+        <div class="q-ctrl">
+          <button class="fbtn2" data-p="1">+ P1 Emergency</button>
+          <button class="fbtn2" data-p="2">+ P2 Urgent</button>
+          <button class="fbtn2" data-p="3">+ P3 Non-urgent</button>
+          <button class="fbtn2" data-act="serve">Doctor calls next</button>
+          <button class="fbtn2" data-act="reset">Reset</button>
+        </div>
+        <label class="q-doc">Doctors on duty <input type="range" min="1" max="4" step="1" value="2" id="qDocs"> <b id="qDocsN">2</b></label>
+        <div class="fstats"><div class="fstat"><small>P1 patient waits</small><b id="qP1"></b></div><div class="fstat"><small>Average wait</small><b id="qAvg"></b></div></div>
+        <p class="readout q-read" aria-live="polite"></p>
+      </div>
+    </div>`)}
   ${blk("Staff screens","Five screens, one live queue",`
     <p class="body-strong" style="margin-bottom:6px">Pick a screen to see how each role works with the same queue.</p>
     ${dxHTML("aeDx", true)}`)}
@@ -1743,6 +1844,22 @@ const CONTENT = {
         <li><span>The AI shows its reasoning, and the doctor always decides</span></li>
         <li><span>Home recordings and symptom diaries reach the doctor's inbox</span></li>
       </ul>
+    </div>`)}
+  ${blk("Feel the difference","Hear it, see it",`
+    <div class="feel lsim-wrap">
+      <div><canvas id="lsim" width="760" height="460" aria-label="Animated breath waveform and its frequency spectrum"></canvas></div>
+      <div>
+        <p class="body-strong">An FFT turns a breath sound into its frequencies. Pick a sound to see its shape, then loosen the sensor.</p>
+        <div class="seg" role="group" aria-label="Breath sound">
+          <button aria-pressed="true" data-s="normal">Healthy</button>
+          <button aria-pressed="false" data-s="wheeze">Wheeze</button>
+          <button aria-pressed="false" data-s="crackle">Crackles</button>
+        </div>
+        <label class="lsim-toggle"><input type="checkbox" id="lsLoose"> Loose sensor</label>
+        <div style="margin-top:14px"><button class="fbtn2 lsim-play" id="lsPlay" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg><span>Listen</span></button></div>
+        <p class="readout" id="lsRead" aria-live="polite"></p>
+        <p class="lsim-note">An illustration with synthesised sounds, not real patient recordings.</p>
+      </div>
     </div>`)}
   ${blk("Doctor dashboard","Six views of the same lungs",`
     <p class="body-strong" style="margin-bottom:6px">Pick a view to explore the redesigned dashboard.</p>
@@ -1804,6 +1921,146 @@ const CONTENT = {
     <div class="phase-panel" id="phasePanel" aria-live="polite"></div>`)}
 `
 };
+
+/* ---------- feel-the-difference demos ---------- */
+function initQueueSim(){
+  const root = $("#qsim"); if (!root) return;
+  const PR = {1:{l:"P1 Emergency",bg:"#FDE3E1",c:"#A3201A"},2:{l:"P2 Urgent",bg:"#FDEBD3",c:"#93430A"},3:{l:"P3 Non-urgent",bg:"#DCF3E6",c:"#146B3A"}};
+  const start = () => [{q:"A141",p:2,t:638},{q:"A147",p:2,t:652},{q:"A151",p:3,t:665},{q:"A154",p:3,t:680},{q:"A160",p:3,t:706}];
+  let Q = start(), seq = 161, clock = 720, mode = "priority", docs = 2;
+  const ROW = 56, list = $(".q-list", root), items = {};
+  const fmt = m => { let hh = Math.floor(m/60), mm = m%60, ap = hh>=12?"PM":"AM"; hh = hh%12||12; return hh+":"+String(mm).padStart(2,"0")+" "+ap; };
+  const wfmt = m => m<=0 ? "Now" : m<60 ? m+" min" : Math.floor(m/60)+" h"+(m%60?" "+(m%60)+" min":"");
+  const order = () => mode==="fcfs" ? [...Q].sort((a,b)=>a.t-b.t) : [...Q].sort((a,b)=>a.p-b.p||a.t-b.t);
+  const waitAt = i => Math.floor(i/docs)*20;
+  const render = () => {
+    const o = order(), keep = new Set(o.map(x=>x.q));
+    Object.keys(items).forEach(k => { if (!keep.has(k)){ const el = items[k]; el.classList.add("out"); setTimeout(()=>el.remove(), 420); delete items[k]; } });
+    o.forEach((x,i) => { let el = items[x.q];
+      if (!el){ el = document.createElement("div"); el.className = "q-item in";
+        el.innerHTML = `<span class="q-pos"></span><b class="q-no">${x.q}</b><span class="q-pr" style="background:${PR[x.p].bg};color:${PR[x.p].c}">${PR[x.p].l}</span><span class="q-arr">Arrived ${fmt(x.t)}</span><span class="q-wait"></span>`;
+        el.style.top = (i*ROW)+"px"; list.appendChild(el); items[x.q] = el; requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove("in"))); }
+      el.style.top = (i*ROW)+"px"; $(".q-pos",el).textContent = i+1; $(".q-wait",el).textContent = wfmt(waitAt(i));
+      el.classList.toggle("danger", x.p===1 && waitAt(i)>0); });
+    list.style.height = Math.max(ROW, o.length*ROW - 8)+"px";
+    const p1 = o.map((x,i)=>({x,w:waitAt(i)})).filter(z=>z.x.p===1);
+    $("#qP1").textContent = p1.length ? wfmt(Math.max(...p1.map(z=>z.w))) : "None yet";
+    $("#qP1").style.color = p1.some(z=>z.w>0) ? "#E5484D" : "";
+    $("#qAvg").textContent = o.length ? wfmt(Math.round(o.reduce((s,x,i)=>s+waitAt(i),0)/o.length)) : "–";
+    $("#qClock").textContent = fmt(clock);
+    $(".q-read",root).textContent = mode==="fcfs"
+      ? (p1.length ? "First come, first served: the P1 patient waits behind everyone who arrived earlier, even with a life-threatening condition." : "First come, first served: everyone waits in arrival order. Add a P1 patient to see what goes wrong.")
+      : (p1.length ? "By medical priority: the P1 patient goes straight to the front and is seen now. Others wait a little longer, which is why every screen in the system explains the order." : "By medical priority: P1 first, then P2, then P3, each in arrival order. Add a P1 patient to see them go straight to the front.");
+  };
+  $$(".q-ctrl [data-p]", root).forEach(b => b.onclick = () => { clock += 4; Q.push({q:"A"+(seq++), p:+b.dataset.p, t:clock}); if (Q.length > 9){ const o = order(); Q = Q.filter(x=>x!==o[0]); } render(); });
+  $(".q-ctrl [data-act=serve]", root).onclick = () => { const o = order(); if (o.length){ Q = Q.filter(x=>x!==o[0]); clock += 6; } render(); };
+  $(".q-ctrl [data-act=reset]", root).onclick = () => { Q = start(); seq = 161; clock = 720; Object.keys(items).forEach(k=>{ items[k].remove(); delete items[k]; }); render(); };
+  $$(".seg button", root).forEach(b => b.onclick = () => { mode = b.dataset.m; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x===b)); render(); });
+  $("#qDocs").oninput = e => { docs = +e.target.value; $("#qDocsN").textContent = docs; render(); };
+  render();
+}
+
+function initLungSim(){
+  const cv = $("#lsim"); if (!cv) return;
+  const ctx = cv.getContext("2d"), W = cv.width, H = cv.height;
+  const SR = 8000, DUR = 4, LEN = SR*DUR, N = 1024;
+  let seedN = 7; const rnd = () => { seedN = (seedN*16807) % 2147483647; return seedN/2147483647; };
+  const bp = (x, f0, Q) => { const w0 = 2*Math.PI*f0/SR, al = Math.sin(w0)/(2*Q), a0 = 1+al;
+    const b0 = al/a0, b2 = -al/a0, a1 = -2*Math.cos(w0)/a0, a2 = (1-al)/a0; const y = new Float32Array(x.length); let x1=0,x2=0,y1=0,y2=0;
+    for (let n=0;n<x.length;n++){ const v = b0*x[n] + b2*x2 - a1*y1 - a2*y2; x2=x1; x1=x[n]; y2=y1; y1=v; y[n]=v; } return y; };
+  const env = t => { const ph = (t%DUR)/DUR; return ph<0.4 ? Math.pow(Math.sin(ph/0.4*Math.PI),2) : 0.75*Math.pow(Math.sin((ph-0.4)/0.6*Math.PI),2); };
+  const cache = {};
+  const gen = (type, loose) => { const key = type+(loose?"L":""); if (cache[key]) return cache[key]; seedN = 7;
+    const wn = new Float32Array(LEN); for (let n=0;n<LEN;n++) wn[n] = rnd()*2-1;
+    const br = bp(bp(wn,380,0.6),380,0.6); const s = new Float32Array(LEN);
+    for (let n=0;n<LEN;n++){ const t = n/SR; s[n] = br[n]*env(t)*(loose?0.45:1); }
+    if (type==="wheeze") for (let n=0;n<LEN;n++){ const t = n/SR, ph = (t%DUR)/DUR; if (ph>0.42){ const e = env(t); s[n] += (loose?0.45:1)*e*(0.45*Math.sin(2*Math.PI*410*t + 1.2*Math.sin(2*Math.PI*5*t)) + 0.12*Math.sin(2*Math.PI*820*t + 2.4*Math.sin(2*Math.PI*5*t))); } }
+    if (type==="crackle") for (let c=0;c<DUR/4;c++) for (let k=0;k<11;k++){ const t0 = c*4 + (0.18+rnd()*0.22)*DUR/1; const f = 650+rnd()*400, n0 = Math.floor(t0*SR);
+      for (let j=0;j<240 && n0+j<LEN;j++){ s[n0+j] += (loose?0.45:1)*0.9*Math.exp(-j/(SR*0.003))*Math.sin(2*Math.PI*f*j/SR); } }
+    if (loose){ const r = new Float32Array(LEN); for (let n=0;n<LEN;n++) r[n] = rnd()*2-1; const rum = bp(bp(r,55,0.5),55,0.5);
+      for (let n=0;n<LEN;n++) s[n] += rum[n]*2.2 + (rnd()*2-1)*0.06;
+      for (let k=0;k<26;k++){ const n0 = Math.floor(rnd()*(LEN-60)); for (let j=0;j<40;j++) s[n0+j] += (rnd()*2-1)*0.9*Math.exp(-j/12); } }
+    let mx = 0; for (let n=0;n<LEN;n++) mx = Math.max(mx, Math.abs(s[n])); for (let n=0;n<LEN;n++) s[n] *= 0.8/mx;
+    return cache[key] = s; };
+  const fft = (re, im) => { const n = re.length; for (let i=1,j=0;i<n;i++){ let bit = n>>1; for (; j&bit; bit>>=1) j ^= bit; j ^= bit; if (i<j){ [re[i],re[j]]=[re[j],re[i]]; [im[i],im[j]]=[im[j],im[i]]; } }
+    for (let len=2; len<=n; len<<=1){ const ang = -2*Math.PI/len, wr = Math.cos(ang), wi = Math.sin(ang);
+      for (let i=0;i<n;i+=len){ let cr=1, ci=0; for (let k=0;k<len/2;k++){ const ur=re[i+k], ui=im[i+k], vr=re[i+k+len/2]*cr-im[i+k+len/2]*ci, vi=re[i+k+len/2]*ci+im[i+k+len/2]*cr;
+        re[i+k]=ur+vr; im[i+k]=ui+vi; re[i+k+len/2]=ur-vr; im[i+k+len/2]=ui-vi; const t=cr*wr-ci*wi; ci=cr*wi+ci*wr; cr=t; } } } };
+  const hann = new Float32Array(N).map((_,i)=>0.5-0.5*Math.cos(2*Math.PI*i/(N-1)));
+  const FMAX = 1200, BINS = Math.floor(FMAX/(SR/N)); let spec = new Float32Array(BINS).fill(-80);
+  let type = "normal", loose = false, sig = gen(type, loose), t0 = performance.now(), ac = null, src = null, gain = null, playing = false, acStart = 0;
+  const TXT = {normal:"Healthy breath sounds spread their energy smoothly across 200–800 Hz, rising and falling with each breath.",
+    wheeze:"A wheeze is a musical, continuous sound, so it shows up as a sharp, narrow peak around 400 Hz while breathing out.",
+    crackle:"Crackles are short pops near the end of breathing in. Each one adds a brief burst of higher-frequency energy."};
+  const LOOSE = " With a loose sensor, rumble and rustle swamp the signal. The spectrum looks busy, but it's noise, not a lung change. That's why the dashboard flags signal quality before anyone reads it.";
+  const read = () => { $("#lsRead").textContent = TXT[type] + (loose ? LOOSE : ""); };
+  const playhead = () => playing && ac ? ((ac.currentTime - acStart) % DUR + DUR) % DUR : ((performance.now()-t0)/1000) % DUR;
+  const startAudio = () => { const at = playhead(); if (src){ try{ src.stop(); }catch(e){} }
+    const buf = ac.createBuffer(1, LEN, SR); buf.copyToChannel(sig, 0); src = ac.createBufferSource(); src.buffer = buf; src.loop = true; src.connect(gain); src.start(0, at); acStart = ac.currentTime - at; };
+  $("#lsPlay").onclick = async () => { if (!ac){ const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; ac = new AC(); gain = ac.createGain(); gain.gain.value = 0.55; gain.connect(ac.destination); }
+    if (ac.state === "suspended") await ac.resume();
+    if (playing){ const at = playhead(); try{ src.stop(); }catch(e){} playing = false; t0 = performance.now() - at*1000; }
+    else { playing = true; startAudio(); }
+    $("#lsPlay").setAttribute("aria-pressed", playing); $("#lsPlay span").textContent = playing ? "Stop" : "Listen"; };
+  const change = () => { const at = playhead(); sig = gen(type, loose); t0 = performance.now() - at*1000; if (playing) startAudio(); read(); };
+  $$(".lsim-wrap .seg button").forEach(b => b.onclick = () => { type = b.dataset.s; $$(".lsim-wrap .seg button").forEach(x=>x.setAttribute("aria-pressed", x===b)); change(); });
+  $("#lsLoose").onchange = e => { loose = e.target.checked; change(); };
+  onCleanup(()=>{ try{ src && src.stop(); }catch(e){} try{ ac && ac.close(); }catch(e){} });
+  const P = 22, TOPH = 170, SPY = TOPH + 46, SPH = H - SPY - 40;
+  let raf;
+  const draw = () => { const th = playhead(), ns = Math.floor(th*SR);
+    ctx.clearRect(0,0,W,H); ctx.fillStyle = "#0E1626"; ctx.fillRect(0,0,W,H);
+    ctx.font = "600 13px Inter, system-ui, sans-serif"; ctx.fillStyle = "#AFC0DA"; ctx.fillText("Breath sound · last 2 seconds", P, 26);
+    ctx.fillText("Frequency spectrum (FFT)", P, SPY - 14);
+    // waveform
+    const wx = P, ww = W - 2*P, wy = 40, wh = TOPH - 50, span = 2*SR;
+    ctx.strokeStyle = "#1E2A44"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(wx, wy+wh/2); ctx.lineTo(wx+ww, wy+wh/2); ctx.stroke();
+    ctx.fillStyle = "#7CC4FF"; const per = span/ww;
+    for (let x=0;x<ww;x++){ let mn = 1, mx = -1; const a = ns - span + Math.floor(x*per);
+      for (let j=0;j<per;j+=2){ const v = sig[((a+j)%LEN+LEN)%LEN]; if (v<mn) mn=v; if (v>mx) mx=v; }
+      ctx.fillRect(wx+x, wy+wh/2 - mx*wh/2, 1, Math.max(1,(mx-mn)*wh/2)); }
+    // spectrum
+    const re = new Float32Array(N), im = new Float32Array(N);
+    for (let i=0;i<N;i++) re[i] = sig[((ns - N + i)%LEN+LEN)%LEN]*hann[i];
+    fft(re, im);
+    for (let b=0;b<BINS;b++){ const m = Math.hypot(re[b], im[b])/(N/4); const db = Math.max(-80, 20*Math.log10(m+1e-6)); spec[b] = spec[b]*0.82 + db*0.18; }
+    const sx = P, sw = W - 2*P, x0 = f => sx + f/FMAX*sw, y0 = db => SPY + SPH - (db+80)/72*SPH;
+    ctx.fillStyle = "rgba(124,196,255,.08)"; ctx.fillRect(x0(200), SPY, x0(800)-x0(200), SPH);
+    ctx.fillStyle = "#6F86AD"; ctx.font = "500 11px Inter, system-ui, sans-serif"; ctx.fillText("Analysis band 200–800 Hz", x0(200)+6, SPY+14);
+    ctx.strokeStyle = "#1E2A44"; ctx.beginPath(); for (let f=0; f<=FMAX; f+=200){ ctx.moveTo(x0(f), SPY); ctx.lineTo(x0(f), SPY+SPH); } ctx.stroke();
+    ctx.fillStyle = "#6F86AD"; for (let f=0; f<=FMAX; f+=200){ ctx.fillText(f+(f===FMAX?" Hz":""), x0(f)-(f===FMAX?44:f?10:0), SPY+SPH+16); }
+    const grad = ctx.createLinearGradient(0, SPY, 0, SPY+SPH); grad.addColorStop(0, "rgba(255,193,94,.55)"); grad.addColorStop(1, "rgba(255,193,94,0)");
+    ctx.beginPath(); ctx.moveTo(x0(0), SPY+SPH); for (let b=0;b<BINS;b++) ctx.lineTo(x0(b*SR/N), y0(spec[b])); ctx.lineTo(x0((BINS-1)*SR/N), SPY+SPH); ctx.closePath(); ctx.fillStyle = grad; ctx.fill();
+    ctx.beginPath(); for (let b=0;b<BINS;b++){ const X = x0(b*SR/N), Y = y0(spec[b]); b ? ctx.lineTo(X,Y) : ctx.moveTo(X,Y); } ctx.strokeStyle = "#FFC15E"; ctx.lineWidth = 2; ctx.stroke();
+    let pk = 13; for (let b=13;b<BINS;b++) if (spec[b] > spec[pk]) pk = b;
+    const pf = Math.round(pk*SR/N/10)*10; ctx.strokeStyle = "rgba(255,255,255,.5)"; ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(x0(pk*SR/N), SPY); ctx.lineTo(x0(pk*SR/N), SPY+SPH); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = "#FFFFFF"; ctx.font = "600 12px Inter, system-ui, sans-serif"; ctx.fillText("Peak "+pf+" Hz", Math.min(x0(pk*SR/N)+6, W-P-80), SPY+30);
+    const q = loose ? ["Signal quality 18% · Poor", "#F28B82", "rgba(242,139,130,.16)"] : ["Signal quality 94% · Good", "#7EE2B8", "rgba(126,226,184,.14)"];
+    ctx.font = "700 12px Inter, system-ui, sans-serif"; const tw = ctx.measureText(q[0]).width + 20; ctx.fillStyle = q[2];
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(W-P-tw, SPY-30, tw, 24, 12) : ctx.rect(W-P-tw, SPY-30, tw, 24); ctx.fill(); ctx.fillStyle = q[1]; ctx.fillText(q[0], W-P-tw+10, SPY-13);
+    raf = requestAnimationFrame(draw); };
+  read(); raf = requestAnimationFrame(draw); onCleanup(()=>cancelAnimationFrame(raf));
+}
+
+function initTrayGame(){
+  const root = $("#tgame"); if (!root) return;
+  const FOOD = [["#E8862E","#F6C27A"],["#C9A35A","#F5E6BF"],["#4F8A3C","#A8D08D"],["#B5462E","#E58A6E"]];
+  const NAMES = ["laksa","chicken rice","nasi lemak","mee goreng"];
+  let mode = "before", base = 124, nums = [], target = 0, lock = false; const sc = {before:[0,0], disp:[0,0]};
+  const stage = $(".tg-stage", root), counter = $("#tgCounter");
+  const TXT = {before:"Every tray looks the same, so guests have to guess, or crowd the counter asking staff in a language they may not share.",
+    disp:"The dispenser shows each order number on its tray and slides the right one out, so guests grab it first time."};
+  const round = () => { lock = false; nums = [0,1,2,3].map(i=>base+i).sort(()=>Math.random()-.5); target = nums[Math.floor(Math.random()*4)];
+    $("#tgNum").textContent = String(target).padStart(4,"0"); $("#tgMsg").textContent = "";
+    counter.innerHTML = nums.map((n,i)=>`<button class="tg-tray${mode==="disp"&&n===target?" lit":""}" data-n="${n}" aria-label="${mode==="disp"?"Tray for order "+String(n).padStart(4,"0"):"Tray "+(i+1)}"><span class="tg-no">${String(n).padStart(4,"0")}</span><span class="tg-bowl" style="--c:${FOOD[n%4][0]};--c2:${FOOD[n%4][1]}"></span><span class="tg-cup"></span></button>`).join("");
+    $$(".tg-tray", counter).forEach(b => b.onclick = () => pick(b)); };
+  const score = () => { $("#tgB").textContent = sc.before[0]+" / "+sc.before[1]; $("#tgD").textContent = sc.disp[0]+" / "+sc.disp[1]; };
+  const pick = b => { if (lock) return; const n = +b.dataset.n; sc[mode][1]++;
+    if (n === target){ lock = true; b.classList.add("ok"); $("#tgMsg").textContent = "Got it! Enjoy your "+NAMES[n%4]+"."; score(); setTimeout(()=>{ base += 4; round(); }, 1100); }
+    else { sc[mode][0]++; b.classList.remove("bad"); void b.offsetWidth; b.classList.add("bad"); $("#tgMsg").textContent = "Oops, that's order "+String(n).padStart(4,"0")+"'s "+NAMES[n%4]+"."; score(); } };
+  $$(".seg button", root).forEach(b => b.onclick = () => { mode = b.dataset.m; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x===b)); stage.classList.toggle("disp", mode==="disp"); $("#tgRead").textContent = TXT[mode]; round(); });
+  $("#tgRead").textContent = TXT[mode]; score(); round();
+}
 
 /* ---------- project interactives ---------- */
 const INIT = {
@@ -1966,6 +2223,7 @@ const INIT = {
   onCleanup(()=>cancelAnimationFrame(raf));
 },
 "tray-dispenser"(){
+  initTrayGame();
   const imgs = $$("#stepper .stage img"), bs = $$("#stepper .sbtn");
   let cur = 0, auto = true;
   const set = i => { cur = i; imgs.forEach((im,j)=>im.classList.toggle("on", i===j)); bs.forEach((b,j)=>b.classList.toggle("on", i===j)); };
@@ -2125,6 +2383,7 @@ const INIT = {
 },
 "vase"(){},
 "ae-queue"(){
+  initQueueSim();
   initDx("aeDx", [
     {src:"ae-d-triage.webp", who:"Triage nurse", t:"Triage intake", url:"cgh-ae / intake", d:"Scan the patient's wristband, choose P1, P2 or P3, and add them to the queue. Capacity settings, like how many doctors are on duty, keep every wait estimate honest."},
     {src:"ae-d-reassess.webp", who:"Triage nurse", t:"Reassessment desk", url:"cgh-ae / reassessment", d:"Patients who report feeling worse come first, with their pain score over time and what they said in the app. Nurses log new observations and can change the priority on the spot."},
@@ -2150,6 +2409,7 @@ const INIT = {
   ]);
 },
 "lung-fft"(){
+  initLungSim();
   initDx("lfDx", [
     {src:"lf-d-point.webp", who:"Doctor", t:"Point detail", url:"lung-evaluation / point", d:"One recording at a single point: the lung map on the left, the frequency spectrum in the middle and the diagnosis panel on the right. A warning appears when signal quality is too low to trust."},
     {src:"lf-d-all.webp", who:"Doctor", t:"All 11 points", url:"lung-evaluation / all-points", d:"A small spectrum for every recording point, colour-coded by signal quality, so doctors can spot which points need a closer look."},
