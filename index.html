@@ -754,6 +754,23 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .dx-bar span{margin-left:10px;flex:1;max-width:380px;font-size:12px;color:#AFC0DA;background:#0F1626;border-radius:6px;padding:4px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dx-view{max-height:min(66vh,620px);overflow:auto;background:#fff;overscroll-behavior:contain}
 .dx-view img{display:block;width:100%;cursor:zoom-in}
+.dx-stage{padding:clamp(4px,1.5vw,16px) 0 4px}
+.mon{width:100%;max-width:860px;margin:0 auto;filter:drop-shadow(0 28px 30px rgba(8,16,40,.28))}
+.mon-screen{background:#0B0D12;border-radius:18px 18px 0 0;padding:clamp(8px,1.2vw,14px);position:relative}
+.mon-screen::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.07),rgba(255,255,255,0) 35%)}
+.mon-glass{aspect-ratio:16/10;max-height:none!important;border-radius:3px}
+.mon-chin{height:clamp(22px,3.2vw,36px);background:linear-gradient(#E3E6EA,#C7CCD3);border-radius:0 0 18px 18px;display:grid;place-items:center}
+.mon-chin i{width:12px;height:12px;border-radius:50%;background:#AEB4BD;box-shadow:inset 0 1px 1px rgba(0,0,0,.2)}
+.mon-neck{width:20%;height:clamp(40px,6vw,76px);margin:0 auto;background:linear-gradient(90deg,#AEB4BD,#E6E9ED 45%,#B8BEC6);clip-path:polygon(10% 0,90% 0,100% 100%,0 100%)}
+.mon-base{width:38%;height:clamp(8px,1vw,12px);margin:0 auto;background:linear-gradient(#DCE0E5,#B9BFC7);border-radius:4px 4px 10px 10px}
+.tvm{width:100%;max-width:880px;margin:0 auto}
+.tv-pole{width:18px;height:clamp(30px,5vw,56px);margin:0 auto;background:linear-gradient(90deg,#3B4252,#7A8394 50%,#3B4252);border-radius:0 0 3px 3px}
+.tv-frame{position:relative;background:#101217;border-radius:10px;padding:clamp(6px,.9vw,10px) clamp(6px,.9vw,10px) clamp(14px,1.6vw,20px);box-shadow:0 0 0 1px #2A2F3A,0 36px 50px -28px rgba(0,0,0,.6)}
+.tv-frame::after{content:"";position:absolute;inset:clamp(6px,.9vw,10px) clamp(6px,.9vw,10px) clamp(14px,1.6vw,20px);pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.1),rgba(255,255,255,0) 32%)}
+.tv-glass{aspect-ratio:16/9;overflow:hidden;background:#000}
+.tv-glass img{display:block;width:100%;height:100%;object-fit:cover;cursor:zoom-in}
+.tv-led{position:absolute;bottom:clamp(5px,.6vw,8px);left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#4ADE80;box-shadow:0 0 6px #4ADE80}
+.tv-tag{text-align:center;font-size:13px;color:var(--muted);margin-top:14px}
 .dx-info{margin-top:16px}
 .dx-info h3{font-size:clamp(22px,2.4vw,28px);font-weight:800;letter-spacing:-.02em}
 .dx-info p{font-size:17px;color:var(--ink-2);margin-top:8px;max-width:70ch}
@@ -1200,21 +1217,26 @@ function initProto(id, screens, opts={}){
   return { go, get i(){ return i; } };
 }
 const fcard = (src, h, t) => `<div class="fcard">${img(src,h)}<h3>${h}</h3><p>${t}</p></div>`;
-const dxHTML = id => `<div class="dx" id="${id}">
+const dxHTML = (id, device) => `<div class="dx" id="${id}">
       <div class="dx-tabs" role="tablist"></div>
-      <div><div class="dx-win"><div class="dx-bar"><i></i><i></i><i></i><span class="dx-url"></span></div><div class="dx-view" tabindex="0"><img alt=""></div></div>
+      <div>${device ? `<div class="dx-stage">
+        <div class="mon"><div class="mon-screen"><div class="mon-glass dx-view" tabindex="0" aria-label="Desktop screen, scrollable"><img alt=""></div></div><div class="mon-chin"><i></i></div><div class="mon-neck"></div><div class="mon-base"></div></div>
+        <div class="tvm" hidden><div class="tv-pole"></div><div class="tv-frame"><div class="tv-glass"><img alt=""></div><span class="tv-led"></span></div><p class="tv-tag">55" display · A&amp;E waiting area</p></div>
+      </div>` : `<div class="dx-win"><div class="dx-bar"><i></i><i></i><i></i><span class="dx-url"></span></div><div class="dx-view" tabindex="0"><img alt=""></div></div>`}
       <div class="dx-info" aria-live="polite"><h3></h3><p></p><p class="phint">Scroll inside the window to see the whole screen, or click it to zoom in.</p></div></div>
     </div>`;
 function initDx(id, items){
   const root = $("#"+id); if (!root) return;
-  const tabs = $(".dx-tabs", root), view = $(".dx-view", root), im = $("img", view);
+  const tabs = $(".dx-tabs", root), view = $(".dx-view", root), im = $("img", view), mon = $(".mon", root), tvm = $(".tvm", root), tvi = tvm && $("img", tvm), hint = $(".dx-info .phint", root);
   tabs.innerHTML = items.map((it,i)=>`<button class="dx-tab" role="tab" data-i="${i}"><small>${String(i+1).padStart(2,"0")} · ${it.who}</small><b>${it.t}</b></button>`).join("");
   items.forEach(it => { const p = new Image(); p.src = IMG(it.src); });
-  const set = i => { const it = items[i]; im.src = IMG(it.src); im.alt = it.t + " screen"; view.scrollTop = 0;
-    $(".dx-url", root).textContent = it.url; $(".dx-info h3", root).textContent = it.t; $(".dx-info p", root).textContent = it.d;
+  const set = i => { const it = items[i]; const tv = !!(tvm && it.frame === "tv");
+    if (tvm){ mon.hidden = tv; tvm.hidden = !tv; hint.textContent = tv ? "Click the screen to zoom in." : "Scroll inside the screen to see the whole page, or click it to zoom in."; }
+    const target = tv ? tvi : im; target.src = IMG(it.src); target.alt = it.t + " screen"; view.scrollTop = 0;
+    const u = $(".dx-url", root); if (u) u.textContent = it.url; $(".dx-info h3", root).textContent = it.t; $(".dx-info p", root).textContent = it.d;
     $$(".dx-tab", tabs).forEach((b,j)=>b.setAttribute("aria-selected", i===j)); };
   $$(".dx-tab", tabs).forEach(b => b.onclick = () => set(+b.dataset.i));
-  im.onclick = () => openLB(im.src, im.alt);
+  im.onclick = () => openLB(im.src, im.alt); if (tvi) tvi.onclick = () => openLB(tvi.src, tvi.alt);
   set(0);
 }
 const appHTML = k => `<div class="proto-wrap">
@@ -1657,17 +1679,13 @@ const CONTENT = {
     </div>`)}
   ${blk("Staff screens","Five screens, one live queue",`
     <p class="body-strong" style="margin-bottom:6px">Pick a screen to see how each role works with the same queue.</p>
-    ${dxHTML("aeDx")}`)}
+    ${dxHTML("aeDx", true)}`)}
   ${blk("Patient app · concept","A&amp;E in your pocket",`
     <p class="body-strong" style="margin-bottom:6px">From deciding whether to come in, to going home with your medicine. Patients follow their wait from their wristband QR code, with no app download needed.</p>
     ${appHTML("ae")}`)}
   ${blk("System map","How the screens connect",`
     <p class="body-strong">Arrows show what each screen sends to the next. White cards are the patient's phone and navy cards are CGH staff screens.</p>
-    <figure class="mapfig"><div class="plate"><img class="zoom" src="${IMG("ae-map.webp")}" alt="System map: the patient app (join the queue, my queue, it's your turn, visit journey, after your visit, I feel worse, help getting there) linked to staff screens (triage intake, reassessment desk, doctor queue, waiting area TV, escort task app)" loading="lazy"></div><figcaption>Click to zoom in.</figcaption></figure>
-    <div class="states2">
-      <figure class="mapfig" style="margin:0"><div class="plate"><img class="zoom" src="${IMG("ae-states.webp")}" alt="Edge states: lock-screen alerts, a major emergency notice and an offline state" loading="lazy"></div></figure>
-      <div><h3 style="font-size:22px">When things don't go to plan</h3><p class="body-strong" style="margin-top:8px">Lock-screen alerts let patients put their phone away and still not miss their turn. If a major emergency arrives, the duty manager can post an honest notice. Offline, the app shows the last known number instead of a stale "live" one.</p></div>
-    </div>`)}
+    <figure class="mapfig"><div class="plate"><img class="zoom" src="${IMG("ae-map.webp")}" alt="System map: the patient app (join the queue, my queue, it's your turn, visit journey, after your visit, I feel worse, help getting there) linked to staff screens (triage intake, reassessment desk, doctor queue, waiting area TV, escort task app)" loading="lazy"></div><figcaption>Click to zoom in.</figcaption></figure>`)}
 `,
 "lung-fft": () => `
   ${blk("Overview","Lung sounds, made readable",`
@@ -2047,7 +2065,7 @@ const INIT = {
     {src:"ae-d-reassess.webp", who:"Triage nurse", t:"Reassessment desk", url:"cgh-ae / reassessment", d:"Patients who report feeling worse come first, with their pain score over time and what they said in the app. Nurses log new observations and can change the priority on the spot."},
     {src:"ae-d-doctor.webp", who:"Doctor", t:"Doctor queue", url:"cgh-ae / queue", d:"The current patient, who's next with a one-tap Call in, and the full queue sorted by priority, then arrival time, with live wait estimates."},
     {src:"ae-d-manager.webp", who:"Duty manager", t:"Department overview", url:"cgh-ae / overview", d:"The whole department at a glance: patients waiting by hour with a forecast, zones that need attention, and quick actions like paging the on-call doctor or posting a notice to the TV and patient app."},
-    {src:"ae-d-tv.webp", who:"Waiting room", t:"Waiting-area TV", url:"cgh-ae / waiting-display", d:"Big, readable numbers for who's being called and to which room, who's up next and the estimated wait for each priority, plus three plain reminders for everyone waiting."}
+    {src:"ae-d-tv.webp", frame:"tv", who:"Waiting room", t:"Waiting-area TV", url:"cgh-ae / waiting-display", d:"Big, readable numbers for who's being called and to which room, who's up next and the estimated wait for each priority, plus three plain reminders for everyone waiting."}
   ]);
   initApp("ae", [
     ["ae-p-arrive.webp","Before you come","Shows how busy A&E is right now and suggests faster options for non-emergencies. A 995 button stays at the top for real emergencies."],
