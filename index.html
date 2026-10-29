@@ -2294,53 +2294,12 @@ function initKit(){
   const PAL = ["#F4A6C4","#FBE08C","#A9DCC3","#8FC5EE","#C7A7EC"], INK = "#24306B";
   const star = on => `<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${on?"#FFC531":"#E7E2D3"}" stroke="${on?"#D99A00":"#D6D0BE"}" stroke-width="1.2"/></svg>`;
   const stars = n => { $("#kitStars").innerHTML = [0,1,2].map(i=>star(i<n)).join(""); };
-  const INFO = {dot:{lbl:"Marble drops", skill:"Impulse control & working memory", txt:"Drag the magnetic pen to guide the marble along the dots. Rush it and the magnet loses the marble, which drops back to the last checkpoint. Slow, careful moves win."},
+  const INFO = {dot:{lbl:"Marble drops", skill:"Impulse control & working memory", txt:"Drag the magnetic pen to guide the marble along the dots, following the glowing dot ahead. Rush it and the magnet loses the marble, which drops back to the last purple checkpoint. Six paths, from a gentle wave to a spiral. Tap Next path for a new one."},
     snap:{lbl:"Sticks that didn't match", skill:"Spatial reasoning & two-handed coordination", txt:"Complete the symmetry: the left half is already built. Tap one peg, then the next, to snap a stick that mirrors the left side. Comparing both sides builds spatial reasoning and pattern recognition. Tap the card to flip it and see the sticks you need."},
     thread:{lbl:"Threading mistakes", skill:"Pincer grip & patience", txt:"Follow the pattern card from the dark dot and tap the holes in order to thread the tile. A wrong hole pulls the last stitch back out, so mistakes are a chance to slow down, not to give up. Tap the card to flip it."}};
   let game = "dot", cleanupGame = null, count = 0;
   const pt = e => { const r = svg.getBoundingClientRect(); return [(e.clientX-r.left)*420/r.width, (e.clientY-r.top)*300/r.height]; };
   const setCount = n => { count = n; $("#kitA").textContent = n; };
-
-  const dotGame = () => {
-    const P = [[40,250],[90,210],[70,150],[130,110],[200,140],[230,210],[300,230],[350,180],[320,110],[370,60]];
-    const pts = []; for (let i=0;i<P.length-1;i++){ const a = P[i], b = P[i+1], c = P[Math.max(0,i-1)], d = P[Math.min(P.length-1,i+2)];
-      for (let k=0;k<20;k++){ const t = k/20, t2=t*t, t3=t2*t; pts.push([0.5*((2*a[0])+(-c[0]+b[0])*t+(2*c[0]-5*a[0]+4*b[0]-d[0])*t2+(-c[0]+3*a[0]-3*b[0]+d[0])*t3), 0.5*((2*a[1])+(-c[1]+b[1])*t+(2*c[1]-5*a[1]+4*b[1]-d[1])*t2+(-c[1]+3*a[1]-3*b[1]+d[1])*t3)]); } }
-    pts.push(P[P.length-1]);
-    const L = [0]; for (let i=1;i<pts.length;i++) L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0], pts[i][1]-pts[i-1][1])); const TOT = L[L.length-1];
-    const at = s => { s = Math.max(0, Math.min(TOT, s)); let i = 1; while (i < L.length-1 && L[i] < s) i++; const k = (s-L[i-1])/Math.max(1e-6, L[i]-L[i-1]); return [pts[i-1][0]+(pts[i][0]-pts[i-1][0])*k, pts[i-1][1]+(pts[i][1]-pts[i-1][1])*k]; };
-    const NDOT = 26, CHECK = [0, TOT*0.25, TOT*0.5, TOT*0.75];
-    const d = "M"+pts.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" L");
-    let s = 0, check = 0, hold = false, lastT = 0, lastS = 0, done = false, drops = 0, anim = null, spd = 0;
-    svg.innerHTML = `<rect x="6" y="6" width="408" height="288" rx="18" fill="#FFFFFF" stroke="#F0E3B5" stroke-width="3"/>
-      <path d="${d}" fill="none" stroke="#F3EAD0" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="${d}" fill="none" stroke="#E8DAB0" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
-      <g id="kDots">${Array.from({length:NDOT},(_,i)=>{ const p = at(TOT*i/(NDOT-1)); return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="5" fill="#E7DDBF"/>`; }).join("")}</g>
-      ${CHECK.slice(1).map(c=>{ const p = at(c); return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="9" fill="none" stroke="#C7A7EC" stroke-width="3"/>`; }).join("")}
-      <g transform="translate(${P[P.length-1][0]} ${P[P.length-1][1]})"><circle r="16" fill="#A9DCC3"/><path d="M-6 0l4 4 8-8" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
-      <g id="kPen" opacity="0"><circle r="20" fill="rgba(143,197,238,.25)" stroke="#8FC5EE" stroke-width="2" stroke-dasharray="4 4"/></g>
-      <g id="kBall"><circle r="11" fill="#5B6BD6"/><circle cx="-3.5" cy="-3.5" r="4" fill="#FFFFFF" opacity=".75"/></g>`;
-    const ball = $("#kBall", svg), pen = $("#kPen", svg), dotsEl = $$("#kDots circle", svg);
-    const paint = () => { const p = at(s); ball.setAttribute("transform", `translate(${p[0].toFixed(1)} ${p[1].toFixed(1)})`);
-      dotsEl.forEach((c,i)=>c.setAttribute("fill", TOT*i/(NDOT-1) <= s+0.5 ? PAL[i%5] : "#E7DDBF")); };
-    const drop = why => { hold = false; drops++; setCount(drops); msg.textContent = why; msg.style.color = "#C2410C"; pen.setAttribute("opacity","0");
-      const from = s, to = CHECK[check], t0 = performance.now(); cancelAnimationFrame(anim);
-      const go = now => { const k = Math.min(1,(now-t0)/500); s = from + (to-from)*(1-Math.pow(1-k,3)); paint(); if (k<1) anim = requestAnimationFrame(go); }; anim = requestAnimationFrame(go); };
-    const down = e => { if (done) return; const q = pt(e), p = at(s); if (Math.hypot(q[0]-p[0], q[1]-p[1]) > 34){ msg.textContent = "Pick up the marble with the pen first."; msg.style.color = INK; return; }
-      hold = true; lastT = performance.now(); lastS = s; svg.setPointerCapture(e.pointerId); msg.textContent = "Nice and slow..."; msg.style.color = INK; };
-    const move = e => { const q = pt(e); pen.setAttribute("transform", `translate(${q[0].toFixed(1)} ${q[1].toFixed(1)})`); if (!hold) return; pen.setAttribute("opacity","1");
-      let best = s, bd = 1e9; for (let ss = Math.max(0,s-30); ss <= Math.min(TOT, s+45); ss += 2){ const p = at(ss), dd = Math.hypot(q[0]-p[0], q[1]-p[1]); if (dd < bd){ bd = dd; best = ss; } }
-      if (bd > 40) return drop("Oops, the pen slipped off the path. Back to the last checkpoint!");
-      const now = performance.now(), dt = Math.max(16, now-lastT); spd = spd*0.6 + (Math.abs(best-lastS)/dt*1000)*0.4; lastT = now; lastS = best;
-      bar.style.width = Math.min(100, spd/260*100)+"%"; bar.style.background = spd < 150 ? "#3BAA5C" : spd < 230 ? "#F2C94C" : "#E5484D";
-      if (spd > 260) return drop("Too fast! The magnet lost the marble.");
-      s = Math.max(s, best); CHECK.forEach((c,i)=>{ if (s >= c) check = Math.max(check, i); }); paint();
-      if (s >= TOT-2){ hold = false; done = true; pen.setAttribute("opacity","0"); const st = drops===0?3:drops<=2?2:1; stars(st); msg.style.color = "#146B3A";
-        msg.textContent = drops===0 ? "Perfect! Slow and steady, with no drops." : "Made it! "+drops+(drops===1?" drop":" drops")+" along the way. Try again for 3 stars."; } };
-    const up = () => { hold = false; pen.setAttribute("opacity","0"); spd = 0; bar.style.width = "0"; };
-    svg.addEventListener("pointerdown", down); svg.addEventListener("pointermove", move); svg.addEventListener("pointerup", up); svg.addEventListener("pointercancel", up);
-    paint(); msg.textContent = "Grab the blue marble and guide it along the dots."; msg.style.color = INK;
-    return () => { svg.removeEventListener("pointerdown", down); svg.removeEventListener("pointermove", move); svg.removeEventListener("pointerup", up); svg.removeEventListener("pointercancel", up); cancelAnimationFrame(anim); };
-  };
 
   const starRow = (x, y, n) => [0,1,2].map(i=>`<path transform="translate(${x+i*13} ${y}) scale(.5)" d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${i<n?"#FFC531":"#D9D6CC"}"/>`).join("");
   // an activity card, in the style of the printed SynapSys cards
@@ -2350,6 +2309,61 @@ function initKit(){
         <text x="${x+16}" y="${y+h-18}" font-size="7.5" font-weight="600" fill="#444">Difficulty level</text>${starRow(x+76, y+h-27, st)}`; }
     else { s += `<text x="${x+w/2}" y="${y+32}" text-anchor="middle" font-size="10.5" font-weight="800" fill="#222">What do you need?</text>${inner}`; }
     s += `<text x="${x+w/2}" y="${y+h+16}" text-anchor="middle" font-size="9" font-weight="700" fill="#8A7F5A">Tap the card to flip it</text></g>`; return s; };
+
+  const dotGame = () => {
+    const spiral = () => { const o = []; for (let i=0;i<=34;i++){ const t = i/34, a = Math.PI*0.9 + t*Math.PI*3.4, r = 118 - t*96; o.push([210+Math.cos(a)*r*1.35, 150+Math.sin(a)*r]); } return o; };
+    const heart = () => { const o = []; for (let i=0;i<=40;i++){ const t = 0.3 + (Math.PI*2-1.15)*(i/40); o.push([210+16*Math.pow(Math.sin(t),3)*7.4, 140-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))*7]); } return o; };
+    const PATHS = [
+      {n:"Gentle wave", st:1, p:[[34,170],[90,110],[150,190],[210,110],[270,190],[330,110],[386,160]]},
+      {n:"Snake", st:2, p:[[40,250],[90,210],[70,150],[130,110],[200,140],[230,210],[300,230],[350,180],[320,110],[370,60]]},
+      {n:"Mountains", st:2, p:[[34,250],[90,80],[150,250],[210,70],[270,250],[330,80],[386,220]]},
+      {n:"Heart", st:2, p:heart()},
+      {n:"Loop-the-loops", st:3, p:[[34,232],[110,234],[176,190],[176,120],[128,96],[96,140],[140,196],[236,224],[300,170],[300,104],[254,78],[226,124],[270,184],[386,190]]},
+      {n:"Spiral", st:3, p:spiral()}];
+    const PI = (dotGame.n = ((dotGame.n ?? -1) + 1) % PATHS.length), PATH = PATHS[PI], P = PATH.p;
+    const pts = []; for (let i=0;i<P.length-1;i++){ const a = P[i], b = P[i+1], c = P[Math.max(0,i-1)], d = P[Math.min(P.length-1,i+2)];
+      for (let k=0;k<20;k++){ const t = k/20, t2=t*t, t3=t2*t; pts.push([0.5*((2*a[0])+(-c[0]+b[0])*t+(2*c[0]-5*a[0]+4*b[0]-d[0])*t2+(-c[0]+3*a[0]-3*b[0]+d[0])*t3), 0.5*((2*a[1])+(-c[1]+b[1])*t+(2*c[1]-5*a[1]+4*b[1]-d[1])*t2+(-c[1]+3*a[1]-3*b[1]+d[1])*t3)]); } }
+    pts.push(P[P.length-1]);
+    const L = [0]; for (let i=1;i<pts.length;i++) L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0], pts[i][1]-pts[i-1][1])); const TOT = L[L.length-1];
+    const at = s => { s = Math.max(0, Math.min(TOT, s)); let i = 1; while (i < L.length-1 && L[i] < s) i++; const k = (s-L[i-1])/Math.max(1e-6, L[i]-L[i-1]); return [pts[i-1][0]+(pts[i][0]-pts[i-1][0])*k, pts[i-1][1]+(pts[i][1]-pts[i-1][1])*k]; };
+    const NDOT = Math.max(22, Math.round(TOT/22)), CHECK = [0, TOT*0.25, TOT*0.5, TOT*0.75];
+    const d = "M"+pts.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" L");
+    let s = 0, check = 0, hold = false, lastT = 0, lastS = 0, done = false, drops = 0, anim = null, spd = 0;
+    svg.innerHTML = `<rect x="6" y="6" width="408" height="288" rx="18" fill="#FFFFFF" stroke="#F0E3B5" stroke-width="3"/>
+      <path d="${d}" fill="none" stroke="#F3EAD0" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="${d}" fill="none" stroke="#E8DAB0" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
+      <g id="kDots">${Array.from({length:NDOT},(_,i)=>{ const p = at(TOT*i/(NDOT-1)); return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="5" fill="#E7DDBF"/>`; }).join("")}</g>
+      ${CHECK.slice(1).map(c=>{ const p = at(c); return `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="9" fill="none" stroke="#C7A7EC" stroke-width="3"/>`; }).join("")}
+      <g transform="translate(${P[P.length-1][0]} ${P[P.length-1][1]})"><circle r="16" fill="#A9DCC3"/><path d="M-6 0l4 4 8-8" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <text x="22" y="30" font-size="12" font-weight="800" fill="${INK}">Path ${PI+1} of ${PATHS.length}: ${PATH.n}</text>${starRow(22+((`Path ${PI+1} of ${PATHS.length}: ${PATH.n}`).length*6.6)+8, 19, PATH.st)}
+      <circle id="kNext" r="10" fill="none" stroke="#5B6BD6" stroke-width="3" opacity="0"><animate attributeName="r" values="7;12;7" dur="1s" repeatCount="indefinite"/></circle>
+      <g id="kGrab"><circle r="18" fill="none" stroke="#5B6BD6" stroke-width="3"><animate attributeName="r" values="14;24;14" dur="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;.2;1" dur="1.2s" repeatCount="indefinite"/></circle><text y="-30" text-anchor="middle" font-size="11" font-weight="800" fill="#5B6BD6">Grab me</text></g>
+      <g id="kPen" opacity="0"><circle r="20" fill="rgba(143,197,238,.25)" stroke="#8FC5EE" stroke-width="2" stroke-dasharray="4 4"/></g>
+      <g id="kBall"><circle r="11" fill="#5B6BD6"/><circle cx="-3.5" cy="-3.5" r="4" fill="#FFFFFF" opacity=".75"/></g>`;
+    const ball = $("#kBall", svg), pen = $("#kPen", svg), dotsEl = $$("#kDots circle", svg), grab = $("#kGrab", svg), nextR = $("#kNext", svg);
+    const paint = () => { const p = at(s); ball.setAttribute("transform", `translate(${p[0].toFixed(1)} ${p[1].toFixed(1)})`);
+      grab.setAttribute("transform", `translate(${p[0].toFixed(1)} ${p[1].toFixed(1)})`); grab.style.display = (hold || done) ? "none" : "";
+      const nd = Math.min(NDOT-1, Math.floor(s/(TOT/(NDOT-1)))+1), np = at(TOT*nd/(NDOT-1)); nextR.setAttribute("cx", np[0].toFixed(1)); nextR.setAttribute("cy", np[1].toFixed(1)); nextR.setAttribute("opacity", (hold && !done) ? "1" : "0");
+      dotsEl.forEach((c,i)=>c.setAttribute("fill", TOT*i/(NDOT-1) <= s+0.5 ? PAL[i%5] : "#E7DDBF")); };
+    const drop = why => { hold = false; drops++; grab.style.display = ""; setCount(drops); msg.textContent = why; msg.style.color = "#C2410C"; pen.setAttribute("opacity","0");
+      const from = s, to = CHECK[check], t0 = performance.now(); cancelAnimationFrame(anim);
+      const go = now => { const k = Math.min(1,(now-t0)/500); s = from + (to-from)*(1-Math.pow(1-k,3)); paint(); if (k<1) anim = requestAnimationFrame(go); }; anim = requestAnimationFrame(go); };
+    const down = e => { if (done) return; const q = pt(e), p = at(s); if (Math.hypot(q[0]-p[0], q[1]-p[1]) > 34){ msg.textContent = "Pick up the marble with the pen first."; msg.style.color = INK; return; }
+      hold = true; lastT = performance.now(); lastS = s; svg.setPointerCapture(e.pointerId); paint(); msg.textContent = "Nice and slow... follow the glowing dot."; msg.style.color = INK; };
+    const move = e => { const q = pt(e); pen.setAttribute("transform", `translate(${q[0].toFixed(1)} ${q[1].toFixed(1)})`); if (!hold) return; pen.setAttribute("opacity","1");
+      let best = s, bd = 1e9; for (let ss = Math.max(0,s-30); ss <= Math.min(TOT, s+45); ss += 2){ const p = at(ss), dd = Math.hypot(q[0]-p[0], q[1]-p[1]); if (dd < bd){ bd = dd; best = ss; } }
+      if (bd > 40) return drop("Oops, the pen slipped off the path. Back to the last checkpoint!");
+      const now = performance.now(), dt = Math.max(16, now-lastT); spd = spd*0.6 + (Math.abs(best-lastS)/dt*1000)*0.4; lastT = now; lastS = best;
+      bar.style.width = Math.min(100, spd/260*100)+"%"; bar.style.background = spd < 150 ? "#3BAA5C" : spd < 230 ? "#F2C94C" : "#E5484D";
+      if (spd > 260) return drop("Too fast! The magnet lost the marble.");
+      s = Math.max(s, best); CHECK.forEach((c,i)=>{ if (s >= c) check = Math.max(check, i); }); paint();
+      if (s >= TOT-2){ hold = false; done = true; pen.setAttribute("opacity","0"); const st = drops===0?3:drops<=2?2:1; stars(st); msg.style.color = "#146B3A";
+        msg.textContent = drops===0 ? "Perfect! Slow and steady, with no drops." : "Made it! "+drops+(drops===1?" drop":" drops")+" along the way. Try again for 3 stars."; } };
+    const up = () => { hold = false; pen.setAttribute("opacity","0"); spd = 0; bar.style.width = "0"; if (!done) paint(); };
+    svg.addEventListener("pointerdown", down); svg.addEventListener("pointermove", move); svg.addEventListener("pointerup", up); svg.addEventListener("pointercancel", up);
+    paint(); msg.textContent = "Press and hold the blue marble, then slide it slowly along the dots to the tick."; msg.style.color = INK;
+    return () => { svg.removeEventListener("pointerdown", down); svg.removeEventListener("pointermove", move); svg.removeEventListener("pointerup", up); svg.removeEventListener("pointercancel", up); cancelAnimationFrame(anim); };
+  };
 
   const snapGame = () => {
     const COLS = 7, ROWS = 5, X0 = 186, Y0 = 44, DX = 35, DY = 50, AX = 3;
@@ -2377,17 +2391,20 @@ function initKit(){
     const render = () => {
       let s = `<rect x="6" y="6" width="408" height="288" rx="18" fill="#FFFFFF" stroke="#F0E3B5" stroke-width="3"/>`;
       s += actCard({col:sh.col, title:"Complete the symmetry", name:sh.n, inner: flip ? backInner() : cardInner(), stars:sh.st, back:flip});
-      const [ax0] = pos([AX,0]); s += `<line x1="${ax0}" y1="${Y0-22}" x2="${ax0}" y2="${Y0+(ROWS-1)*DY+22}" stroke="#B9B2A0" stroke-width="2" stroke-dasharray="5 6"/><text x="${ax0}" y="${Y0-28}" text-anchor="middle" font-size="9" font-weight="700" fill="#8A7F5A">mirror line</text>`;
+      const [ax0] = pos([AX,0]); s += `<line x1="${ax0}" y1="${Y0-22}" x2="${ax0}" y2="${Y0+(ROWS-1)*DY+24}" stroke="#B9B2A0" stroke-width="2" stroke-dasharray="5 6"/><text x="${ax0}" y="${Y0+(ROWS-1)*DY+36}" text-anchor="middle" font-size="9" font-weight="700" fill="#8A7F5A">mirror line</text>`;
       s += sh.e.map(([a,b],i)=>strip(a,b,STRIP[i%8])).join("");
       s += placed.map(k=>{ const n = need.find(x=>x.k===k); const i = sh.e.findIndex(([a,b])=>key(mir(a),mir(b))===k); return strip(n.a,n.b,STRIP[(i<0?0:i)%8]); }).join("");
       const nx = next(); if (hint && nx) s += strip(nx.a, nx.b, "#5B6BD6", true);
+      let guide = null; if (nx){ const same = (u,v) => u && v && u[0]===v[0] && u[1]===v[1];
+        if (!sel) guide = nx.a; else { const n2 = need.find(n => !placed.includes(n.k) && (same(n.a,sel) || same(n.b,sel))); guide = n2 ? (same(n2.a,sel) ? n2.b : n2.a) : nx.a; } }
+      if (guide){ const [gx,gy] = pos(guide); s += `<circle cx="${gx}" cy="${gy}" r="12" fill="rgba(91,107,214,.15)" stroke="#5B6BD6" stroke-width="2.5"><animate attributeName="r" values="9;15;9" dur="1.1s" repeatCount="indefinite"/></circle><text x="${gx}" y="${gy-20}" text-anchor="middle" font-size="9" font-weight="800" fill="#5B6BD6">${sel ? "then here" : "tap here"}</text>`; }
       const mSel = sel ? mir(sel) : null;
       for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++){ const [x,y] = pos([c,r]); const on = sel && sel[0]===c && sel[1]===r, twin = mSel && mSel[0]===c && mSel[1]===r && c!==AX;
         s += `<g class="kpeg" data-c="${c}" data-r="${r}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="16" fill="transparent"/>${twin?`<circle cx="${x}" cy="${y}" r="12" fill="none" stroke="#F2C94C" stroke-width="3"/>`:""}<circle cx="${x}" cy="${y}" r="${on?9:5.5}" fill="${on?"#5B6BD6":c<AX?"#E2DCCB":"#CFC5A8"}" stroke="${on?"#FFFFFF":"none"}" stroke-width="3"/></g>`; }
       svg.innerHTML = s;
       $$(".kpeg", svg).forEach(g => g.onclick = () => tap([+g.dataset.c, +g.dataset.r]));
       $(".kcard", svg).onclick = () => { flip = !flip; render(); };
-      const done = placed.length; if (done < need.length && !msg.dataset.hold) { msg.textContent = `Stick ${done+1} of ${need.length}: look at the left side, then snap its mirror on the right.`; msg.style.color = INK; } };
+      const done = placed.length; if (done < need.length && !msg.dataset.hold) { msg.textContent = sel ? `Stick ${done+1} of ${need.length}: now tap the second glowing peg to snap the stick.` : `Stick ${done+1} of ${need.length}: tap the glowing peg to start the mirror of a left-side stick.`; msg.style.color = INK; } };
     const say = (t, c) => { msg.textContent = t; msg.style.color = c; msg.dataset.hold = 1; setTimeout(()=>{ delete msg.dataset.hold; }, 10); };
     const tap = p => {
       if (!sel){ sel = p; render(); return; }
@@ -2425,8 +2442,8 @@ function initKit(){
       if (k > 1) s += `<polyline points="${pat.p.slice(0,k).map(q=>pos(q).join(",")).join(" ")}" fill="none" stroke="#E2558C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`;
       const nx = pat.p[k];
       if (hint && nx && k>0){ const a = pos(pat.p[k-1]), b = pos(nx); s += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#E2558C" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 8"><animate attributeName="opacity" values=".25;1;.25" dur="1.2s" repeatCount="indefinite"/></line>`; }
-      for (let r=0;r<N;r++) for (let c=0;c<N;c++){ const [x,y] = pos([c,r]); const isN = nx && nx[0]===c && nx[1]===r && (k===0 || hint); const isF = flash && flash[0]===c && flash[1]===r;
-        s += `<g class="khole" data-c="${c}" data-r="${r}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="18" fill="transparent"/>${isN?`<circle cx="${x}" cy="${y}" r="14" fill="none" stroke="#FFFFFF" stroke-width="3"><animate attributeName="r" values="12;16;12" dur="1.2s" repeatCount="indefinite"/></circle>`:""}<circle cx="${x}" cy="${y}" r="8.5" fill="${isF?"#E5484D":"#24306B"}" stroke="rgba(255,255,255,.35)" stroke-width="2"/></g>`; }
+      for (let r=0;r<N;r++) for (let c=0;c<N;c++){ const [x,y] = pos([c,r]); const isN = nx && nx[0]===c && nx[1]===r; const isF = flash && flash[0]===c && flash[1]===r;
+        s += `<g class="khole" data-c="${c}" data-r="${r}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="18" fill="transparent"/>${isN?`<circle cx="${x}" cy="${y}" r="14" fill="rgba(255,255,255,.25)" stroke="#FFFFFF" stroke-width="3"><animate attributeName="r" values="12;17;12" dur="1.1s" repeatCount="indefinite"/></circle><text x="${x}" y="${y-22}" text-anchor="middle" font-size="9" font-weight="800" fill="#FFFFFF">${k===0?"start":"next"}</text>`:""}<circle cx="${x}" cy="${y}" r="8.5" fill="${isF?"#E5484D":"#24306B"}" stroke="rgba(255,255,255,.35)" stroke-width="2"/></g>`; }
       if (k>0){ const [x,y] = pos(pat.p[k-1]); s += `<circle cx="${x}" cy="${y}" r="7" fill="#E2558C"/>`; }
       svg.innerHTML = s;
       $$(".khole", svg).forEach(g => g.onclick = () => tap([+g.dataset.c, +g.dataset.r]));
@@ -2434,16 +2451,16 @@ function initKit(){
     const tap = p => { if (k >= pat.p.length) return;
       if (pat.p[k][0]===p[0] && pat.p[k][1]===p[1]){ k++; flash = null; hint = false;
         if (k === pat.p.length){ render(); stars(bad===0?3:bad<=2?2:1); msg.textContent = "Pattern done!"+(bad?" You fixed "+bad+(bad===1?" mistake":" mistakes")+" along the way.":" Not a single mistake."); msg.style.color = "#146B3A"; return; }
-        msg.textContent = `Hole ${k} of ${pat.p.length} done. Check the card for where the thread goes next.`; msg.style.color = "#146B3A"; }
+        msg.textContent = `Hole ${k} of ${pat.p.length} done. Tap the glowing hole next, matching the line on the card.`; msg.style.color = "#146B3A"; }
       else { bad++; setCount(bad); flash = p; if (k > 1) k--; msg.textContent = "Wrong hole. The last stitch slides back out. Take your time, or tap Show me a hint."; msg.style.color = "#C2410C"; }
       render(); };
     $("#kitHint").onclick = () => { hint = true; render(); msg.textContent = k===0 ? "Start at the glowing hole, the dark dot on the card." : "The dashed line shows where the thread goes next."; msg.style.color = INK; };
-    render(); msg.textContent = "Start at the glowing hole, the dark dot marked 1 on the card."; msg.style.color = INK;
+    render(); msg.textContent = "Tap the glowing hole to start. It matches the dark dot marked 1 on the card."; msg.style.color = INK;
     return () => {};
   };
 
   const GAMES = {dot:dotGame, snap:snapGame, thread:threadGame};
-  const start = () => { if (cleanupGame) cleanupGame(); card.hidden = true; setCount(0); stars(0); bar.style.width = "0"; meter.style.display = game==="dot" ? "" : "none"; $("#kitHint").style.display = game==="dot" ? "none" : ""; $("#kitNew").textContent = game==="dot" ? "Start again" : "New card"; delete msg.dataset.hold;
+  const start = () => { if (cleanupGame) cleanupGame(); card.hidden = true; setCount(0); stars(0); bar.style.width = "0"; meter.style.display = game==="dot" ? "" : "none"; $("#kitHint").style.display = game==="dot" ? "none" : ""; $("#kitNew").textContent = game==="dot" ? "Next path" : "New card"; delete msg.dataset.hold;
     $("#kitLblA").textContent = INFO[game].lbl; $("#kitSkill").textContent = INFO[game].skill; $("#kitRead").textContent = INFO[game].txt; cleanupGame = GAMES[game](); };
   $$(".seg button", root).forEach(b => b.onclick = () => { game = b.dataset.g; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x===b)); start(); });
   $("#kitNew").onclick = start;
