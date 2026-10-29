@@ -740,6 +740,34 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .fbphotos .plate{aspect-ratio:4/3}
 .fbphotos .plate:first-child{grid-column:1/-1;aspect-ratio:16/9}
 @media (max-width:760px){.fbgrid{grid-template-columns:1fr}}
+.dx{display:grid;grid-template-columns:minmax(210px,280px) minmax(0,1fr);gap:clamp(16px,2.5vw,30px);background:var(--plate);border-radius:var(--r-lg);padding:clamp(16px,3vw,32px);margin-top:14px;align-items:start}
+.dx-tabs{display:flex;flex-direction:column;gap:8px}
+.dx-tab{font:inherit;text-align:left;border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:14px;padding:12px 14px;cursor:pointer;transition:background .2s,border-color .2s,color .2s,transform .2s}
+.dx-tab:hover{transform:translateX(3px)}
+.dx-tab small{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--pa)}
+.dx-tab b{display:block;font-size:15px;font-weight:700;margin-top:2px}
+.dx-tab[aria-selected="true"]{background:var(--pa);border-color:var(--pa);color:#fff}
+.dx-tab[aria-selected="true"] small{color:rgba(255,255,255,.82)}
+.dx-win{border-radius:14px;overflow:hidden;background:#0F1626;box-shadow:0 26px 44px -26px rgba(0,0,0,.55)}
+.dx-bar{display:flex;align-items:center;gap:6px;padding:10px 12px;background:#1B2335}
+.dx-bar i{width:10px;height:10px;border-radius:50%;background:#3A4560}
+.dx-bar span{margin-left:10px;flex:1;max-width:380px;font-size:12px;color:#AFC0DA;background:#0F1626;border-radius:6px;padding:4px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dx-view{max-height:min(66vh,620px);overflow:auto;background:#fff;overscroll-behavior:contain}
+.dx-view img{display:block;width:100%;cursor:zoom-in}
+.dx-info{margin-top:16px}
+.dx-info h3{font-size:clamp(22px,2.4vw,28px);font-weight:800;letter-spacing:-.02em}
+.dx-info p{font-size:17px;color:var(--ink-2);margin-top:8px;max-width:70ch}
+.dx-info .phint{margin-top:10px}
+@media (max-width:900px){.dx{grid-template-columns:1fr}.dx-tabs{flex-direction:row;overflow-x:auto;padding-bottom:4px}.dx-tab{flex:none;width:190px}.dx-tab:hover{transform:none}}
+.mapfig{margin:14px 0 0}
+.mapfig .plate{background:#fff;padding:clamp(8px,1.5vw,18px);aspect-ratio:auto!important;height:auto}
+.mapfig .plate img{object-fit:contain;height:auto;width:100%;display:block;cursor:zoom-in}
+:root[data-theme="dark"] .dx-tab[aria-selected="true"]{color:#0B1630}
+:root[data-theme="dark"] .dx-tab[aria-selected="true"] small{color:rgba(11,22,48,.72)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .dx-tab[aria-selected="true"]{color:#0B1630}:root:not([data-theme="light"]) .dx-tab[aria-selected="true"] small{color:rgba(11,22,48,.72)}}
+.mapfig figcaption{font-size:14px;color:var(--muted);margin-top:10px}
+.states2{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(18px,3vw,36px);align-items:center;margin-top:28px}
+@media (max-width:820px){.states2{grid-template-columns:1fr}}
 .phases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .phase{border:1px solid var(--line);background:var(--chip);border-radius:12px;padding:10px 14px;text-align:left;cursor:pointer;transition:all .25s}
 .phase small{display:block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--pa)}
@@ -833,19 +861,27 @@ const PROJECTS = [
   cat:"UI/UX · Mobile App", year:"2025", ctx:"Passion project", tags:["uiux"], tagLabels:["UI/UX","Mobile App"],
   hero:"cc-cover.jpg", thumb:"cc-cover.jpg", thumbPos:"0% 50%",
   blurb:"An all-in-one caregiving app with shared calendars, mood check-ins, peer support and service booking. Every caregiver deserves care too."},
- {id:"tray-dispenser", num:"04", name:"Tray Dispenser", sub:"Mandai Wildlife Reserve", p:"#3D7A4C", pd:"#86C796",
+ {id:"ae-queue", num:"04", name:"A&amp;E Queue System", sub:"Changi General Hospital", p:"#0B6CC4", pd:"#7CC4F2",
+  cat:"UI/UX · Dashboards &amp; App", year:"2025", ctx:"UI/UX internship · Changi General Hospital", tags:["uiux","service"], tagLabels:["UI/UX","Dashboards","Service Design"],
+  hero:"ae-cover.jpg", thumb:"ae-cover.jpg", thumbPos:"0% 50%",
+  blurb:"One live A&amp;E queue shared by triage nurses, doctors, duty managers, the waiting room and patients, so everyone knows who's next and why."},
+ {id:"lung-fft", num:"05", name:"Lung FFT", sub:"Visualisation Dashboard", p:"#5B47B8", pd:"#B7A6F5",
+  cat:"UI/UX · Data Visualisation", year:"2025", ctx:"UI/UX internship project", tags:["uiux"], tagLabels:["UI/UX","Data Viz","Dashboards"],
+  hero:"lf-cover.jpg", thumb:"lf-cover.jpg", thumbPos:"0% 50%",
+  blurb:"A dashboard that turns lung sound recordings into clear frequency charts doctors can trust, plus an app for recording at home."},
+ {id:"tray-dispenser", num:"06", name:"Tray Dispenser", sub:"Mandai Wildlife Reserve", p:"#3D7A4C", pd:"#86C796",
   cat:"Service & Product Design", year:"2024–25", ctx:"Industry studio · Mandai Wildlife Group", tags:["service","product"], tagLabels:["Service Design","Product Design"],
   hero:"tray-cover.jpg", thumb:"tray-cover.jpg", thumbPos:"0% 50%",
   blurb:"A back-end tray dispenser for Mandai's food courts. Each tray shows its order number, so tourists always grab the right one."},
- {id:"lafex", num:"05", name:"LAFEX", sub:"Latte Art for Steadier Hands", p:"#3B4A8A", pd:"#9DABEA",
+ {id:"lafex", num:"07", name:"LAFEX", sub:"Latte Art for Steadier Hands", p:"#3B4A8A", pd:"#9DABEA",
   cat:"Product Design · App", year:"2024", ctx:"Studio Project 2 · mock Electrolux brief", tags:["product","uiux"], tagLabels:["Product Design","App","Redesign"],
   hero:"lafex-cover.jpg", thumb:"lafex-cover.jpg", thumbPos:"0% 50%",
   blurb:"A latte-art device, wristband and app for older adults with Parkinson's, redesigned after user testing so shaking hands can still pour a heart."},
- {id:"bon", num:"06", name:"BON", sub:"Crochet Storage", p:"#A0703A", pd:"#D9AC74",
+ {id:"bon", num:"08", name:"BON", sub:"Crochet Storage", p:"#A0703A", pd:"#D9AC74",
   cat:"Product Design", year:"2023–24", ctx:"Studio project", tags:["product"], tagLabels:["Product Design","Prototyping"],
   hero:"bon-cover.jpg", thumb:"bon-cover.jpg", thumbPos:"0% 50%",
   blurb:"A crochet storage unit with sliding, rotating compartments that keeps yarn, hooks and tools tidy and tangle-free."},
- {id:"vase", num:"07", name:"Flower Vase", sub:"Laser-Cut Gift", p:"#B5562F", pd:"#F0A27C",
+ {id:"vase", num:"09", name:"Flower Vase", sub:"Laser-Cut Gift", p:"#B5562F", pd:"#F0A27C",
   cat:"Product Design · Laser Cutting", year:"2024", ctx:"Personal project · Mother's Day gift", tags:["product"], tagLabels:["Laser Cutting","Product Design"],
   hero:"vase-cover.jpg", thumb:"vase-cover.jpg", thumbPos:"0% 50%",
   blurb:"A Mother's Day gift cut from a single sheet of scrap wood, with flat pieces that slot together into a 3D vase of flowers."}
@@ -936,7 +972,7 @@ function viewHome(){
         </div>
       </div>
       <div class="leds" id="leds">
-        ${[["07","","#FF8E72","Projects in this portfolio"],["04","","#FFD45C","Industry partners"],["04","","#8EE6C4","Awards &amp; scholarships"]]
+        ${[[String(PROJECTS.length).padStart(2,"0"),"","#FF8E72","Projects in this portfolio"],["04","","#FFD45C","Industry partners"],["04","","#8EE6C4","Awards &amp; scholarships"]]
           .map(([n,s,c,t])=>`<div class="led" style="color:${c}"><div class="dg" data-n="${n}">${n.split("").map(()=>segSVG()).join("")}${s?`<span class="sf">${s}</span>`:""}</div><p>${t}</p></div>`).join("")}
       </div>
     </div>
@@ -980,7 +1016,7 @@ function viewHome(){
 
   <section class="wrap" id="worksSec">
     <div class="sec-head">
-      <h2>Selected Works<sup id="workCount">(07)</sup></h2>
+      <h2>Selected Works<sup id="workCount">(${String(PROJECTS.length).padStart(2,"0")})</sup></h2>
       <div class="filters" role="group" aria-label="Filter projects">
         <button class="chip" aria-pressed="true" data-f="all">All</button>
         <button class="chip" aria-pressed="false" data-f="product">Product Design</button>
@@ -1164,6 +1200,39 @@ function initProto(id, screens, opts={}){
   return { go, get i(){ return i; } };
 }
 const fcard = (src, h, t) => `<div class="fcard">${img(src,h)}<h3>${h}</h3><p>${t}</p></div>`;
+const dxHTML = id => `<div class="dx" id="${id}">
+      <div class="dx-tabs" role="tablist"></div>
+      <div><div class="dx-win"><div class="dx-bar"><i></i><i></i><i></i><span class="dx-url"></span></div><div class="dx-view" tabindex="0"><img alt=""></div></div>
+      <div class="dx-info" aria-live="polite"><h3></h3><p></p><p class="phint">Scroll inside the window to see the whole screen, or click it to zoom in.</p></div></div>
+    </div>`;
+function initDx(id, items){
+  const root = $("#"+id); if (!root) return;
+  const tabs = $(".dx-tabs", root), view = $(".dx-view", root), im = $("img", view);
+  tabs.innerHTML = items.map((it,i)=>`<button class="dx-tab" role="tab" data-i="${i}"><small>${String(i+1).padStart(2,"0")} · ${it.who}</small><b>${it.t}</b></button>`).join("");
+  items.forEach(it => { const p = new Image(); p.src = IMG(it.src); });
+  const set = i => { const it = items[i]; im.src = IMG(it.src); im.alt = it.t + " screen"; view.scrollTop = 0;
+    $(".dx-url", root).textContent = it.url; $(".dx-info h3", root).textContent = it.t; $(".dx-info p", root).textContent = it.d;
+    $$(".dx-tab", tabs).forEach((b,j)=>b.setAttribute("aria-selected", i===j)); };
+  $$(".dx-tab", tabs).forEach(b => b.onclick = () => set(+b.dataset.i));
+  im.onclick = () => openLB(im.src, im.alt);
+  set(0);
+}
+const appHTML = k => `<div class="proto-wrap">
+      ${protoHTML(k+"Proto")}
+      <div class="pinfo">
+        <p class="pstep" id="${k}Step"></p>
+        <h3 id="${k}Title"></h3>
+        <p class="pdesc" id="${k}Desc" aria-live="polite"></p>
+        <div class="chips" id="${k}Chips"></div>
+        <p class="phint">Tap the screen, swipe, or pick a screen above.</p>
+      </div>
+    </div>`;
+function initApp(k, A){
+  $("#"+k+"Chips").innerHTML = A.map((a,i)=>`<button class="chip" aria-pressed="false" data-i="${i}">${a[1]}</button>`).join("");
+  const show = i => { $("#"+k+"Step").textContent = `Screen ${i+1} of ${A.length}`; $("#"+k+"Title").textContent = A[i][1]; $("#"+k+"Desc").textContent = A[i][2]; $$("#"+k+"Chips .chip").forEach((c,j)=>c.setAttribute("aria-pressed", i===j)); };
+  const P = initProto(k+"Proto", A.map(a=>({src:IMG(a[0]), label:a[1]})), {onChange: show});
+  $$("#"+k+"Chips .chip").forEach(c => c.onclick = () => P.go(+c.dataset.i, true));
+}
 
 /* ---------- project contents ---------- */
 const CONTENT = {
@@ -1572,6 +1641,62 @@ const CONTENT = {
     <p class="body-strong" style="margin-bottom:18px">Every piece was laid out on one sheet of scrap wood, cut with a laser, then slotted together into 3D.</p>
     <div class="vase">${[["img/vase-sheet.webp","Cut lines on the sheet"],["img/vase-assembled-render.webp","Cut and assembled"]].map(([f,t],i)=>`<figure><div class="plate"><img class="zoom" src="${f}" alt="Vase: ${t}" loading="lazy"></div><figcaption><i>0${i+1}</i>${t}</figcaption></figure>`).join('<span class="varr" aria-hidden="true">→</span>')}</div>`)}
 `,
+"ae-queue": () => `
+  ${blk("Overview","One live queue for everyone in A&amp;E",`
+    <div class="two">
+      <div>
+        <p class="body-strong">During my UI/UX internship at Temasek Polytechnic's School of Engineering, I designed wireframes for Changi General Hospital's A&amp;E dynamic queue system, refined with A&amp;E staff. Here, I redesigned it as one connected system: screens for triage nurses, doctors and duty managers, a waiting-room TV, and a companion app for patients and their families.</p>
+        <p class="hmw">How might we make long A&amp;E waits feel clearer and fairer, while giving staff one live picture of the queue?</p>
+      </div>
+      <ul class="list" style="margin-top:0">
+        <li><span>Patients are seen by medical priority (P1 to P3), not arrival time, and every screen explains it</span></li>
+        <li><span>Wait estimates update live as doctors finish consultations</span></li>
+        <li><span>Anyone who feels worse can tell the triage team from their phone</span></li>
+        <li><span>Family can follow the visit without endless texting</span></li>
+      </ul>
+    </div>`)}
+  ${blk("Staff screens","Five screens, one live queue",`
+    <p class="body-strong" style="margin-bottom:6px">Pick a screen to see how each role works with the same queue.</p>
+    ${dxHTML("aeDx")}`)}
+  ${blk("Patient app · concept","A&amp;E in your pocket",`
+    <p class="body-strong" style="margin-bottom:6px">From deciding whether to come in, to going home with your medicine. Patients follow their wait from their wristband QR code, with no app download needed.</p>
+    ${appHTML("ae")}`)}
+  ${blk("System map","How the screens connect",`
+    <p class="body-strong">Arrows show what each screen sends to the next. White cards are the patient's phone and navy cards are CGH staff screens.</p>
+    <figure class="mapfig"><div class="plate"><img class="zoom" src="${IMG("ae-map.webp")}" alt="System map: the patient app (join the queue, my queue, it's your turn, visit journey, after your visit, I feel worse, help getting there) linked to staff screens (triage intake, reassessment desk, doctor queue, waiting area TV, escort task app)" loading="lazy"></div><figcaption>Click to zoom in.</figcaption></figure>
+    <div class="states2">
+      <figure class="mapfig" style="margin:0"><div class="plate"><img class="zoom" src="${IMG("ae-states.webp")}" alt="Edge states: lock-screen alerts, a major emergency notice and an offline state" loading="lazy"></div></figure>
+      <div><h3 style="font-size:22px">When things don't go to plan</h3><p class="body-strong" style="margin-top:8px">Lock-screen alerts let patients put their phone away and still not miss their turn. If a major emergency arrives, the duty manager can post an honest notice. Offline, the app shows the last known number instead of a stale "live" one.</p></div>
+    </div>`)}
+`,
+"lung-fft": () => `
+  ${blk("Overview","Lung sounds, made readable",`
+    <div class="two">
+      <div>
+        <p class="body-strong">Also during my internship, I designed wireframes and data visualisations for the Lung FFT project. A vest with 11 sensors records a patient's lung sounds, and an FFT (Fast Fourier Transform) turns each recording into a frequency spectrum. In this redesign, I made those readings easier for doctors to check and trust, and added an app for patients to record at home.</p>
+        <p class="hmw">How might we help doctors read complex lung sound data quickly, and understand why the AI suggests what it does?</p>
+      </div>
+      <ul class="list" style="margin-top:0">
+        <li><span>All 11 recording points on a front and back lung map</span></li>
+        <li><span>Signal quality flagged clearly, so a loose sensor isn't mistaken for a lung change</span></li>
+        <li><span>The AI shows its reasoning, and the doctor always decides</span></li>
+        <li><span>Home recordings and symptom diaries reach the doctor's inbox</span></li>
+      </ul>
+    </div>`)}
+  ${blk("Doctor dashboard","Six views of the same lungs",`
+    <p class="body-strong" style="margin-bottom:6px">Pick a view to explore the redesigned dashboard.</p>
+    ${dxHTML("lfDx")}`)}
+  ${blk("Patient app · concept","Recording at home, guided",`
+    <p class="body-strong" style="margin-bottom:6px">A calm, dark app that walks patients through putting on the vest, recording and tracking how breathless they feel.</p>
+    ${appHTML("lf")}`)}
+  ${blk("System map","How the screens connect",`
+    <p class="body-strong">The patient's recordings and diary entries flow to the doctor's screens, and the doctor's note flows back to the patient's results.</p>
+    <figure class="mapfig"><div class="plate"><img class="zoom" src="${IMG("lf-map.webp")}" alt="System map: patient app (home, vest fit check, guided recording, results, symptom diary) linked to doctor screens (remote-monitoring inbox, patient home data, compare recordings)" loading="lazy"></div><figcaption>Click to zoom in.</figcaption></figure>
+    <div class="states2">
+      <figure class="mapfig" style="margin:0"><div class="plate"><img class="zoom" src="${IMG("lf-states.webp")}" alt="Edge states: recording couldn't send, vest disconnected, and no results yet" loading="lazy"></div></figure>
+      <div><h3 style="font-size:22px">When things don't go to plan</h3><p class="body-strong" style="margin-top:8px">If a recording can't send, the app reassures patients it's saved. If the vest disconnects, it picks up where it stopped. And before the first result arrives, it explains what will appear and what to do next.</p></div>
+    </div>`)}
+`,
 "internship": () => `
   ${blk("Overview","Five months, four highlights",`
     <div class="two">
@@ -1916,6 +2041,49 @@ const INIT = {
   });
 },
 "vase"(){},
+"ae-queue"(){
+  initDx("aeDx", [
+    {src:"ae-d-triage.webp", who:"Triage nurse", t:"Triage intake", url:"cgh-ae / intake", d:"Scan the patient's wristband, choose P1, P2 or P3, and add them to the queue. Capacity settings, like how many doctors are on duty, keep every wait estimate honest."},
+    {src:"ae-d-reassess.webp", who:"Triage nurse", t:"Reassessment desk", url:"cgh-ae / reassessment", d:"Patients who report feeling worse come first, with their pain score over time and what they said in the app. Nurses log new observations and can change the priority on the spot."},
+    {src:"ae-d-doctor.webp", who:"Doctor", t:"Doctor queue", url:"cgh-ae / queue", d:"The current patient, who's next with a one-tap Call in, and the full queue sorted by priority, then arrival time, with live wait estimates."},
+    {src:"ae-d-manager.webp", who:"Duty manager", t:"Department overview", url:"cgh-ae / overview", d:"The whole department at a glance: patients waiting by hour with a forecast, zones that need attention, and quick actions like paging the on-call doctor or posting a notice to the TV and patient app."},
+    {src:"ae-d-tv.webp", who:"Waiting room", t:"Waiting-area TV", url:"cgh-ae / waiting-display", d:"Big, readable numbers for who's being called and to which room, who's up next and the estimated wait for each priority, plus three plain reminders for everyone waiting."}
+  ]);
+  initApp("ae", [
+    ["ae-p-arrive.webp","Before you come","Shows how busy A&E is right now and suggests faster options for non-emergencies. A 995 button stays at the top for real emergencies."],
+    ["ae-p-join.webp","Join the queue","Scan the QR code on your wristband or queue slip to follow your wait. No app download needed."],
+    ["ae-p-queue.webp","My queue","Your number, priority, how many people are ahead and the estimated wait, all live. Turn on an alert for when you're 2 away."],
+    ["ae-p-called.webp","It's your turn","A full-screen alert with your room number and simple directions, plus a button if you need help getting there."],
+    ["ae-p-journey.webp","Visit journey","All seven steps of an A&E visit, from registration to pharmacy, so you always know what comes next."],
+    ["ae-p-worse.webp","I feel worse","A quick pain score and symptom check-in that goes straight to the triage nurse, without losing your place."],
+    ["ae-p-family.webp","Family & caregivers","Invite family to follow your visit and choose what they can see. Test results stay private by default."],
+    ["ae-p-familyview.webp","Family's view","What a family member sees: live status, updates, what to bring, and a button to say they're coming."],
+    ["ae-p-nearby.webp","Step out","Step-out mode lets you grab food or use the toilet without losing your place, with nearby facilities and walking times."],
+    ["ae-p-help.webp","Help getting there","Your turn is held while a staff member comes to walk you to the room, or you can follow step-by-step directions."],
+    ["ae-p-community.webp","Read while you wait","Short reads, like why A&E isn't first come, first served, and questions from other patients."],
+    ["ae-p-settings.webp","Easier to use","Four languages, bigger text, read-aloud and strong vibration, so no one misses their turn."],
+    ["ae-p-visits.webp","After your visit","Discharge notes, medicine, follow-up appointments, MC and bill, all in one place."],
+    ["ae-p-escort.webp","Staff escort app","Patient care assistants get escort requests on their phone, with notes like 'trouble hearing' so they know how to help."]
+  ]);
+},
+"lung-fft"(){
+  initDx("lfDx", [
+    {src:"lf-d-point.webp", who:"Doctor", t:"Point detail", url:"lung-evaluation / point", d:"One recording at a single point: the lung map on the left, the frequency spectrum in the middle and the diagnosis panel on the right. A warning appears when signal quality is too low to trust."},
+    {src:"lf-d-all.webp", who:"Doctor", t:"All 11 points", url:"lung-evaluation / all-points", d:"A small spectrum for every recording point, colour-coded by signal quality, so doctors can spot which points need a closer look."},
+    {src:"lf-d-compare.webp", who:"Doctor", t:"Compare two recordings", url:"lung-evaluation / compare", d:"Two recordings side by side, with the change in band energy at every point and both spectra overlaid."},
+    {src:"lf-d-ai.webp", who:"Doctor", t:"Why the AI predicted this", url:"lung-evaluation / ai-explained", d:"Which sensors and frequency bands most influenced the AI's suggestion, what data it couldn't trust, and a simple question: do you agree?"},
+    {src:"lf-d-inbox.webp", who:"Doctor", t:"Remote-monitoring inbox", url:"lung-evaluation / remote", d:"Home recordings from every vest patient, sorted by urgency, so doctors see who's getting worse first."},
+    {src:"lf-d-patient.webp", who:"Doctor", t:"Patient home data", url:"lung-evaluation / patient", d:"30 days of symptom diary, band energy and sensor contact for one patient, with a plain-language note the doctor sends back to the patient's app."}
+  ]);
+  initApp("lf", [
+    ["lf-p-pair.webp","Set up your vest","Four simple steps to pair the vest, starting with turning it on."],
+    ["lf-p-home.webp","Home","Today's recording, the week's streak and the latest result from the doctor."],
+    ["lf-p-fitcheck.webp","Vest fit check","Shows which of the 11 sensors need adjusting, with plain directions for each one."],
+    ["lf-p-record.webp","Guided recording","A breathing circle guides each step (normal, deep, cough, speak) while the app checks every sensor is picking up."],
+    ["lf-p-results.webp","Results","Results appear only after the doctor reviews them, with a plain-language note and what to do next."],
+    ["lf-p-diary.webp","Symptom diary","A quick daily check-in for breathlessness, cough and fever, shared with the doctor's team."]
+  ]);
+},
 "internship"(){
   const P = [[69,1,"New logo proposals"],[70,1,"New wireframe proposals"],[71,1,"Turning the design system into a stylesheet"],[72,1,"Work done"],
     [73,2,"Suggesting features"],[74,2,"Creating guides"],[75,2,"Creating default profile icons"],[76,2,"Expanding avatars with Canva tools"],
@@ -1941,7 +2109,7 @@ function viewWorks(){
   return `<section class="wrap p-head">
     <p class="eyebrow">2023 – 2026</p>
     <h1 style="margin-top:10px">My Works</h1>
-    <p class="lead">Seven projects across product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum to studio briefs and my own explorations.</p>
+    <p class="lead">Nine projects across product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital, to studio briefs and my own explorations.</p>
   </section>
   <section class="wrap" style="padding-top:44px">
     <div class="grid">${PROJECTS.map(p=>card(p)).join("")}</div>
@@ -2054,7 +2222,7 @@ function render(){
   const app = $("#app");
   let navKey = "home";
   const p = PROJECTS.find(x=>x.id===h);
-  if (p){ app.innerHTML = projectShell(p, CONTENT[p.id]()); INIT[p.id](); navKey = "works"; document.title = p.name + " · Natalie Ang"; }
+  if (p){ app.innerHTML = projectShell(p, CONTENT[p.id]()); INIT[p.id](); navKey = "works"; document.title = p.name.replace(/&amp;/g,"&") + " · Natalie Ang"; }
   else if (h === "journey"){ app.innerHTML = viewJourney(); initJourney(); navKey = "journey"; document.title = "My Journey · Natalie Ang"; }
   else if (h === "works"){ app.innerHTML = viewWorks(); initWorks(); navKey = "works"; document.title = "My Works · Natalie Ang"; }
   else { app.innerHTML = viewHome(); initHome(); document.title = "Natalie Ang Portfolio"; if (h === "recognition") navKey = "recognition"; }
