@@ -1263,6 +1263,43 @@ function initApp(k, A){
 }
 
 /* ---------- project contents ---------- */
+const OE_GROUPS = [
+    {k:"Lower primary · P1 – P3", t:"Lower primary", title:"Playful and picture-led", intro:"Playful and picture-led. Echo the mascot reads along, a talking trail turns practice into an adventure, and stars replace marks.",
+     d:[["oe-d-p1-home.webp","Home","Aiden's home: today's talking adventure, his progress along the talking trail, and reading set by his teacher."],
+        ["oe-d-p1-read.webp","Read aloud with Echo","Read a story page by page. Tricky words split into syllables to clap along to, while Echo listens and cheers him on."],
+        ["oe-d-p1-stars.webp","Stars & word practice","Stars instead of marks, three things he did well, and words to practise. Practising never takes away stars."],
+        ["oe-d-p1-trail.webp","Talking trail map","Every stop on the trail is a speaking mission. Finish stops to earn stars and unlock treasure."],
+        ["oe-d-p1-picture.webp","华文 看图说话","Chinese picture talk: tap the numbers in the picture to learn words, then plan the talk with who, when, where and what happened."],
+        ["oe-d-p1-holidays.webp","Trail stop: Holidays","Talk about a beach picture, with helper questions and sentence starters for when you're stuck."]],
+     p:[["oe-p-p1-home.webp","Home","The same adventure on a phone: one big Play mission button and the talking trail."],
+        ["oe-p-p1-read.webp","Read aloud","One page at a time, with a big record button and help close by."],
+        ["oe-p-p1-stars.webp","Stars","Stars, a cheerful mascot and the words to practise next."],
+        ["oe-p-p1-trail-full.webp","Talking trail","The trail map, with the next stop ready to start.",1],
+        ["oe-p-p1-picture.webp","看图说话","Chinese picture talk with pinyin, word cards and a thinking-time countdown."],
+        ["oe-p-p1-holidays.webp","Holidays","Who, where, doing and feeling helpers, then start talking to win 3 stars."]]},
+    {k:"Upper primary · P4 – P6", t:"Upper primary", title:"PSLE-ready, with levels and leagues", intro:"PSLE-ready. Levels, XP and leagues keep it motivating, while practice mirrors the real stimulus-based conversation.",
+     d:[["oe-d-p4-home.webp","Home","Ryan's PSLE countdown, today's challenge, his level, and a checklist of every PSLE oral component in English and Chinese."],
+        ["oe-d-p4-talk.webp","Talk with Echo","A stimulus-based conversation on saving water. Echo asks follow-ups based on his answers, and only nudges with ideas when he asks."],
+        ["oe-d-p4-feedback.webp","Feedback","A score out of 20, how he did on ideas, examples and clarity, one top tip with a better example, and words to polish."]],
+     p:[["oe-p-p4-home.webp","Home","The countdown, today's challenge and the PSLE checklist, sized for a phone."],
+        ["oe-p-p4-talk.webp","Talk with Echo","The conversation as a chat, with Say it again, Slower please and Need an idea."],
+        ["oe-p-p4-feedback.webp","Your score","Score, rubric bars, a top tip and a word to practise."]]},
+    {k:"Secondary", t:"Secondary", title:"A live examiner and real feedback", intro:"Grown-up and exam-focused: a live examiner, rubric-based feedback and a word coach, in English and Chinese.",
+     d:[["oe-d-s-home.webp","Home","Nahilus's weekly goal, today's quest, assignments due from his teachers, and a class leaderboard ranked by practice effort, not marks."],
+        ["oe-d-s-talk.webp","Talk with Echo","A live O-Level style conversation. Echo listens without interrupting, then asks follow-up questions based on what was said."],
+        ["oe-d-s-feedback.webp","AI feedback & word coach","Marks for each rubric band, what went well, the next step, speaking skills like pace and filler words, and a pronunciation coach."],
+        ["oe-d-s-video.webp","华文 看录像会话","Chinese video conversation: watch the clip with subtitles, see the questions, and build an answer with a structure and useful phrases, with pinyin on or off."]],
+     p:[["oe-p-s-home.webp","Home","Today's quest, what's due soon and the week's streak."],
+        ["oe-p-s-talk.webp","Talk with Echo","The live conversation on a phone, with a timer and a big stop button."],
+        ["oe-p-s-feedback.webp","Your feedback","Score, rubric bands and a word coach that slides up from the bottom."],
+        ["oe-p-s-video.webp","看录像会话","The video, the first question and the answer helper."]]},
+    {k:"Teachers &amp; parents", t:"Teachers & parents", title:"Every class in one place", intro:"Teachers manage every class in one place, and parents get a simple weekly summary.",
+     d:[["oe-d-t-overview.webp","Class overview","Submissions, class average, who needs a nudge, progress since the start of term, and a review queue."],
+        ["oe-d-t-class.webp","Students & gradebook","Every student's attempts, latest score, band for each rubric, trend and status, with suggested practice groups."],
+        ["oe-d-t-review.webp","Review a submission","Listen to the recording with its transcript, see the AI's suggested bands and how confident it is, then confirm the final mark and feedback."],
+        ["oe-d-t-assign.webp","Create assignment","Pick classes, the oral component, topic and examiner questions, set the rubric, then publish."]],
+     p:[["oe-p-parent.webp","Parent weekly summary","Days practised, stars won, what their child is better at and working on, their best reading to listen to, and an idea to try at home."]]}
+];
 const CONTENT = {
 "synapsys": () => `
   ${blk("Research","A Ferrari with bicycle brakes",`
@@ -1735,10 +1772,13 @@ const CONTENT = {
         <li><span>AI marks are checked by teachers before they're final</span></li>
       </ul>
     </div>`)}
-  ${blk("Redesign · by age group","One app, four audiences",`
-    <p class="body-strong" style="margin-bottom:18px">Pick an age group to see its screens on a laptop and on a phone.</p>
-    <div class="phases" id="oeGroups" role="tablist"></div>
-    <div id="oePanel" style="margin-top:22px"></div>`)}
+  ${blk("Redesign","One app, four audiences",`
+    <p class="body-strong" style="margin-bottom:18px">Each group of users gets its own look and level of challenge. Jump to a group, or scroll through all four.</p>
+    <div class="phases" id="oeJump"></div>`)}
+  ${OE_GROUPS.map((g,i)=>blk(g.k, g.title, `
+    <p class="body-strong">${g.intro}</p>
+    <h3 class="oe-sub">On a laptop</h3>${dxHTML("oeDx"+i, true)}
+    <h3 class="oe-sub">On a phone</h3>${appHTML("oeA"+i)}`).replace('<section class="block rv">', `<section class="block rv" id="oeG${i}">`)).join("")}
 `,
 "internship": () => `
   ${blk("Overview","Five months, four highlights",`
@@ -2128,55 +2168,9 @@ const INIT = {
   ]);
 },
 "oral-exam"(){
-  const G = [
-    {k:"P1 – P3", t:"Lower primary", intro:"Playful and picture-led. Echo the mascot reads along, a talking trail turns practice into an adventure, and stars replace marks.",
-     d:[["oe-d-p1-home.webp","Home","Aiden's home: today's talking adventure, his progress along the talking trail, and reading set by his teacher."],
-        ["oe-d-p1-read.webp","Read aloud with Echo","Read a story page by page. Tricky words split into syllables to clap along to, while Echo listens and cheers him on."],
-        ["oe-d-p1-stars.webp","Stars & word practice","Stars instead of marks, three things he did well, and words to practise. Practising never takes away stars."],
-        ["oe-d-p1-trail.webp","Talking trail map","Every stop on the trail is a speaking mission. Finish stops to earn stars and unlock treasure."],
-        ["oe-d-p1-picture.webp","华文 看图说话","Chinese picture talk: tap the numbers in the picture to learn words, then plan the talk with who, when, where and what happened."],
-        ["oe-d-p1-holidays.webp","Trail stop: Holidays","Talk about a beach picture, with helper questions and sentence starters for when you're stuck."]],
-     p:[["oe-p-p1-home.webp","Home","The same adventure on a phone: one big Play mission button and the talking trail."],
-        ["oe-p-p1-read.webp","Read aloud","One page at a time, with a big record button and help close by."],
-        ["oe-p-p1-stars.webp","Stars","Stars, a cheerful mascot and the words to practise next."],
-        ["oe-p-p1-trail-full.webp","Talking trail","The trail map, with the next stop ready to start.",1],
-        ["oe-p-p1-picture.webp","看图说话","Chinese picture talk with pinyin, word cards and a thinking-time countdown."],
-        ["oe-p-p1-holidays.webp","Holidays","Who, where, doing and feeling helpers, then start talking to win 3 stars."]]},
-    {k:"P4 – P6", t:"Upper primary", intro:"PSLE-ready. Levels, XP and leagues keep it motivating, while practice mirrors the real stimulus-based conversation.",
-     d:[["oe-d-p4-home.webp","Home","Ryan's PSLE countdown, today's challenge, his level, and a checklist of every PSLE oral component in English and Chinese."],
-        ["oe-d-p4-talk.webp","Talk with Echo","A stimulus-based conversation on saving water. Echo asks follow-ups based on his answers, and only nudges with ideas when he asks."],
-        ["oe-d-p4-feedback.webp","Feedback","A score out of 20, how he did on ideas, examples and clarity, one top tip with a better example, and words to polish."]],
-     p:[["oe-p-p4-home.webp","Home","The countdown, today's challenge and the PSLE checklist, sized for a phone."],
-        ["oe-p-p4-talk.webp","Talk with Echo","The conversation as a chat, with Say it again, Slower please and Need an idea."],
-        ["oe-p-p4-feedback.webp","Your score","Score, rubric bars, a top tip and a word to practise."]]},
-    {k:"Secondary", t:"Secondary", intro:"Grown-up and exam-focused: a live examiner, rubric-based feedback and a word coach, in English and Chinese.",
-     d:[["oe-d-s-home.webp","Home","Nahilus's weekly goal, today's quest, assignments due from his teachers, and a class leaderboard ranked by practice effort, not marks."],
-        ["oe-d-s-talk.webp","Talk with Echo","A live O-Level style conversation. Echo listens without interrupting, then asks follow-up questions based on what was said."],
-        ["oe-d-s-feedback.webp","AI feedback & word coach","Marks for each rubric band, what went well, the next step, speaking skills like pace and filler words, and a pronunciation coach."],
-        ["oe-d-s-video.webp","华文 看录像会话","Chinese video conversation: watch the clip with subtitles, see the questions, and build an answer with a structure and useful phrases, with pinyin on or off."]],
-     p:[["oe-p-s-home.webp","Home","Today's quest, what's due soon and the week's streak."],
-        ["oe-p-s-talk.webp","Talk with Echo","The live conversation on a phone, with a timer and a big stop button."],
-        ["oe-p-s-feedback.webp","Your feedback","Score, rubric bands and a word coach that slides up from the bottom."],
-        ["oe-p-s-video.webp","看录像会话","The video, the first question and the answer helper."]]},
-    {k:"Teachers & parents", t:"Teachers & parents", intro:"Teachers manage every class in one place, and parents get a simple weekly summary.",
-     d:[["oe-d-t-overview.webp","Class overview","Submissions, class average, who needs a nudge, progress since the start of term, and a review queue."],
-        ["oe-d-t-class.webp","Students & gradebook","Every student's attempts, latest score, band for each rubric, trend and status, with suggested practice groups."],
-        ["oe-d-t-review.webp","Review a submission","Listen to the recording with its transcript, see the AI's suggested bands and how confident it is, then confirm the final mark and feedback."],
-        ["oe-d-t-assign.webp","Create assignment","Pick classes, the oral component, topic and examiner questions, set the rubric, then publish."]],
-     p:[["oe-p-parent.webp","Parent weekly summary","Days practised, stars won, what their child is better at and working on, their best reading to listen to, and an idea to try at home."]]}
-  ];
-  $("#oeGroups").innerHTML = G.map((g,i)=>`<button class="phase" role="tab" data-g="${i}"><small>${g.k}</small><span>${g.t}</span></button>`).join("");
-  const panel = $("#oePanel");
-  const show = i => { const g = G[i];
-    $$("#oeGroups .phase").forEach((b,j)=>b.setAttribute("aria-selected", i===j));
-    panel.innerHTML = `<div class="fade-in"><p class="body-strong">${g.intro}</p>
-      <h3 class="oe-sub">On a laptop</h3>${dxHTML("oeDx", true)}
-      <h3 class="oe-sub">On a phone</h3>${appHTML("oe")}</div>`;
-    initDx("oeDx", g.d.map(x=>({src:x[0], who:g.t, t:x[1], d:x[2]})));
-    initApp("oe", g.p);
-  };
-  $$("#oeGroups .phase").forEach(b => b.onclick = () => show(+b.dataset.g));
-  show(0);
+  $("#oeJump").innerHTML = OE_GROUPS.map((g,i)=>`<button class="phase" data-g="${i}"><small>${["P1 – P3","P4 – P6","Sec 1 – 5","Teachers &amp; parents"][i]}</small><span>${["Lower primary","Upper primary","Secondary","Staff &amp; home"][i]}</span></button>`).join("");
+  $$("#oeJump .phase").forEach(b => b.onclick = () => { const s = $("#oeG"+b.dataset.g); if (s) scrollTo({top: s.getBoundingClientRect().top + scrollY - 80, behavior: reduce ? "auto" : "smooth"}); });
+  OE_GROUPS.forEach((g,i) => { initDx("oeDx"+i, g.d.map(x=>({src:x[0], who:g.t, t:x[1], d:x[2]}))); initApp("oeA"+i, g.p); });
 },
 "internship"(){
   const P = [[69,1,"New logo proposals"],[70,1,"New wireframe proposals"],[71,1,"Turning the design system into a stylesheet"],[72,1,"Work done"],
