@@ -53,6 +53,7 @@
 
 *{box-sizing:border-box}
 html,body{margin:0}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{animation-duration:.001ms!important;transition-duration:.001ms!important}}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
@@ -437,7 +438,10 @@ p{margin:0}
 .hitem h4 i{font-style:normal;width:22px;height:22px;border-radius:50%;background:var(--pa);color:#fff;display:grid;place-items:center;font-size:11px}
 .hitem p{font-size:13.5px;color:var(--ink-2)}
 .hitem.on{opacity:1;border-color:var(--pa)}
-@media (max-width:760px){.hot{grid-template-columns:1fr}.hlist2{grid-template-columns:1fr}}
+.hot-x .stage{max-width:300px}
+.hlist1{display:grid;gap:10px}
+.hot.swap{animation:cardPop .45s cubic-bezier(.2,.8,.2,1)}
+@media (max-width:760px){.hot{grid-template-columns:1fr}.hlist2{grid-template-columns:1fr}.hot-x .stage{max-width:240px}}
 
 .gallery{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:22px}
 .gallery figure{margin:0}
@@ -1507,9 +1511,18 @@ const CONTENT = {
         .map(([f,t])=>`<figure><div class="plate" style="aspect-ratio:675/243"><img class="zoom" src="img/${f}" alt="${t}" loading="lazy"></div><figcaption>${t}</figcaption></figure>`).join("")}</div>
     </div>`)}
   ${blk("Final model","Explore the details",`
+    <p class="body-strong" style="margin-bottom:16px">Tap a number on the model, or a feature, to see how it works. Switch to the exploded view to look inside the hidden storage.</p>
+    <div class="seg bonview" role="group" aria-label="Model view" style="margin:0 0 26px">
+      <button aria-pressed="true" data-v="a">Assembled</button>
+      <button aria-pressed="false" data-v="x">Exploded · hidden storage</button>
+    </div>
     <div class="hot" id="hot">
       <div class="stage"><img src="${IMG('bon-render-cut.webp')}" alt="BON final render with drawers swung open" style="border-radius:0;filter:drop-shadow(0 26px 26px rgba(10,20,50,.22))"></div>
       <div class="hlist2" id="hlist2"></div>
+    </div>
+    <div class="hot hot-x" id="hotX" hidden>
+      <div class="stage"><img src="${IMG('bon-exploded.webp')}" alt="Exploded view of BON: lid, stitch-marker cup, hook tube, spine and swivelling tiers" style="border-radius:0;filter:drop-shadow(0 26px 26px rgba(10,20,50,.22))"></div>
+      <div class="hlist1" id="hlistX"></div>
     </div>`)}
   ${blk("Video","See BON in action",`
     ${videoCard("https://drive.google.com/file/d/1RU8SvEpFQhF8LleJs5OFkFgXQqF92vhh/view?usp=sharing","bon-video.jpg","Watch the BON video","Opens in Google Drive")}`)}
@@ -1854,12 +1867,26 @@ const INIT = {
     ["Sliding Compartments","Pull out just the tray you need. No digging through clutter.",66,66],
     ["Hidden Storage","A concealed compartment keeps yarn safe from dust and sunlight.",75,30],
     ["Different-Height Tubes","Long hooks and tiny stitch markers each get their own tube, so nothing tangles.",17,28]];
-  const stage = $("#hot .stage");
-  stage.insertAdjacentHTML("beforeend", H.map((h,i)=>`<button class="dot" data-i="${i}" style="left:${h[2]}%;top:${h[3]}%" aria-label="${h[0]}">${i+1}</button>`).join(""));
-  $("#hlist2").innerHTML = H.map((h,i)=>`<button class="hitem" data-i="${i}"><h4><i>${i+1}</i>${h[0]}</h4><p>${h[1]}</p></button>`).join("");
-  const pick = i => { $$("#hot .dot").forEach((d,j)=>d.classList.toggle("on", i===j)); $$("#hlist2 .hitem").forEach((d,j)=>d.classList.toggle("on", i===j)); };
-  $$("#hot .dot, #hlist2 .hitem").forEach(b => { b.onclick = () => pick(+b.dataset.i); b.onmouseenter = () => pick(+b.dataset.i); });
-  pick(0);
+  const X = [["Sliding lid","Covers both tubes, so the small parts stay hidden and dust-free.",49,9],
+    ["Stitch-marker cup","Shallow tray with a cork base for stitch markers and darning needles. Sits on top, first to hand.",26,27],
+    ["Hook tube","Holds a full set of hooks upright and together, so no more digging for the right size.",26,49],
+    ["PVC-lined spine","Both tubes slot down into the central spine and lift straight out.",26,72],
+    ["Swivelling tiers","Yarn and works-in-progress live in the three quadrant drawers around it.",63,84]];
+  const setup = (root, list, D) => {
+    $(".stage", root).insertAdjacentHTML("beforeend", D.map((h,i)=>`<button class="dot" data-i="${i}" style="left:${h[2]}%;top:${h[3]}%" aria-label="${h[0]}">${i+1}</button>`).join(""));
+    list.innerHTML = D.map((h,i)=>`<button class="hitem" data-i="${i}"><h4><i>${i+1}</i>${h[0]}</h4><p>${h[1]}</p></button>`).join("");
+    const pick = i => { $$(".dot", root).forEach((d,j)=>d.classList.toggle("on", i===j)); $$(".hitem", list).forEach((d,j)=>d.classList.toggle("on", i===j)); };
+    [...$$(".dot", root), ...$$(".hitem", list)].forEach(b => { b.onclick = () => pick(+b.dataset.i); b.onmouseenter = () => pick(+b.dataset.i); });
+    pick(0);
+  };
+  setup($("#hot"), $("#hlist2"), H);
+  setup($("#hotX"), $("#hlistX"), X);
+  $$(".bonview button").forEach(b => b.onclick = () => {
+    const x = b.dataset.v === "x";
+    $$(".bonview button").forEach(o => o.setAttribute("aria-pressed", o === b));
+    $("#hot").hidden = x; $("#hotX").hidden = !x;
+    const shown = x ? $("#hotX") : $("#hot"); shown.classList.remove("swap"); void shown.offsetWidth; shown.classList.add("swap");
+  });
 },
 "vase"(){},
 "internship"(){
