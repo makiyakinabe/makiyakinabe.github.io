@@ -442,10 +442,15 @@ p{margin:0}
 /* tray game */
 .tg-stage{border-radius:18px;padding:16px;background:#D9DEE4;transition:background .4s}
 .tg-call{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#1C1917;color:#E7E2DA;border-radius:12px;padding:10px 16px;margin-bottom:14px;font-weight:600;font-size:14px}
+.tg-call small{display:block;font-size:12px;font-weight:500;color:#B9B2A8;margin-top:2px}
+.tg-call small span{color:#FFFFFF;font-weight:700}
 .tg-call b{font-family:"DejaVu Sans Mono",ui-monospace,monospace;font-size:28px;color:#FFB45E;letter-spacing:.06em}
 .tg-counter{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px;border-radius:14px;background:#B9C1CA;transition:all .4s}
-.tg-tray{position:relative;font:inherit;border:0;border-radius:14px;height:112px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;background:#8E97A1;box-shadow:inset 0 0 0 6px rgba(0,0,0,.1),0 5px 0 rgba(0,0,0,.18);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .3s,opacity .3s,background .3s}
+.tg-tray{position:relative;font:inherit;border:0;border-radius:14px;height:150px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;padding:0;background:#8E97A1;box-shadow:inset 0 0 0 6px rgba(0,0,0,.1),0 5px 0 rgba(0,0,0,.18);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .3s,opacity .3s,background .3s}
 .tg-tray:hover{transform:translateY(-2px)}
+.tg-dish{width:108px;height:108px;flex:none;filter:drop-shadow(0 3px 4px rgba(0,0,0,.18))}
+.tg-drink{width:40px;height:40px;flex:none;align-self:flex-end;margin-bottom:22px}
+@media (max-width:520px){.tg-tray{height:120px}.tg-dish{width:82px;height:82px}.tg-drink{width:30px;height:30px;margin-bottom:14px}}
 .tg-bowl{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--c2),var(--c));box-shadow:0 0 0 5px #F7F3EC,0 4px 8px rgba(0,0,0,.25)}
 .tg-cup{width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#E9D7B5,#9B6A3C);box-shadow:0 0 0 4px #F7F3EC}
 .tg-no{position:absolute;top:8px;left:10px;font-family:"DejaVu Sans Mono",ui-monospace,monospace;font-weight:700;font-size:13px;background:#111;color:#FFB45E;padding:2px 7px;border-radius:5px;opacity:0;transition:opacity .3s}
@@ -1564,12 +1569,12 @@ const CONTENT = {
   ${blk("Feel the difference","Which tray is mine?",`
     <div class="feel" id="tgame">
       <div class="tg-stage">
-        <div class="tg-call"><span>Now ready</span><b id="tgNum">0126</b></div>
+        <div class="tg-call"><span>Now ready<small>Your order: <span id="tgOrder"></span></small></span><b id="tgNum">0126</b></div>
         <div class="tg-counter" id="tgCounter"></div>
         <p class="tg-msg" id="tgMsg" aria-live="polite"></p>
       </div>
       <div>
-        <p class="body-strong">You're a tourist at Ah Meng Restaurant and your number just came up. Grab your tray.</p>
+        <p class="body-strong">You're a tourist at Ah Meng Restaurant and your number just came up. Find your tray, but watch out: some dishes look almost the same.</p>
         <div class="seg" role="group" aria-label="Collection point">
           <button aria-pressed="true" data-m="before">Shared counter</button>
           <button aria-pressed="false" data-m="disp">With the dispenser</button>
@@ -2044,20 +2049,48 @@ function initLungSim(){
 
 function initTrayGame(){
   const root = $("#tgame"); if (!root) return;
-  const FOOD = [["#E8862E","#F6C27A"],["#C9A35A","#F5E6BF"],["#4F8A3C","#A8D08D"],["#B5462E","#E58A6E"]];
-  const NAMES = ["laksa","chicken rice","nasi lemak","mee goreng"];
-  let mode = "before", base = 124, nums = [], target = 0, lock = false; const sc = {before:[0,0], disp:[0,0]};
+  const R = (a,b) => a + Math.random()*(b-a);
+  let gid = 0;
+  const bowl = (soup, soup2, inner) => { const id = "tgsg"+(gid++); return `<svg viewBox="0 0 100 100" class="tg-dish" aria-hidden="true"><defs><radialGradient id="${id}" cx=".4" cy=".35" r=".75"><stop offset="0" stop-color="${soup2}"/><stop offset="1" stop-color="${soup}"/></radialGradient></defs>
+    <circle cx="50" cy="52" r="47" fill="rgba(0,0,0,.18)"/><circle cx="50" cy="50" r="47" fill="#F5F0E6"/><circle cx="50" cy="50" r="47" fill="none" stroke="#2F6DB5" stroke-width="2.2" stroke-dasharray="3 3" opacity=".55"/>
+    <circle cx="50" cy="50" r="40" fill="#E4DACB"/><circle cx="50" cy="50" r="37" fill="url(#${id})"/>${inner}</svg>`; };
+  const plate = (base, inner) => `<svg viewBox="0 0 100 100" class="tg-dish" aria-hidden="true"><circle cx="50" cy="52" r="47" fill="rgba(0,0,0,.18)"/><circle cx="50" cy="50" r="47" fill="#FBF8F2"/><circle cx="50" cy="50" r="40" fill="${base}"/>${inner}</svg>`;
+  const noodles = (col, w, n) => { let s = ""; for (let i=0;i<n;i++){ const y = 30+i*(40/n)+R(-2,2); s += `<path d="M${R(18,26)} ${y} q 12 ${R(-8,8)} 24 0 t 24 0 t ${R(8,14)} ${R(-4,4)}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" opacity=".95"/>`; } return s; };
+  const dots = (cols, n, r, x0=26, x1=74, y0=28, y1=72) => { let s = ""; for (let i=0;i<n;i++){ s += `<circle cx="${R(x0,x1).toFixed(1)}" cy="${R(y0,y1).toFixed(1)}" r="${r}" fill="${cols[i%cols.length]}"/>`; } return s; };
+  const prawn = (x,y,rot) => `<g transform="translate(${x} ${y}) rotate(${rot})"><path d="M-9 0 a9 9 0 0 1 18 0 l-4 0 a5 5 0 0 0 -10 0z" fill="#F27B5A"/><path d="M-6 -1 l2 -5 M-1 -2 l0 -6 M4 -1 l2 -5" stroke="#FBD3C2" stroke-width="1.2"/><path d="M9 0 l4 3 l-4 2z" fill="#E0573A"/></g>`;
+  const egg = (x,y,r=8) => `<g transform="translate(${x} ${y})"><ellipse rx="${r}" ry="${r*0.78}" fill="#FFFDF6"/><circle r="${r*0.48}" fill="#F6B73C"/></g>`;
+  const cucumber = (x,y) => `<g transform="translate(${x} ${y})"><circle r="5.5" fill="#3F8A3A"/><circle r="4.4" fill="#D9EFC2"/><circle r="1.6" fill="#B9DA92"/></g>`;
+  const slices = (c1, c2, x, y, n) => { let s = ""; for (let i=0;i<n;i++) s += `<g transform="translate(${x+i*7.5} ${y}) rotate(-8)"><rect x="-5" y="-12" width="10" height="24" rx="4" fill="${c1}"/><rect x="-5" y="-12" width="10" height="5" rx="2.5" fill="${c2}"/></g>`; return s; };
+  const rice = (x,y,rx,ry) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#FFFCF3"/><ellipse cx="${x-rx*0.25}" cy="${y-ry*0.35}" rx="${rx*0.45}" ry="${ry*0.3}" fill="#FFFFFF" opacity=".8"/>` + dots(["#EFE8D6"], 14, 0.9, x-rx*0.8, x+rx*0.8, y-ry*0.7, y+ry*0.7);
+  const DISH = [
+    {name:"laksa", pair:0, draw:()=>bowl("#D9631C","#F39A45", noodles("#F7E7B0",3.2,6) + prawn(38,42,-20) + prawn(62,60,160) + egg(60,38,7.5) + `<rect x="30" y="56" width="9" height="9" rx="2" fill="#C98B45"/><rect x="44" y="64" width="8" height="8" rx="2" fill="#B97A38"/>` + dots(["#5E9E3A","#4C8A2E"],10,1.4) + dots(["#B3261E"],8,1))},
+    {name:"curry chicken noodles", pair:0, draw:()=>bowl("#B9581B","#E8893A", noodles("#F2D27A",2.2,7) + `<path d="M34 40 q6 -6 12 0 q2 7 -6 8 q-8 0 -6 -8z" fill="#EBD0A6" stroke="#B7793E" stroke-width="1.2"/><path d="M58 56 q7 -5 12 1 q1 7 -7 7 q-7 0 -5 -8z" fill="#EBD0A6" stroke="#B7793E" stroke-width="1.2"/>` + `<rect x="56" y="34" width="9" height="9" rx="3" fill="#E9C25E"/><rect x="34" y="58" width="8" height="8" rx="3" fill="#E3B852"/>` + dots(["#6FAF4A"],9,1.3) + dots(["#B3261E"],5,1))},
+    {name:"Hainanese chicken rice", pair:1, draw:()=>plate("#F1ECE2", rice(36,52,20,16) + slices("#F6E7C8","#EBCB7B",52,48,4) + cucumber(56,70) + cucumber(66,72) + `<circle cx="74" cy="30" r="7" fill="#FFFFFF" stroke="#E6DED0"/><circle cx="74" cy="30" r="5" fill="#D9442B"/>` + dots(["#6FAF4A"],4,1.2,52,78,40,58))},
+    {name:"roasted chicken rice", pair:1, draw:()=>plate("#F1ECE2", rice(36,52,20,16) + slices("#C9783A","#8E3F17",52,48,4) + cucumber(56,70) + cucumber(66,72) + `<circle cx="74" cy="30" r="7" fill="#FFFFFF" stroke="#E6DED0"/><circle cx="74" cy="30" r="5" fill="#D9442B"/>` + dots(["#6FAF4A"],4,1.2,52,78,40,58))},
+    {name:"nasi lemak with egg", pair:2, draw:()=>plate("#4E8A3A", `<path d="M14 50 q36 -40 72 0 q-36 40 -72 0z" fill="#6AA84F" opacity=".7"/>` + rice(42,48,16,13) + egg(64,40,10) + `<path d="M56 60 q8 -6 16 0 q-2 8 -8 8 q-7 0 -8 -8z" fill="#C2362A"/>` + cucumber(34,68) + cucumber(42,72) + dots(["#C9A26A","#8A5A2B"],14,1.6,54,76,64,78))},
+    {name:"nasi lemak with chicken wing", pair:2, draw:()=>plate("#4E8A3A", `<path d="M14 50 q36 -40 72 0 q-36 40 -72 0z" fill="#6AA84F" opacity=".7"/>` + rice(42,48,16,13) + `<g transform="translate(64 40) rotate(-25)"><ellipse rx="11" ry="7" fill="#A8612A"/><ellipse rx="8" ry="4.5" fill="#C27A35" opacity=".8"/>` + dots(["#8A4A1C"],6,1,-8,8,-4,4) + `</g><path d="M56 60 q8 -6 16 0 q-2 8 -8 8 q-7 0 -8 -8z" fill="#C2362A"/>` + cucumber(34,68) + cucumber(42,72) + dots(["#C9A26A","#8A5A2B"],14,1.6,54,76,64,78))}
+  ];
+  const DRINK = [["#7A4A2A","#C99B70","kopi"],["#B9783F","#E9C08E","teh"],["#9CC55A","#D7EDA3","lime juice"],["#4A2A1E","#7A4A3A","kopi-o"]];
+  const cup = d => `<svg viewBox="0 0 40 40" class="tg-drink" aria-hidden="true"><circle cx="20" cy="21" r="18" fill="rgba(0,0,0,.15)"/><circle cx="20" cy="20" r="18" fill="#F5F0E6"/><circle cx="20" cy="20" r="13" fill="${d[0]}"/><circle cx="17" cy="17" r="6" fill="${d[1]}" opacity=".7"/><path d="M36 14 q6 6 0 12" fill="none" stroke="#F5F0E6" stroke-width="4"/></svg>`;
+  let mode = "before", base = 124, trays = [], target = null, lock = false; const sc = {before:[0,0], disp:[0,0]};
   const stage = $(".tg-stage", root), counter = $("#tgCounter");
-  const TXT = {before:"Every tray looks the same, so guests have to guess, or crowd the counter asking staff in a language they may not share.",
-    disp:"The dispenser shows each order number on its tray and slides the right one out, so guests grab it first time."};
-  const round = () => { lock = false; nums = [0,1,2,3].map(i=>base+i).sort(()=>Math.random()-.5); target = nums[Math.floor(Math.random()*4)];
-    $("#tgNum").textContent = String(target).padStart(4,"0"); $("#tgMsg").textContent = "";
-    counter.innerHTML = nums.map((n,i)=>`<button class="tg-tray${mode==="disp"&&n===target?" lit":""}" data-n="${n}" aria-label="${mode==="disp"?"Tray for order "+String(n).padStart(4,"0"):"Tray "+(i+1)}"><span class="tg-no">${String(n).padStart(4,"0")}</span><span class="tg-bowl" style="--c:${FOOD[n%4][0]};--c2:${FOOD[n%4][1]}"></span><span class="tg-cup"></span></button>`).join("");
+  const TXT = {before:"Some dishes look almost the same, and none of the trays are labelled, so guests have to guess, or crowd the counter asking staff in a language they may not share.",
+    disp:"The dispenser shows each order number on its tray and slides the right one out, so guests grab it first time, however similar the food looks."};
+  const shuffle = a => a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+  const num = n => String(n).padStart(4,"0");
+  const round = () => { lock = false;
+    const pair = Math.floor(Math.random()*3), twins = DISH.map((d,i)=>i).filter(i=>DISH[i].pair===pair);
+    const others = shuffle(DISH.map((d,i)=>i).filter(i=>DISH[i].pair!==pair)).slice(0,2);
+    const dishes = shuffle([...twins, ...others]), nums = shuffle([0,1,2,3].map(i=>base+i));
+    trays = dishes.map((d,i)=>({d, n:nums[i], drink:DRINK[Math.floor(Math.random()*DRINK.length)]}));
+    const want = twins[Math.floor(Math.random()*2)]; target = trays.find(t=>t.d===want); const td = DRINK[Math.floor(Math.random()*DRINK.length)]; trays.forEach(t=>{ if (twins.includes(t.d)) t.drink = td; });
+    $("#tgNum").textContent = num(target.n); $("#tgOrder").textContent = DISH[target.d].name + " + " + target.drink[2]; $("#tgMsg").textContent = "";
+    counter.innerHTML = trays.map((t,i)=>`<button class="tg-tray${mode==="disp"&&t===target?" lit":""}" data-i="${i}" aria-label="${mode==="disp"?"Tray for order "+num(t.n)+", ":"Tray "+(i+1)+", "}${DISH[t.d].name} and ${t.drink[2]}"><span class="tg-no">${num(t.n)}</span>${DISH[t.d].draw()}${cup(t.drink)}</button>`).join("");
     $$(".tg-tray", counter).forEach(b => b.onclick = () => pick(b)); };
   const score = () => { $("#tgB").textContent = sc.before[0]+" / "+sc.before[1]; $("#tgD").textContent = sc.disp[0]+" / "+sc.disp[1]; };
-  const pick = b => { if (lock) return; const n = +b.dataset.n; sc[mode][1]++;
-    if (n === target){ lock = true; b.classList.add("ok"); $("#tgMsg").textContent = "Got it! Enjoy your "+NAMES[n%4]+"."; score(); setTimeout(()=>{ base += 4; round(); }, 1100); }
-    else { sc[mode][0]++; b.classList.remove("bad"); void b.offsetWidth; b.classList.add("bad"); $("#tgMsg").textContent = "Oops, that's order "+String(n).padStart(4,"0")+"'s "+NAMES[n%4]+"."; score(); } };
+  const pick = b => { if (lock) return; const t = trays[+b.dataset.i]; sc[mode][1]++;
+    if (t === target){ lock = true; b.classList.add("ok"); $("#tgMsg").textContent = "Got it! Enjoy your "+DISH[t.d].name+"."; score(); setTimeout(()=>{ base += 4; round(); }, 1200); }
+    else { sc[mode][0]++; b.classList.remove("bad"); void b.offsetWidth; b.classList.add("bad"); $("#tgMsg").textContent = "Oops, that's order "+num(t.n)+"'s "+DISH[t.d].name+"."; score(); } };
   $$(".seg button", root).forEach(b => b.onclick = () => { mode = b.dataset.m; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x===b)); stage.classList.toggle("disp", mode==="disp"); $("#tgRead").textContent = TXT[mode]; round(); });
   $("#tgRead").textContent = TXT[mode]; score(); round();
 }
