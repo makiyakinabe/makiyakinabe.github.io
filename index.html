@@ -457,6 +457,7 @@ p{margin:0}
 .about-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:clamp(24px,5vw,64px);margin-top:40px;align-items:start}
 .about-grid .plate{aspect-ratio:350/520;max-width:340px}
 .about-grid .copy{display:grid;gap:16px;font-size:18px;color:var(--ink-2)}
+.about-grid .copy b{color:var(--ink);font-weight:700}
 .about-grid .copy .q{font-family:var(--display);font-weight:700;font-size:clamp(24px,2.8vw,32px);line-height:1.15;color:var(--ink);letter-spacing:-.02em}
 @media (max-width:760px){.about-grid{grid-template-columns:1fr}.about-grid .plate{max-width:260px}}
 .tl{margin-top:24px;border-left:1px solid var(--line);margin-left:6px}
@@ -1965,9 +1966,9 @@ function viewJourney(){
       <div class="plate mestack" id="aboutPhoto" role="button" tabindex="0" aria-label="Show another photo of Natalie" style="cursor:pointer">${meImgs(1)}</div>
       <div class="copy">
         <p class="q">How do we translate complex functionality into intuitive, delightful experiences?</p>
-        <p>That question drives my work every day. My journey started in product and experience design, where I learned the importance of empathy, usability and visual storytelling.</p>
-        <p>The most powerful digital products are built by people who understand both the user and the system, so I'm now pursuing a degree in Computer Science (IMGD). This blend lets me speak both languages: the creative language of designers and the technical language of developers.</p>
-        <p>Outside the studio I work in hospitality, from Hilton's Executive Lounge to busy food counters. It keeps me close to the people products are for. I am also the founder of <b>Ah Dai's Cart</b>, where my business partner and I sell customisable photostrip keychains!</p>
+        <p>That question drives my work every day. My journey started in <b>Product Experience &amp; Design</b>, where I learned the importance of <b>empathy, usability and visual storytelling</b>.</p>
+        <p>The most powerful digital products are built by people who understand both the user and the system, so I'm now pursuing a degree in <b>Computer Science (IMGD)</b>. This blend lets me <b>speak both languages</b>: the creative language of designers and the technical language of developers.</p>
+        <p>Outside the studio I work in <b>hospitality</b>, from <b>Hilton's Executive Lounge</b> to busy food counters. It keeps me <b>close to the people products are for</b>. I am also the founder of <b>Ah Dai's Cart</b>, where my business partner and I sell customisable photostrip keychains!</p>
         <div><a class="btn" href="#works">See my works <span class="arr">${arrow}</span></a></div>
       </div>
     </div>
