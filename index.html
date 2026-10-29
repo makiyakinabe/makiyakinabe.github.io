@@ -465,6 +465,97 @@ p{margin:0}
 @keyframes tgShake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 .tg-msg{margin-top:12px;font-weight:700;font-size:15px;min-height:1.5em;color:#1C1917}
 
+/* clap it out */
+.cl-stage{background:#FFF4E6;border-radius:18px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:18px;color:#1C1917;text-align:center}
+.cl-echo{display:flex;align-items:center;gap:12px;align-self:flex-start}
+.cl-echo svg{width:56px;height:56px;flex:none}
+.cl-bubble{background:#FFFFFF;border-radius:16px 16px 16px 4px;padding:10px 14px;font-weight:700;font-size:15px;box-shadow:0 4px 0 #F0E2D2;text-align:left}
+.cl-word{min-height:84px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}
+.cl-plain{font-size:clamp(34px,5vw,48px);font-weight:800;letter-spacing:-.02em}
+.cl-chip{font-size:clamp(22px,3.4vw,30px);font-weight:800;padding:10px 16px;border-radius:16px;background:#FFE3CC;color:#7C2D12;box-shadow:0 4px 0 #F0C9A8;transition:transform .15s,background .15s,box-shadow .15s}
+.cl-chip.st{background:#FFD0A8}
+.cl-chip.on{background:#FF7A1A;color:#1C1917;box-shadow:0 4px 0 #C2410C;transform:translateY(-4px) scale(1.06)}
+.cl-btn{font:inherit;font-weight:800;font-size:20px;display:inline-flex;align-items:center;gap:10px;min-height:76px;padding:0 34px;border-radius:999px;border:0;background:radial-gradient(circle at 35% 30%,#FFB27A,#FF7A1A 55%,#D9520A);color:#1C1917;box-shadow:0 5px 0 #A8400A,0 0 0 10px rgba(255,122,26,.15);cursor:pointer;transition:transform .08s}
+.cl-btn:active,.cl-btn.hit{transform:translateY(3px) scale(.97);box-shadow:0 2px 0 #A8400A,0 0 0 14px rgba(255,122,26,.22)}
+.cl-btn svg{width:30px;height:30px}
+.cl-stars{display:flex;gap:6px}
+.cl-stars svg{width:38px;height:38px;transition:transform .3s}
+.cl-stars svg.on{transform:scale(1.15)}
+.cl-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* light the path */
+.gl-stage{position:relative;background:linear-gradient(#DDEFF7,#C7E2EE);border-radius:18px;padding:18px;min-height:340px;color:#1C2B3A;overflow:hidden}
+.gl-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 14px;position:relative;z-index:1;margin-top:8px}
+.gl-cube{font:inherit;border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;padding:6px;color:#1C2B3A}
+.gl-box{position:relative;width:74px;height:74px;border-radius:18px;background:linear-gradient(145deg,#FFFFFF,#D8E1E8);box-shadow:inset 0 -8px 0 rgba(0,0,0,.08),0 8px 14px -6px rgba(0,0,0,.3);transition:all .35s}
+.gl-box b{position:absolute;inset:0;display:grid;place-items:center;font-size:22px;font-weight:800;color:#9AA8B5}
+.gl-lbl{font-size:13px;font-weight:700;line-height:1.2;min-height:2.4em}
+.gl-cube.next .gl-box{background:linear-gradient(145deg,#FFF5C4,var(--g));box-shadow:0 0 0 4px rgba(255,255,255,.7),0 0 30px 8px var(--g),inset 0 -8px 0 rgba(0,0,0,.08);animation:glPulse 1.4s ease-in-out infinite}
+.gl-cube.next .gl-box b{color:#1C2B3A}
+.gl-cube.done .gl-box{background:linear-gradient(145deg,#E6F8EC,#A8DDB8)}
+.gl-cube.done .gl-box b{color:#146B3A}
+.gl-cube.miss .gl-box{animation:tgShake .4s;box-shadow:0 0 0 4px #E5484D}
+@keyframes glPulse{50%{transform:translateY(-4px)}}
+.gl-scent{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--g);opacity:.0;pointer-events:none;animation:glScent 1.6s ease-out forwards}
+@keyframes glScent{0%{opacity:.8;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(var(--dx),-70px) scale(1.6)}}
+.gl-note{position:absolute;inset:18px;z-index:3;background:#FFFFFF;border-radius:16px;padding:18px 20px;box-shadow:0 20px 40px -20px rgba(0,0,0,.4);transition:opacity .4s}
+.gl-note h4{font-size:15px;margin:0 0 8px}
+.gl-note ol{margin:0;padding-left:20px;font-weight:600;line-height:1.7}
+.gl-note.gone{opacity:0;pointer-events:none}
+.gl-pop{position:absolute;z-index:2;background:#FFFFFF;border-radius:18px 18px 18px 4px;padding:8px 12px;font-weight:800;font-size:14px;box-shadow:0 10px 20px -8px rgba(0,0,0,.35);opacity:0;transform:scale(.6);transition:opacity .3s,transform .3s;pointer-events:none}
+.gl-pop.on{opacity:1;transform:scale(1)}
+.gl-msg{position:relative;z-index:1;margin-top:10px;font-weight:700;font-size:15px;min-height:1.4em}
+/* caregiver morning */
+.ccm-wrap{display:flex;justify-content:center}
+.ccm-phone{width:min(290px,78vw);aspect-ratio:9/18.5;border-radius:44px;padding:10px;background:#111;box-shadow:0 30px 50px -24px rgba(0,0,0,.6)}
+.ccm-scr{position:relative;width:100%;height:100%;border-radius:35px;overflow:hidden;background:#F7F1F4;color:#2A1A22;font-size:13px}
+.ccm-lock{position:absolute;inset:0;background:linear-gradient(160deg,#5B6B8F,#2F3A55);color:#fff;padding:22px 12px}
+.ccm-time{text-align:center;font-size:44px;font-weight:300;letter-spacing:-.02em;line-height:1}
+.ccm-date{text-align:center;font-size:13px;opacity:.85;margin-bottom:14px}
+.ccm-list{display:flex;flex-direction:column;gap:7px}
+.ccm-n{display:flex;gap:9px;align-items:flex-start;background:rgba(255,255,255,.88);color:#1C1C1E;border-radius:14px;padding:8px 10px;animation:ccmIn .4s cubic-bezier(.2,.8,.2,1) both}
+.ccm-n i{flex:none;width:22px;height:22px;border-radius:6px;margin-top:1px}
+.ccm-n b{display:block;font-size:11px;color:#6B6B70;font-weight:600}
+.ccm-n span{display:block;font-size:12.5px;line-height:1.3}
+@keyframes ccmIn{from{opacity:0;transform:translateY(-12px) scale(.96)}}
+.ccm-badge{position:absolute;top:10px;right:14px;background:#E5484D;color:#fff;font-weight:800;font-size:12px;border-radius:999px;padding:2px 8px}
+.ccm-app{position:absolute;inset:0;padding:22px 14px;display:flex;flex-direction:column;gap:10px;overflow:auto;scrollbar-width:none}
+.ccm-card{background:#FFFFFF;border-radius:16px;padding:12px;box-shadow:0 2px 0 #EAD9E2}
+.ccm-card h5{margin:0 0 6px;font-size:12px;color:#8B5A72;text-transform:uppercase;letter-spacing:.06em}
+.ccm-faces{display:flex;justify-content:space-between}
+.ccm-faces button{font:inherit;border:0;background:none;cursor:pointer;padding:2px;border-radius:50%}
+.ccm-faces svg{width:34px;height:34px;display:block;transition:transform .2s}
+.ccm-faces button[aria-pressed="true"] svg{transform:scale(1.18);filter:drop-shadow(0 0 0 #B83A78)}
+.ccm-faces button[aria-pressed="true"]{box-shadow:0 0 0 2px #B83A78}
+.ccm-week{display:flex;gap:5px;margin-top:8px;align-items:center;font-size:10px;color:#8B5A72}
+.ccm-week i{width:16px;height:16px;border-radius:50%;display:block}
+.ccm-check{display:flex;align-items:center;gap:8px;font:inherit;width:100%;border:0;background:none;text-align:left;padding:6px 0;cursor:pointer;color:#2A1A22;font-size:13px}
+.ccm-check i{flex:none;width:18px;height:18px;border-radius:6px;border:2px solid #B83A78;display:grid;place-items:center;color:#fff;font-style:normal;font-size:12px}
+.ccm-check[aria-pressed="true"] i{background:#B83A78}
+.ccm-check[aria-pressed="true"] span{text-decoration:line-through;color:#9A8A92}
+.ccm-bar{height:6px;border-radius:3px;background:#F1E1EA;overflow:hidden;margin-top:6px}
+.ccm-bar i{display:block;height:100%;background:#B83A78;transition:width .4s}
+/* tangle test */
+.bt-stage{background:#F3EDE4;border-radius:18px;padding:12px;color:#3A2A1C}
+.bt-stage svg{width:100%;height:auto;display:block;touch-action:none}
+.bt-ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+/* flat to 3d */
+.vz-stage{background:linear-gradient(#F4EFE7,#E6DCCB);border-radius:18px;padding:12px;color:#3A2A1C;user-select:none;-webkit-user-select:none}
+.vz-scene{position:relative;height:clamp(300px,42vw,400px);perspective:1100px;overflow:hidden;cursor:grab;touch-action:pan-y}
+.vz-obj{position:absolute;left:50%;top:36%;width:0;height:0;transform-style:preserve-3d}
+.vz-p{position:absolute;left:0;top:0;transform-style:preserve-3d}
+.vz-p svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.vz-p svg.back{transform:translateZ(-6px)}
+.vz-range{width:100%;accent-color:var(--pa);margin-top:16px}
+.vz-ticks{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:600;margin-top:4px}
+/* turbine */
+.tb-stage{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;background:radial-gradient(circle at 50% 40%,#2A3D8F,#121C46);border-radius:18px;padding:18px;color:#E6ECFF;position:relative;overflow:hidden}
+.tb-stage svg{width:min(320px,80%);height:auto;display:block;margin:0 auto;touch-action:none;cursor:grab}
+.tb-rpm{position:absolute;left:18px;top:14px;font-weight:700;font-size:13px;color:#AFC0EE}
+.tb-rpm b{display:block;font-size:26px;color:#FFFFFF;font-variant-numeric:tabular-nums}
+.tb-insp{display:flex;gap:12px;align-items:center;margin-top:16px}
+.tb-insp img{width:96px;height:72px;object-fit:cover;border-radius:10px;flex:none}
+.tb-insp span{font-size:14px;color:var(--ink-2)}
+
 /* gift set: product story + inspirations */
 .scrub.wide .stage{aspect-ratio:16/9}
 .scrub.wide .stage img{object-fit:contain}
@@ -1387,6 +1478,25 @@ const CONTENT = {
       <div><small>Secondary users</small><b>Neurotypical children</b></div>
       <div><small>Secondary users</small><b>Parents and caregivers</b></div>
     </div>`)}
+  ${blk("Feel the difference","Light the path",`
+    <div class="feel" id="glow">
+      <div class="gl-stage">
+        <div class="gl-note" id="glNote"><h4>Mum says: before bed, please</h4><ol id="glList"></ol></div>
+        <div class="gl-grid" id="glGrid"></div>
+        <span class="gl-pop" id="glPop"></span>
+        <p class="gl-msg" id="glMsg" aria-live="polite"></p>
+      </div>
+      <div>
+        <p class="body-strong">For a child with ADHD, bath time is six steps to remember while everything competes for attention. Tap the steps in order.</p>
+        <div class="seg" role="group" aria-label="Bath time">
+          <button aria-pressed="true" data-m="none">Without cues</button>
+          <button aria-pressed="false" data-m="cubes">With Glow Path Cubes</button>
+        </div>
+        <div style="margin-top:14px"><button class="fbtn2" id="glAgain" type="button">Start bath time again</button></div>
+        <div class="fstats"><div class="fstat"><small>Steps mixed up · without cues</small><b id="glA">0</b></div><div class="fstat"><small>Steps mixed up · with cubes</small><b id="glB">0</b></div></div>
+        <p class="readout" id="glRead" aria-live="polite"></p>
+      </div>
+    </div>`)}
   ${blk("Phase 1 · Ideation","Three ecosystems, one calmer day",`
     <p class="body-strong" style="margin-bottom:22px">My first round explored three ecosystems, each tackling a daily struggle parents told me about. Pick one to see it, and how parents rated it.</p>
     <div class="tabs" role="tablist" id="calmTabs">
@@ -1497,6 +1607,21 @@ const CONTENT = {
         <div class="snav">${SAFM_STORY.map((s,i)=>`<button data-i="${i}">${s.t}</button>`).join("")}</div>
       </div>
     </div>`)}
+  ${blk("Feel the difference","Spin the turbine",`
+    <div class="feel" id="turb">
+      <div class="tb-stage"><div class="tb-rpm">Fan speed<b id="tbRpm">0 rpm</b></div><svg id="tbSvg" viewBox="-160 -160 320 320" role="img" aria-label="Turbine fan, drag to spin"></svg></div>
+      <div>
+        <p class="body-strong">The fan is shaped like the jet engines on display at the museum. Flick the blades to spin them, or pick a power setting.</p>
+        <div class="seg" role="group" aria-label="Power">
+          <button aria-pressed="true" data-s="0">Off</button>
+          <button aria-pressed="false" data-s="1">Breeze</button>
+          <button aria-pressed="false" data-s="2">Cruise</button>
+          <button aria-pressed="false" data-s="3">Take-off</button>
+        </div>
+        <div class="tb-insp"><img src="${IMG('safm-insp-turbine.jpg')}" alt="Jet engine turbine on display at the museum" loading="lazy"><span>Inspired by the jet engine turbines at the Air Force Museum. The heptagon housing keeps to the set's sharp-edged theme.</span></div>
+        <p class="readout" id="tbRead" aria-live="polite"></p>
+      </div>
+    </div>`)}
   ${blk("Storytelling","Custom postcards",`
     <p class="body-strong">Every set ships with a postcard that tells the design story, so recipients understand the thought behind the gift. Tap a card to flip it.</p>
     <div class="postcards">${[1,2,3,4].map(i=>`<button class="pcard" aria-label="Flip postcard ${i}"><span class="pc-inner"><img class="pc-front" src="assets/postcard-${i}-front.jpg" alt="Postcard ${i} front" loading="lazy"><img class="pc-back" src="assets/postcard-${i}-back.jpg" alt="Postcard ${i} back with message" loading="lazy"></span></button>`).join("")}</div>`)}
@@ -1524,6 +1649,19 @@ const CONTENT = {
         </ul>
       </div>
       <div class="plate" style="aspect-ratio:4/3"><img class="zoom" src="assets/cc-caregiver.jpg" alt="A caregiver at her dining table with medicine boxes, a care checklist and a phone full of notifications, her hand on her forehead, while her elderly mother rests in a wheelchair by the window" loading="lazy"></div>
+    </div>`)}
+  ${blk("Feel the difference","A caregiver's morning",`
+    <div class="feel" id="ccm">
+      <div class="ccm-wrap"><div class="ccm-phone"><div class="ccm-scr" id="ccmScr"></div></div></div>
+      <div>
+        <p class="body-strong">Jane cares for her mum, Mdm Lim. Before 9am, her phone is already full. See her morning across five apps, then with CareCircle+.</p>
+        <div class="seg" role="group" aria-label="Phone">
+          <button aria-pressed="true" data-m="chaos">Five different apps</button>
+          <button aria-pressed="false" data-m="cc">With CareCircle+</button>
+        </div>
+        <div class="fstats"><div class="fstat"><small>Apps to check</small><b id="ccmApps">5</b></div><div class="fstat"><small>Things to keep in her head</small><b id="ccmThings">8</b></div></div>
+        <p class="readout" id="ccmRead" aria-live="polite"></p>
+      </div>
     </div>`)}
   ${blk("Redesign","CareCircle+, redesigned",`
     <p class="body-strong" style="margin-bottom:6px">A calmer, clearer version of the app. Every screen leads with one main task, the person being cared for stays in view, and support for the caregiver sits right on the home screen.</p>
@@ -1753,6 +1891,24 @@ const CONTENT = {
       <div class="bon-tests">${[["bon-test-1.jpg","Testing a tall drawer mock-up"],["bon-test-2.jpg","Trying fanned compartments and separate tubes"],["bon-test-3.jpg","Testing detachable compartments while crocheting"]]
         .map(([f,t])=>`<figure><div class="plate" style="aspect-ratio:675/243"><img class="zoom" src="img/${f}" alt="${t}" loading="lazy"></div><figcaption>${t}</figcaption></figure>`).join("")}</div>
     </div>`)}
+  ${blk("Feel the difference","The tangle test",`
+    <div class="feel" id="tangle">
+      <div class="bt-stage"><svg id="btSvg" viewBox="0 0 400 330" role="img" aria-label="Yarn balls and their strands seen from above"></svg></div>
+      <div>
+        <p class="body-strong">Crocheters often work with several colours at once. Add yarn and see what happens to the strands in an open basket, then in BON's swivelling tiers.</p>
+        <div class="seg" role="group" aria-label="Storage">
+          <button aria-pressed="true" data-m="basket">Open basket</button>
+          <button aria-pressed="false" data-m="bon">BON</button>
+        </div>
+        <div class="bt-ctrl">
+          <button class="fbtn2" id="btAdd" type="button">+ Add yarn</button>
+          <button class="fbtn2" id="btShake" type="button">Shake it</button>
+          <button class="fbtn2" id="btReset" type="button">Reset</button>
+        </div>
+        <div class="fstats"><div class="fstat"><small>Tangles · open basket</small><b id="btA">0</b></div><div class="fstat"><small>Tangles · BON</small><b id="btB">0</b></div></div>
+        <p class="readout" id="btRead" aria-live="polite"></p>
+      </div>
+    </div>`)}
   ${blk("Final model","Explore the details",`
     <p class="body-strong" style="margin-bottom:16px">Tap a number on the model, or a feature, to see how it works. Switch to the exploded view to look inside the hidden storage.</p>
     <div class="seg bonview" role="group" aria-label="Model view" style="margin:0 0 26px">
@@ -1783,6 +1939,17 @@ const CONTENT = {
         </ul>
       </div>
       <div class="plate" style="aspect-ratio:1/1"><img class="zoom" src="img/vase-desk.jpg" alt="Render of the laser-cut flower vase on a desk" loading="lazy"></div>
+    </div>`)}
+  ${blk("Feel the difference","Flat to 3D",`
+    <div class="feel" id="vz">
+      <div class="vz-stage"><div class="vz-scene" id="vzScene" aria-label="3D view of the vase pieces, drag to turn"><div class="vz-obj" id="vzObj"></div></div></div>
+      <div>
+        <p class="body-strong">Three flat pieces, one sheet of scrap wood. Drag the slider to slot them together, and drag the model to turn it.</p>
+        <input type="range" class="vz-range" id="vzR" min="0" max="100" value="0" aria-label="Assembly">
+        <div class="vz-ticks"><span>Flat sheet</span><span>Slotting</span><span>Standing vase</span></div>
+        <div style="margin-top:14px"><button class="fbtn2" id="vzPlay" type="button">Play it for me</button></div>
+        <p class="readout" id="vzRead" aria-live="polite"></p>
+      </div>
     </div>`)}
   ${blk("Process","Flat sheet to 3D vase",`
     <p class="body-strong" style="margin-bottom:18px">Every piece was laid out on one sheet of scrap wood, cut with a laser, then slotted together into 3D.</p>
@@ -1893,6 +2060,26 @@ const CONTENT = {
         <li><span>English and Chinese oral components, with pinyin support</span></li>
         <li><span>AI marks are checked by teachers before they're final</span></li>
       </ul>
+    </div>`)}
+  ${blk("Feel the difference","Clap it out",`
+    <div class="feel" id="clap">
+      <div class="cl-stage">
+        <div class="cl-echo"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 14a10 10 0 0 1 10-10h24a10 10 0 0 1 10 10v20a10 10 0 0 1-10 10H30l-10 10v-10a10 10 0 0 1-10-10z" fill="#FF7A1A"/><circle cx="25" cy="23" r="5" fill="#fff"/><circle cx="39" cy="23" r="5" fill="#fff"/><circle cx="26" cy="24" r="2.4" fill="#1C1917"/><circle cx="40" cy="24" r="2.4" fill="#1C1917"/><path d="M26 33q6 5 12 0" stroke="#1C1917" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg><span class="cl-bubble" id="clBubble"></span></div>
+        <div class="cl-word" id="clWord"></div>
+        <button class="cl-btn" id="clClap" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 13V6.5a1.5 1.5 0 0 1 3 0V12"/><path d="M11 11V4.5a1.5 1.5 0 0 1 3 0V11"/><path d="M14 11V6.5a1.5 1.5 0 0 1 3 0v6.5a7 7 0 0 1-7 7h-.5A6.5 6.5 0 0 1 5 17.6L3.3 14a1.5 1.5 0 0 1 2.6-1.5L8 15"/></svg>Clap</button>
+        <div class="cl-stars" id="clStars" aria-label="Stars"></div>
+      </div>
+      <div>
+        <p class="body-strong">Long words are hard to say in one go. Echo breaks them into beats you can clap. Try a word without the beats first, then with them.</p>
+        <div class="seg" role="group" aria-label="Help">
+          <button aria-pressed="true" data-m="plain">Just the word</button>
+          <button aria-pressed="false" data-m="beats">With Echo's beats</button>
+        </div>
+        <div class="cl-words" id="clWords"></div>
+        <div style="margin-top:14px"><button class="fbtn2" id="clHear" type="button">Hear Echo say it</button></div>
+        <div class="fstats"><div class="fstat"><small>Right first time · just the word</small><b id="clA">0 / 0</b></div><div class="fstat"><small>Right first time · with beats</small><b id="clB">0 / 0</b></div></div>
+        <p class="readout" id="clRead" aria-live="polite"></p>
+      </div>
     </div>`)}
   ${blk("Redesign","One app, four audiences",`
     <p class="body-strong" style="margin-bottom:18px">Each group of users gets its own look and level of challenge. Jump to a group, or scroll through all four.</p>
@@ -2097,9 +2284,229 @@ function initTrayGame(){
   $("#tgRead").textContent = TXT[mode]; score(); round();
 }
 
+function initClap(){
+  const root = $("#clap"); if (!root) return;
+  const W = [{w:"whispered",s:["whis","pered"],st:0},{w:"environment",s:["en","vi","ron","ment"],st:1},{w:"committed",s:["com","mit","ted"],st:1},{w:"gentle",s:["gen","tle"],st:0},{w:"responsibility",s:["re","spon","si","bi","li","ty"],st:3}];
+  let wi = 0, mode = "plain", taps = 0, timer = null, tried = false; const sc = {plain:[0,0], beats:[0,0]};
+  const star = on => `<svg viewBox="0 0 24 24" class="${on?"on":""}"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${on?"#FFC531":"#EADBC8"}" stroke="${on?"#D99A00":"#D9C7B0"}" stroke-width="1.2"/></svg>`;
+  const stars = n => { $("#clStars").innerHTML = [0,1,2].map(i=>star(i<n)).join(""); };
+  let ac = null; const click = () => { try { if (!ac) ac = new (window.AudioContext||window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.type = "triangle"; o.frequency.value = 520; g.gain.setValueAtTime(.25, ac.currentTime); g.gain.exponentialRampToValueAtTime(.001, ac.currentTime+.12); o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime+.13); } catch(e){} };
+  const word = () => { const d = W[wi];
+    $("#clWord").innerHTML = mode==="beats" ? d.s.map((x,i)=>`<span class="cl-chip${i===d.st?" st":""}">${i===d.st?x.toUpperCase():x}</span>`).join("") : `<span class="cl-plain">${d.w}</span>`;
+    $("#clBubble").textContent = mode==="beats" ? "Clap once for each beat!" : "How many claps is this word?"; };
+  const score = () => { $("#clA").textContent = sc.plain[0]+" / "+sc.plain[1]; $("#clB").textContent = sc.beats[0]+" / "+sc.beats[1]; };
+  const TXT = {plain:"Without help, you have to guess where one sound ends and the next begins. Most people clap the wrong number of beats on long words.",
+    beats:"Echo splits the word into beats and makes the stressed one bigger, so children can hear it, see it and clap it, the way teachers do in class."};
+  const finish = () => { const d = W[wi], n = d.s.length; const ok = taps === n;
+    if (!tried){ sc[mode][1]++; if (ok) sc[mode][0]++; tried = true; score(); }
+    stars(ok ? 3 : Math.abs(taps-n)===1 ? 2 : 1);
+    $("#clBubble").textContent = ok ? "Yes! "+d.s.join("-")+" has "+n+" beats." : "You clapped "+taps+". Listen again: "+d.s.join("-")+" has "+n+" beats.";
+    taps = 0; setTimeout(()=>{ $$(".cl-chip", root).forEach(c=>c.classList.remove("on")); }, 700); };
+  $("#clClap").onclick = () => { const b = $("#clClap"); b.classList.remove("hit"); void b.offsetWidth; b.classList.add("hit"); setTimeout(()=>b.classList.remove("hit"), 120);
+    click(); const chips = $$(".cl-chip", root); if (chips[taps]) chips[taps].classList.add("on"); taps++;
+    clearTimeout(timer); timer = setTimeout(finish, 1300); };
+  $("#clHear").onclick = () => { const d = W[wi], chips = $$(".cl-chip", root); const ss = window.speechSynthesis;
+    if (mode==="beats"){ d.s.forEach((x,i)=>setTimeout(()=>{ chips.forEach(c=>c.classList.remove("on")); if (chips[i]) chips[i].classList.add("on"); if (ss){ const u = new SpeechSynthesisUtterance(x); u.rate = .8; u.lang = "en-GB"; ss.speak(u); } }, i*650));
+      setTimeout(()=>chips.forEach(c=>c.classList.remove("on")), d.s.length*650+300); }
+    else if (ss){ const u = new SpeechSynthesisUtterance(d.w); u.lang = "en-GB"; ss.speak(u); } };
+  const pickWord = i => { wi = i; taps = 0; tried = false; stars(0); $$("#clWords .chip").forEach((c,j)=>c.setAttribute("aria-pressed", j===i)); word(); };
+  $("#clWords").innerHTML = W.map((d,i)=>`<button class="chip" aria-pressed="${i===0}" data-i="${i}">${d.w}</button>`).join("");
+  $$("#clWords .chip").forEach(c => c.onclick = () => pickWord(+c.dataset.i));
+  $$(".seg button", root).forEach(b => b.onclick = () => { mode = b.dataset.m; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x===b)); $("#clRead").textContent = TXT[mode]; pickWord(wi); });
+  $("#clRead").textContent = TXT[mode]; score(); pickWord(0);
+  onCleanup(()=>{ clearTimeout(timer); try{ window.speechSynthesis && speechSynthesis.cancel(); }catch(e){} try{ ac && ac.close(); }catch(e){} });
+}
+
+function initGlow(){
+  const root = $("#glow"); if (!root) return;
+  const S = [["Turn on the shower","#C7B8F5"],["Wet your hair","#9FD8F0"],["Shampoo","#FFC2A8"],["Rinse it out","#A8E6C6"],["Soap up","#FFE08A"],["Towel dry","#F5B8D6"]];
+  const POPS = ["Ooh, bubbles!","Is that a toy boat?","The water's too cold!","I'm hungry...","Where's my duck?","Look, steam!"];
+  let mode = "none", step = 0, order = [], popT = null, noteT = null; const sc = {none:0, cubes:0};
+  const grid = $("#glGrid"), note = $("#glNote"), pop = $("#glPop");
+  $("#glList").innerHTML = S.map(s=>`<li>${s[0]}</li>`).join("");
+  const TXT = {none:"The list disappears, distractions keep popping up, and every step looks the same. It's easy to skip shampoo or rinse twice, and bath time turns into nagging.",
+    cubes:"Each Glow Path Cube lights up and releases a calming scent when it's time for that step, so the next thing to do is always obvious, with no nagging needed."};
+  const score = () => { $("#glA").textContent = sc.none; $("#glB").textContent = sc.cubes; };
+  const render = () => { grid.innerHTML = order.map(i=>{ const s = S[i]; const cls = i < step ? "done" : (mode==="cubes" && i===step ? "next" : "");
+      return `<button class="gl-cube ${cls}" data-i="${i}" style="--g:${s[1]}"><span class="gl-box"><b>${i < step ? "✓" : mode==="cubes" ? i+1 : "?"}</b></span><span class="gl-lbl">${s[0]}</span></button>`; }).join("");
+    $$(".gl-cube", grid).forEach(b => b.onclick = () => tap(b)); };
+  const scent = b => { const r = b.getBoundingClientRect(), st = root.querySelector(".gl-stage").getBoundingClientRect();
+    for (let k=0;k<6;k++){ const d = document.createElement("span"); d.className = "gl-scent"; d.style.setProperty("--g", b.style.getPropertyValue("--g")); d.style.setProperty("--dx", (Math.random()*50-25)+"px");
+      d.style.left = (r.left - st.left + r.width/2 - 5 + Math.random()*20-10)+"px"; d.style.top = (r.top - st.top + 20)+"px"; d.style.animationDelay = (k*0.12)+"s"; root.querySelector(".gl-stage").appendChild(d); setTimeout(()=>d.remove(), 2400); } };
+  const tap = b => { const i = +b.dataset.i;
+    if (i < step) return;
+    if (i === step){ step++; render(); if (mode==="cubes"){ const nb = $(`.gl-cube[data-i="${step}"]`, grid); if (nb) scent(nb); }
+      $("#glMsg").textContent = step===S.length ? (mode==="cubes" ? "All clean, no nagging needed!" : "Done, finally!") : ""; }
+    else { sc[mode]++; score(); b.classList.remove("miss"); void b.offsetWidth; b.classList.add("miss"); $("#glMsg").textContent = "Oops! Skipped “"+S[step][0]+"”."; } };
+  const start = () => { clearTimeout(noteT); clearInterval(popT); step = 0; $("#glMsg").textContent = "";
+    order = mode==="cubes" ? S.map((_,i)=>i) : S.map((_,i)=>i).sort(()=>Math.random()-.5);
+    render();
+    if (mode==="none"){ note.classList.remove("gone"); noteT = setTimeout(()=>{ note.classList.add("gone"); $("#glMsg").textContent = "Now, what was the order again?"; }, 3200);
+      popT = setInterval(()=>{ if (step>=S.length) return; pop.textContent = POPS[Math.floor(Math.random()*POPS.length)]; pop.style.left = (10+Math.random()*55)+"%"; pop.style.top = (8+Math.random()*60)+"%"; pop.classList.add("on"); setTimeout(()=>pop.classList.remove("on"), 1400); }, 2200); }
+    else { note.classList.add("gone"); pop.classList.remove("on"); setTimeout(()=>{ const nb = $(`.gl-cube[data-i="0"]`, grid); if (nb) scent(nb); }, 300); } };
+  $$(".seg button", root).forEach(b => b.onclick = () => { mode = b.dataset.m; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x===b)); $("#glRead").textContent = TXT[mode]; start(); });
+  $("#glAgain").onclick = start;
+  $("#glRead").textContent = TXT[mode]; score(); start();
+  onCleanup(()=>{ clearTimeout(noteT); clearInterval(popT); });
+}
+
+function initMorning(){
+  const root = $("#ccm"); if (!root) return;
+  const scr = $("#ccmScr");
+  const N = [["#3BAA5C","Family group chat","Ah Boy: Mum's blood pressure was high again last night"],["#2F80ED","Clinic SMS","Reminder: Mdm Lim, polyclinic appointment Thu 10:30am"],["#E2552D","Pharmacy","Your refill for Mdm Lim is ready for collection"],["#F2994A","Calendar","Physio session, today 3:00pm"],["#3BAA5C","Family group chat","Mei: Who's bringing Mum to physio later?"],["#6C63FF","Email","Caregiver workshop: register by Friday"],["#F2C94C","Notes","Amlodipine after breakfast, Metformin after dinner"],["#9B51E0","Bank","Payment due: home nurse visit"],["#3BAA5C","Family group chat","Ah Boy: Did Mum eat breakfast?"]];
+  let mode = "chaos", t = null, k = 0, mood = -1, done = {0:false,1:false,2:false};
+  const FACES = [["#E5484D","M8 16q4-4 8 0"],["#F2994A","M8 15.5q4-2 8 0"],["#F2C94C","M8 15h8"],["#7CC79B","M8 14q4 3 8 0"],["#3BAA5C","M7.5 13.5q4.5 5 9 0"]];
+  const face = ([c,m]) => `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="${c}"/><circle cx="8.5" cy="10" r="1.4" fill="#1C1C1E"/><circle cx="15.5" cy="10" r="1.4" fill="#1C1C1E"/><path d="${m}" stroke="#1C1C1E" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
+  const WEEK = [3,2,3,1,2,3];
+  const TXT = {chaos:"Appointments in one app, medicine in another, family updates in a group chat. Jane has to piece it all together in her head before 9am.",
+    cc:"CareCircle+ brings it into one calm home screen: a 30-second MoodDot check-in for Jane herself, the next appointment, and today's care plan as a simple checklist."};
+  const chaos = () => { clearInterval(t); k = 0;
+    scr.innerHTML = `<div class="ccm-lock"><span class="ccm-badge" id="ccmBadge">0</span><div class="ccm-time">8:02</div><div class="ccm-date">Thursday, 30 October</div><div class="ccm-list" id="ccmList"></div></div>`;
+    const list = $("#ccmList", scr);
+    const add = () => { const n = N[k % N.length]; const el = document.createElement("div"); el.className = "ccm-n"; el.innerHTML = `<i style="background:${n[0]}"></i><div><b>${n[1]}</b><span>${n[2]}</span></div>`; list.prepend(el); while (list.children.length > 6) list.lastChild.remove(); k++; $("#ccmBadge", scr).textContent = k + 14; };
+    add(); t = setInterval(add, 1100); };
+  const cc = () => { clearInterval(t);
+    const items = ["Amlodipine after breakfast","Physio at 3:00pm","Collect refill from pharmacy"];
+    const prog = Object.values(done).filter(Boolean).length;
+    scr.innerHTML = `<div class="ccm-app">
+      <div><div style="font-size:12px;color:#8B5A72;font-weight:700">Good morning, Jane</div><div style="font-size:17px;font-weight:800">Caring for Mdm Lim</div></div>
+      <div class="ccm-card"><h5>MoodDot · how are you today?</h5><div class="ccm-faces">${FACES.map((f,i)=>`<button aria-pressed="${mood===i}" data-m="${i}" aria-label="Mood ${i+1} of 5">${face(f)}</button>`).join("")}</div>
+        <div class="ccm-week">${WEEK.map(v=>`<i style="background:${FACES[v][0]}"></i>`).join("")}<i style="background:${mood<0?"#EBDCE3":FACES[mood][0]};box-shadow:0 0 0 2px #fff,0 0 0 3px #B83A78"></i><span>${mood<0?"Today":"Saved +5 pts"}</span></div></div>
+      <div class="ccm-card"><h5>Next appointment</h5><div style="font-weight:800">Thu 10:30am · Polyclinic</div><div style="color:#8B5A72;font-size:12px">Leg check-up · bring her medicine list</div></div>
+      <div class="ccm-card"><h5>Today's care plan · ${prog} of 3</h5><div class="ccm-bar"><i style="width:${prog/3*100}%"></i></div>${items.map((x,i)=>`<button class="ccm-check" aria-pressed="${done[i]}" data-i="${i}"><i>${done[i]?"✓":""}</i><span>${x}</span></button>`).join("")}</div>
+    </div>`;
+    $$(".ccm-faces button", scr).forEach(b => b.onclick = () => { mood = +b.dataset.m; cc(); });
+    $$(".ccm-check", scr).forEach(b => b.onclick = () => { done[b.dataset.i] = !done[b.dataset.i]; cc(); }); };
+  const set = m => { mode = m; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x.dataset.m===m)); $("#ccmRead").textContent = TXT[m];
+    $("#ccmApps").textContent = m==="chaos" ? "5" : "1"; $("#ccmThings").textContent = m==="chaos" ? "8" : "0"; m==="chaos" ? chaos() : cc(); };
+  $$(".seg button", root).forEach(b => b.onclick = () => set(b.dataset.m));
+  set("chaos"); onCleanup(()=>clearInterval(t));
+}
+
+function initTangle(){
+  const root = $("#tangle"); if (!root) return;
+  const svg = $("#btSvg"), NS = "http://www.w3.org/2000/svg";
+  const COL = [["#E8A0B4","#C96F8A"],["#9BC4E2","#5E93BC"],["#F2D27A","#C9A13E"],["#A8D5A2","#6EAA66"],["#C7A7EC","#9373C4"]];
+  const EXIT = [200,322], CX = 200, CY = 150;
+  let mode = "basket", n = 3, rot = 0, B = [], tang = {basket:0, bon:0};
+  const R = (a,b)=>a+Math.random()*(b-a);
+  const place = () => { B = []; let tries = 0; while (B.length < 5 && tries < 500){ tries++; const a = R(0,6.28), r = R(15,100); const x = CX+Math.cos(a)*r*1.25, y = CY-10+Math.sin(a)*r*0.75;
+      if (B.every(o => Math.hypot(o.x-x, o.y-y) > 50)) B.push({x, y, c1:[R(80,320),R(30,250)], c2:[R(80,320),R(60,300)]}); } };
+  const bez = (p0,p1,p2,p3) => { const pts=[]; for (let k=0;k<=24;k++){ const t=k/24, u=1-t; pts.push([u*u*u*p0[0]+3*u*u*t*p1[0]+3*u*t*t*p2[0]+t*t*t*p3[0], u*u*u*p0[1]+3*u*u*t*p1[1]+3*u*t*t*p2[1]+t*t*t*p3[1]]); } return pts; };
+  const inter = (a,b,c,d) => { const den = (d[1]-c[1])*(b[0]-a[0])-(d[0]-c[0])*(b[1]-a[1]); if (!den) return null; const ua = ((d[0]-c[0])*(a[1]-c[1])-(d[1]-c[1])*(a[0]-c[0]))/den, ub = ((b[0]-a[0])*(a[1]-c[1])-(b[1]-a[1])*(a[0]-c[0]))/den; return (ua>0&&ua<1&&ub>0&&ub<1) ? [a[0]+ua*(b[0]-a[0]), a[1]+ua*(b[1]-a[1])] : null; };
+  const ball = (x,y,c,r=20) => `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="${r}" fill="${c[0]}"/><path d="M${-r*.8} ${-r*.3} q${r*.8} ${-r*.6} ${r*1.6} 0 M${-r*.9} ${r*.15} q${r*.9} ${-r*.5} ${r*1.8} 0 M${-r*.7} ${r*.55} q${r*.7} ${-r*.4} ${r*1.4} 0 M${-r*.3} ${-r*.9} q${r*.5} ${r*.9} ${r*.2} ${r*1.8}" stroke="${c[1]}" stroke-width="2" fill="none" opacity=".75"/><circle r="${r}" fill="none" stroke="${c[1]}" stroke-width="1.5"/></g>`;
+  const draw = () => { let s = "", hits = [];
+    if (mode==="basket"){
+      s += `<ellipse cx="${CX}" cy="${CY}" rx="170" ry="122" fill="#C8955A"/><ellipse cx="${CX}" cy="${CY}" rx="158" ry="111" fill="#A9743F"/>`;
+      for (let k=0;k<12;k++) s += `<ellipse cx="${CX}" cy="${CY}" rx="${158-k*12}" ry="${111-k*8.5}" fill="none" stroke="#8E5E30" stroke-width="1" opacity=".35"/>`;
+      const paths = B.slice(0,n).map(b => bez([b.x,b.y], b.c1, b.c2, EXIT));
+      for (let i=0;i<paths.length;i++) for (let j=i+1;j<paths.length;j++) for (let a=0;a<paths[i].length-1;a++) for (let c=0;c<paths[j].length-1;c++){ const p = inter(paths[i][a],paths[i][a+1],paths[j][c],paths[j][c+1]); if (p && Math.hypot(p[0]-EXIT[0],p[1]-EXIT[1])>18) hits.push(p); }
+      B.slice(0,n).forEach((b,i) => s += `<path d="M${b.x} ${b.y} C${b.c1} ${b.c2} ${EXIT}" stroke="${COL[i][1]}" stroke-width="3" fill="none" stroke-linecap="round"/>`);
+      B.slice(0,n).forEach((b,i) => s += ball(b.x,b.y,COL[i]));
+      hits.forEach(p => s += `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="7" fill="none" stroke="#E5484D" stroke-width="2.5"/>`);
+      tang.basket = hits.length;
+    } else {
+      const SL = 5, RO = 128, RI = 30;
+      s += `<g transform="rotate(${rot} ${CX} ${CY})"><circle cx="${CX}" cy="${CY}" r="${RO+8}" fill="#D7B98C"/><circle cx="${CX}" cy="${CY}" r="${RO}" fill="#EAD6B4"/>`;
+      for (let i=0;i<SL;i++){ const a = i/SL*Math.PI*2 - Math.PI/2; s += `<line x1="${CX+Math.cos(a)*RI}" y1="${CY+Math.sin(a)*RI}" x2="${CX+Math.cos(a)*RO}" y2="${CY+Math.sin(a)*RO}" stroke="#C9A877" stroke-width="5" stroke-linecap="round"/>`; }
+      for (let i=0;i<SL;i++){ const a = (i+.5)/SL*Math.PI*2 - Math.PI/2; s += `<circle cx="${CX+Math.cos(a)*(RO+2)}" cy="${CY+Math.sin(a)*(RO+2)}" r="5" fill="#8E6A3C"/>`; }
+      s += `<circle cx="${CX}" cy="${CY}" r="${RI}" fill="#CFD6DE" stroke="#AEB8C2" stroke-width="3"/><circle cx="${CX}" cy="${CY}" r="${RI-10}" fill="#E8ECF0"/>`;
+      for (let i=0;i<n;i++){ const a = (i+.5)/SL*Math.PI*2 - Math.PI/2, bx = CX+Math.cos(a)*78, by = CY+Math.sin(a)*78, ex = CX+Math.cos(a)*(RO+2), ey = CY+Math.sin(a)*(RO+2), tx = CX+Math.cos(a)*(RO+30), ty = CY+Math.sin(a)*(RO+30);
+        s += `<path d="M${bx} ${by} L${ex} ${ey} Q${CX+Math.cos(a+.08)*(RO+16)} ${CY+Math.sin(a+.08)*(RO+16)} ${tx} ${ty}" stroke="${COL[i][1]}" stroke-width="3" fill="none" stroke-linecap="round"/>` + ball(bx,by,COL[i],22); }
+      s += `</g>`; tang.bon = 0; }
+    svg.innerHTML = s; $("#btA").textContent = tang.basket; $("#btB").textContent = tang.bon;
+    $("#btRead").textContent = mode==="basket" ? (tang.basket ? "Every strand runs to your hook across the same space, so they cross and knot. "+tang.basket+(tang.basket===1?" tangle":" tangles")+" already, and it gets worse every time the basket is moved." : "With one or two balls it's fine. Add more yarn, or shake it, and watch the strands start to cross.")
+      : "Each ball sits in its own compartment and feeds out through its own hole, so strands never cross. Drag the tier to swivel it and reach any colour.";
+    $("#btShake").textContent = mode==="basket" ? "Shake it" : "Swivel the tier"; };
+  $("#btAdd").onclick = () => { if (n < 5){ n++; draw(); } };
+  $("#btShake").onclick = () => { if (mode==="basket"){ place(); draw(); } else { const r0 = rot, t0 = performance.now(); const go = now => { const k = Math.min(1,(now-t0)/700); rot = r0 + 72*(1-Math.pow(1-k,3)); draw(); if (k<1) requestAnimationFrame(go); }; requestAnimationFrame(go); } };
+  $("#btReset").onclick = () => { n = 3; rot = 0; place(); draw(); };
+  let drag = null; svg.addEventListener("pointerdown", e => { if (mode!=="bon") return; const r = svg.getBoundingClientRect(); drag = {a: Math.atan2(e.clientY-(r.top+r.height*CY/330), e.clientX-(r.left+r.width/2)), rot}; svg.setPointerCapture(e.pointerId); });
+  svg.addEventListener("pointermove", e => { if (!drag) return; const r = svg.getBoundingClientRect(); const a = Math.atan2(e.clientY-(r.top+r.height*CY/330), e.clientX-(r.left+r.width/2)); rot = drag.rot + (a-drag.a)*180/Math.PI; draw(); });
+  svg.addEventListener("pointerup", () => drag = null);
+  $$(".seg button", root).forEach(b => b.onclick = () => { mode = b.dataset.m; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x===b)); svg.style.cursor = mode==="bon" ? "grab" : ""; draw(); });
+  place(); draw();
+}
+
+function initVase(){
+  const root = $("#vz"); if (!root) return;
+  const obj = $("#vzObj"), scene = $("#vzScene"), range = $("#vzR");
+  const WOOD = `<defs><linearGradient id="vzw" x1="0" y1="0" x2="1" y2=".2"><stop offset="0" stop-color="#E2B57E"/><stop offset=".5" stop-color="#D3A26A"/><stop offset="1" stop-color="#E6BD88"/></linearGradient><linearGradient id="vzb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9A6A3A"/><stop offset="1" stop-color="#7E5428"/></linearGradient></defs>`;
+  const petals = (cx,cy,r) => [0,1,2,3,4].map(i=>{ const a = i*72*Math.PI/180 - Math.PI/2; return `<circle cx="${(cx+Math.cos(a)*r).toFixed(1)}" cy="${(cy+Math.sin(a)*r).toFixed(1)}" r="${(r*0.78).toFixed(1)}"/>`; }).join("") + `<circle cx="${cx}" cy="${cy}" r="${r*0.8}"/>`;
+  const A_SHAPE = `<g>${petals(62,62,26)}${petals(140,104,17)}<path d="M98 210 C92 160 80 120 64 88 L72 84 C88 116 100 156 104 206 Z"/><path d="M102 210 C110 170 124 140 138 120 L145 125 C132 144 118 172 110 212 Z"/><ellipse cx="70" cy="150" rx="16" ry="6" transform="rotate(-25 70 150)"/><ellipse cx="128" cy="160" rx="14" ry="5" transform="rotate(25 128 160)"/><path d="M84 200 L116 200 L114 236 C146 262 172 296 162 330 L150 352 L50 352 L38 330 C28 296 54 262 86 236 Z"/></g>`;
+  const A_CUT = `<path d="M84 200 L116 200 L114 236 C146 262 172 296 162 330 L150 352 L50 352 L38 330 C28 296 54 262 86 236 Z" fill="none" stroke="#5A3A1C" stroke-width="1.6"/><rect x="97" y="292" width="6" height="60" fill="#5A3A1C"/><circle cx="62" cy="62" r="9" fill="none" stroke="#5A3A1C" stroke-width="1.4"/><circle cx="140" cy="104" r="6" fill="none" stroke="#5A3A1C" stroke-width="1.4"/>`;
+  const B_PATH = `M86 6 L114 6 L112 44 C144 70 170 104 160 136 L150 156 L50 156 L40 136 C30 104 56 70 88 44 Z`;
+  const svgA = cls => `<svg viewBox="0 0 200 360" class="${cls}">${WOOD}<g fill="${cls?"url(#vzb)":"url(#vzw)"}" stroke="${cls?"none":"#6B4423"}" stroke-width="1.4">${A_SHAPE}</g>${cls?"":A_CUT}</svg>`;
+  const svgB = cls => `<svg viewBox="0 0 200 160" class="${cls}"><path d="${B_PATH}" fill="${cls?"#8A5C2E":"#DDAE76"}" stroke="${cls?"none":"#6B4423"}" stroke-width="1.4"/>${cls?"":`<rect x="97" y="6" width="6" height="66" fill="#5A3A1C"/>`}</svg>`;
+  const svgBase = cls => `<svg viewBox="0 0 200 200" class="${cls}"><circle cx="100" cy="100" r="96" fill="${cls?"#8A5C2E":"#DDAE76"}" stroke="${cls?"none":"#6B4423"}" stroke-width="1.4"/>${cls?"":`<rect x="97" y="40" width="6" height="120" fill="#5A3A1C"/><rect x="40" y="97" width="120" height="6" fill="#5A3A1C"/>`}</svg>`;
+  const FLOOR = 150;
+  const P = {
+    sheet:{w:520,h:360,html:`<div style="position:absolute;inset:0;border-radius:8px;background:repeating-linear-gradient(8deg,#E4BC86 0 6px,#DDB27A 6px 13px,#E8C28E 13px 19px);box-shadow:0 0 0 1px #C9995F"></div>`},
+    base:{w:200,h:200,html:svgBase("back")+svgBase("")},
+    a:{w:200,h:360,html:svgA("back")+svgA("")},
+    b:{w:200,h:160,html:svgB("back")+svgB("")}
+  };
+  Object.entries(P).forEach(([k,v]) => { const d = document.createElement("div"); d.className = "vz-p"; d.style.width = v.w+"px"; d.style.height = v.h+"px"; d.style.marginLeft = (-v.w/2)+"px"; d.style.marginTop = (-v.h/2)+"px"; d.innerHTML = v.html; obj.appendChild(d); v.el = d; });
+  const L = (a,b,t) => a+(b-a)*t, E = t => t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2, seg = (t,a,b) => E(Math.min(1,Math.max(0,(t-a)/(b-a))));
+  let t = 0, spin = -28, auto = false, raf, user = false;
+  const tf = (x,y,z,rx,ry) => `translate3d(${x}px,${y}px,${z}px) rotateY(${ry}deg) rotateX(${rx}deg)`;
+  const apply = () => {
+    const sc = Math.min(0.92, scene.clientWidth/640, scene.clientHeight/420);
+    obj.style.transform = `scale(${sc}) rotateX(-22deg) rotateY(${spin}deg)`;
+    const kb = seg(t,0,.35), ka = seg(t,.2,.65), kB = seg(t,.5,.95);
+    P.sheet.el.style.transform = tf(0,FLOOR+2,0,90,0); P.sheet.el.style.opacity = 1 - seg(t,.25,.55);
+    P.base.el.style.transform = tf(L(150,0,kb), FLOOR, L(-80,0,kb), 90, 0);
+    P.a.el.style.transform = tf(L(-120,0,ka), L(FLOOR-1, FLOOR-170, ka), L(10,0,ka), L(90,0,ka), 0);
+    P.b.el.style.transform = tf(L(110,0,kB), L(FLOOR-1, FLOOR-72, kB), L(90,0,kB), L(90,0,kB), L(0,90,kB));
+    $("#vzRead").textContent = t < .2 ? "Every piece is laid out on one sheet of scrap wood: one vase half with both flowers, a second vase half and a round base." : t < .6 ? "The laser cuts them out, and the round base takes a cross-shaped slot so the vase can stand." : t < .95 ? "The second half slides down across the first, slot into slot, so two flat pieces become a 3D form." : "Done: a vase of flowers that stands on its own, made from wood that would have been thrown away.";
+  };
+  range.oninput = () => { t = range.value/100; auto = false; apply(); };
+  $("#vzPlay").onclick = () => { auto = true; t = 0; };
+  let dragX = null; scene.addEventListener("pointerdown", e => { dragX = e.clientX; user = true; scene.setPointerCapture(e.pointerId); });
+  scene.addEventListener("pointermove", e => { if (dragX==null) return; spin += (e.clientX - dragX)*0.5; dragX = e.clientX; apply(); });
+  scene.addEventListener("pointerup", () => dragX = null);
+  const loop = () => { if (auto){ t = Math.min(1, t + 0.004); range.value = Math.round(t*100); if (t>=1) auto = false; apply(); }
+    if (t > .97 && dragX==null && !reduce){ spin += 0.25; apply(); }
+    raf = requestAnimationFrame(loop); };
+  apply(); raf = requestAnimationFrame(loop); onCleanup(()=>cancelAnimationFrame(raf));
+  addEventListener("resize", apply); onCleanup(()=>removeEventListener("resize", apply));
+}
+
+function initTurbine(){
+  const root = $("#turb"); if (!root) return;
+  const svg = $("#tbSvg");
+  const hept = r => Array.from({length:7},(_,i)=>{ const a = i/7*Math.PI*2 - Math.PI/2; return (Math.cos(a)*r).toFixed(1)+","+(Math.sin(a)*r).toFixed(1); }).join(" ");
+  let blades = ""; for (let i=0;i<14;i++) blades += `<path d="M0 -24 C 18 -50 26 -82 18 -110 L 4 -112 C 8 -84 4 -52 -6 -26 Z" fill="url(#tbBl)" stroke="#2B3A78" stroke-width="1" transform="rotate(${i*360/14})"/>`;
+  svg.innerHTML = `<defs><linearGradient id="tbBl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E8EEFF"/><stop offset="1" stop-color="#8FA3D9"/></linearGradient><radialGradient id="tbHub" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#8E9CC8"/></radialGradient><linearGradient id="tbH" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B54C4"/><stop offset="1" stop-color="#16246A"/></linearGradient></defs>
+    <g id="tbWind" opacity="0"></g>
+    <polygon points="${hept(150)}" fill="url(#tbH)" stroke="#5C78E8" stroke-width="3"/><polygon points="${hept(128)}" fill="#0C1440"/>
+    <g id="tbRot">${blades}</g><circle r="30" fill="url(#tbHub)" stroke="#2B3A78" stroke-width="2"/><circle r="8" fill="#2B3A78"/>
+    <circle r="122" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="2"/>`;
+  const rotG = $("#tbRot", svg), wind = $("#tbWind", svg);
+  let streaks = ""; for (let i=0;i<18;i++){ const a = Math.random()*Math.PI*2; streaks += `<line class="tbs" x1="${(Math.cos(a)*120).toFixed(1)}" y1="${(Math.sin(a)*120).toFixed(1)}" x2="${(Math.cos(a)*150).toFixed(1)}" y2="${(Math.sin(a)*150).toFixed(1)}" stroke="rgba(190,210,255,.7)" stroke-width="2" stroke-linecap="round" data-a="${a.toFixed(3)}" data-o="${Math.random().toFixed(3)}"/>`; }
+  wind.innerHTML = streaks;
+  const LEVEL = [0, 220, 620, 1400], TXT = ["Flick the blades, or choose a setting.", "Breeze: a gentle desk-side airflow.", "Cruise: steady airflow, like an engine at cruising speed.", "Take-off: full thrust. The faster it spins, the more it looks like the turbine that inspired it."];
+  let ang = 0, vel = 0, target = 0, last = performance.now(), raf, drag = null;
+  const set = s => { target = LEVEL[s]; $$(".seg button", root).forEach(b=>b.setAttribute("aria-pressed", +b.dataset.s===s)); $("#tbRead").textContent = TXT[s]; };
+  $$(".seg button", root).forEach(b => b.onclick = () => set(+b.dataset.s));
+  const pang = e => { const r = svg.getBoundingClientRect(); return Math.atan2(e.clientY-(r.top+r.height/2), e.clientX-(r.left+r.width/2))*180/Math.PI; };
+  svg.addEventListener("pointerdown", e => { drag = {a: pang(e), t: performance.now()}; svg.setPointerCapture(e.pointerId); svg.style.cursor = "grabbing"; });
+  svg.addEventListener("pointermove", e => { if (!drag) return; const a = pang(e), now = performance.now(); let d = a - drag.a; if (d>180) d-=360; if (d<-180) d+=360; ang += d; vel = vel*0.5 + (d/Math.max(8,now-drag.t))*1000/6*0.5; drag = {a, t: now}; });
+  const up = () => { drag = null; svg.style.cursor = ""; }; svg.addEventListener("pointerup", up); svg.addEventListener("pointercancel", up);
+  const loop = now => { const dt = Math.min(.05,(now-last)/1000); last = now;
+    if (!drag){ vel += (target - vel) * Math.min(1, dt*(target>Math.abs(vel)?1.6:0.9)); ang += vel*6*dt; }
+    rotG.setAttribute("transform", `rotate(${(ang%360).toFixed(2)})`);
+    const rpm = Math.abs(Math.round(vel)); $("#tbRpm").textContent = rpm + " rpm";
+    const k = Math.min(1, rpm/1400); wind.setAttribute("opacity", (k*0.9).toFixed(2));
+    $$(".tbs", wind).forEach(l => { let o = (+l.dataset.o + dt*(0.4+k*2.2)) % 1; l.dataset.o = o; const a = +l.dataset.a, r0 = 130 + o*40; l.setAttribute("x1",(Math.cos(a)*r0).toFixed(1)); l.setAttribute("y1",(Math.sin(a)*r0).toFixed(1)); l.setAttribute("x2",(Math.cos(a)*(r0+10+k*30)).toFixed(1)); l.setAttribute("y2",(Math.sin(a)*(r0+10+k*30)).toFixed(1)); l.setAttribute("opacity",(1-o).toFixed(2)); });
+    raf = requestAnimationFrame(loop); };
+  set(0); raf = requestAnimationFrame(loop); onCleanup(()=>cancelAnimationFrame(raf));
+}
+
 /* ---------- project interactives ---------- */
 const INIT = {
 "synapsys"(){
+  initGlow();
   const C = [
     {img:"calm-c1.jpg", t:"Thought-to-Action Toolkit", s:"Reimagining CBT therapy at home. Name a feeling, pause, then reframe negative thoughts.",
      fb:["Least preferred","syn-fb-3.jpg",["Parents appreciated the emotional-regulation support and clear structure","Less fun compared to skill games or bath play"]],
@@ -2208,11 +2615,13 @@ const INIT = {
   initViewer("book", Array.from({length:32},(_,i)=>({src:`booklet/b${String(i+1).padStart(2,"0")}.jpg`, t:`Page ${i+1}`})));
 },
 "gift-set"(){
+  initTurbine();
   initScrub("scrub", ["Mark 1","Mark 2","Final"], ["First physical models, testing scale, layout and how a fan, holder and charger share one base.","Refined forms: turbine fan, faceted holder, radar-like charger and jets on a faceted base.","Final render on an office desk: blue faceted base with F-16, F-15 and F-35 models climbing upward."]);
   initStory();
   $$(".pcard").forEach(c => c.onclick = () => c.classList.toggle("flipped"));
 },
 "carecircle"(){
+  initMorning();
   const RA = [["Sign up","A warm welcome with one clear way in: email, Google or biometrics. Users can hide their email behind a private relay, and a plain-language note explains how data is protected under the PDPA."],
     ["Home","Greets Jane by name and shows who she's caring for. The daily MoodDot check-in leads, followed by quick actions, the next appointment and progress on today's care plan."],
     ["Services","Everything in two groups: 'Look after yourself' for mood, progress, peer support and live chat, and 'Get things done' for booking, wayfinding, workshops and rewards."],
@@ -2389,6 +2798,7 @@ const INIT = {
   onCleanup(()=>cancelAnimationFrame(raf));
 },
 "bon"(){
+  initTangle();
   const H = [["Slidable Cover","See every compartment's contents without lifting anything off.",58,12],
     ["Removable Dividers","Rearrange space for different yarns, hooks and accessories.",57,46],
     ["360° Rotation","Compartments swing around the core, so every one stays in reach.",21,80],
@@ -2416,7 +2826,7 @@ const INIT = {
     const shown = x ? $("#hotX") : $("#hot"); shown.classList.remove("swap"); void shown.offsetWidth; shown.classList.add("swap");
   });
 },
-"vase"(){},
+"vase"(){ initVase(); },
 "ae-queue"(){
   initQueueSim();
   initDx("aeDx", [
@@ -2463,6 +2873,7 @@ const INIT = {
   ]);
 },
 "oral-exam"(){
+  initClap();
   $("#oeJump").innerHTML = OE_GROUPS.map((g,i)=>`<button class="phase" data-g="${i}"><small>${["P1 – P3","P4 – P6","Sec 1 – 5","Teachers &amp; parents"][i]}</small><span>${["Lower primary","Upper primary","Secondary","Staff &amp; home"][i]}</span></button>`).join("");
   $$("#oeJump .phase").forEach(b => b.onclick = () => { const s = $("#oeG"+b.dataset.g); if (s) scrollTo({top: s.getBoundingClientRect().top + scrollY - 80, behavior: reduce ? "auto" : "smooth"}); });
   OE_GROUPS.forEach((g,i) => { initDx("oeDx"+i, g.d.map(x=>({src:x[0], who:g.t, t:x[1], d:x[2]}))); initApp("oeA"+i, g.p); });
