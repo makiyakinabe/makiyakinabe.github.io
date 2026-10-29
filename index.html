@@ -162,9 +162,12 @@ p{margin:0}
 .lseg.on{opacity:1;filter:drop-shadow(0 0 6px currentColor)}
 .tape-band{position:relative;margin-top:clamp(40px,6vw,70px);height:120px}
 .tape-row{position:absolute;left:-3%;right:-3%;top:30px;background:#FFDB6E;color:#151515;border-block:3px solid rgba(0,0,0,.25);transform:rotate(-2deg);overflow:hidden;box-shadow:0 18px 30px -16px rgba(0,0,0,.8)}
-.tape-cta{display:block;position:relative;height:110px;margin-inline:calc(50% - 50vw);overflow:hidden;text-decoration:none;cursor:pointer}
-.tape-row.cta{top:28px;background:#7C6CF2;color:#fff;transform:rotate(-1.6deg);border-block-color:rgba(255,255,255,.25)}
+.tape-cta{display:block;position:relative;height:170px;margin-inline:calc(50% - 50vw);overflow:hidden;text-decoration:none;cursor:pointer}
+.tape-row.cta{top:40px;background:#7C6CF2;color:#fff;transform:rotate(-1.6deg);border-block-color:rgba(255,255,255,.25)}
 .tape-cta .tape-track{animation-duration:30s}
+.tape-row.cta2{top:62px;background:#9ED4FF;color:#0B1630;transform:rotate(2.6deg);opacity:.97}
+.tape-cta .tape-row.cta2 .tape-track{animation-direction:reverse;animation-duration:36s}
+.tape-cta:hover .tape-row.cta2{background:#B5DEFF}
 .tape-cta:hover .tape-track{animation-play-state:paused}
 .tape-cta:hover .tape-row.cta{background:#8E80F6}
 .tape-cta:focus-visible{outline:3px solid var(--accent);outline-offset:-6px}
@@ -954,7 +957,8 @@ function viewHome(){
     </div>
   </section>
 
-  <a class="tape-cta" href="#journey" aria-label="Wanna know more about me? Go to My Journey">
+  <a class="tape-cta" href="#journey" aria-label="Learn more about me on My Journey">
+    <div class="tape-row cta2"><div class="tape-track">${Array(12).fill(`<span>Learn more about me here</span>`).join("")}</div></div>
     <div class="tape-row cta"><div class="tape-track">${Array(12).fill(`<span>Wanna know more about me?</span>`).join("")}</div></div>
   </a>
 
