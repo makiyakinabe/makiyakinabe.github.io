@@ -771,6 +771,7 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .tv-glass img{display:block;width:100%;height:100%;object-fit:cover;cursor:zoom-in}
 .tv-led{position:absolute;bottom:clamp(5px,.6vw,8px);left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#4ADE80;box-shadow:0 0 6px #4ADE80}
 .tv-tag{text-align:center;font-size:13px;color:var(--muted);margin-top:14px}
+.oe-sub{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--pa);margin:26px 0 0}
 .dx-info{margin-top:16px}
 .dx-info h3{font-size:clamp(22px,2.4vw,28px);font-weight:800;letter-spacing:-.02em}
 .dx-info p{font-size:17px;color:var(--ink-2);margin-top:8px;max-width:70ch}
@@ -886,19 +887,23 @@ const PROJECTS = [
   cat:"UI/UX · Data Visualisation", year:"2025", ctx:"UI/UX internship project", tags:["uiux"], tagLabels:["UI/UX","Data Viz","Dashboards"],
   hero:"lf-cover.jpg", thumb:"lf-cover.jpg", thumbPos:"0% 50%",
   blurb:"A dashboard that turns lung sound recordings into clear frequency charts doctors can trust, plus an app for recording at home."},
- {id:"tray-dispenser", num:"06", name:"Tray Dispenser", sub:"Mandai Wildlife Reserve", p:"#3D7A4C", pd:"#86C796",
+ {id:"oral-exam", num:"06", name:"Oral Exam Mastery", sub:"AI Oral Practice", p:"#D4561A", pd:"#FFAE6E",
+  cat:"UI/UX · Web &amp; Mobile App", year:"2025", ctx:"UI/UX internship · Ministry of Education", tags:["uiux"], tagLabels:["UI/UX","EdTech","Web &amp; Mobile"],
+  hero:"oe-cover.jpg", thumb:"oe-cover.jpg", thumbPos:"0% 50%",
+  blurb:"AI-marked oral practice for primary and secondary students, with Echo as a friendly examiner and one place for teachers to manage every class."},
+ {id:"tray-dispenser", num:"07", name:"Tray Dispenser", sub:"Mandai Wildlife Reserve", p:"#3D7A4C", pd:"#86C796",
   cat:"Service & Product Design", year:"2024–25", ctx:"Industry studio · Mandai Wildlife Group", tags:["service","product"], tagLabels:["Service Design","Product Design"],
   hero:"tray-cover.jpg", thumb:"tray-cover.jpg", thumbPos:"0% 50%",
   blurb:"A back-end tray dispenser for Mandai's food courts. Each tray shows its order number, so tourists always grab the right one."},
- {id:"lafex", num:"07", name:"LAFEX", sub:"Latte Art for Steadier Hands", p:"#3B4A8A", pd:"#9DABEA",
+ {id:"lafex", num:"08", name:"LAFEX", sub:"Latte Art for Steadier Hands", p:"#3B4A8A", pd:"#9DABEA",
   cat:"Product Design · App", year:"2024", ctx:"Studio Project 2 · mock Electrolux brief", tags:["product","uiux"], tagLabels:["Product Design","App","Redesign"],
   hero:"lafex-cover.jpg", thumb:"lafex-cover.jpg", thumbPos:"0% 50%",
   blurb:"A latte-art device, wristband and app for older adults with Parkinson's, redesigned after user testing so shaking hands can still pour a heart."},
- {id:"bon", num:"08", name:"BON", sub:"Crochet Storage", p:"#A0703A", pd:"#D9AC74",
+ {id:"bon", num:"09", name:"BON", sub:"Crochet Storage", p:"#A0703A", pd:"#D9AC74",
   cat:"Product Design", year:"2023–24", ctx:"Studio project", tags:["product"], tagLabels:["Product Design","Prototyping"],
   hero:"bon-cover.jpg", thumb:"bon-cover.jpg", thumbPos:"0% 50%",
   blurb:"A crochet storage unit with sliding, rotating compartments that keeps yarn, hooks and tools tidy and tangle-free."},
- {id:"vase", num:"09", name:"Flower Vase", sub:"Laser-Cut Gift", p:"#B5562F", pd:"#F0A27C",
+ {id:"vase", num:"10", name:"Flower Vase", sub:"Laser-Cut Gift", p:"#B5562F", pd:"#F0A27C",
   cat:"Product Design · Laser Cutting", year:"2024", ctx:"Personal project · Mother's Day gift", tags:["product"], tagLabels:["Laser Cutting","Product Design"],
   hero:"vase-cover.jpg", thumb:"vase-cover.jpg", thumbPos:"0% 50%",
   blurb:"A Mother's Day gift cut from a single sheet of scrap wood, with flat pieces that slot together into a 3D vase of flowers."}
@@ -1715,6 +1720,28 @@ const CONTENT = {
       <div><h3 style="font-size:22px">When things don't go to plan</h3><p class="body-strong" style="margin-top:8px">If a recording can't send, the app reassures patients it's saved. If the vest disconnects, it picks up where it stopped. And before the first result arrives, it explains what will appear and what to do next.</p></div>
     </div>`)}
 `,
+"oral-exam": () => `
+  ${blk("Overview","Oral practice students actually want to do",`
+    <div class="two">
+      <div>
+        <p class="body-strong">During my internship at Temasek Polytechnic's School of Engineering, I redesigned the logo, wireframes and dashboards for Oral Exam Mastery, an MOE oral-exam practice site, then ran user tests with students. This second version makes it more appealing for students of every age, and easier for teachers to manage each class.</p>
+        <p class="hmw">How might we make oral practice something students look forward to, at every age, while giving teachers one place to manage each class?</p>
+      </div>
+      <ul class="list" style="margin-top:0">
+        <li><span>Echo, a friendly AI examiner, listens and asks follow-up questions</span></li>
+        <li><span>Four audiences, each with its own look and level of challenge</span></li>
+        <li><span>English and Chinese oral components, with pinyin support</span></li>
+        <li><span>AI marks are checked by teachers before they're final</span></li>
+      </ul>
+    </div>`)}
+  ${blk("Version 1","Where it started",`
+    <p class="body-strong" style="margin-bottom:18px">My original internship work: logo proposals, the first wireframes, and dashboards for students and teachers, refined after feedback from students.</p>
+    ${viewerHTML("oeV1", "", "16/10", "#FBF8EE")}`)}
+  ${blk("Version 2 · by age group","One app, four audiences",`
+    <p class="body-strong" style="margin-bottom:18px">Pick an age group to see its screens on a laptop and on a phone.</p>
+    <div class="phases" id="oeGroups" role="tablist"></div>
+    <div id="oePanel" style="margin-top:22px"></div>`)}
+`,
 "internship": () => `
   ${blk("Overview","Five months, four highlights",`
     <div class="two">
@@ -2102,6 +2129,64 @@ const INIT = {
     ["lf-p-diary.webp","Symptom diary","A quick daily check-in for breathlessness, cough and fever, shared with the doctor's team."]
   ]);
 },
+"oral-exam"(){
+  initViewer("oeV1", [
+    {src:"intern/i69.jpg", t:"New logo proposals", c:"From the initial logo to speech-bubble marks"},
+    {src:"intern/i70.jpg", t:"New wireframe proposals", c:"Topic cards for English, Chinese, Malay and Tamil orals"},
+    {src:"intern/i78.jpg", t:"Dashboards for students and teachers", c:"Proposed to give both a clear overview of the platform"},
+    {src:"intern/i80.jpg", t:"User feedback and refinements", c:"Student dashboard, desktop and mobile"},
+    {src:"intern/i84.jpg", t:"Oral Exam Mastery refinements", c:"The full set of refined screens"}
+  ], {zoom:true});
+  const G = [
+    {k:"P1 – P3", t:"Lower primary", intro:"Playful and picture-led. Echo the mascot reads along, a talking trail turns practice into an adventure, and stars replace marks.",
+     d:[["oe-d-p1-home.webp","Home","Aiden's home: today's talking adventure, his progress along the talking trail, and reading set by his teacher."],
+        ["oe-d-p1-read.webp","Read aloud with Echo","Read a story page by page. Tricky words split into syllables to clap along to, while Echo listens and cheers him on."],
+        ["oe-d-p1-stars.webp","Stars & word practice","Stars instead of marks, three things he did well, and words to practise. Practising never takes away stars."],
+        ["oe-d-p1-trail.webp","Talking trail map","Every stop on the trail is a speaking mission. Finish stops to earn stars and unlock treasure."],
+        ["oe-d-p1-picture.webp","华文 看图说话","Chinese picture talk: tap the numbers in the picture to learn words, then plan the talk with who, when, where and what happened."],
+        ["oe-d-p1-holidays.webp","Trail stop: Holidays","Talk about a beach picture, with helper questions and sentence starters for when you're stuck."]],
+     p:[["oe-p-p1-home.webp","Home","The same adventure on a phone: one big Play mission button and the talking trail."],
+        ["oe-p-p1-read.webp","Read aloud","One page at a time, with a big record button and help close by."],
+        ["oe-p-p1-stars.webp","Stars","Stars, a cheerful mascot and the words to practise next."],
+        ["oe-p-p1-trail.webp","Talking trail","The trail map, with the next stop ready to start."],
+        ["oe-p-p1-picture.webp","看图说话","Chinese picture talk with pinyin, word cards and a thinking-time countdown."],
+        ["oe-p-p1-holidays.webp","Holidays","Who, where, doing and feeling helpers, then start talking to win 3 stars."]]},
+    {k:"P4 – P6", t:"Upper primary", intro:"PSLE-ready. Levels, XP and leagues keep it motivating, while practice mirrors the real stimulus-based conversation.",
+     d:[["oe-d-p4-home.webp","Home","Ryan's PSLE countdown, today's challenge, his level, and a checklist of every PSLE oral component in English and Chinese."],
+        ["oe-d-p4-talk.webp","Talk with Echo","A stimulus-based conversation on saving water. Echo asks follow-ups based on his answers, and only nudges with ideas when he asks."],
+        ["oe-d-p4-feedback.webp","Feedback","A score out of 20, how he did on ideas, examples and clarity, one top tip with a better example, and words to polish."]],
+     p:[["oe-p-p4-home.webp","Home","The countdown, today's challenge and the PSLE checklist, sized for a phone."],
+        ["oe-p-p4-talk.webp","Talk with Echo","The conversation as a chat, with Say it again, Slower please and Need an idea."],
+        ["oe-p-p4-feedback.webp","Your score","Score, rubric bars, a top tip and a word to practise."]]},
+    {k:"Secondary", t:"Secondary", intro:"Grown-up and exam-focused: a live examiner, rubric-based feedback and a word coach, in English and Chinese.",
+     d:[["oe-d-s-home.webp","Home","Nahilus's weekly goal, today's quest, assignments due from his teachers, and a class leaderboard ranked by practice effort, not marks."],
+        ["oe-d-s-talk.webp","Talk with Echo","A live O-Level style conversation. Echo listens without interrupting, then asks follow-up questions based on what was said."],
+        ["oe-d-s-feedback.webp","AI feedback & word coach","Marks for each rubric band, what went well, the next step, speaking skills like pace and filler words, and a pronunciation coach."],
+        ["oe-d-s-video.webp","华文 看录像会话","Chinese video conversation: watch the clip with subtitles, see the questions, and build an answer with a structure and useful phrases, with pinyin on or off."]],
+     p:[["oe-p-s-home.webp","Home","Today's quest, what's due soon and the week's streak."],
+        ["oe-p-s-talk.webp","Talk with Echo","The live conversation on a phone, with a timer and a big stop button."],
+        ["oe-p-s-feedback.webp","Your feedback","Score, rubric bands and a word coach that slides up from the bottom."],
+        ["oe-p-s-video.webp","看录像会话","The video, the first question and the answer helper."]]},
+    {k:"Teachers & parents", t:"Teachers & parents", intro:"Teachers manage every class in one place, and parents get a simple weekly summary.",
+     d:[["oe-d-t-overview.webp","Class overview","Submissions, class average, who needs a nudge, progress since the start of term, and a review queue."],
+        ["oe-d-t-class.webp","Students & gradebook","Every student's attempts, latest score, band for each rubric, trend and status, with suggested practice groups."],
+        ["oe-d-t-review.webp","Review a submission","Listen to the recording with its transcript, see the AI's suggested bands and how confident it is, then confirm the final mark and feedback."],
+        ["oe-d-t-assign.webp","Create assignment","Pick classes, the oral component, topic and examiner questions, set the rubric, then publish."]],
+     p:[["oe-p-parent.webp","Parent weekly summary","Days practised, stars won, what their child is better at and working on, their best reading to listen to, and an idea to try at home."]]}
+  ];
+  $("#oeGroups").innerHTML = G.map((g,i)=>`<button class="phase" role="tab" data-g="${i}"><small>${g.k}</small><span>${g.t}</span></button>`).join("");
+  const panel = $("#oePanel");
+  const show = i => { const g = G[i];
+    $$("#oeGroups .phase").forEach((b,j)=>b.setAttribute("aria-selected", i===j));
+    panel.innerHTML = `<div class="fade-in"><p class="body-strong">${g.intro}</p>
+      <h3 class="oe-sub">On a laptop</h3>${dxHTML("oeDx", true)}
+      <h3 class="oe-sub">On a phone</h3>${appHTML("oe")}</div>`;
+    initDx("oeDx", g.d.map(x=>({src:x[0], who:g.t, t:x[1], d:x[2]})));
+    initApp("oe", g.p);
+  };
+  $$("#oeGroups .phase").forEach(b => b.onclick = () => show(+b.dataset.g));
+  show(0);
+},
 "internship"(){
   const P = [[69,1,"New logo proposals"],[70,1,"New wireframe proposals"],[71,1,"Turning the design system into a stylesheet"],[72,1,"Work done"],
     [73,2,"Suggesting features"],[74,2,"Creating guides"],[75,2,"Creating default profile icons"],[76,2,"Expanding avatars with Canva tools"],
@@ -2127,7 +2212,7 @@ function viewWorks(){
   return `<section class="wrap p-head">
     <p class="eyebrow">2023 – 2026</p>
     <h1 style="margin-top:10px">My Works</h1>
-    <p class="lead">Nine projects across product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital, to studio briefs and my own explorations.</p>
+    <p class="lead">Ten projects across product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital and the Ministry of Education, to studio briefs and my own explorations.</p>
   </section>
   <section class="wrap" style="padding-top:44px">
     <div class="grid">${PROJECTS.map(p=>card(p)).join("")}</div>
