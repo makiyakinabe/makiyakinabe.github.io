@@ -161,7 +161,7 @@ p{margin:0}
 .led p{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#BDB8D6;margin-top:12px}
 .lseg{fill:currentColor;opacity:.09}
 .lseg.on{opacity:1;filter:drop-shadow(0 0 6px currentColor)}
-.tape-band{position:relative;margin-top:clamp(40px,6vw,70px);height:120px}
+.tape-band{position:relative;margin-top:clamp(40px,6vw,70px);height:calc(118px + 2.4vw)}
 .tape-row{position:absolute;left:-3%;right:-3%;top:30px;background:#FFDB6E;color:#151515;border-block:3px solid rgba(0,0,0,.25);transform:rotate(-2deg);overflow:hidden;box-shadow:0 18px 30px -16px rgba(0,0,0,.8)}
 .tape-cta{display:block;position:relative;height:170px;margin-inline:calc(50% - 50vw);overflow:hidden;text-decoration:none;cursor:pointer}
 .tape-row.cta{top:40px;background:#7C6CF2;color:#fff;transform:rotate(-1.6deg);border-block-color:rgba(255,255,255,.25)}
@@ -941,8 +941,8 @@ function viewHome(){
       </div>
     </div>
     <div class="tape-band" aria-hidden="true">
-      <div class="tape-row b"><div class="tape-track">${Array(2).fill(["User research","Prototyping","Model making","Wireframing","Game development","Data viz","Rendering"].map(t=>`<span>${t}</span>`).join("")).join("")}</div></div>
-      <div class="tape-row"><div class="tape-track">${Array(2).fill(["Product design","UI/UX","Service design","Empathy first","Interactive media","Design thinking"].map(t=>`<span>${t}</span>`).join("")).join("")}</div></div>
+      <div class="tape-row b"><div class="tape-track">${Array(4).fill(["User research","Prototyping","Model making","Wireframing","Game development","Data viz","Rendering"].map(t=>`<span>${t}</span>`).join("")).join("")}</div></div>
+      <div class="tape-row"><div class="tape-track">${Array(4).fill(["Product design","UI/UX","Service design","Empathy first","Interactive media","Design thinking"].map(t=>`<span>${t}</span>`).join("")).join("")}</div></div>
     </div>
   </section>
 
