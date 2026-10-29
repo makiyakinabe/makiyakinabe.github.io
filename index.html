@@ -1574,7 +1574,7 @@ const CONTENT = {
         <p class="tg-msg" id="tgMsg" aria-live="polite"></p>
       </div>
       <div>
-        <p class="body-strong">You're a tourist at Ah Meng Restaurant and your number just came up. Find your tray, but watch out: some dishes look almost the same.</p>
+        <p class="body-strong">You're a tourist at Ah Meng Restaurant and your number just came up. Find your tray, but watch out: some dishes look almost, or exactly, the same.</p>
         <div class="seg" role="group" aria-label="Collection point">
           <button aria-pressed="true" data-m="before">Shared counter</button>
           <button aria-pressed="false" data-m="disp">With the dispenser</button>
@@ -2074,23 +2074,25 @@ function initTrayGame(){
   const cup = d => `<svg viewBox="0 0 40 40" class="tg-drink" aria-hidden="true"><circle cx="20" cy="21" r="18" fill="rgba(0,0,0,.15)"/><circle cx="20" cy="20" r="18" fill="#F5F0E6"/><circle cx="20" cy="20" r="13" fill="${d[0]}"/><circle cx="17" cy="17" r="6" fill="${d[1]}" opacity=".7"/><path d="M36 14 q6 6 0 12" fill="none" stroke="#F5F0E6" stroke-width="4"/></svg>`;
   let mode = "before", base = 124, trays = [], target = null, lock = false; const sc = {before:[0,0], disp:[0,0]};
   const stage = $(".tg-stage", root), counter = $("#tgCounter");
-  const TXT = {before:"Some dishes look almost the same, and none of the trays are labelled, so guests have to guess, or crowd the counter asking staff in a language they may not share.",
-    disp:"The dispenser shows each order number on its tray and slides the right one out, so guests grab it first time, however similar the food looks."};
+  const TXT = {before:"Some dishes look almost the same, sometimes two guests order exactly the same meal, and none of the trays are labelled, so guests have to guess, or crowd the counter asking staff in a language they may not share.",
+    disp:"The dispenser shows each order number on its tray and slides the right one out, so guests grab it first time, even when someone else ordered the exact same meal."};
   const shuffle = a => a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
   const num = n => String(n).padStart(4,"0");
   const round = () => { lock = false;
     const pair = Math.floor(Math.random()*3), twins = DISH.map((d,i)=>i).filter(i=>DISH[i].pair===pair);
     const others = shuffle(DISH.map((d,i)=>i).filter(i=>DISH[i].pair!==pair)).slice(0,2);
-    const dishes = shuffle([...twins, ...others]), nums = shuffle([0,1,2,3].map(i=>base+i));
+    const want = twins[Math.floor(Math.random()*2)], exact = Math.random() < 0.4;
+    const dishes = shuffle(exact ? [want, want, twins.find(x=>x!==want), others[0]] : [...twins, ...others]), nums = shuffle([0,1,2,3].map(i=>base+i));
     trays = dishes.map((d,i)=>({d, n:nums[i], drink:DRINK[Math.floor(Math.random()*DRINK.length)]}));
-    const want = twins[Math.floor(Math.random()*2)]; target = trays.find(t=>t.d===want); const td = DRINK[Math.floor(Math.random()*DRINK.length)]; trays.forEach(t=>{ if (twins.includes(t.d)) t.drink = td; });
+    target = trays.find(t=>t.d===want); const td = DRINK[Math.floor(Math.random()*DRINK.length)]; trays.forEach(t=>{ if (twins.includes(t.d)) t.drink = td; });
     $("#tgNum").textContent = num(target.n); $("#tgOrder").textContent = DISH[target.d].name + " + " + target.drink[2]; $("#tgMsg").textContent = "";
     counter.innerHTML = trays.map((t,i)=>`<button class="tg-tray${mode==="disp"&&t===target?" lit":""}" data-i="${i}" aria-label="${mode==="disp"?"Tray for order "+num(t.n)+", ":"Tray "+(i+1)+", "}${DISH[t.d].name} and ${t.drink[2]}"><span class="tg-no">${num(t.n)}</span>${DISH[t.d].draw()}${cup(t.drink)}</button>`).join("");
     $$(".tg-tray", counter).forEach(b => b.onclick = () => pick(b)); };
   const score = () => { $("#tgB").textContent = sc.before[0]+" / "+sc.before[1]; $("#tgD").textContent = sc.disp[0]+" / "+sc.disp[1]; };
   const pick = b => { if (lock) return; const t = trays[+b.dataset.i]; sc[mode][1]++;
     if (t === target){ lock = true; b.classList.add("ok"); $("#tgMsg").textContent = "Got it! Enjoy your "+DISH[t.d].name+"."; score(); setTimeout(()=>{ base += 4; round(); }, 1200); }
-    else { sc[mode][0]++; b.classList.remove("bad"); void b.offsetWidth; b.classList.add("bad"); $("#tgMsg").textContent = "Oops, that's order "+num(t.n)+"'s "+DISH[t.d].name+"."; score(); } };
+    else { sc[mode][0]++; b.classList.remove("bad"); void b.offsetWidth; b.classList.add("bad");
+      $("#tgMsg").textContent = t.d === target.d ? "Oops, that's order "+num(t.n)+". They ordered exactly the same thing as you!" : "Oops, that's order "+num(t.n)+"'s "+DISH[t.d].name+"."; score(); } };
   $$(".seg button", root).forEach(b => b.onclick = () => { mode = b.dataset.m; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x===b)); stage.classList.toggle("disp", mode==="disp"); $("#tgRead").textContent = TXT[mode]; round(); });
   $("#tgRead").textContent = TXT[mode]; score(); round();
 }
