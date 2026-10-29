@@ -1481,7 +1481,7 @@ const CONTENT = {
           <button aria-pressed="false" data-g="snap">Snap-Path Strips</button>
           <button aria-pressed="false" data-g="thread">Thread &amp; Pattern Tiles</button>
         </div>
-        <div style="margin-top:14px"><button class="fbtn2" id="kitNew" type="button">Start again</button></div>
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><button class="fbtn2" id="kitHint" type="button">Show me a hint</button><button class="fbtn2" id="kitNew" type="button">New card</button></div>
         <div class="kit-stars" id="kitStars" aria-label="Stars"></div>
         <div class="fstats"><div class="fstat"><small id="kitLblA">Marble drops</small><b id="kitA">0</b></div><div class="fstat"><small>Skill it trains</small><b id="kitSkill" style="font-size:16px;line-height:1.25;margin-top:4px"></b></div></div>
         <p class="readout" id="kitRead" aria-live="polite"></p>
@@ -2295,8 +2295,8 @@ function initKit(){
   const star = on => `<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${on?"#FFC531":"#E7E2D3"}" stroke="${on?"#D99A00":"#D6D0BE"}" stroke-width="1.2"/></svg>`;
   const stars = n => { $("#kitStars").innerHTML = [0,1,2].map(i=>star(i<n)).join(""); };
   const INFO = {dot:{lbl:"Marble drops", skill:"Impulse control & working memory", txt:"Drag the magnetic pen to guide the marble along the dots. Rush it and the magnet loses the marble, which drops back to the last checkpoint. Slow, careful moves win."},
-    snap:{lbl:"Strips that wouldn't snap", skill:"Finger strength & two-handed coordination", txt:"Copy the shape on the task card. Tap one peg, then the next, to snap a strip between them. Only strips that match the card will snap in."},
-    thread:{lbl:"Threading mistakes", skill:"Pincer grip & patience", txt:"Follow the pattern card and tap the holes in order to thread the tile. A wrong hole pulls the last stitch back out, so mistakes are a chance to slow down, not to give up."}};
+    snap:{lbl:"Sticks that didn't match", skill:"Spatial reasoning & two-handed coordination", txt:"Complete the symmetry: the left half is already built. Tap one peg, then the next, to snap a stick that mirrors the left side. Comparing both sides builds spatial reasoning and pattern recognition. Tap the card to flip it and see the sticks you need."},
+    thread:{lbl:"Threading mistakes", skill:"Pincer grip & patience", txt:"Follow the pattern card from the dark dot and tap the holes in order to thread the tile. A wrong hole pulls the last stitch back out, so mistakes are a chance to slow down, not to give up. Tap the card to flip it."}};
   let game = "dot", cleanupGame = null, count = 0;
   const pt = e => { const r = svg.getBoundingClientRect(); return [(e.clientX-r.left)*420/r.width, (e.clientY-r.top)*300/r.height]; };
   const setCount = n => { count = n; $("#kitA").textContent = n; };
@@ -2342,59 +2342,108 @@ function initKit(){
     return () => { svg.removeEventListener("pointerdown", down); svg.removeEventListener("pointermove", move); svg.removeEventListener("pointerup", up); svg.removeEventListener("pointercancel", up); cancelAnimationFrame(anim); };
   };
 
+  const starRow = (x, y, n) => [0,1,2].map(i=>`<path transform="translate(${x+i*13} ${y}) scale(.5)" d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${i<n?"#FFC531":"#D9D6CC"}"/>`).join("");
+  // an activity card, in the style of the printed SynapSys cards
+  const actCard = (o) => { const {x=12,y=24,w=140,h=212,col,title,name,inner,stars:st,back} = o;
+    let s = `<g class="kcard" style="cursor:pointer"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="${col}"/><rect x="${x+8}" y="${y+8}" width="${w-16}" height="${h-16}" rx="8" fill="#F4F4F2"/>`;
+    if (!back){ s += `<text x="${x+w/2}" y="${y+30}" text-anchor="middle" font-size="9.6" font-weight="800" fill="#222">${title}</text><text x="${x+w/2}" y="${y+46}" text-anchor="middle" font-size="9" font-weight="600" fill="#444">${name}</text>${inner}
+        <text x="${x+16}" y="${y+h-18}" font-size="7.5" font-weight="600" fill="#444">Difficulty level</text>${starRow(x+76, y+h-27, st)}`; }
+    else { s += `<text x="${x+w/2}" y="${y+32}" text-anchor="middle" font-size="10.5" font-weight="800" fill="#222">What do you need?</text>${inner}`; }
+    s += `<text x="${x+w/2}" y="${y+h+16}" text-anchor="middle" font-size="9" font-weight="700" fill="#8A7F5A">Tap the card to flip it</text></g>`; return s; };
+
   const snapGame = () => {
-    const COLS = 6, ROWS = 4, X0 = 42, Y0 = 66, DX = 46, DY = 58;
-    const SHAPES = [{n:"House", e:[[[1,3],[1,1]],[[1,1],[2,0]],[[2,0],[3,1]],[[3,1],[3,3]],[[3,3],[1,3]],[[1,1],[3,1]]]},
-      {n:"Lightning", e:[[[3,0],[1,2]],[[1,2],[3,2]],[[3,2],[1,3]]]},
-      {n:"Diamond", e:[[[3,0],[1,1]],[[1,1],[3,3]],[[3,3],[5,1]],[[5,1],[3,0]],[[1,1],[5,1]]]}];
-    let si = Math.floor(Math.random()*SHAPES.length), placed = [], sel = null, bad = 0;
+    const COLS = 7, ROWS = 5, X0 = 186, Y0 = 44, DX = 35, DY = 50, AX = 3;
+    const SHAPES = [
+      {n:"House", col:"#4A90D9", st:1, e:[[[3,0],[1,2]],[[1,2],[1,4]],[[1,4],[3,4]],[[1,2],[3,2]],[[2,3],[2,4]]]},
+      {n:"Double heart", col:"#E07BB0", st:2, e:[[[3,1],[2,0]],[[2,0],[1,0]],[[1,0],[0,1]],[[0,1],[0,2]],[[0,2],[3,4]]]},
+      {n:"Butterfly", col:"#8E55B5", st:3, e:[[[3,0],[3,4]],[[3,1],[1,0]],[[1,0],[0,1]],[[0,1],[1,2]],[[1,2],[3,2]],[[3,2],[0,3]],[[0,3],[1,4]],[[1,4],[3,3]]]}];
+    const mir = ([c,r]) => [2*AX-c, r];
     const key = (a,b) => [a.join(","),b.join(",")].sort().join("|");
+    let si = (snapGame.n = ((snapGame.n ?? -1) + 1) % SHAPES.length), placed = [], sel = null, bad = 0, flip = false, hint = false;
+    const sh = SHAPES[si];
+    const given = sh.e.map(([a,b])=>key(a,b));
+    const need = []; sh.e.forEach(([a,b])=>{ const k = key(mir(a),mir(b)); if (!given.includes(k) && !need.some(n=>n.k===k)) need.push({k, a:mir(a), b:mir(b)}); });
     const pos = ([c,r]) => [X0+c*DX, Y0+r*DY];
-    const render = () => { const sh = SHAPES[si];
+    const STRIP = ["#E2558C","#4A90D9","#F2C94C","#3BAA5C","#8E55B5","#F2994A","#5B6BD6","#E07BB0"];
+    const strip = (a,b,col,ghost) => { const p = pos(a), q = pos(b); return ghost ? `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${col}" stroke-width="11" stroke-linecap="round" stroke-dasharray="2 9" opacity=".9"><animate attributeName="opacity" values=".25;1;.25" dur="1.2s" repeatCount="indefinite"/></line>`
+      : `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${col}" stroke-width="11" stroke-linecap="round"/><line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="rgba(255,255,255,.5)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 6"/>`; };
+    const cardInner = () => { const cx = 82, cy = 140, k = 0.52; const tr = ([c,r]) => [cx + (c-AX)*DX*k, cy - 60 + r*DY*k*0.95];
+      const all = [...sh.e.map(([a,b])=>[a,b,true]), ...need.map(n=>[n.a,n.b,placed.includes(n.k)])];
+      return `<line x1="${cx}" y1="${cy-70}" x2="${cx}" y2="${cy+60}" stroke="#9A9A9A" stroke-width="1" stroke-dasharray="3 3"/>` + all.map(([a,b,on],i)=>{ const p = tr(a), q = tr(b); return `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${sh.col}" stroke-width="6" stroke-linecap="round" opacity="${on?1:.95}"/>`; }).join(""); };
+    const backInner = () => `<rect x="28" y="70" width="108" height="78" rx="8" fill="none" stroke="${sh.col}" stroke-width="1.5"/><text x="82" y="86" text-anchor="middle" font-size="8" font-weight="700" fill="#333">Straight SnapSticks</text>
+      <rect x="52" y="98" width="7" height="34" rx="3.5" fill="#4A90D9"/><text x="64" y="120" font-size="10" font-weight="700" fill="#333">x${Math.ceil(need.length/2)}</text><rect x="94" y="98" width="7" height="34" rx="3.5" fill="#3BAA5C"/><text x="106" y="120" font-size="10" font-weight="700" fill="#333">x${Math.floor(need.length/2)}</text>
+      <text x="82" y="176" text-anchor="middle" font-size="9" font-weight="800" fill="#333">Sticks to add: ${need.length}</text><text x="82" y="192" text-anchor="middle" font-size="8" fill="#555">Left side is done for you.</text><text x="82" y="204" text-anchor="middle" font-size="8" fill="#555">Mirror it on the right.</text>`;
+    const next = () => need.find(n => !placed.includes(n.k));
+    const render = () => {
       let s = `<rect x="6" y="6" width="408" height="288" rx="18" fill="#FFFFFF" stroke="#F0E3B5" stroke-width="3"/>`;
-      s += placed.map((k,i)=>{ const [a,b] = k.split("|").map(x=>pos(x.split(",").map(Number))); return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${PAL[i%5]}" stroke-width="14" stroke-linecap="round"/><line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-linecap="round" transform="translate(0 -3)"/>`; }).join("");
-      for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++){ const [x,y] = pos([c,r]); const on = sel && sel[0]===c && sel[1]===r;
-        s += `<g class="kpeg" data-c="${c}" data-r="${r}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="18" fill="transparent"/><circle cx="${x}" cy="${y}" r="${on?10:7}" fill="${on?"#5B6BD6":"#D9CFB0"}" stroke="${on?"#FFFFFF":"none"}" stroke-width="3"/></g>`; }
+      s += actCard({col:sh.col, title:"Complete the symmetry", name:sh.n, inner: flip ? backInner() : cardInner(), stars:sh.st, back:flip});
+      const [ax0] = pos([AX,0]); s += `<line x1="${ax0}" y1="${Y0-22}" x2="${ax0}" y2="${Y0+(ROWS-1)*DY+22}" stroke="#B9B2A0" stroke-width="2" stroke-dasharray="5 6"/><text x="${ax0}" y="${Y0-28}" text-anchor="middle" font-size="9" font-weight="700" fill="#8A7F5A">mirror line</text>`;
+      s += sh.e.map(([a,b],i)=>strip(a,b,STRIP[i%8])).join("");
+      s += placed.map(k=>{ const n = need.find(x=>x.k===k); const i = sh.e.findIndex(([a,b])=>key(mir(a),mir(b))===k); return strip(n.a,n.b,STRIP[(i<0?0:i)%8]); }).join("");
+      const nx = next(); if (hint && nx) s += strip(nx.a, nx.b, "#5B6BD6", true);
+      const mSel = sel ? mir(sel) : null;
+      for (let r=0;r<ROWS;r++) for (let c=0;c<COLS;c++){ const [x,y] = pos([c,r]); const on = sel && sel[0]===c && sel[1]===r, twin = mSel && mSel[0]===c && mSel[1]===r && c!==AX;
+        s += `<g class="kpeg" data-c="${c}" data-r="${r}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="16" fill="transparent"/>${twin?`<circle cx="${x}" cy="${y}" r="12" fill="none" stroke="#F2C94C" stroke-width="3"/>`:""}<circle cx="${x}" cy="${y}" r="${on?9:5.5}" fill="${on?"#5B6BD6":c<AX?"#E2DCCB":"#CFC5A8"}" stroke="${on?"#FFFFFF":"none"}" stroke-width="3"/></g>`; }
       svg.innerHTML = s;
-      card.hidden = false; card.innerHTML = `Task card<br><span style="font-size:13px;text-transform:none;letter-spacing:0">${sh.n}</span><svg viewBox="40 40 260 200">${sh.e.map(([a,b])=>{ const p=pos(a), q=pos(b); const k = key(a,b), got = placed.includes(k); return `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${got?"#A9DCC3":"#24306B"}" stroke-width="12" stroke-linecap="round"/>`; }).join("")}</svg>`;
-      $$(".kpeg", svg).forEach(g => g.onclick = () => tap([+g.dataset.c, +g.dataset.r])); };
-    const tap = p => { const sh = SHAPES[si];
+      $$(".kpeg", svg).forEach(g => g.onclick = () => tap([+g.dataset.c, +g.dataset.r]));
+      $(".kcard", svg).onclick = () => { flip = !flip; render(); };
+      const done = placed.length; if (done < need.length && !msg.dataset.hold) { msg.textContent = `Stick ${done+1} of ${need.length}: look at the left side, then snap its mirror on the right.`; msg.style.color = INK; } };
+    const say = (t, c) => { msg.textContent = t; msg.style.color = c; msg.dataset.hold = 1; setTimeout(()=>{ delete msg.dataset.hold; }, 10); };
+    const tap = p => {
       if (!sel){ sel = p; render(); return; }
       if (sel[0]===p[0] && sel[1]===p[1]){ sel = null; render(); return; }
-      const k = key(sel,p);
-      if (sh.e.some(([a,b])=>key(a,b)===k) && !placed.includes(k)){ placed.push(k); sel = p; msg.textContent = "Snap!"; msg.style.color = "#146B3A";
-        if (placed.length === sh.e.length){ sel = null; render(); stars(bad===0?3:bad<=2?2:1); msg.textContent = "You built the "+sh.n.toLowerCase()+"!"+(bad?" "+bad+" strips didn't fit along the way.":" Every strip fit first time."); return; } }
-      else { bad++; setCount(bad); msg.textContent = placed.includes(k) ? "That strip is already there." : "That strip won't snap there. Check the card."; msg.style.color = "#C2410C"; sel = p; }
-      render(); };
-    render(); msg.textContent = "Tap a peg, then the next one, to snap a strip between them."; msg.style.color = INK;
-    return () => { card.hidden = true; };
+      const k = key(sel,p), n = need.find(x=>x.k===k);
+      if (given.includes(k)){ sel = p; render(); say("That stick is already on the left side. Build its mirror on the right.", "#C2410C"); return; }
+      if (n && !placed.includes(k)){ placed.push(k); sel = null; hint = false;
+        if (placed.length === need.length){ render(); stars(bad===0?3:bad<=2?2:1); say("Symmetry complete! Your "+sh.n.toLowerCase()+" matches on both sides."+(bad?" "+bad+(bad===1?" stick":" sticks")+" didn't fit along the way.":""), "#146B3A"); return; }
+        render(); say("Snap! "+(need.length-placed.length)+" more to go.", "#146B3A"); return; }
+      bad++; setCount(bad); sel = null; render();
+      const a = mir(p); say(placed.includes(k) ? "That stick is already there." : "That stick wouldn't match the left side. Tip: the glowing yellow peg shows the mirror of the one you tapped.", "#C2410C"); };
+    $("#kitHint").onclick = () => { hint = true; render(); say("The dashed stick shows where the next one goes.", INK); };
+    render();
+    return () => {};
   };
 
   const threadGame = () => {
-    const N = 5, X0 = 90, Y0 = 50, D = 50;
-    const PATS = [[[0,0],[1,1],[2,0],[3,1],[4,0],[4,2],[3,3],[2,2],[1,3],[0,2],[0,4],[2,4],[4,4]],[[2,0],[1,1],[0,2],[1,3],[2,4],[3,3],[4,2],[3,1],[2,0],[2,2],[2,4]],[[0,0],[4,0],[0,1],[4,1],[0,2],[4,2],[0,3],[4,3],[0,4],[4,4]]];
-    let pi = Math.floor(Math.random()*PATS.length), k = 0, bad = 0, flash = null;
-    const pos = ([c,r]) => [X0+c*D, Y0+r*D];
-    const render = () => { const pat = PATS[pi];
-      let s = `<rect x="6" y="6" width="408" height="288" rx="18" fill="#FFFFFF" stroke="#F0E3B5" stroke-width="3"/><rect x="${X0-34}" y="${Y0-30}" width="${(N-1)*D+68}" height="${(N-1)*D+60}" rx="16" fill="#8FC5EE"/><rect x="${X0-34}" y="${Y0-30}" width="${(N-1)*D+68}" height="${(N-1)*D+60}" rx="16" fill="none" stroke="#5E93BC" stroke-width="3"/>`;
-      if (k > 1) s += `<polyline points="${pat.slice(0,k).map(p=>pos(p).join(",")).join(" ")}" fill="none" stroke="#E2558C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`;
-      for (let r=0;r<N;r++) for (let c=0;c<N;c++){ const [x,y] = pos([c,r]); const nx = pat[k] && pat[k][0]===c && pat[k][1]===r; const isF = flash && flash[0]===c && flash[1]===r;
-        s += `<g class="khole" data-c="${c}" data-r="${r}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="20" fill="transparent"/><circle cx="${x}" cy="${y}" r="9" fill="${isF?"#E5484D":"#24306B"}" stroke="${nx && k>0 ? "#FFFFFF" : "rgba(255,255,255,.35)"}" stroke-width="${nx && k>0 ? 3 : 2}"/></g>`; }
-      if (k>0){ const [x,y] = pos(pat[k-1]); s += `<circle cx="${x}" cy="${y}" r="7" fill="#E2558C"/>`; }
+    const N = 5, X0 = 208, Y0 = 54, D = 44;
+    const PATS = [{n:"Zigzag",col:"#3BAA5C",st:1,p:[[0,0],[1,1],[2,0],[3,1],[4,0],[4,2],[3,3],[2,2],[1,3],[0,2],[0,4],[2,4],[4,4]]},
+      {n:"Diamond",col:"#4A90D9",st:2,p:[[2,0],[1,1],[0,2],[1,3],[2,4],[3,3],[4,2],[3,1],[2,0],[2,2],[2,4]]},
+      {n:"Ladder",col:"#E07BB0",st:3,p:[[0,0],[4,0],[0,1],[4,1],[0,2],[4,2],[0,3],[4,3],[0,4],[4,4]]}];
+    let pi = (threadGame.n = ((threadGame.n ?? -1) + 1) % PATS.length), k = 0, bad = 0, flash = null, flip = false, hint = false;
+    const pat = PATS[pi], pos = ([c,r]) => [X0+c*D, Y0+r*D];
+    const cardInner = () => { const sc = 0.42, ox = 82 - (N-1)*D*sc/2, oy = 76; const tp = ([c,r]) => [ox+c*D*sc, oy+r*D*sc];
+      let s = ""; for (let r=0;r<N;r++) for (let c=0;c<N;c++){ const q = tp([c,r]); s += `<circle cx="${q[0]}" cy="${q[1]}" r="2.6" fill="#B8C4D4"/>`; }
+      s += `<polyline points="${pat.p.map(x=>tp(x).join(",")).join(" ")}" fill="none" stroke="${pat.col}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;
+      const st = tp(pat.p[0]); s += `<circle cx="${st[0]}" cy="${st[1]}" r="6" fill="#24306B"/><text x="${st[0]}" y="${st[1]+3}" text-anchor="middle" font-size="7" font-weight="800" fill="#fff">1</text>`;
+      return s; };
+    const backInner = () => `<rect x="28" y="70" width="108" height="64" rx="8" fill="none" stroke="${pat.col}" stroke-width="1.5"/><text x="82" y="86" text-anchor="middle" font-size="8" font-weight="700" fill="#333">Thread</text><path d="M46 112 q12 -14 24 0 t 24 0 t 24 0" stroke="${pat.col}" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <text x="82" y="160" text-anchor="middle" font-size="9" font-weight="800" fill="#333">Holes to thread: ${pat.p.length}</text><text x="82" y="176" text-anchor="middle" font-size="8" fill="#555">Start at the dark dot,</text><text x="82" y="188" text-anchor="middle" font-size="8" fill="#555">then follow the line.</text>`;
+    const render = () => {
+      let s = `<rect x="6" y="6" width="408" height="288" rx="18" fill="#FFFFFF" stroke="#F0E3B5" stroke-width="3"/>`;
+      s += actCard({col:pat.col, title:"Follow the pattern", name:pat.n, inner: flip ? backInner() : cardInner(), stars:pat.st, back:flip});
+      s += `<rect x="${X0-30}" y="${Y0-28}" width="${(N-1)*D+60}" height="${(N-1)*D+56}" rx="16" fill="#8FC5EE" stroke="#5E93BC" stroke-width="3"/>`;
+      if (k > 1) s += `<polyline points="${pat.p.slice(0,k).map(q=>pos(q).join(",")).join(" ")}" fill="none" stroke="#E2558C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`;
+      const nx = pat.p[k];
+      if (hint && nx && k>0){ const a = pos(pat.p[k-1]), b = pos(nx); s += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#E2558C" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 8"><animate attributeName="opacity" values=".25;1;.25" dur="1.2s" repeatCount="indefinite"/></line>`; }
+      for (let r=0;r<N;r++) for (let c=0;c<N;c++){ const [x,y] = pos([c,r]); const isN = nx && nx[0]===c && nx[1]===r && (k===0 || hint); const isF = flash && flash[0]===c && flash[1]===r;
+        s += `<g class="khole" data-c="${c}" data-r="${r}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="18" fill="transparent"/>${isN?`<circle cx="${x}" cy="${y}" r="14" fill="none" stroke="#FFFFFF" stroke-width="3"><animate attributeName="r" values="12;16;12" dur="1.2s" repeatCount="indefinite"/></circle>`:""}<circle cx="${x}" cy="${y}" r="8.5" fill="${isF?"#E5484D":"#24306B"}" stroke="rgba(255,255,255,.35)" stroke-width="2"/></g>`; }
+      if (k>0){ const [x,y] = pos(pat.p[k-1]); s += `<circle cx="${x}" cy="${y}" r="7" fill="#E2558C"/>`; }
       svg.innerHTML = s;
-      card.hidden = false; card.innerHTML = `Pattern card<svg viewBox="${X0-30} ${Y0-30} ${(N-1)*D+60} ${(N-1)*D+60}"><polyline points="${pat.map(p=>pos(p).join(",")).join(" ")}" fill="none" stroke="#E2558C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>${pat.slice(0,1).map(p=>`<circle cx="${pos(p)[0]}" cy="${pos(p)[1]}" r="14" fill="#24306B"/>`).join("")}</svg>`;
-      $$(".khole", svg).forEach(g => g.onclick = () => tap([+g.dataset.c, +g.dataset.r])); };
-    const tap = p => { const pat = PATS[pi]; if (k >= pat.length) return;
-      if (pat[k][0]===p[0] && pat[k][1]===p[1]){ k++; flash = null; msg.textContent = k===1 ? "Good start! Follow the card." : "Pulled through."; msg.style.color = "#146B3A";
-        if (k === pat.length){ stars(bad===0?3:bad<=2?2:1); msg.textContent = "Pattern done!"+(bad?" You fixed "+bad+(bad===1?" mistake":" mistakes")+" along the way.":" Not a single mistake."); } }
-      else { bad++; setCount(bad); flash = p; if (k > 1) k--; msg.textContent = "Wrong hole. The last stitch slides back out. Take your time."; msg.style.color = "#C2410C"; }
+      $$(".khole", svg).forEach(g => g.onclick = () => tap([+g.dataset.c, +g.dataset.r]));
+      $(".kcard", svg).onclick = () => { flip = !flip; render(); }; };
+    const tap = p => { if (k >= pat.p.length) return;
+      if (pat.p[k][0]===p[0] && pat.p[k][1]===p[1]){ k++; flash = null; hint = false;
+        if (k === pat.p.length){ render(); stars(bad===0?3:bad<=2?2:1); msg.textContent = "Pattern done!"+(bad?" You fixed "+bad+(bad===1?" mistake":" mistakes")+" along the way.":" Not a single mistake."); msg.style.color = "#146B3A"; return; }
+        msg.textContent = `Hole ${k} of ${pat.p.length} done. Check the card for where the thread goes next.`; msg.style.color = "#146B3A"; }
+      else { bad++; setCount(bad); flash = p; if (k > 1) k--; msg.textContent = "Wrong hole. The last stitch slides back out. Take your time, or tap Show me a hint."; msg.style.color = "#C2410C"; }
       render(); };
-    render(); msg.textContent = "Start at the dark dot on the card, then follow the thread."; msg.style.color = INK;
-    return () => { card.hidden = true; };
+    $("#kitHint").onclick = () => { hint = true; render(); msg.textContent = k===0 ? "Start at the glowing hole, the dark dot on the card." : "The dashed line shows where the thread goes next."; msg.style.color = INK; };
+    render(); msg.textContent = "Start at the glowing hole, the dark dot marked 1 on the card."; msg.style.color = INK;
+    return () => {};
   };
 
   const GAMES = {dot:dotGame, snap:snapGame, thread:threadGame};
-  const start = () => { if (cleanupGame) cleanupGame(); card.hidden = true; setCount(0); stars(0); bar.style.width = "0"; meter.style.visibility = game==="dot" ? "visible" : "hidden";
+  const start = () => { if (cleanupGame) cleanupGame(); card.hidden = true; setCount(0); stars(0); bar.style.width = "0"; meter.style.display = game==="dot" ? "" : "none"; $("#kitHint").style.display = game==="dot" ? "none" : ""; $("#kitNew").textContent = game==="dot" ? "Start again" : "New card"; delete msg.dataset.hold;
     $("#kitLblA").textContent = INFO[game].lbl; $("#kitSkill").textContent = INFO[game].skill; $("#kitRead").textContent = INFO[game].txt; cleanupGame = GAMES[game](); };
   $$(".seg button", root).forEach(b => b.onclick = () => { game = b.dataset.g; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x===b)); start(); });
   $("#kitNew").onclick = start;
