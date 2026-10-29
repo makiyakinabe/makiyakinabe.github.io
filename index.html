@@ -162,6 +162,12 @@ p{margin:0}
 .lseg.on{opacity:1;filter:drop-shadow(0 0 6px currentColor)}
 .tape-band{position:relative;margin-top:clamp(40px,6vw,70px);height:120px}
 .tape-row{position:absolute;left:-3%;right:-3%;top:30px;background:#FFDB6E;color:#151515;border-block:3px solid rgba(0,0,0,.25);transform:rotate(-2deg);overflow:hidden;box-shadow:0 18px 30px -16px rgba(0,0,0,.8)}
+.tape-cta{display:block;position:relative;height:110px;margin-inline:calc(50% - 50vw);overflow:hidden;text-decoration:none;cursor:pointer}
+.tape-row.cta{top:28px;background:#7C6CF2;color:#fff;transform:rotate(-1.6deg);border-block-color:rgba(255,255,255,.25)}
+.tape-cta .tape-track{animation-duration:30s}
+.tape-cta:hover .tape-track{animation-play-state:paused}
+.tape-cta:hover .tape-row.cta{background:#8E80F6}
+.tape-cta:focus-visible{outline:3px solid var(--accent);outline-offset:-6px}
 .tape-row.b{background:#8EE6C4;transform:rotate(2.2deg);top:44px;opacity:.95}
 .tape-track{display:flex;width:max-content;animation:tapeMove 38s linear infinite}
 .tape-row.b .tape-track{animation-direction:reverse;animation-duration:46s}
@@ -947,6 +953,10 @@ function viewHome(){
       <div style="margin-top:6px"><button class="btn" id="toWorks">View My Works <span class="arr">${arrow}</span></button></div>
     </div>
   </section>
+
+  <a class="tape-cta" href="#journey" aria-label="Wanna know more about me? Go to My Journey">
+    <div class="tape-row cta"><div class="tape-track">${Array(12).fill(`<span>Wanna know more about me?</span>`).join("")}</div></div>
+  </a>
 
   <section class="statement wrap">
     <p id="stmt">How do we translate complex functionality into intuitive, delightful experiences? That's the question that drives my work every day.</p>
