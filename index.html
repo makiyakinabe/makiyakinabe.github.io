@@ -2012,11 +2012,10 @@ const CONTENT = {
     ${appHTML("lf")}`)}
   ${blk("System map","How the screens connect",`
     <p class="body-strong">The patient's recordings and diary entries flow to the doctor's screens, and the doctor's note flows back to the patient's results.</p>
-    <figure class="mapfig"><div class="plate"><img class="zoom" src="${IMG("lf-map.webp")}" alt="System map: patient app (home, vest fit check, guided recording, results, symptom diary) linked to doctor screens (remote-monitoring inbox, patient home data, compare recordings)" loading="lazy"></div><figcaption>Click to zoom in.</figcaption></figure>
-    <div class="states2">
-      <figure class="mapfig" style="margin:0"><div class="plate"><img class="zoom" src="${IMG("lf-states.webp")}" alt="Edge states: recording couldn't send, vest disconnected, and no results yet" loading="lazy"></div></figure>
-      <div><h3 style="font-size:22px">When things don't go to plan</h3><p class="body-strong" style="margin-top:8px">If a recording can't send, the app reassures patients it's saved. If the vest disconnects, it picks up where it stopped. And before the first result arrives, it explains what will appear and what to do next.</p></div>
-    </div>`)}
+    <figure class="mapfig"><div class="plate"><img class="zoom" src="${IMG("lf-map.webp")}" alt="System map: patient app (home, vest fit check, guided recording, results, symptom diary) linked to doctor screens (remote-monitoring inbox, patient home data, compare recordings)" loading="lazy"></div><figcaption>Click to zoom in.</figcaption></figure>`)}
+  ${blk("Edge states","When things don't go to plan",`
+    <p class="body-strong" style="margin-bottom:6px">What patients see when something interrupts a home recording. Each screen reassures them and shows one clear next step.</p>
+    ${appHTML("lfS")}`)}
 `,
 "oral-exam": () => `
   ${blk("Overview","Oral practice students actually want to do",`
@@ -2935,6 +2934,11 @@ const INIT = {
     {src:"lf-d-ai.webp", who:"Doctor", t:"Why the AI predicted this", url:"lung-evaluation / ai-explained", d:"Which sensors and frequency bands most influenced the AI's suggestion, what data it couldn't trust, and a simple question: do you agree?"},
     {src:"lf-d-inbox.webp", who:"Doctor", t:"Remote-monitoring inbox", url:"lung-evaluation / remote", d:"Home recordings from every vest patient, sorted by urgency, so doctors see who's getting worse first."},
     {src:"lf-d-patient.webp", who:"Doctor", t:"Patient home data", url:"lung-evaluation / patient", d:"30 days of symptom diary, band energy and sensor contact for one patient, with a plain-language note the doctor sends back to the patient's app."}
+  ]);
+  initApp("lfS", [
+    ["lf-s-unsent.webp","Recording couldn't send","If the phone is offline, the recording stays safe on the phone and is sent to Dr. Lim's team as soon as it's back online, so the patient never has to record again."],
+    ["lf-s-vest.webp","Vest disconnected","If the vest drops its connection mid-recording, the app pauses, gives three simple fixes, and continues from the same step instead of starting over."],
+    ["lf-s-empty.webp","No results yet","Before the first result arrives, the app explains what will appear and when, and points to the one thing to do now: set up the vest."]
   ]);
   initApp("lf", [
     ["lf-p-pair.webp","Set up your vest","Four simple steps to pair the vest, starting with turning it on."],
