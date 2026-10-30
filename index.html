@@ -536,6 +536,33 @@ p{margin:0}
 .tb-insp img{width:96px;height:72px;object-fit:cover;border-radius:10px;flex:none}
 .tb-insp span{font-size:14px;color:var(--ink-2)}
 
+/* interactive system map */
+.smap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:clamp(16px,2.5vw,28px);background:var(--plate);border-radius:var(--r-lg);padding:clamp(14px,2.5vw,28px);margin-top:14px;align-items:start}
+.smap-svgwrap{overflow-x:auto;border-radius:16px;background:#FFFFFF}
+.smap svg{display:block;width:100%;min-width:680px;height:auto;font-family:inherit}
+.smap .nd{cursor:pointer;transition:opacity .25s}
+.smap .nd rect{transition:stroke .2s,stroke-width .2s}
+.smap .nd:focus{outline:none}
+.smap .nd:focus-visible rect,.smap .nd.on rect{stroke:#F2994A;stroke-width:3.5}
+.smap .ed{transition:opacity .25s}
+.smap .ed path{fill:none;stroke:#7D8DA8;stroke-width:1.6}
+.smap .ed.hot path{stroke:#F2994A;stroke-width:3;stroke-dasharray:8 6;animation:smapFlow 1s linear infinite}
+.smap .ed text{font-size:11px;fill:#5B6B86;font-weight:600}
+.smap .ed.hot text{fill:#C2410C;font-weight:800}
+.smap.focus .nd.dim,.smap.focus .ed.dim{opacity:.22}
+@keyframes smapFlow{to{stroke-dashoffset:-14}}
+.smap-panel{background:var(--chip);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.smap-panel small{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--pa)}
+.smap-panel h3{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:0}
+.smap-panel p{font-size:15px;color:var(--ink-2);margin:0}
+.smap-panel .lnk{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--muted);font-weight:600}
+.smap-panel .lnk button{font:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.smap-shot{border-radius:12px;overflow:hidden;background:#0B1022;cursor:zoom-in}
+.smap-shot img{display:block;width:100%;height:auto;max-height:340px;object-fit:cover;object-position:top}
+.smap-shot.ph{width:150px;align-self:center;border-radius:22px;padding:6px}
+.smap-shot.ph img{border-radius:16px;max-height:none;aspect-ratio:9/19.5}
+@media (max-width:900px){.smap{grid-template-columns:1fr}}
+
 /* gift set: product story + inspirations */
 .scrub.wide .stage{aspect-ratio:16/9}
 .scrub.wide .stage img{object-fit:contain}
@@ -1971,8 +1998,8 @@ const CONTENT = {
     <p class="body-strong" style="margin-bottom:6px">From deciding whether to come in, to going home with your medicine. Patients follow their wait from their wristband QR code, with no app download needed.</p>
     ${appHTML("ae")}`)}
   ${blk("System map","How the screens connect",`
-    <p class="body-strong">Arrows show what each screen sends to the next. White cards are the patient's phone and navy cards are CGH staff screens.</p>
-    <figure class="mapfig"><div class="plate"><img class="zoom" src="${IMG("ae-map.webp")}" alt="System map: the patient app (join the queue, my queue, it's your turn, visit journey, after your visit, I feel worse, help getting there) linked to staff screens (triage intake, reassessment desk, doctor queue, waiting area TV, escort task app)" loading="lazy"></div><figcaption>Click to zoom in.</figcaption></figure>`)}
+    <p class="body-strong">Tap any screen to see what it does and how it connects. White cards are the patient's phone and navy cards are CGH staff screens.</p>
+    ${smapHTML("aeMap")}`)}
 `,
 "lung-fft": () => `
   ${blk("Overview","Lung sounds, made readable",`
@@ -2011,8 +2038,8 @@ const CONTENT = {
     <p class="body-strong" style="margin-bottom:6px">A calm, dark app that walks patients through putting on the vest, recording and tracking how breathless they feel.</p>
     ${appHTML("lf")}`)}
   ${blk("System map","How the screens connect",`
-    <p class="body-strong">The patient's recordings and diary entries flow to the doctor's screens, and the doctor's note flows back to the patient's results.</p>
-    <figure class="mapfig"><div class="plate"><img class="zoom" src="${IMG("lf-map.webp")}" alt="System map: patient app (home, vest fit check, guided recording, results, symptom diary) linked to doctor screens (remote-monitoring inbox, patient home data, compare recordings)" loading="lazy"></div><figcaption>Click to zoom in.</figcaption></figure>`)}
+    <p class="body-strong">Tap any screen to follow the data. Recordings and diary entries flow to the doctor's screens, and the doctor's note flows back to the patient's results.</p>
+    ${smapHTML("lfMap")}`)}
   ${blk("Edge states","When things don't go to plan",`
     <p class="body-strong" style="margin-bottom:6px">What patients see when something interrupts a home recording. Each screen reassures them and shows one clear next step.</p>
     ${appHTML("lfS")}`)}
@@ -2083,6 +2110,72 @@ const CONTENT = {
     <div class="phase-panel" id="phasePanel" aria-live="polite"></div>`)}
 `
 };
+
+/* ---------- interactive system map ---------- */
+const smapHTML = id => `<div class="smap" id="${id}"><div class="smap-svgwrap"><svg role="group" aria-label="System map"></svg></div><div class="smap-panel" aria-live="polite"></div></div>`;
+const SMAPS = {
+  aeMap:{w:1000, h:440,
+    lanes:[{x:16,y:14,w:968,h:236,t:"CGH A&E",s:"Patient phone app",fill:"#EEF4FA"},{x:16,y:300,w:968,h:126,t:"CGH A&E",s:"Staff screens",fill:"#E2ECF6"}],
+    nodes:[
+      {id:"join",t:"Join the queue",s:"Scan wristband QR",x:110,y:82,k:"p",img:"ae-p-join.webp",ph:1,d:"Patients scan the QR code on their wristband to follow their wait, with no app download."},
+      {id:"queue",t:"My queue",s:"Number, wait, alerts",x:290,y:82,k:"p",img:"ae-p-queue-full.webp",ph:1,d:"Queue number, priority, people ahead and estimated wait, updated live."},
+      {id:"turn",t:"It's your turn",s:"Room number, vibration",x:470,y:82,k:"p",img:"ae-p-called.webp",ph:1,d:"A full-screen alert with the room number and directions when the doctor calls them in."},
+      {id:"journey",t:"Visit journey",s:"Tests, results, next steps",x:650,y:82,k:"p",img:"ae-p-journey-full.webp",ph:1,d:"All seven steps of an A&E visit, so patients always know what comes next."},
+      {id:"after",t:"After your visit",s:"Medicine, MC, follow-up",x:830,y:82,k:"p",img:"ae-p-visits-full.webp",ph:1,d:"Discharge notes, medicine, follow-up appointments, MC and bill in one place."},
+      {id:"worse",t:"I feel worse",s:"Pain score check-in",x:290,y:198,k:"pw",img:"ae-p-worse.webp",ph:1,d:"A quick pain score and symptom check-in that goes straight to the triage nurse."},
+      {id:"wait",t:"While you wait",s:"Read, family, step out",x:650,y:198,k:"pd",img:"ae-p-community-full.webp",ph:1,d:"Things to do while waiting: short reads, updating family, step-out mode and accessibility settings."},
+      {id:"help",t:"Help getting there",s:"Escort or directions",x:830,y:198,k:"p",img:"ae-p-help.webp",ph:1,d:"Holds the patient's turn while a staff member comes to walk them to the room."},
+      {id:"triage",t:"Triage intake",s:"Priority + wristband",x:110,y:370,k:"s",img:"ae-d-triage.webp",d:"Nurses scan a wristband, set P1, P2 or P3 priority, and add the patient to the live queue."},
+      {id:"reassess",t:"Reassessment desk",s:"Pain alerts, re-checks",x:290,y:370,k:"s",img:"ae-d-reassess.webp",d:"Patients who report feeling worse appear first, so nurses can re-check them and change priority."},
+      {id:"doctor",t:"Doctor queue",s:"Call in, complete",x:470,y:370,k:"s",img:"ae-d-doctor.webp",d:"Doctors see who's next by priority and call them in with one tap."},
+      {id:"tv",t:"Waiting area TV",s:"Now calling, est. wait",x:650,y:370,k:"s",img:"ae-d-tv.webp",d:"Big numbers for who's being called and where, plus estimated waits for each priority."},
+      {id:"escort",t:"Escort task app",s:"Staff phone",x:830,y:370,k:"s",img:"ae-p-escort.webp",ph:1,d:"Patient care assistants get escort requests on their phones, with notes on how to help."}],
+    edges:[["triage","join","wristband QR"],["join","queue"],["queue","turn"],["turn","journey"],["journey","after"],["queue","worse"],["worse","reassess","pain update"],["reassess","doctor","re-triage"],["doctor","turn","call in"],["doctor","tv","now calling"],["turn","help","needs help",{mid:142,dx1:44}],["help","escort","escort request"]]},
+  lfMap:{w:1000, h:420, nw:166,
+    lanes:[{x:16,y:14,w:968,h:130,t:"Lung FFT",s:"Patient app + vest",fill:"#141C2E",dark:1},{x:16,y:270,w:968,h:136,t:"Lung FFT",s:"Doctors",fill:"#141C2E",dark:1}],
+    nodes:[
+      {id:"home",t:"Home",s:"Today's recording, streak",x:130,y:92,k:"lp",img:"lf-p-home-full.webp",ph:1,d:"Today's recording, the week's streak and the latest reviewed result."},
+      {id:"fit",t:"Vest fit check",s:"11 sensors touching skin",x:310,y:92,k:"lp",img:"lf-p-fitcheck-full.webp",ph:1,d:"Shows which of the 11 sensors need adjusting before recording starts."},
+      {id:"rec",t:"Guided recording",s:"Breathe, cough, say “99”",x:490,y:92,k:"lp",img:"lf-p-record.webp",ph:1,d:"A breathing circle guides each step while the app checks every sensor is picking up."},
+      {id:"res",t:"Results",s:"Only after doctor review",x:670,y:92,k:"lp",img:"lf-p-results-full.webp",ph:1,d:"Results appear only after the doctor reviews them, with a plain-language note."},
+      {id:"diary",t:"Symptom diary",s:"Breathlessness, cough",x:850,y:92,k:"lp",img:"lf-p-diary-full.webp",ph:1,d:"A quick daily check-in for breathlessness, cough and fever."},
+      {id:"inbox",t:"Remote-monitoring inbox",s:"All vest patients",x:490,y:350,k:"ld",img:"lf-d-inbox.webp",d:"Home recordings from every vest patient, sorted by urgency."},
+      {id:"pdata",t:"Patient home data",s:"Trends, review, send note",x:670,y:350,k:"ld",img:"lf-d-patient.webp",d:"30 days of diary, band energy and sensor contact, plus the note sent back to the patient."},
+      {id:"cmp",t:"Compare recordings",s:"Then point detail, 11 points",x:850,y:350,k:"ld",img:"lf-d-compare.webp",d:"Two recordings side by side, then the detail for any of the 11 points."}],
+    edges:[["home","fit"],["fit","rec"],["rec","inbox","recording sent"],["inbox","pdata"],["pdata","res","doctor's note",{dx1:-28,dx2:-28}],["diary","pdata","diary entries",{mid:200,dx2:30}],["pdata","cmp"]]}
+};
+function initSmap(id){
+  const root = $("#"+id); if (!root) return; const M = SMAPS[id], svg = $("svg", root), panel = $(".smap-panel", root);
+  const NW = M.nw || 150, NH = 52, N = {}; M.nodes.forEach(n => N[n.id] = n);
+  const STY = {p:["#FFFFFF","#C9D6E6","#0F1B3D","#4A5B78"], pw:["#FFFFFF","#E5A3A0","#0F1B3D","#4A5B78"], pd:["#FFFFFF","#C9D6E6","#0F1B3D","#4A5B78"], s:["#0F2A5C","#0F2A5C","#FFFFFF","#BFD3EE"], lp:["#1B2740","#2E3D5E","#FFFFFF","#9FB1D1"], ld:["#7CC4FF","#7CC4FF","#0B1630","#1E3A66"]};
+  const route = e => { const a = N[e[0]], b = N[e[1]], o = e[3]||{}; const dx1 = o.dx1||0, dx2 = o.dx2||0;
+    if (Math.abs(a.y-b.y) < 4){ const dir = b.x > a.x ? 1 : -1; const x1 = a.x+dir*NW/2, x2 = b.x-dir*NW/2; return {d:`M${x1} ${a.y} L${x2} ${b.y}`, lx:(x1+x2)/2, ly:a.y+NH/2+15}; }
+    const down = b.y > a.y, y1 = a.y + (down?NH/2:-NH/2), y2 = b.y + (down?-NH/2:NH/2), x1 = a.x+dx1, x2 = b.x+dx2;
+    if (Math.abs(x1-x2) < 4) return {d:`M${x1} ${y1} L${x2} ${y2}`, lx:x1+8, ly:(y1+y2)/2+4, anchor:"start"};
+    const mid = o.mid || (y1+y2)/2; return {d:`M${x1} ${y1} L${x1} ${mid} L${x2} ${mid} L${x2} ${y2}`, lx:(x1+x2)/2, ly:mid-7}; };
+  let s = `<defs><marker id="${id}A" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7D8DA8"/></marker><marker id="${id}H" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#F2994A"/></marker></defs>`;
+  s += `<rect width="${M.w}" height="${M.h}" fill="${M.lanes[0].dark?"#0E1626":"#FFFFFF"}"/>`;
+  M.lanes.forEach(l => s += `<rect x="${l.x}" y="${l.y}" width="${l.w}" height="${l.h}" rx="14" fill="${l.fill}"/><text x="${l.x+14}" y="${l.y+22}" font-size="13" font-weight="800" fill="${l.dark?"#FFFFFF":"#0F1B3D"}">${l.t}</text><text x="${l.x+14}" y="${l.y+37}" font-size="11" fill="${l.dark?"#9FB1D1":"#4A5B78"}">${l.s}</text>`);
+  M.edges.forEach((e,i) => { const r = route(e); s += `<g class="ed" data-i="${i}"><path d="${r.d}" marker-end="url(#${id}A)"/>${e[2]?`<text x="${r.lx}" y="${r.ly}" text-anchor="${r.anchor||"middle"}">${e[2]}</text>`:""}</g>`; });
+  M.nodes.forEach(n => { const c = STY[n.k]; s += `<g class="nd" tabindex="0" role="button" data-id="${n.id}" aria-label="${n.t}" transform="translate(${n.x-NW/2} ${n.y-NH/2})"><rect width="${NW}" height="${NH}" rx="10" fill="${c[0]}" stroke="${c[1]}" stroke-width="1.5" ${n.k==="pd"?'stroke-dasharray="4 4"':""}/><text x="${NW/2}" y="22" text-anchor="middle" font-size="12.5" font-weight="800" fill="${c[2]}">${n.t}</text><text x="${NW/2}" y="38" text-anchor="middle" font-size="10.5" fill="${c[3]}">${n.s}</text></g>`; });
+  svg.setAttribute("viewBox", `0 0 ${M.w} ${M.h}`); svg.innerHTML = s;
+  const lane = n => n.y > M.lanes[0].y + M.lanes[0].h ? M.lanes[1].s : M.lanes[0].s;
+  const select = idn => { const n = N[idn]; root.classList.add("focus");
+    const linked = new Set([idn]); const outs = [], ins = [];
+    M.edges.forEach((e,i) => { const hot = e[0]===idn || e[1]===idn; const g = $(`.ed[data-i="${i}"]`, svg); g.classList.toggle("hot", hot); g.classList.toggle("dim", !hot); $("path", g).setAttribute("marker-end", `url(#${id}${hot?"H":"A"})`);
+      if (e[0]===idn){ linked.add(e[1]); outs.push(e); } if (e[1]===idn){ linked.add(e[0]); ins.push(e); } });
+    $$(".nd", svg).forEach(g => { g.classList.toggle("on", g.dataset.id===idn); g.classList.toggle("dim", !linked.has(g.dataset.id)); });
+    const chip = (e, other) => `<button data-go="${other}">${N[other].t}${e[2]?` · ${e[2]}`:""}</button>`;
+    panel.innerHTML = `<small>${lane(n)}</small><h3>${n.t}</h3><p>${n.d}</p>
+      ${ins.length?`<div class="lnk">Gets from ${ins.map(e=>chip(e,e[0])).join("")}</div>`:""}
+      ${outs.length?`<div class="lnk">Sends to ${outs.map(e=>chip(e,e[1])).join("")}</div>`:""}
+      ${!ins.length && !outs.length ? `<div class="lnk">Optional extras, open any time from the queue screen.</div>` : ""}
+      <div class="smap-shot${n.ph?" ph":""}" role="button" tabindex="0" aria-label="Zoom into the ${n.t} screen"><img src="${IMG(n.img)}" alt="${n.t} screen" loading="lazy"></div>`;
+    $$("[data-go]", panel).forEach(b => b.onclick = () => select(b.dataset.go));
+    const shot = $(".smap-shot", panel); shot.onclick = () => openLB(IMG(n.img), n.t+" screen"); };
+  $$(".nd", svg).forEach(g => { g.onclick = () => select(g.dataset.id); g.onkeydown = e => { if (e.key==="Enter" || e.key===" "){ e.preventDefault(); select(g.dataset.id); } }; });
+  select(M.nodes[0].id);
+}
 
 /* ---------- feel-the-difference demos ---------- */
 function initQueueSim(){
@@ -2900,6 +2993,7 @@ const INIT = {
 },
 "vase"(){},
 "ae-queue"(){
+  initSmap("aeMap");
   initQueueSim();
   initDx("aeDx", [
     {src:"ae-d-triage.webp", who:"Triage nurse", t:"Triage intake", url:"cgh-ae / intake", d:"Scan the patient's wristband, choose P1, P2 or P3, and add them to the queue. Capacity settings, like how many doctors are on duty, keep every wait estimate honest."},
@@ -2926,6 +3020,7 @@ const INIT = {
   ]);
 },
 "lung-fft"(){
+  initSmap("lfMap");
   initLungSim();
   initDx("lfDx", [
     {src:"lf-d-point.webp", who:"Doctor", t:"Point detail", url:"lung-evaluation / point", d:"One recording at a single point: the lung map on the left, the frequency spectrum in the middle and the diagnosis panel on the right. A warning appears when signal quality is too low to trust."},
