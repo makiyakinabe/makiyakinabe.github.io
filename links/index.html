@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Natalie Ang — portfolio, Lumi, Instagram and LinkedIn.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;-webkit-text-size-adjust:100%}img{max-width:100%}</style>
+<title>Natalie Ang Links</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: one narrow column, a fried-egg avatar on top, two big "yolk" links, then small pan-side links */
+:root {
+  --bg: #f3efe6;
+  --pan: #e6e0d2;
+  --white: #fffdf8;
+  --fg: #23201a;
+  --muted: #6b6457;
+  --yolk: #f5b324;
+  --yolk-deep: #e08a0b;
+  --line: #d9d1c0;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1a17; --pan: #26241f; --white: #fbf8f1; --fg: #f4efe4;
+    --muted: #a69e8e; --yolk: #f7bb35; --yolk-deep: #f09a1a; --line: #37342d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1a17; --pan: #26241f; --white: #fbf8f1; --fg: #f4efe4;
+  --muted: #a69e8e; --yolk: #f7bb35; --yolk-deep: #f09a1a; --line: #37342d;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 48px 40px;
+}
+.wrap { max-width: 440px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 28px; }
+
+/* Fried egg avatar */
+.egg {
+  width: 132px; aspect-ratio: 1.08; max-width: 100%;
+  background: var(--white);
+  border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+  display: grid; place-items: center;
+  box-shadow: 0 2px 0 var(--line), 0 14px 30px -18px rgba(0,0,0,.35);
+  transform: rotate(-6deg);
+}
+.yolk {
+  width: 54%; aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #ffe08a 0 14%, var(--yolk) 38%, var(--yolk-deep) 100%);
+  display: grid; place-items: center;
+  font-family: var(--display); font-weight: 800; font-size: 26px; color: #3a2402;
+  transform: rotate(6deg);
+  letter-spacing: -0.02em;
+}
+
+header { text-align: center; display: flex; flex-direction: column; gap: 6px; }
+h1 { font-family: var(--display); font-weight: 800; font-size: 34px; line-height: 1.05; margin: 0; letter-spacing: -0.025em; text-wrap: balance; }
+.role { margin: 0; color: var(--muted); font-size: 15px; text-wrap: balance; }
+
+/* Main links */
+.main { width: 100%; display: flex; flex-direction: column; gap: 14px; }
+.card {
+  display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 14px;
+  padding: 16px 18px 16px 16px;
+  background: var(--white); color: #23201a;
+  border-radius: 20px;
+  text-decoration: none;
+  box-shadow: 0 2px 0 var(--line);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--yolk); }
+.card:focus-visible { outline: 3px solid var(--yolk-deep); outline-offset: 3px; }
+.dot {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #ffe08a 0 12%, var(--yolk) 40%, var(--yolk-deep) 100%);
+  display: grid; place-items: center;
+}
+.dot svg { width: 24px; height: 24px; stroke: #3a2402; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.text { min-width: 0; }
+.label { font-family: var(--display); font-weight: 700; font-size: 20px; line-height: 1.15; display: block; }
+.sub { font-size: 14px; color: #6b6457; display: block; margin-top: 2px; }
+.arrow { font-family: var(--display); font-size: 22px; color: #6b6457; }
+
+/* Secondary links */
+.more { width: 100%; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.smile { width: 62%; height: auto; fill: #3a2402; stroke: #3a2402; }
+.smile path { fill: none; stroke-width: 2.8; stroke-linecap: round; }
+.smile circle { stroke: none; }
+.pill {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 12px 6px;
+  border: 1.5px solid var(--line); border-radius: 16px;
+  background: var(--pan);
+  color: var(--fg); text-decoration: none; text-align: center;
+  font-size: 13px; line-height: 1.25;
+  transition: border-color .18s ease;
+  min-width: 0;
+}
+.pill:hover { border-color: var(--yolk-deep); }
+.pill:focus-visible { outline: 3px solid var(--yolk-deep); outline-offset: 2px; }
+.pill b { font-family: var(--display); font-weight: 700; font-size: 15px; }
+.pill span { color: var(--muted); overflow-wrap: anywhere; }
+.pill .ico { width: 30px; height: 30px; fill: none; stroke: var(--yolk-deep); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.role { max-width: 34ch; margin-inline: auto !important; }
+
+footer { color: var(--muted); font-size: 13px; text-align: center; }
+footer .handle { font-family: var(--display); font-weight: 700; color: var(--fg); }
+
+@media (max-width: 360px) { .more { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .card, .pill { transition: none; } .card:hover { transform: none; } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <div class="egg" aria-hidden="true"><div class="yolk"><svg class="smile" viewBox="0 0 40 40"><circle cx="13.5" cy="16" r="2.6"/><circle cx="26.5" cy="16" r="2.6"/><path d="M12 24.5c2.2 3.4 5 5 8 5s5.8-1.6 8-5"/></svg></div></div>
+
+  <header>
+    <h1>Natalie Ang</h1>
+    <p class="role">Hello! Thanks for dropping by~ Feel free to support me by dropping a follow and connecting with me!</p>
+  </header>
+
+  <nav class="main" aria-label="Main links">
+    <a class="card" href="https://makiyakinabe.github.io" target="_blank" rel="noopener">
+      <span class="dot"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></span>
+      <span class="text">
+        <span class="label">Portfolio</span>
+        <span class="sub">UI/UX and product design, incl. Mandai, CGH and Air Force Museum projects</span>
+      </span>
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="card" href="https://makiyakinabe.github.io/lumi/" target="_blank" rel="noopener">
+      <span class="dot"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-3.5 10.9V17h7v-3.1A6 6 0 0 0 12 3z"/><path d="M9.5 20.5h5"/></svg></span>
+      <span class="text">
+        <span class="label">Lumi</span>
+        <span class="sub">Free app helping non-verbal children and youths express themselves</span>
+      </span>
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
+  </nav>
+
+  <nav class="more" aria-label="More links">
+    <a class="pill" href="https://www.instagram.com/eggsperimenting/" target="_blank" rel="noopener"><b>Instagram</b><span>@eggsperimenting</span></a>
+    <a class="pill" href="https://www.linkedin.com/in/natalieangkaixin2203" target="_blank" rel="noopener"><b>LinkedIn</b><span>Natalie Ang</span></a>  </nav>
+
+  <footer>Cooked up by <span class="handle">eggsperimenting</span> · Singapore</footer>
+</div>
+</body>
+</html>
