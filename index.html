@@ -1020,6 +1020,30 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .lb img{max-height:86vh;max-width:min(1200px,100%);border-radius:14px;object-fit:contain;animation:fadeIn .3s ease both}
 .lb button{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));border:0;background:#fff;color:#111;border-radius:10px;padding:8px 14px;font-weight:600;cursor:pointer}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--nav);color:var(--nav-ink);padding:10px 16px;border-radius:12px;font-size:14px;z-index:95}
+/* Lumi case study */
+.lumi-tab{position:relative;background:#1E2422;border-radius:clamp(20px,3vw,38px);padding:clamp(10px,1.4vw,18px);box-shadow:0 30px 60px -20px rgba(0,0,0,.45);max-width:980px;margin:0 auto}
+.lumi-tab::before{content:"";position:absolute;left:50%;top:clamp(3px,.55vw,7px);width:8px;height:8px;margin-left:-4px;border-radius:50%;background:#3a4643}
+.lumi-scr{position:relative;aspect-ratio:1194/834;border-radius:clamp(10px,1.4vw,20px);overflow:hidden;background:#E8D9C5}
+.lumi-scr img,.lumi-scr iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;object-fit:cover}
+.lumi-play{position:absolute;inset:0;display:grid;place-items:center;background:rgba(20,40,38,.35);border:0;cursor:pointer;color:#fff;font:inherit;transition:background .25s}
+.lumi-play:hover{background:rgba(20,40,38,.2)}
+.lumi-play span{display:inline-flex;align-items:center;gap:12px;background:#2F7E79;border:3px solid #fff;border-radius:999px;padding:14px 26px;font-weight:700;font-size:clamp(15px,1.6vw,19px);box-shadow:0 10px 24px rgba(0,0,0,.3)}
+.lumi-play svg{width:22px;height:22px}
+.lumi-bar{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;max-width:980px;margin:18px auto 0}
+.lumi-bar p{margin:0;color:var(--muted);font-size:15px}
+.lumi-ages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}
+.lumi-ages div{background:var(--plate);border-radius:var(--r-md,18px);padding:16px 18px}
+.lumi-ages b{display:block;font-family:var(--display);font-size:18px}
+.lumi-ages small{display:block;color:var(--pa);font-weight:700;margin:2px 0 6px}
+.lumi-ages p{margin:0;font-size:14.5px;line-height:1.45;color:var(--muted)}
+.lumi-pr{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px;margin-top:22px}
+.lumi-pr div{background:var(--plate);border-radius:var(--r-md,18px);padding:20px}
+.lumi-pr h3{font-size:18px;margin:0 0 6px}
+.lumi-pr p{margin:0;font-size:15px;line-height:1.5;color:var(--muted)}
+.lumi-real figure{margin:0}
+.lumi-real figcaption{margin-top:12px;font-size:15px;line-height:1.5;color:var(--muted)}
+.lumi-real figcaption b{color:var(--ink,inherit);display:block;font-size:17px;margin-bottom:2px}
+@media (max-width:700px){.lumi-ages{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -1068,39 +1092,43 @@ const PROJECTS = [
   cat:"Product Design · App", year:"2025–26", ctx:"Final year project · Temasek Polytechnic", tags:["product","uiux"], tagLabels:["Product Design","App","Research"],
   hero:"syn-cover.jpg", thumb:"syn-cover.jpg", thumbPos:"0% 50%",
   blurb:"A modular play system that helps children with ADHD turn restless energy into purposeful play, building coordination, confidence and focus at home."},
- {id:"gift-set", num:"02", name:"Corporate Gift Set", sub:"Air Force Museum", p:"#2B47A8", pd:"#8EA6F0",
+ {id:"lumi", num:"02", name:"Lumi", sub:"A Calm Companion App", p:"#2F7E79", pd:"#7CC9C2",
+  cat:"UI/UX · Game &amp; App Design", year:"2026", ctx:"Passion project · designed and coded by me", tags:["uiux"], tagLabels:["UI/UX","Game Design","Accessibility"],
+  hero:"lumi-cover.jpg", thumb:"lumi-cover.jpg", thumbPos:"0% 50%",
+  blurb:"A free tablet game for non-speaking children and young people: talk with pictures, plan the day, calm down, and practise real life with Lumi."},
+ {id:"gift-set", num:"03", name:"Corporate Gift Set", sub:"Air Force Museum", p:"#2B47A8", pd:"#8EA6F0",
   cat:"Product Design", year:"2025", ctx:"Industry studio · Singapore Air Force Museum", tags:["product"], tagLabels:["Product Design","Industry Project"],
   hero:"safm-cover.jpg", thumb:"safm-cover.jpg", thumbPos:"0% 50%",
   blurb:"A desk set for Singapore Air Force Museum VIP guests: a turbine fan, stationery holder and wireless charger shaped by the museum itself."},
- {id:"carecircle", num:"03", name:"CareCircle+", sub:"Caregiving App", p:"#B83A78", pd:"#EE8DBD",
+ {id:"carecircle", num:"04", name:"CareCircle+", sub:"Caregiving App", p:"#B83A78", pd:"#EE8DBD",
   cat:"UI/UX · Mobile App", year:"2025", ctx:"Passion project", tags:["uiux"], tagLabels:["UI/UX","Mobile App"],
   hero:"cc-cover.jpg", thumb:"cc-cover.jpg", thumbPos:"0% 50%",
   blurb:"An all-in-one caregiving app with shared calendars, mood check-ins, peer support and service booking. Every caregiver deserves care too."},
- {id:"ae-queue", num:"04", name:"A&amp;E Queue System", sub:"Changi General Hospital", p:"#0B6CC4", pd:"#7CC4F2",
+ {id:"ae-queue", num:"05", name:"A&amp;E Queue System", sub:"Changi General Hospital", p:"#0B6CC4", pd:"#7CC4F2",
   cat:"UI/UX · Dashboards &amp; App", year:"2025", ctx:"UI/UX internship · Changi General Hospital", tags:["uiux","service"], tagLabels:["UI/UX","Dashboards","Service Design"],
   hero:"ae-cover.jpg", thumb:"ae-cover.jpg", thumbPos:"0% 50%",
   blurb:"One live A&amp;E queue shared by triage nurses, doctors, duty managers, the waiting room and patients, so everyone knows who's next and why."},
- {id:"lung-fft", num:"05", name:"Lung FFT", sub:"Visualisation Dashboard", p:"#5B47B8", pd:"#B7A6F5",
+ {id:"lung-fft", num:"06", name:"Lung FFT", sub:"Visualisation Dashboard", p:"#5B47B8", pd:"#B7A6F5",
   cat:"UI/UX · Data Visualisation", year:"2025", ctx:"UI/UX internship project", tags:["uiux"], tagLabels:["UI/UX","Data Viz","Dashboards"],
   hero:"lf-cover.jpg", thumb:"lf-cover.jpg", thumbPos:"0% 50%",
   blurb:"A dashboard that turns lung sound recordings into clear frequency charts doctors can trust, plus an app for recording at home."},
- {id:"oral-exam", num:"06", name:"Oral Exam Mastery", sub:"AI Oral Practice", p:"#D4561A", pd:"#FFAE6E",
+ {id:"oral-exam", num:"07", name:"Oral Exam Mastery", sub:"AI Oral Practice", p:"#D4561A", pd:"#FFAE6E",
   cat:"UI/UX · Web &amp; Mobile App", year:"2025", ctx:"UI/UX internship · Ministry of Education", tags:["uiux"], tagLabels:["UI/UX","EdTech","Web &amp; Mobile"],
   hero:"oe-cover.jpg", thumb:"oe-cover.jpg", thumbPos:"0% 50%",
   blurb:"AI-marked oral practice for primary and secondary students, with Echo as a friendly examiner and one place for teachers to manage every class."},
- {id:"tray-dispenser", num:"07", name:"Tray Dispenser", sub:"Mandai Wildlife Reserve", p:"#3D7A4C", pd:"#86C796",
+ {id:"tray-dispenser", num:"08", name:"Tray Dispenser", sub:"Mandai Wildlife Reserve", p:"#3D7A4C", pd:"#86C796",
   cat:"Service & Product Design", year:"2024–25", ctx:"Industry studio · Mandai Wildlife Group", tags:["service","product"], tagLabels:["Service Design","Product Design"],
   hero:"tray-cover4.jpg", thumb:"tray-cover4.jpg", thumbPos:"0% 50%",
   blurb:"A back-end tray dispenser for Mandai's food courts. Each tray shows its order number, so tourists always grab the right one."},
- {id:"lafex", num:"08", name:"LAFEX", sub:"Latte Art for Steadier Hands", p:"#3B4A8A", pd:"#9DABEA",
+ {id:"lafex", num:"09", name:"LAFEX", sub:"Latte Art for Steadier Hands", p:"#3B4A8A", pd:"#9DABEA",
   cat:"Product Design · App", year:"2024", ctx:"Studio Project 2 · mock Electrolux brief", tags:["product","uiux"], tagLabels:["Product Design","App","Redesign"],
   hero:"lafex-cover.jpg", thumb:"lafex-cover.jpg", thumbPos:"0% 50%",
   blurb:"A latte-art device, wristband and app for older adults with Parkinson's, redesigned after user testing so shaking hands can still pour a heart."},
- {id:"bon", num:"09", name:"BON", sub:"Crochet Storage", p:"#A0703A", pd:"#D9AC74",
+ {id:"bon", num:"10", name:"BON", sub:"Crochet Storage", p:"#A0703A", pd:"#D9AC74",
   cat:"Product Design", year:"2023–24", ctx:"Studio project", tags:["product"], tagLabels:["Product Design","Prototyping"],
   hero:"bon-cover.jpg", thumb:"bon-cover.jpg", thumbPos:"0% 50%",
   blurb:"A crochet storage unit with sliding, rotating compartments that keeps yarn, hooks and tools tidy and tangle-free."},
- {id:"vase", num:"10", name:"Flower Vase", sub:"Laser-Cut Gift", p:"#B5562F", pd:"#F0A27C",
+ {id:"vase", num:"11", name:"Flower Vase", sub:"Laser-Cut Gift", p:"#B5562F", pd:"#F0A27C",
   cat:"Product Design · Laser Cutting", year:"2024", ctx:"Personal project · Mother's Day gift", tags:["product"], tagLabels:["Laser Cutting","Product Design"],
   hero:"vase-cover.jpg", thumb:"vase-cover.jpg", thumbPos:"0% 50%",
   blurb:"A Mother's Day gift cut from a single sheet of scrap wood, with flat pieces that slot together into a 3D vase of flowers."}
@@ -1750,6 +1778,54 @@ const CONTENT = {
     </div>`)}
   ${blk("Process booklet","Flip through the full process",`
     ${viewerHTML("book", `<a class="btn" href="https://heyzine.com/flip-book/2570235db8.html" target="_blank" rel="noopener">Open the full flipbook <span class="arr">${arrow}</span></a>`, "1755/1241", "#FEFAE5")}`)}
+`,
+"lumi": () => `
+  ${blk("Concept","Every child has something to say",`
+    <div class="two">
+      <div>
+        <p class="body-strong">Many non-speaking children have plenty to say, but no easy way to say it. Small changes to the day can feel huge, and everyday places like a busy hawker centre or the dentist can be overwhelming.</p>
+        <p class="hmw">How might we help non-speaking children express themselves, cope with change and practise everyday life, at their own pace?</p>
+        <p class="body-strong" style="margin-top:26px">Lumi is a gentle friend on the tablet. It grows with the child, with three looks for different ages, and three ways to play: on their own, together with a grown-up, and a Grown-ups area for parents and teachers.</p>
+      </div>
+      <div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-setup.jpg")}" alt="Lumi's welcome screen, where a grown-up picks Little ones, Primary or Teens, a difficulty and a colour theme" loading="lazy"></div>
+    </div>
+    <div class="lumi-ages">
+      <div><b>Little ones</b><small>Ages 3 to 6</small><p>Bigger buttons, fewer choices and more pictures. Just Now and Next for the day.</p></div>
+      <div><b>Primary</b><small>Ages 7 to 12</small><p>The standard Lumi look, with stories, games and lessons for everyday life.</p></div>
+      <div><b>Teens</b><small>Ages 13 to 18</small><p>A calmer, grown-up look with more words and choices, and life skills like ordering food or asking for help at work.</p></div>
+    </div>`)}
+  ${blk("Try it","Play Lumi right here",`
+    <div class="lumi-tab"><div class="lumi-scr" id="lumiScr">
+      <img src="${IMG("lumi-home.jpg")}" alt="Lumi's home screen" loading="lazy">
+      <button class="lumi-play" id="lumiPlay" type="button"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>Play Lumi here</span></button>
+    </div></div>
+    <div class="lumi-bar"><p>The real app, running live. Turn your sound on: Lumi talks. Works best on a tablet or laptop.</p>
+      <a class="btn" href="https://makiyakinabe.github.io/lumi/" target="_blank" rel="noopener">Open full screen <span class="arr">${arrow}</span></a></div>`)}
+  ${blk("Inside Lumi","A day with Lumi",`
+    ${viewerHTML("lumiView", "", "1194/834", "#E8D9C5")}`)}
+  ${blk("Real life practice","Stories set in Singapore",`
+    <p class="body-strong" style="margin-bottom:22px">Instead of reading about a new place, the child acts it out with Lumi, one small step at a time, with a kind hint instead of a wrong answer.</p>
+    <div class="two lumi-real">
+      <figure><div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-story.jpg")}" alt="Story scene at a hawker centre, Lumi looking worried and choosing between headphones, a quieter table or slow breaths" loading="lazy"></div>
+        <figcaption><b>Lunch at the hawker centre</b>Choose what helps with the noise, chope a table with a tissue packet, queue, and pay with cash, card or phone. Also the MRT, polyclinic, dentist, haircut, fire drill and more.</figcaption></figure>
+      <figure><div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-learn.jpg")}" alt="Brush teeth lesson in a bathroom, with a dotted outline showing where to drag the step stool" loading="lazy"></div>
+        <figcaption><b>Learn with Lumi</b>Brush teeth, wash hands, get dressed, pack a bag or buy food at the canteen. Lumi shows each step first, then "Do it with me" helps if the child gets stuck.</figcaption></figure>
+    </div>`)}
+  ${blk("Design principles","Calm by design",`
+    <div class="lumi-pr">
+      <div><h3>Nothing timed, nothing wrong</h3><p>One small action per step, big things to drag, and gentle hints. Badges wait until a task is finished, so nothing pops up mid-step.</p></div>
+      <div><h3>Watch, then do</h3><p>A see-through hand shows each new step first. "Show me" is always there, and "Do it with me" does it together.</p></div>
+      <div><h3>Drawn pictures, no emoji</h3><p>Every symbol is a soft, consistent drawing, so the talk board, stories and games feel like one world.</p></div>
+      <div><h3>Made for every child</h3><p>Tap instead of drag, high contrast, a calm low-colour theme, and a Break button on every screen.</p></div>
+      <div><h3>Home languages</h3><p>Words can show and be spoken in 华文, Bahasa Melayu or தமிழ், and families can use their own words, like 婆婆 for Grandma.</p></div>
+      <div><h3>Private and free</h3><p>Everything stays on the tablet, it works offline, and it's free for everyone, no app store needed.</p></div>
+    </div>`)}
+  ${blk("My role","Designed and built solo",`
+    <ul class="list">
+      <li><span>Planned the features around communication, routines and emotional regulation, for ages 3 to 18</span></li>
+      <li><span>Designed the UI, the Lumi character, and a full set of drawn symbols and story characters</span></li>
+      <li><span>Coded it as an installable web app in plain HTML, CSS and JavaScript, so it runs on any tablet or phone</span></li>
+    </ul>`)}
 `,
 "gift-set": () => `
   ${blk("Concept","A gift that tells the museum's story",`
@@ -2943,6 +3019,25 @@ const INIT = {
   initBoard("synBoard", "assets/syn-board-full.jpg", "SynapSys exhibition board, both panels");
   initViewer("book", Array.from({length:32},(_,i)=>({src:`booklet/b${String(i+1).padStart(2,"0")}.jpg`, t:`Page ${i+1}`})));
 },
+"lumi"(){
+  initViewer("lumiView", [
+    {src:IMG("lumi-home.jpg"), t:"Home", c:"Lumi greets the child by name and shows what's next."},
+    {src:IMG("lumi-talk.jpg"), t:"Talk board", c:"Tap pictures to build a message, and Lumi says it out loud."},
+    {src:IMG("lumi-myday.jpg"), t:"My day", c:"A picture timetable, with the one thing to do now."},
+    {src:IMG("lumi-nownext.jpg"), t:"Now and Next", c:"A simple timer for what's happening now, and what comes after."},
+    {src:IMG("lumi-calm.jpg"), t:"Calm corner", c:"Breathe with Lumi and a balloon, with soft music."},
+    {src:IMG("lumi-chat.jpg"), t:"Chat with Lumi", c:"Share a feeling with one tap."},
+    {src:IMG("lumi-stories.jpg"), t:"Stories", c:"Real places to practise, from the dentist to getting lost."},
+    {src:IMG("lumi-wait.jpg"), t:"Waiting game", c:"Gentle practice for waiting for the bus, food or a queue."},
+    {src:IMG("lumi-together.jpg"), t:"Together", c:"Turn-taking games to play with Mum, Dad, a teacher or a friend."},
+    {src:IMG("lumi-progress.jpg"), t:"Grown-ups", c:"Feelings, breaks and skills over the week, for parents and teachers."}
+  ]);
+  const btn = $("#lumiPlay");
+  if (btn) btn.onclick = () => {
+    const scr = $("#lumiScr");
+    scr.innerHTML = `<iframe src="/lumi/" title="Lumi, playable" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+  };
+},
 "gift-set"(){
   initTurbine();
   initScrub("scrub", ["Mark 1","Mark 2","Final"], ["First physical models, testing scale, layout and how a fan, holder and charger share one base.","Refined forms: turbine fan, faceted holder, radar-like charger and jets on a faceted base.","Final render on an office desk: blue faceted base with F-16, F-15 and F-35 models climbing upward."]);
@@ -3239,7 +3334,7 @@ function viewWorks(){
   return `<section class="wrap p-head">
     <p class="eyebrow">2023 – 2026</p>
     <h1 style="margin-top:10px">My Works</h1>
-    <p class="lead">Ten projects across product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital and the Ministry of Education, to studio briefs and my own explorations.</p>
+    <p class="lead">Eleven projects across product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital and the Ministry of Education, to studio briefs and my own explorations.</p>
   </section>
   <section class="wrap" style="padding-top:44px">
     <div class="grid">${PROJECTS.map(p=>card(p)).join("")}</div>
