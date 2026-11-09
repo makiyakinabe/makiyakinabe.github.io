@@ -1036,10 +1036,82 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .lumi-ages b{display:block;font-family:var(--display);font-size:18px}
 .lumi-ages small{display:block;color:var(--pa);font-weight:700;margin:2px 0 6px}
 .lumi-ages p{margin:0;font-size:14.5px;line-height:1.45;color:var(--muted)}
-.lumi-pr{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px;margin-top:22px}
-.lumi-pr div{background:var(--plate);border-radius:var(--r-md,18px);padding:20px}
-.lumi-pr h3{font-size:18px;margin:0 0 6px}
-.lumi-pr p{margin:0;font-size:15px;line-height:1.5;color:var(--muted)}
+.lp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.lp-card{background:var(--plate);border-radius:var(--r-lg);padding:14px 14px 22px;display:flex;flex-direction:column}
+.lp-card>h3{font-size:18px;margin:16px 6px 6px}
+.lp-card>p{margin:0 6px;font-size:15px;line-height:1.5;color:var(--muted)}
+.lp-demo{position:relative;background:#F6EEE2;border-radius:16px;padding:16px;min-height:236px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#3B2F2F;font-family:"Nunito","Varela Round",ui-rounded,system-ui,sans-serif;overflow:hidden}
+.lp-demo button{font:inherit;cursor:pointer}
+.lp-say{margin:0;font-size:14px;font-weight:700;color:#2F7E79;text-align:center;min-height:2.6em;display:flex;align-items:center;transition:color .2s}
+.lp-say.warm{color:#B7741A}
+.lp-ask{margin:0;font-weight:800;font-size:16px;text-align:center}
+.lp-opts{display:flex;gap:10px}
+.lp-opts button{border:2.5px solid #D6C4A8;background:#fff;border-radius:14px;padding:12px 16px;font-weight:800;font-size:15px;color:#3B2F2F;transition:transform .15s,border-color .2s,background .2s}
+.lp-opts button:hover{transform:translateY(-2px)}
+.lp-opts button.soft{animation:lpSoft .5s;border-color:#F2A65A;background:#FFF4E2}
+.lp-opts button.yes{border-color:#4F8A3F;background:#E7F3E1}
+@keyframes lpSoft{0%,100%{transform:none}30%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
+.lp-star{position:absolute;font-weight:900;color:#C98A1E;background:#FFF1C2;border-radius:99px;padding:4px 10px;font-size:14px;animation:lpStar 1.4s ease-out forwards;pointer-events:none}
+@keyframes lpStar{0%{opacity:0;transform:translateY(10px) scale(.6)}20%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0;transform:translateY(-24px)}}
+.lp-track{position:relative;width:100%;max-width:280px;height:96px;background:radial-gradient(#E9DBC6 1.2px,transparent 1.6px) 0 0/16px 16px,#FBF6EE;border-radius:14px}
+.lp-ring{position:absolute;right:22px;top:14px;width:68px;height:68px;border-radius:50%;border:3px dashed #2F7E79;opacity:.7}
+.lp-ring.ok{border-style:solid;opacity:1;background:#DCEFED}
+.lp-piece{position:absolute;left:18px;top:16px;width:64px;height:64px;border-radius:16px;background:#fff;border:2.5px solid #D6C4A8;display:grid;place-items:center;cursor:grab;touch-action:none;box-shadow:0 4px 10px rgba(0,0,0,.1);z-index:2}
+.lp-piece img{width:44px;height:44px;pointer-events:none}
+.lp-piece.anim{transition:left .9s cubic-bezier(.45,0,.3,1),top .9s cubic-bezier(.45,0,.3,1)}
+.lp-hand{position:absolute;left:44px;top:44px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.75);border:3px solid rgba(47,126,121,.6);opacity:0;z-index:3;pointer-events:none}
+.lp-hand.go{animation:lpHand 1.6s cubic-bezier(.45,0,.3,1) 2}
+@keyframes lpHand{0%{opacity:0;transform:none}15%{opacity:.9;transform:none}75%{opacity:.9;transform:translate(var(--hx),0)}100%{opacity:0;transform:translate(var(--hx),0)}}
+.lp-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.lp-btns button,.lp-chips button,.lp-seg button{border:2px solid #D6C4A8;background:#fff;color:#3B2F2F;border-radius:99px;padding:7px 13px;font-weight:800;font-size:13.5px}
+.lp-btns button[data-a="with"]{background:#FBE3EE;border-color:#E9A8C4}
+.lp-chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.lp-chips button[aria-pressed="true"],.lp-seg button[aria-pressed="true"]{background:#2F7E79;border-color:#2F7E79;color:#fff}
+.lp-seg{display:inline-flex;background:#fff;border-radius:99px;padding:3px;border:2px solid #D6C4A8}
+.lp-seg button{border:0;padding:6px 12px}
+.lp-tiles{display:flex;gap:10px;justify-content:center}
+.lp-tile{position:relative;width:76px;height:84px;border-radius:14px;background:#fff;border:2.5px solid #D6C4A8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;color:#3B2F2F;transition:transform .25s,border .2s,background .2s,filter .3s,width .25s,height .25s}
+.lp-tile img{width:40px;height:40px;transition:width .25s,height .25s}
+.lp-tile b{font-size:13px;font-weight:800;line-height:1.1}
+.lp-tile small{font-size:12.5px;font-weight:700;color:#2F7E79;min-height:1.2em;line-height:1.2}
+.lp-tile .e{font-style:normal;font-size:34px;line-height:40px;display:none}
+.lp-d .lp-tiles:not(.lp-show-lumi) .e{display:block}
+.lp-d .lp-tiles:not(.lp-show-lumi) img{display:none}
+.lp-d .lp-tiles:not(.lp-show-lumi) .lp-tile{filter:none}
+.lp-d .lp-tiles.flip .lp-tile{animation:lpFlip .4s}
+@keyframes lpFlip{0%{transform:rotateY(0)}50%{transform:rotateY(90deg)}100%{transform:rotateY(0)}}
+.lp-e .t-eat,.lp-l .lp-tile{background:#E2F2DA;border-color:#6AA84F}
+.lp-e .t-help{background:#E2F2DA;border-color:#6AA84F}
+.lp-e .t-stop{background:#FADAD4;border-color:#D8604C}
+.lp-l .lp-tile{background:#FFF4CC;border-color:#E2B93B;height:96px;cursor:pointer}
+.lp-l .lp-tile:hover{transform:translateY(-2px)}
+.lp-l .lp-tile.talk{animation:lpTalk .6s}
+@keyframes lpTalk{0%,100%{transform:none}40%{transform:scale(1.08)}}
+.lp-e.hc .lp-tile{background:#fff;border:4px solid #111;color:#111}
+.lp-e.lo .lp-tiles{filter:saturate(.25)}
+.lp-e.lo{background:#EFEFED}
+.lp-e.big .lp-tile{width:92px;height:100px}
+.lp-e.big .lp-tile img{width:54px;height:54px}
+.lp-net{display:flex;align-items:center;gap:10px}
+.lp-cloud{width:56px;color:#9ED4FF;transition:color .3s,opacity .3s;position:relative}
+.lp-cloud svg{width:100%;display:block}
+.lp-dash{width:56px;height:0;border-top:3px dashed #9ED4FF;transition:opacity .3s}
+.lp-pad{width:96px;height:70px;border-radius:12px;background:#1E2422;padding:6px;display:block}
+.lp-pad span{display:grid;place-items:center;height:100%;border-radius:7px;background:#E8D9C5;font-weight:900;color:#2F7E79;font-size:15px;position:relative}
+.lp-p.off .lp-cloud{color:#C9C2B8;opacity:.6}
+.lp-p.off .lp-cloud::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:3px;background:#B7741A;transform:rotate(-30deg);border-radius:2px}
+.lp-p.off .lp-dash{opacity:0}
+.lp-p.off .lp-pad span::after{content:"✓";position:absolute;right:-8px;top:-8px;width:22px;height:22px;border-radius:50%;background:#4F8A3F;color:#fff;font-size:13px;display:grid;place-items:center}
+.lp-sw{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14px;cursor:pointer;user-select:none}
+.lp-sw input{position:absolute;opacity:0;pointer-events:none}
+.lp-sw span{width:42px;height:24px;border-radius:99px;background:#C9C2B8;position:relative;transition:background .2s}
+.lp-sw span::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .2s}
+.lp-sw input:checked+span{background:#2F7E79}
+.lp-sw input:checked+span::after{transform:translateX(18px)}
+.lp-sw input:focus-visible+span,.lp-demo button:focus-visible,.lp-piece:focus-visible{outline:3px solid #F2A65A;outline-offset:2px}
+@media (max-width:980px){.lp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.lp-grid{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion: reduce){.lp-hand.go,.lp-opts button.soft,.lp-star,.lp-tiles.flip .lp-tile,.lp-l .lp-tile.talk{animation:none}.lp-piece.anim{transition:none}}
 .lumi-real figure{margin:0}
 .lumi-real figcaption{margin-top:12px;font-size:15px;line-height:1.5;color:var(--muted)}
 .lumi-real figcaption b{color:var(--ink,inherit);display:block;font-size:17px;margin-bottom:2px}
@@ -1694,6 +1766,61 @@ const LUMI_FEATS = [
   {v:"learn", t:"Learn with Lumi", k:"Life skills", d:"Brushing teeth, one small step at a time. “Show me” plays a see-through hand, and “Do it with me” does the step together."},
   {v:"wait", t:"Waiting game", k:"Emotional regulation", d:"Pick something to wait for, like food cooking. The ring counts down, and Lumi suggests things to do while waiting: breathe, count, squeeze or look around."}
 ];
+function initLumiPrinciples(){
+  const root = $("#lumiPr"); if (!root) return;
+  const demo = n => $(`[data-demo="${n}"]`, root);
+  // 1. nothing wrong
+  { const d = demo("wrong"), say = $(".lp-say", d); let t;
+    $$(".lp-opts button", d).forEach(b => b.onclick = () => {
+      clearTimeout(t); $$(".lp-opts button", d).forEach(x=>x.classList.remove("soft","yes"));
+      if (b.dataset.ok === "1"){ b.classList.add("yes"); say.className = "lp-say"; say.textContent = "Yes! Headphones make the noise softer.";
+        const st = document.createElement("span"); st.className = "lp-star"; st.textContent = "+1 ★"; st.style.right = "18px"; st.style.top = "14px"; d.appendChild(st); setTimeout(()=>st.remove(), 1500); }
+      else { void b.offsetWidth; b.classList.add("soft"); say.className = "lp-say warm"; say.textContent = "Ice cream is yummy, but it won't make it quieter. Try another one!"; }
+      t = setTimeout(()=>{ $$(".lp-opts button", d).forEach(x=>x.classList.remove("soft","yes")); say.className = "lp-say"; say.textContent = "No timer. Take your time."; }, 4200);
+    }); }
+  // 2. watch, then do
+  { const d = demo("watch"), tr = $(".lp-track", d), pc = $(".lp-piece", d), ring = $(".lp-ring", d), hand = $(".lp-hand", d), say = $(".lp-say", d);
+    let done = false;
+    const goal = () => ({x: tr.clientWidth - 22 - 68 + 2, y: 16});
+    const finish = () => { done = true; const g = goal(); pc.style.left = g.x+"px"; pc.style.top = g.y+"px"; ring.classList.add("ok"); say.textContent = "You did it! Tap Show me to try again.";
+      setTimeout(()=>{ pc.classList.add("anim"); pc.style.left = "18px"; pc.style.top = "16px"; ring.classList.remove("ok"); done = false; setTimeout(()=>{ pc.classList.remove("anim"); say.textContent = "Drag the plate into the ring."; }, 950); }, 2600); };
+    $('[data-a="show"]', d).onclick = () => { if (done) return; hand.style.setProperty("--hx", (goal().x - 18) + "px"); hand.classList.remove("go"); void hand.offsetWidth; hand.classList.add("go"); say.textContent = "Watch the hand, then you try."; };
+    $('[data-a="with"]', d).onclick = () => { if (done) return; hand.style.setProperty("--hx", (goal().x - 18) + "px"); hand.classList.remove("go"); void hand.offsetWidth; hand.classList.add("go"); pc.classList.add("anim"); say.textContent = "Let's do it together."; requestAnimationFrame(()=>{ const g = goal(); pc.style.left = g.x+"px"; }); setTimeout(()=>{ pc.classList.remove("anim"); finish(); }, 1000); };
+    let drag = null;
+    pc.addEventListener("pointerdown", e => { if (done) return; pc.setPointerCapture(e.pointerId); const r = pc.getBoundingClientRect(); drag = {dx: e.clientX - r.left, dy: e.clientY - r.top}; pc.style.cursor = "grabbing"; });
+    pc.addEventListener("pointermove", e => { if (!drag) return; const tb = tr.getBoundingClientRect();
+      const x = Math.max(0, Math.min(tb.width - 64, e.clientX - tb.left - drag.dx)), y = Math.max(0, Math.min(tb.height - 64, e.clientY - tb.top - drag.dy));
+      pc.style.left = x+"px"; pc.style.top = y+"px"; });
+    pc.addEventListener("pointerup", () => { if (!drag) return; drag = null; pc.style.cursor = "";
+      const g = goal(), x = parseFloat(pc.style.left), y = parseFloat(pc.style.top);
+      if (Math.hypot(x - g.x, y - g.y) < 46) finish(); else { say.textContent = "Nearly! Try the dashed ring."; } });
+    pc.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); $('[data-a="with"]', d).click(); } }); }
+  // 3. drawn vs emoji
+  { const d = demo("drawn"), tl = $(".lp-tiles", d), say = $(".lp-say", d);
+    $$(".lp-seg button", d).forEach(b => b.onclick = () => { $$(".lp-seg button", d).forEach(x=>x.setAttribute("aria-pressed", x===b));
+      tl.classList.remove("flip"); void tl.offsetWidth; tl.classList.add("flip");
+      setTimeout(()=>tl.classList.toggle("lp-show-lumi", b.dataset.s === "lumi"), 200);
+      say.textContent = b.dataset.s === "lumi" ? "Same look on every device." : "Emoji change from phone to phone, and can look busy."; }); }
+  // 4. every child
+  { const d = demo("every"), say = $(".lp-say", d), names = {hc:"High contrast", lo:"Low colour", big:"Bigger buttons"};
+    $$(".lp-chips button", d).forEach(b => b.onclick = () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", on); d.classList.toggle(b.dataset.c, on);
+      const act = $$(".lp-chips button", d).filter(x=>x.getAttribute("aria-pressed")==="true").map(x=>names[x.dataset.c]);
+      say.textContent = act.length ? act.join(" + ") + " on." : "Turn the settings on and off."; }); }
+  // 5. home languages
+  { const d = demo("lang"), say = $(".lp-say", d);
+    const W = {grandma:{en:"Grandma",zh:"奶奶",ms:"nenek",ta:"பாட்டி"}, eat:{en:"eat",zh:"吃",ms:"makan",ta:"சாப்பிடு"}, happy:{en:"happy",zh:"开心",ms:"gembira",ta:"மகிழ்ச்சி"}};
+    const LC = {zh:"zh-CN", ms:"ms-MY", ta:"ta-IN"}; let lang = "zh";
+    const paint = () => $$(".lp-tile", d).forEach(t => $("small", t).textContent = W[t.dataset.w][lang]);
+    $$(".lp-chips button", d).forEach(b => b.onclick = () => { lang = b.dataset.l; $$(".lp-chips button", d).forEach(x=>x.setAttribute("aria-pressed", x===b)); paint(); });
+    $$(".lp-tile", d).forEach(t => t.onclick = () => { const w = W[t.dataset.w]; t.classList.remove("talk"); void t.offsetWidth; t.classList.add("talk");
+      say.textContent = `“${w.en}” … “${w[lang]}”`;
+      try{ const ss = speechSynthesis; ss.cancel(); const voices = ss.getVoices(); const u1 = new SpeechSynthesisUtterance(w.en); u1.lang = "en-GB"; u1.rate = .9; ss.speak(u1);
+        if (voices.some(v=>v.lang && v.lang.toLowerCase().startsWith(lang))){ const u2 = new SpeechSynthesisUtterance(w[lang]); u2.lang = LC[lang]; u2.rate = .85; ss.speak(u2); } }catch(e){} });
+    paint(); }
+  // 6. private
+  { const d = demo("private"), cb = $("input", d), say = $(".lp-say", d);
+    cb.onchange = () => { d.classList.toggle("off", !cb.checked); say.textContent = cb.checked ? "Nothing is uploaded. No account, no ads." : "Still works! Everything stays on this tablet."; }; }
+}
 const CONTENT = {
 "synapsys": () => `
   ${blk("Research","A Ferrari with bicycle brakes",`
@@ -1858,13 +1985,56 @@ const CONTENT = {
         <figcaption><b>Learn with Lumi</b>Brush teeth, wash hands, get dressed, pack a bag or buy food at the canteen. Lumi shows each step first, then "Do it with me" helps if the child gets stuck.</figcaption></figure>
     </div>`)}
   ${blk("Design principles","Calm by design",`
-    <div class="lumi-pr">
-      <div><h3>Nothing timed, nothing wrong</h3><p>One small action per step, big things to drag, and gentle hints. Badges wait until a task is finished, so nothing pops up mid-step.</p></div>
-      <div><h3>Watch, then do</h3><p>A see-through hand shows each new step first. "Show me" is always there, and "Do it with me" does it together.</p></div>
-      <div><h3>Drawn pictures, no emoji</h3><p>Every symbol is a soft, consistent drawing, so the talk board, stories and games feel like one world.</p></div>
-      <div><h3>Made for every child</h3><p>Tap instead of drag, high contrast, a calm low-colour theme, and a Break button on every screen.</p></div>
-      <div><h3>Home languages</h3><p>Words can show and be spoken in 华文, Bahasa Melayu or தமிழ், and families can use their own words, like 婆婆 for Grandma.</p></div>
-      <div><h3>Private and free</h3><p>Everything stays on the tablet, it works offline, and it's free for everyone, no app store needed.</p></div>
+    <p class="body-strong" style="margin-bottom:22px">Six rules every screen follows. Try each one.</p>
+    <div class="lp-grid" id="lumiPr">
+      <div class="lp-card">
+        <div class="lp-demo lp-q" data-demo="wrong">
+          <p class="lp-ask">It's noisy here. What could help?</p>
+          <div class="lp-opts"><button type="button" data-ok="0">Ice cream</button><button type="button" data-ok="1">Headphones</button></div>
+          <p class="lp-say" aria-live="polite">No timer. Take your time.</p>
+        </div>
+        <h3>Nothing timed, nothing wrong</h3><p>One small action per step and no timers. A wrong tap gets a kind hint, never a red cross or a buzz.</p>
+      </div>
+      <div class="lp-card">
+        <div class="lp-demo lp-w" data-demo="watch">
+          <div class="lp-track"><span class="lp-ring"></span><span class="lp-piece" tabindex="0" aria-label="Drag the plate to the ring"><img src="${IMG("lumi-ic-eat.svg")}" alt=""></span><span class="lp-hand" aria-hidden="true"></span></div>
+          <div class="lp-btns"><button type="button" data-a="show">Show me</button><button type="button" data-a="with">Do it with me</button></div>
+          <p class="lp-say" aria-live="polite">Drag the plate into the ring.</p>
+        </div>
+        <h3>Watch, then do</h3><p>A see-through hand shows each new step first. “Show me” is always there, and “Do it with me” does it together.</p>
+      </div>
+      <div class="lp-card">
+        <div class="lp-demo lp-d" data-demo="drawn">
+          <div class="lp-seg" role="group" aria-label="Picture style"><button type="button" aria-pressed="false" data-s="emoji">Emoji</button><button type="button" aria-pressed="true" data-s="lumi">Lumi drawings</button></div>
+          <div class="lp-tiles lp-show-lumi">${[["eat","🍽️"],["happy","🙂"],["grandma","👵"]].map(([n,e])=>`<span class="lp-tile"><i class="e">${e}</i><img src="${IMG("lumi-ic-"+n+".svg")}" alt=""><b>${n==="grandma"?"Grandma":n}</b></span>`).join("")}</div>
+          <p class="lp-say">Same look on every device.</p>
+        </div>
+        <h3>Drawn pictures, no emoji</h3><p>Emoji look different on every phone and tablet. Lumi's soft drawings stay the same, so the talk board, stories and games feel like one world.</p>
+      </div>
+      <div class="lp-card">
+        <div class="lp-demo lp-e" data-demo="every">
+          <div class="lp-chips"><button type="button" aria-pressed="false" data-c="hc">High contrast</button><button type="button" aria-pressed="false" data-c="lo">Low colour</button><button type="button" aria-pressed="false" data-c="big">Bigger</button></div>
+          <div class="lp-tiles">${["eat","help","stop"].map(n=>`<span class="lp-tile t-${n}"><img src="${IMG("lumi-ic-"+n+".svg")}" alt=""><b>${n}</b></span>`).join("")}</div>
+          <p class="lp-say">Turn the settings on and off.</p>
+        </div>
+        <h3>Made for every child</h3><p>High contrast, a calm low-colour theme, bigger buttons, tap instead of drag, and a Break button on every screen.</p>
+      </div>
+      <div class="lp-card">
+        <div class="lp-demo lp-l" data-demo="lang">
+          <div class="lp-chips"><button type="button" aria-pressed="true" data-l="zh">华文</button><button type="button" aria-pressed="false" data-l="ms">Melayu</button><button type="button" aria-pressed="false" data-l="ta">தமிழ்</button></div>
+          <div class="lp-tiles">${["grandma","eat","happy"].map(n=>`<button type="button" class="lp-tile" data-w="${n}"><img src="${IMG("lumi-ic-"+n+".svg")}" alt=""><b>${n==="grandma"?"Grandma":n}</b><small></small></button>`).join("")}</div>
+          <p class="lp-say" aria-live="polite">Tap a picture to hear it.</p>
+        </div>
+        <h3>Home languages</h3><p>Words show and can be spoken in 华文, Bahasa Melayu or தமிழ், and families can swap in their own words, like 婆婆 for Grandma.</p>
+      </div>
+      <div class="lp-card">
+        <div class="lp-demo lp-p" data-demo="private">
+          <div class="lp-net"><span class="lp-cloud" aria-hidden="true"><svg viewBox="0 0 48 32"><path d="M14 28h22a9 9 0 0 0 1-18 12 12 0 0 0-23 2 8 8 0 0 0 0 16z" fill="currentColor"/></svg></span><span class="lp-dash"></span><span class="lp-pad"><span>Lumi</span></span></div>
+          <label class="lp-sw"><input type="checkbox" checked> <span></span> Internet</label>
+          <p class="lp-say" aria-live="polite">Nothing is uploaded. No account, no ads.</p>
+        </div>
+        <h3>Private and free</h3><p>Everything stays on the tablet and Lumi works offline. It's free for everyone, with no app store needed.</p>
+      </div>
     </div>`)}
   ${blk("My role","From idea to companion app",`
     <ul class="list">
@@ -3072,6 +3242,7 @@ const INIT = {
   initViewer("book", Array.from({length:32},(_,i)=>({src:`booklet/b${String(i+1).padStart(2,"0")}.jpg`, t:`Page ${i+1}`})));
 },
 "lumi"(){
+  initLumiPrinciples();
   const tour = $("#lumiTour");
   if (tour){
     const vid = $("#lumiVid"), tabs = $$(".lumi-tlist button", tour), tt = $("#lumiTT"), td = $("#lumiTD");
