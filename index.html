@@ -1020,6 +1020,64 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .lb img{max-height:86vh;max-width:min(1200px,100%);border-radius:14px;object-fit:contain;animation:fadeIn .3s ease both}
 .lb button{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));border:0;background:#fff;color:#111;border-radius:10px;padding:8px 14px;font-weight:600;cursor:pointer}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--nav);color:var(--nav-ink);padding:10px 16px;border-radius:12px;font-size:14px;z-index:95}
+/* SG bus case study */
+.bus-q{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:24px}
+.bus-q div{background:#0B0D10;color:#F3F2EC;border-radius:var(--r-lg);padding:24px}
+.bus-q b{display:block;font-family:var(--display);font-size:44px;line-height:1;color:#FFD400}
+.bus-q .chg b{color:#FF9A1F}
+.bus-q h3{font-size:20px;margin:12px 0 6px;color:#fff}
+.bus-q p{margin:0;font-size:15px;line-height:1.5;color:#B8BEC7}
+.bus-res{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.bus-res div{background:var(--plate);border-radius:var(--r-md,18px);padding:20px;border-top:5px solid #FFD400}
+.bus-res h3{font-size:17px;margin:0 0 6px}
+.bus-res p{margin:0;font-size:15px;line-height:1.5;color:var(--muted)}
+.bus-ride{display:grid;grid-template-columns:220px minmax(0,1fr);gap:clamp(16px,3vw,32px);align-items:start}
+.bus-steps{list-style:none;margin:0;padding:0;display:grid;gap:6px;position:relative}
+.bus-steps::before{content:"";position:absolute;left:21px;top:20px;bottom:20px;width:3px;background:repeating-linear-gradient(#C9CDD0 0 6px,transparent 6px 12px)}
+.bus-steps button{position:relative;display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:transparent;font:inherit;font-weight:700;font-size:15.5px;color:inherit;padding:8px 10px 8px 4px;border-radius:12px;cursor:pointer;transition:background .2s}
+.bus-steps button:hover{background:var(--plate)}
+.bus-steps button span{flex:none;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--bg,#fff);border:2.5px solid #C9CDD0;font-weight:800;transition:all .2s}
+.bus-steps button[aria-selected="true"]{background:var(--plate)}
+.bus-steps button[aria-selected="true"] span{background:#FFD400;border-color:#0B0D10;color:#0B0D10;transform:scale(1.08)}
+.bus-steps button:focus-visible,.bus-mode button:focus-visible{outline:3px solid #FF9A1F;outline-offset:2px}
+.bus-view{background:#0B0D10;border-radius:var(--r-lg);padding:clamp(14px,2vw,24px);color:#F3F2EC;min-width:0}
+.bus-mode{display:inline-flex;background:#1B1E23;border-radius:999px;padding:4px;margin-bottom:16px}
+.bus-mode button{border:0;background:transparent;color:#B8BEC7;font:inherit;font-weight:700;font-size:14px;padding:8px 16px;border-radius:999px;cursor:pointer}
+.bus-mode button[aria-pressed="true"]{background:#FFD400;color:#0B0D10}
+.bus-mode button.o[aria-pressed="true"]{background:#FF9A1F}
+.bus-mode button:disabled{opacity:.35;cursor:not-allowed}
+.bus-screen{position:relative;background:#15181C;border-radius:14px;height:clamp(240px,34vw,440px);padding:12px;overflow:hidden;border:2px solid #2A2D31;transition:border-color .3s}
+.bus-screen.chg{border-color:#FF9A1F}
+.bus-screen img{position:absolute;left:12px;top:12px;width:calc(100% - 24px);height:calc(100% - 24px);object-fit:contain;display:block}
+.bus-screen.in img{animation:busIn .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes busIn{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+.bus-info h3{font-size:20px;margin:18px 0 12px;color:#fff}
+.bus-qs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px}
+.bus-qs div{background:#171A1F;border-radius:12px;padding:14px 16px;border-left:5px solid #FFD400}
+.bus-qs div.o{border-left-color:#FF9A1F}
+.bus-qs b{display:block;font-size:15.5px;line-height:1.3;color:#fff}
+.bus-qs span{display:block;font-size:14.5px;line-height:1.45;color:#B8BEC7;margin-top:4px}
+.bus-pt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.bus-pt div{background:var(--plate);border-radius:var(--r-md,18px);padding:20px}
+.bus-pt b{display:block;font-family:var(--display);font-size:17px}
+.bus-pt span{display:inline-block;font-size:12.5px;font-weight:700;background:#FFD400;color:#0B0D10;border-radius:6px;padding:2px 8px;margin:6px 0 8px}
+.bus-pt p{margin:0;font-size:15px;line-height:1.5;color:var(--muted)}
+.bus-sys{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:24px}
+.bus-type{background:#0B0D10;color:#F3F2EC;border-radius:var(--r-lg);padding:28px}
+.bus-type small{font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#B8BEC7;font-size:12.5px}
+.bus-type b{display:block;font-size:clamp(40px,5vw,64px);line-height:1;margin:12px 0 8px;font-family:"Atkinson Hyperlegible",Verdana,sans-serif}
+.bus-type span{font-size:20px}
+.bus-type p{color:#B8BEC7;font-size:15px;line-height:1.5;margin:12px 0 0}
+.bus-sw{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-content:center}
+.bus-sw div{display:grid;grid-template-columns:56px 1fr;column-gap:14px;align-items:center}
+.bus-sw i{grid-row:span 2;width:56px;height:56px;border-radius:12px}
+.bus-sw b{font-size:16px}
+.bus-sw span{font-size:14px;color:var(--muted)}
+.bus-rule{grid-column:1/-1;margin:6px 0 0;font-size:15px;line-height:1.5;color:var(--muted)}
+.bus-note{margin-top:22px;font-size:14px;color:var(--muted)}
+@media (max-width:900px){.bus-screen{height:clamp(220px,62vw,420px)}.bus-q,.bus-res,.bus-pt{grid-template-columns:minmax(0,1fr)}.bus-sys{grid-template-columns:minmax(0,1fr)}
+  .bus-ride{grid-template-columns:minmax(0,1fr)}.bus-steps{display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.bus-steps::before{display:none}.bus-steps button{white-space:nowrap;padding-right:14px}}
+@media (prefers-reduced-motion: reduce){.bus-screen.in img{animation:none}}
 /* Lumi case study */
 .lumi-tab{position:relative;background:#1E2422;border-radius:clamp(20px,3vw,38px);padding:clamp(10px,1.4vw,18px);box-shadow:0 30px 60px -20px rgba(0,0,0,.45);max-width:980px;margin:0 auto}
 .lumi-tab::before{content:"";position:absolute;left:50%;top:clamp(3px,.55vw,7px);width:8px;height:8px;margin-left:-4px;border-radius:50%;background:#3a4643}
@@ -1197,39 +1255,43 @@ const PROJECTS = [
   cat:"UI/UX · Game &amp; App Design", year:"2026", ctx:"Passion project · Companion app", tags:["uiux"], tagLabels:["UI/UX","Game Design","Accessibility"],
   hero:"lumi-cover.jpg", thumb:"lumi-cover.jpg", thumbPos:"0% 50%",
   blurb:"A free tablet game for non-speaking children and young people: talk with pictures, plan the day, calm down, and practise real life with Lumi."},
- {id:"gift-set", num:"03", name:"Corporate Gift Set", sub:"Air Force Museum", p:"#2B47A8", pd:"#8EA6F0",
+ {id:"bus", num:"03", name:"SG Bus Displays", sub:"Reading the Bus, for Everyone", p:"#8A6A00", pd:"#FFD400",
+  cat:"UI/UX · Wayfinding", year:"2026", ctx:"Self-initiated concept redesign", tags:["uiux"], tagLabels:["UI/UX","Wayfinding","Accessibility"],
+  hero:"bus-cover.jpg", thumb:"bus-cover.jpg", thumbPos:"0% 50%",
+  blurb:"A redesign of every display a Singapore bus rider reads in one trip, from the stop panel to the interchange, easier to understand and easier to see for everyone."},
+ {id:"gift-set", num:"04", name:"Corporate Gift Set", sub:"Air Force Museum", p:"#2B47A8", pd:"#8EA6F0",
   cat:"Product Design", year:"2025", ctx:"Industry studio · Singapore Air Force Museum", tags:["product"], tagLabels:["Product Design","Industry Project"],
   hero:"safm-cover.jpg", thumb:"safm-cover.jpg", thumbPos:"0% 50%",
   blurb:"A desk set for Singapore Air Force Museum VIP guests: a turbine fan, stationery holder and wireless charger shaped by the museum itself."},
- {id:"carecircle", num:"04", name:"CareCircle+", sub:"Caregiving App", p:"#B83A78", pd:"#EE8DBD",
+ {id:"carecircle", num:"05", name:"CareCircle+", sub:"Caregiving App", p:"#B83A78", pd:"#EE8DBD",
   cat:"UI/UX · Mobile App", year:"2025", ctx:"Passion project", tags:["uiux"], tagLabels:["UI/UX","Mobile App"],
   hero:"cc-cover.jpg", thumb:"cc-cover.jpg", thumbPos:"0% 50%",
   blurb:"An all-in-one caregiving app with shared calendars, mood check-ins, peer support and service booking. Every caregiver deserves care too."},
- {id:"ae-queue", num:"05", name:"A&amp;E Queue System", sub:"Changi General Hospital", p:"#0B6CC4", pd:"#7CC4F2",
+ {id:"ae-queue", num:"06", name:"A&amp;E Queue System", sub:"Changi General Hospital", p:"#0B6CC4", pd:"#7CC4F2",
   cat:"UI/UX · Dashboards &amp; App", year:"2025", ctx:"UI/UX internship · Changi General Hospital", tags:["uiux","service"], tagLabels:["UI/UX","Dashboards","Service Design"],
   hero:"ae-cover.jpg", thumb:"ae-cover.jpg", thumbPos:"0% 50%",
   blurb:"One live A&amp;E queue shared by triage nurses, doctors, duty managers, the waiting room and patients, so everyone knows who's next and why."},
- {id:"lung-fft", num:"06", name:"Lung FFT", sub:"Visualisation Dashboard", p:"#5B47B8", pd:"#B7A6F5",
+ {id:"lung-fft", num:"07", name:"Lung FFT", sub:"Visualisation Dashboard", p:"#5B47B8", pd:"#B7A6F5",
   cat:"UI/UX · Data Visualisation", year:"2025", ctx:"UI/UX internship project", tags:["uiux"], tagLabels:["UI/UX","Data Viz","Dashboards"],
   hero:"lf-cover.jpg", thumb:"lf-cover.jpg", thumbPos:"0% 50%",
   blurb:"A dashboard that turns lung sound recordings into clear frequency charts doctors can trust, plus an app for recording at home."},
- {id:"oral-exam", num:"07", name:"Oral Exam Mastery", sub:"AI Oral Practice", p:"#D4561A", pd:"#FFAE6E",
+ {id:"oral-exam", num:"08", name:"Oral Exam Mastery", sub:"AI Oral Practice", p:"#D4561A", pd:"#FFAE6E",
   cat:"UI/UX · Web &amp; Mobile App", year:"2025", ctx:"UI/UX internship · Ministry of Education", tags:["uiux"], tagLabels:["UI/UX","EdTech","Web &amp; Mobile"],
   hero:"oe-cover.jpg", thumb:"oe-cover.jpg", thumbPos:"0% 50%",
   blurb:"AI-marked oral practice for primary and secondary students, with Echo as a friendly examiner and one place for teachers to manage every class."},
- {id:"tray-dispenser", num:"08", name:"Tray Dispenser", sub:"Mandai Wildlife Reserve", p:"#3D7A4C", pd:"#86C796",
+ {id:"tray-dispenser", num:"09", name:"Tray Dispenser", sub:"Mandai Wildlife Reserve", p:"#3D7A4C", pd:"#86C796",
   cat:"Service & Product Design", year:"2024–25", ctx:"Industry studio · Mandai Wildlife Group", tags:["service","product"], tagLabels:["Service Design","Product Design"],
   hero:"tray-cover4.jpg", thumb:"tray-cover4.jpg", thumbPos:"0% 50%",
   blurb:"A back-end tray dispenser for Mandai's food courts. Each tray shows its order number, so tourists always grab the right one."},
- {id:"lafex", num:"09", name:"LAFEX", sub:"Latte Art for Steadier Hands", p:"#3B4A8A", pd:"#9DABEA",
+ {id:"lafex", num:"10", name:"LAFEX", sub:"Latte Art for Steadier Hands", p:"#3B4A8A", pd:"#9DABEA",
   cat:"Product Design · App", year:"2024", ctx:"Studio Project 2 · mock Electrolux brief", tags:["product","uiux"], tagLabels:["Product Design","App","Redesign"],
   hero:"lafex-cover.jpg", thumb:"lafex-cover.jpg", thumbPos:"0% 50%",
   blurb:"A latte-art device, wristband and app for older adults with Parkinson's, redesigned after user testing so shaking hands can still pour a heart."},
- {id:"bon", num:"10", name:"BON", sub:"Crochet Storage", p:"#A0703A", pd:"#D9AC74",
+ {id:"bon", num:"11", name:"BON", sub:"Crochet Storage", p:"#A0703A", pd:"#D9AC74",
   cat:"Product Design", year:"2023–24", ctx:"Studio project", tags:["product"], tagLabels:["Product Design","Prototyping"],
   hero:"bon-cover.jpg", thumb:"bon-cover.jpg", thumbPos:"0% 50%",
   blurb:"A crochet storage unit with sliding, rotating compartments that keeps yarn, hooks and tools tidy and tangle-free."},
- {id:"vase", num:"11", name:"Flower Vase", sub:"Laser-Cut Gift", p:"#B5562F", pd:"#F0A27C",
+ {id:"vase", num:"12", name:"Flower Vase", sub:"Laser-Cut Gift", p:"#B5562F", pd:"#F0A27C",
   cat:"Product Design · Laser Cutting", year:"2024", ctx:"Personal project · Mother's Day gift", tags:["product"], tagLabels:["Laser Cutting","Product Design"],
   hero:"vase-cover.jpg", thumb:"vase-cover.jpg", thumbPos:"0% 50%",
   blurb:"A Mother's Day gift cut from a single sheet of scrap wood, with flat pieces that slot together into a 3D vase of flowers."}
@@ -1821,6 +1883,21 @@ function initLumiPrinciples(){
   { const d = demo("private"), cb = $("input", d), say = $(".lp-say", d);
     cb.onchange = () => { d.classList.toggle("off", !cb.checked); say.textContent = cb.checked ? "Nothing is uploaded. No account, no ads." : "Still works! Everything stays on this tablet."; }; }
 }
+const BUS_STEPS = [
+  {t:"At the stop", n:{img:"bus-stoppanel.jpg", t:"Bus stop panel · Blk 237", w:2400/1620, q:[["Where am I on this route?","A yellow “You are here” bar, then the next stops in order."],["Which bus goes to…?","A “Going to…” index by place, with MRT line badges."],["I need the other direction","“Going the other way?” names the stop across the road."]]},
+                     c:{img:"bus-stop-closed.jpg", t:"Stop closed notice", w:2400/1620, q:[["No bus is coming here","“No buses stop here today” comes first, in orange."],["Where do I go instead?","The nearest open stop, its buses, the walking time and a map."]]}},
+  {t:"Bus arrives", n:{img:"bus-headsign.jpg", t:"Front sign · service 3", w:4, q:[["Is that a 3 or an 8?","The number sits alone in a solid yellow tile."],["Where is it going?","Destination in large mixed case, with an optional “via” line."],["Can I get on with a wheelchair?","A wheelchair symbol shows the bus has a bay."]]},
+                    c:{img:"bus-headsign-divert.jpg", t:"Front sign · diverted", w:4, q:[["Is it still going my way?","“DIVERTED, not via Tampines Ave 7”, before you board."]]}},
+  {t:"On board", n:{img:"bus-screen.jpg", t:"Lower-deck screen", w:16/9, q:[["Is the next stop mine?","The next stop is the biggest thing, labelled in four languages."],["How long until I get off?","Stops left and arrival time, with a little bus moving along a bar."],["When do I press the bell?","“Press the bell to stop here”, right under the next stop."]]},
+                 c:{img:"bus-screen-divert.jpg", t:"Lower-deck screen · diversion", w:16/9, q:[["Is my stop skipped?","Skipped stops are struck through and marked “Not served today”."],["So where do I get off?","“Going to Blk 390? Press the bell and get off here.”"]]}},
+  {t:"Older buses", n:{img:"bus-strip.jpg", t:"Amber LED strip", w:2400/360, q:[["I missed it while it scrolled","Fixed layout: route, next stop, then the one after. Nothing moves."],["The name ran off the end","Full stop names, sized so the longest still fits."],["This bus has no screen","Amber only, so it runs on strips buses already have."]]},
+                    c:{img:"bus-strip-divert.jpg", t:"Amber LED strip · diversion", w:2400/360, q:[["Older buses get told too","The same diversion message, in the same amber."]]}},
+  {t:"Getting off", n:{img:"bus-bell.jpg", t:"Bell pressed", w:16/9, q:[["Did my press register?","The whole screen turns yellow: “Bell pressed · the bus will stop here”."],["Can't hear the chime?","A full-screen visual works for Deaf riders and in a noisy bus."]]},
+                    c:{img:"bus-screen-lastbus.jpg", t:"Last bus tonight", w:16/9, q:[["Is this the last bus?","“Last service 3 tonight” on every display, in orange."],["What if I miss it?","Tomorrow's first bus time, so riders can plan."]]}},
+  {t:"Interchange", n:{img:"bus-kiosk.jpg", t:"Departures kiosk · Tampines Int", w:1350/2400, q:[["Arriving or leaving?","Times say “Leaves in”, with a unit."],["Is it a double-decker?","A DD or SD icon plus the words."],["Can I trust this time?","When live data drops: “~11 min · Timetable only”."]]},
+                    c:{img:"bus-kiosk-audio.jpg", t:"Audio and large text", alt:"Audio mode", w:1350/2400, q:[["I can't see the board","Tap the yellow audio button and a bus fills the screen and is read aloud."],["Deaf riders too","Captions on screen, in four languages."]]}},
+  {t:"At the berth", n:{img:"bus-berth.jpg", t:"Overhead berth sign", w:5, q:[["Am I at the right berth?","The berth letter is the biggest thing on the sign."],["Is my bus leaving from here?","Each service from this berth, with minutes and bus type."]]}}
+];
 const CONTENT = {
 "synapsys": () => `
   ${blk("Research","A Ferrari with bicycle brakes",`
@@ -2048,6 +2125,77 @@ const CONTENT = {
       <span class="lumi-igt"><b>@eggsperimenting</b><span>Lumi sneak peeks, behind the scenes, and my other experiments. Come say hi!</span></span>
       <span class="lumi-igb">Follow on Instagram <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6"/></svg></span>
     </a>`)}
+`,
+"bus": () => `
+  ${blk("Concept","Three questions, at a glance",`
+    <div class="two">
+      <div>
+        <p class="body-strong">Singapore's bus displays were added one at a time: the stop panel, the front sign, the screen on board, the interchange board. Each works on its own, but together they speak different languages, and they're hardest to read exactly when riders need them most.</p>
+        <p class="hmw">How might every bus display help any rider, including seniors, tourists, wheelchair users, and blind, low-vision and Deaf riders, answer three questions at a glance?</p>
+      </div>
+      <div class="plate" style="aspect-ratio:16/9"><img class="zoom" src="${IMG("bus-film-morning.jpg")}" alt="Illustrated morning at Blk 237: commuters read the redesigned stop panel as bus 3 pulls in" loading="lazy"></div>
+    </div>
+    <div class="bus-q">
+      <div><b>1</b><h3>Is this my bus?</h3><p>Service number, destination and kind of bus, readable before it reaches the stop.</p></div>
+      <div><b>2</b><h3>Where am I, and when do I get off?</h3><p>The next stop, how many stops are left, and the bell right where you need it.</p></div>
+      <div class="chg"><b>3</b><h3>What do I do when something changes?</h3><p>Diversions, closed stops and the last bus, explained on every display with a clear next step.</p></div>
+    </div>`)}
+  ${blk("Research","Six frustrations keep coming up",`
+    <p class="body-strong" style="margin-bottom:22px">From forum posts, news coverage, Parliament questions and LTA replies.</p>
+    <div class="bus-res">
+      <div><h3>Live times can't be trusted</h3><p>The Jan to Feb 2026 failure showed 30 to 44 min waits for buses "3 min away", with more outages in June and July.</p></div>
+      <div><h3>Screens blank or frozen</h3><p>Riders work out the next stop from the card reader; stop panels stick on "loading".</p></div>
+      <div><h3>Interchange boards lag the app</h3><p>Times change but boards don't, and people mix up arrival and departure times.</p></div>
+      <div><h3>Wheelchair users can't plan</h3><p>Unsure they'll get a bay; only about a quarter of buses have two.</p></div>
+      <div><h3>Blind riders can't tell which bus is here</h3><p>No audio at stops, and most buses still have no next-stop screen or audio.</p></div>
+      <div><h3>Hard to know your stop or your bus</h3><p>MPs asked for clearer stop codes; seniors want the service number inside every bus.</p></div>
+    </div>`)}
+  ${blk("Ride along","One trip on bus 3",`
+    <p class="body-strong" style="margin-bottom:22px">Follow service 3 from Blk 237 in Tampines. Pick a step, then switch to see what that display says when something changes.</p>
+    <div class="bus-ride" id="busRide">
+      <ol class="bus-steps" role="tablist" aria-label="Steps in the trip">${BUS_STEPS.map((st,i)=>`<li><button role="tab" type="button" aria-selected="${i===0}" data-i="${i}"><span>${i+1}</span>${st.t}</button></li>`).join("")}</ol>
+      <div class="bus-view">
+        <div class="bus-mode" role="group" aria-label="Situation"><button type="button" aria-pressed="true" data-m="0">Normal day</button><button type="button" aria-pressed="false" data-m="1" class="o">Something changed</button></div>
+        <div class="bus-screen" id="busScreen"><img id="busImg" alt=""></div>
+        <div class="bus-info"><h3 id="busT"></h3><div class="bus-qs" id="busQ"></div></div>
+      </div>
+    </div>`)}
+  ${blk("Playtest","Six riders, every board",`
+    <p class="body-strong" style="margin-bottom:22px">Each redesigned board was walked through from six riders' points of view. Every issue was fixed in the designs above.</p>
+    <div class="bus-pt">
+      <div><b>Senior with low vision</b><span>Interchange kiosk</span><p>Couldn't tell which buses are double deck, "Next 11" had no unit, and the audio button didn't look like one.</p></div>
+      <div><b>Office worker in a rush</b><span>Interchange kiosk</span><p>Nothing showed which times were live and which were guesses.</p></div>
+      <div><b>Wheelchair user</b><span>Kiosk and bus side</span><p>No way to see wheelchair space before the bus arrived, and the door arrows pointed along the bus.</p></div>
+      <div><b>Tourist</b><span>Blk 237 stop panel</span><p>Wanted bus 3 to Tampines Int; the panel never said it stops across the road.</p></div>
+      <div><b>Student going to Punggol</b><span>At the stop</span><p>A 3A pulled up, and nothing on the front said it ends early.</p></div>
+      <div><b>Deaf rider</b><span>On board</span><p>A long stop name ran off the amber LED strip, and the front sign broke onto two lines.</p></div>
+    </div>`)}
+  ${blk("The system","One typeface, four colour roles",`
+    <div class="bus-sys">
+      <div class="bus-type"><small>Typeface</small><b>Punggol Int</b><span>Atkinson Hyperlegible</span><p>Made for low-vision readers: easily confused letters like 1, l and I, or 0 and O, are drawn to look different.</p></div>
+      <div class="bus-sw">
+        <div><i style="background:#FFD400"></i><b>Signal yellow</b><span>You, your bus, your action</span></div>
+        <div><i style="background:#FF9A1F"></i><b>Change orange</b><span>Diversions, closures, last bus</span></div>
+        <div><i style="background:#0B0D10"></i><b>Screen black</b><span>On-board and kiosk screens, low glare</span></div>
+        <div><i style="background:#fff;box-shadow:inset 0 0 0 2px #C9CDD0"></i><b>Paper white</b><span>Printed stop panels and notices</span></div>
+        <p class="bus-rule"><b>Rule:</b> colour is never the only signal. Every yellow or orange state also says it in words or with an icon.</p>
+      </div>
+    </div>`)}
+  ${blk("In context","A day on bus 3",`
+    <p class="body-strong" style="margin-bottom:22px">Frames from an illustrated concept film, following a mix of riders through a normal day and a diversion day.</p>
+    ${viewerHTML("busFilm", "", "16/9", "#0B0D10")}`)}
+  ${blk("Next","Built on what LTA already does",`
+    <div class="two">
+      <ul class="list">
+        <li><span>Keeps recent LTA changes: big service numbers on front signs, next-stop audio, and retiring stop-name abbreviations</span></li>
+        <li><span>The amber strip layout runs on LED hardware buses already have, so it's a software change</span></li>
+      </ul>
+      <ul class="list">
+        <li><span>Test with real riders, including seniors, wheelchair users, and blind and Deaf riders</span></li>
+        <li><span>Check readability at real viewing distances and in glare</span></li>
+      </ul>
+    </div>
+    <p class="bus-note">Routes, stops and timetables are real LTA data. Arrival minutes, crowding, berths and all disruption scenarios are illustrative.</p>`)}
 `,
 "gift-set": () => `
   ${blk("Concept","A gift that tells the museum's story",`
@@ -3271,6 +3419,34 @@ const INIT = {
     scr.innerHTML = `<iframe src="/lumi/" title="Lumi, playable" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
   };
 },
+"bus"(){
+  initViewer("busFilm", [
+    {src:IMG("bus-film-morning.jpg"), t:"Morning at Blk 237", c:"Riders read the stop panel as bus 3 pulls in."},
+    {src:IMG("bus-film-onboard.jpg"), t:"On the lower deck", c:"The redesigned screen and amber strip on board."},
+    {src:IMG("bus-film-interchange.jpg"), t:"Tampines Interchange", c:"A wheelchair user at the kiosk while a tourist heads to the berth."},
+    {src:IMG("bus-film-closed.jpg"), t:"Diversion day", c:"An auntie with a market trolley reads the stop-closed notice."},
+    {src:IMG("bus-film-night.jpg"), t:"The last bus", c:"A nurse, a hawker uncle and a student wait for the last 3 home."}
+  ]);
+  const root = $("#busRide"); if (!root) return;
+  const steps = $$(".bus-steps button", root), modes = $$(".bus-mode button", root), img = $("#busImg"), scr = $("#busScreen"), T = $("#busT"), Q = $("#busQ");
+  let cur = 0, mode = 0;
+  const paint = () => {
+    const st = BUS_STEPS[cur], v = (mode && st.c) ? st.c : st.n;
+    steps.forEach((b,j)=>b.setAttribute("aria-selected", j===cur));
+    modes[1].disabled = !st.c; if (!st.c) mode = 0;
+    modes.forEach((b,j)=>b.setAttribute("aria-pressed", j===mode));
+    if (st.c) modes[1].textContent = st.c.alt || "Something changed";
+    scr.classList.toggle("tall", v.w < 1); scr.classList.toggle("thin", v.w > 3); scr.classList.toggle("chg", !!mode);
+    scr.classList.remove("in"); void scr.offsetWidth; scr.classList.add("in");
+    img.src = IMG(v.img); img.alt = v.t;
+    T.textContent = v.t;
+    Q.innerHTML = v.q.map(([a,b])=>`<div class="${mode?'o':''}"><b>“${a}”</b><span>${b}</span></div>`).join("");
+  };
+  steps.forEach(b => b.onclick = () => { cur = +b.dataset.i; paint(); });
+  modes.forEach(b => b.onclick = () => { mode = +b.dataset.m; paint(); });
+  root.addEventListener("keydown", e => { if (e.target.closest(".bus-steps") && (e.key==="ArrowDown"||e.key==="ArrowRight"||e.key==="ArrowUp"||e.key==="ArrowLeft")){ e.preventDefault(); cur = (cur + (e.key==="ArrowDown"||e.key==="ArrowRight"?1:-1) + BUS_STEPS.length) % BUS_STEPS.length; paint(); steps[cur].focus(); } });
+  paint();
+},
 "gift-set"(){
   initTurbine();
   initScrub("scrub", ["Mark 1","Mark 2","Final"], ["First physical models, testing scale, layout and how a fan, holder and charger share one base.","Refined forms: turbine fan, faceted holder, radar-like charger and jets on a faceted base.","Final render on an office desk: blue faceted base with F-16, F-15 and F-35 models climbing upward."]);
@@ -3567,7 +3743,7 @@ function viewWorks(){
   return `<section class="wrap p-head">
     <p class="eyebrow">2023 – 2026</p>
     <h1 style="margin-top:10px">My Works</h1>
-    <p class="lead">Eleven projects across product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital and the Ministry of Education, to studio briefs and my own explorations.</p>
+    <p class="lead">Twelve projects across product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital and the Ministry of Education, to studio briefs and my own explorations.</p>
   </section>
   <section class="wrap" style="padding-top:44px">
     <div class="grid">${PROJECTS.map(p=>card(p)).join("")}</div>
