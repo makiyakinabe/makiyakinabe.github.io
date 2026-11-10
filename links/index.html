@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
-/* Layout: one narrow column, a fried-egg avatar on top, two big "yolk" links, then small pan-side links */
+/* Layout: one narrow column, a pokeable fried-egg avatar on top, two big "yolk" links, then small pan-side links */
 :root {
   --bg: #f3efe6;
   --pan: #e6e0d2;
@@ -45,11 +45,37 @@ body {
   line-height: 1.5;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 48px 40px;
+  padding-block: 20px 40px;
+  transition: background-color .35s ease, color .35s ease;
 }
 .wrap { max-width: 440px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 28px; }
+button { font: inherit; color: inherit; }
+
+/* Top bar: theme switch */
+.top { width: 100%; height: 40px; display: flex; justify-content: flex-end; }
+.theme {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1.5px solid var(--line); background: var(--pan);
+  display: grid; place-items: center; cursor: pointer; padding: 0;
+  transition: transform .3s ease, border-color .2s ease;
+}
+.theme:hover { border-color: var(--yolk-deep); transform: rotate(20deg); }
+.theme:focus-visible { outline: 3px solid var(--yolk-deep); outline-offset: 2px; }
+.theme svg { width: 20px; height: 20px; fill: none; stroke: var(--fg); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.theme .sun { display: none; }
+.theme.is-dark .sun { display: block; }
+.theme.is-dark .moon { display: none; }
 
 /* Fried egg avatar */
+.egg-area { position: relative; display: grid; place-items: center; }
+.egg-btn {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  border-radius: 50%;
+  -webkit-tap-highlight-color: transparent;
+  animation: plop .7s cubic-bezier(.3,1.6,.5,1) both;
+}
+.egg-btn:focus-visible { outline: 3px solid var(--yolk-deep); outline-offset: 6px; }
+.egg-btn.boing { animation: boing .55s ease; }
 .egg {
   width: 132px; aspect-ratio: 1.08; max-width: 100%;
   background: var(--white);
@@ -57,20 +83,42 @@ body {
   display: grid; place-items: center;
   box-shadow: 0 2px 0 var(--line), 0 14px 30px -18px rgba(0,0,0,.35);
   transform: rotate(-6deg);
+  transition: transform .3s ease;
 }
+.egg-btn:hover .egg { transform: rotate(-2deg) scale(1.03); }
 .yolk {
   width: 54%; aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle at 34% 30%, #ffe08a 0 14%, var(--yolk) 38%, var(--yolk-deep) 100%);
   display: grid; place-items: center;
-  font-family: var(--display); font-weight: 800; font-size: 26px; color: #3a2402;
   transform: rotate(6deg);
-  letter-spacing: -0.02em;
 }
+.smile { width: 62%; height: auto; fill: #3a2402; stroke: #3a2402; overflow: visible; }
+.smile path { fill: none; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+.smile circle, .smile ellipse { stroke: none; }
+.smile .fill { fill: #3a2402; stroke-width: 1.6; }
+.smile .cheek { fill: #ef7f62; opacity: .6; }
+#eyes { transition: transform .12s ease-out; }
+
+.bubble {
+  position: absolute; left: 50%; bottom: calc(100% + 12px);
+  transform: translateX(-50%);
+  width: max-content; max-width: min(240px, calc(100vw - 150px));
+  margin: 0; padding: 7px 13px;
+  background: var(--fg); color: var(--bg);
+  border-radius: 14px;
+  font-size: 14px; line-height: 1.3; text-align: center;
+}
+.bubble::after {
+  content: ""; position: absolute; left: 50%; bottom: -5px;
+  width: 10px; height: 10px; background: var(--fg);
+  transform: translateX(-50%) rotate(45deg); border-radius: 2px;
+}
+.bubble.pop { animation: pop .3s cubic-bezier(.3,1.6,.5,1); }
 
 header { text-align: center; display: flex; flex-direction: column; gap: 6px; }
 h1 { font-family: var(--display); font-weight: 800; font-size: 34px; line-height: 1.05; margin: 0; letter-spacing: -0.025em; text-wrap: balance; }
-.role { margin: 0; color: var(--muted); font-size: 15px; text-wrap: balance; }
+.role { margin: 0 auto; max-width: 34ch; color: var(--muted); font-size: 15px; text-wrap: balance; }
 
 /* Main links */
 .main { width: 100%; display: flex; flex-direction: column; gap: 14px; }
@@ -82,25 +130,27 @@ h1 { font-family: var(--display); font-weight: 800; font-size: 34px; line-height
   text-decoration: none;
   box-shadow: 0 2px 0 var(--line);
   transition: transform .18s ease, box-shadow .18s ease;
+  will-change: transform;
 }
 .card:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--yolk); }
+.card:active { transform: scale(.97); box-shadow: 0 1px 0 var(--yolk); }
 .card:focus-visible { outline: 3px solid var(--yolk-deep); outline-offset: 3px; }
 .dot {
   width: 52px; height: 52px; border-radius: 50%;
   background: radial-gradient(circle at 34% 30%, #ffe08a 0 12%, var(--yolk) 40%, var(--yolk-deep) 100%);
   display: grid; place-items: center;
+  transition: transform .4s cubic-bezier(.3,1.6,.5,1);
 }
+.card:hover .dot { transform: rotate(-14deg) scale(1.08); }
 .dot svg { width: 24px; height: 24px; stroke: #3a2402; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .text { min-width: 0; }
 .label { font-family: var(--display); font-weight: 700; font-size: 20px; line-height: 1.15; display: block; }
 .sub { font-size: 14px; color: #6b6457; display: block; margin-top: 2px; }
-.arrow { font-family: var(--display); font-size: 22px; color: #6b6457; }
+.arrow { font-family: var(--display); font-size: 22px; color: #6b6457; transition: transform .2s ease, color .2s ease; }
+.card:hover .arrow { transform: translateX(4px); color: #23201a; }
 
 /* Secondary links */
 .more { width: 100%; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.smile { width: 62%; height: auto; fill: #3a2402; stroke: #3a2402; }
-.smile path { fill: none; stroke-width: 2.8; stroke-linecap: round; }
-.smile circle { stroke: none; }
 .pill {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: 12px 6px;
@@ -108,28 +158,70 @@ h1 { font-family: var(--display); font-weight: 800; font-size: 34px; line-height
   background: var(--pan);
   color: var(--fg); text-decoration: none; text-align: center;
   font-size: 13px; line-height: 1.25;
-  transition: border-color .18s ease;
+  transition: border-color .18s ease, transform .18s ease;
   min-width: 0;
 }
-.pill:hover { border-color: var(--yolk-deep); }
+.pill:hover { border-color: var(--yolk-deep); transform: translateY(-2px); }
+.pill:active { transform: scale(.96); }
 .pill:focus-visible { outline: 3px solid var(--yolk-deep); outline-offset: 2px; }
 .pill b { font-family: var(--display); font-weight: 700; font-size: 15px; }
 .pill span { color: var(--muted); overflow-wrap: anywhere; }
-.pill .ico { width: 30px; height: 30px; fill: none; stroke: var(--yolk-deep); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.role { max-width: 34ch; margin-inline: auto !important; }
+
+/* Share button */
+.share {
+  width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+  padding: 12px 14px;
+  border: 1.5px dashed var(--line); border-radius: 16px;
+  background: transparent; cursor: pointer;
+  font-size: 14px;
+  transition: border-color .18s ease, background-color .18s ease;
+}
+.share:hover { border-color: var(--yolk-deep); }
+.share:focus-visible { outline: 3px solid var(--yolk-deep); outline-offset: 2px; }
+.share svg { width: 18px; height: 18px; fill: none; stroke: var(--yolk-deep); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.share-label { font-family: var(--display); font-weight: 700; }
+.share-url { color: var(--muted); user-select: all; -webkit-user-select: all; overflow-wrap: anywhere; }
+.share.done { border-style: solid; border-color: var(--yolk-deep); background: var(--pan); }
 
 footer { color: var(--muted); font-size: 13px; text-align: center; }
 footer .handle { font-family: var(--display); font-weight: 700; color: var(--fg); }
 
+#rain { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+
+@keyframes plop { from { transform: translateY(-18px) scale(.94); } to { transform: none; } }
+@keyframes boing {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.14, .84); }
+  50% { transform: scale(.9, 1.1); }
+  75% { transform: scale(1.04, .97); }
+  100% { transform: scale(1); }
+}
+@keyframes pop { from { transform: translateX(-50%) scale(.85); } to { transform: translateX(-50%) scale(1); } }
+
 @media (max-width: 360px) { .more { grid-template-columns: 1fr; } }
-@media (prefers-reduced-motion: reduce) { .card, .pill { transition: none; } .card:hover { transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .card:hover, .pill:hover { transform: none; }
+}
 </style>
 
 </head>
 <body>
 <div class="wrap">
-  <div class="egg" aria-hidden="true"><div class="yolk"><svg class="smile" viewBox="0 0 40 40"><circle cx="13.5" cy="16" r="2.6"/><circle cx="26.5" cy="16" r="2.6"/><path d="M12 24.5c2.2 3.4 5 5 8 5s5.8-1.6 8-5"/></svg></div></div>
+  <div class="top">
+    <button class="theme" id="theme" type="button" aria-label="Switch to dark mode">
+      <svg class="moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+    </button>
+  </div>
+
+  <div class="egg-area">
+    <p class="bubble" id="bubble" aria-live="polite">Psst… poke me!</p>
+    <button class="egg-btn" id="egg" type="button" aria-label="Poke the egg">
+      <span class="egg"><span class="yolk"><svg class="smile" id="face" viewBox="0 0 40 40" aria-hidden="true"><g id="eyes"><circle cx="13.5" cy="16" r="2.6"/><circle cx="26.5" cy="16" r="2.6"/></g><path d="M12 24.5c2.2 3.4 5 5 8 5s5.8-1.6 8-5"/></svg></span></span>
+    </button>
+  </div>
 
   <header>
     <h1>Natalie Ang</h1>
@@ -158,9 +250,182 @@ footer .handle { font-family: var(--display); font-weight: 700; color: var(--fg)
 
   <nav class="more" aria-label="More links">
     <a class="pill" href="https://www.instagram.com/eggsperimenting/" target="_blank" rel="noopener"><b>Instagram</b><span>@eggsperimenting</span></a>
-    <a class="pill" href="https://www.linkedin.com/in/natalieangkaixin2203" target="_blank" rel="noopener"><b>LinkedIn</b><span>Natalie Ang</span></a>  </nav>
+    <a class="pill" href="https://www.linkedin.com/in/natalieangkaixin2203" target="_blank" rel="noopener"><b>LinkedIn</b><span>Natalie Ang</span></a>
+  </nav>
+
+  <button class="share" id="share" type="button">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+    <span class="share-label" id="share-label">Share this page</span>
+    <span class="share-url" id="share-url">makiyakinabe.github.io/links</span>
+  </button>
 
   <footer>Cooked up by <span class="handle">eggsperimenting</span> · Singapore</footer>
 </div>
+
+<canvas id="rain" hidden></canvas>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const darkQuery = matchMedia('(prefers-color-scheme: dark)');
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+
+  /* Light / dark switch */
+  const themeBtn = document.getElementById('theme');
+  const saved = store.get('egg-theme');
+  if (saved === 'dark' || saved === 'light') root.dataset.theme = saved;
+  const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : darkQuery.matches;
+  const syncTheme = () => {
+    const d = isDark();
+    themeBtn.classList.toggle('is-dark', d);
+    themeBtn.setAttribute('aria-label', d ? 'Switch to light mode' : 'Switch to dark mode');
+  };
+  themeBtn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.dataset.theme = next;
+    store.set('egg-theme', next);
+    syncTheme();
+  });
+  if (darkQuery.addEventListener) darkQuery.addEventListener('change', syncTheme);
+  new MutationObserver(syncTheme).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+  syncTheme();
+
+  /* Pokeable egg */
+  const eggBtn = document.getElementById('egg');
+  const face = document.getElementById('face');
+  const bubble = document.getElementById('bubble');
+  const MOUTH = '<path d="M12 24.5c2.2 3.4 5 5 8 5s5.8-1.6 8-5"/>';
+  const EYES = '<g id="eyes"><circle cx="13.5" cy="16" r="2.6"/><circle cx="26.5" cy="16" r="2.6"/></g>';
+  const HAPPY_EYES = '<path d="M10.5 17q3-4 6 0M23.5 17q3-4 6 0"/>';
+  const BIG_GRIN = '<path class="fill" d="M11.5 23.5c2.4 4.2 5.3 6 8.5 6s6.1-1.8 8.5-6z"/>';
+  const CHEEKS = '<circle class="cheek" cx="8.5" cy="22" r="3"/><circle class="cheek" cx="31.5" cy="22" r="3"/>';
+  const FACES = {
+    smile: EYES + MOUTH,
+    happy: HAPPY_EYES + BIG_GRIN,
+    wink: '<g id="eyes"><circle cx="13.5" cy="16" r="2.6"/></g><path d="M23.5 16.5h6"/>' + MOUTH,
+    wow: '<g id="eyes"><circle cx="13.5" cy="15.5" r="3"/><circle cx="26.5" cy="15.5" r="3"/></g><ellipse class="fill" cx="20" cy="26.5" rx="3" ry="3.6"/>',
+    shy: EYES + CHEEKS + MOUTH,
+    love: HAPPY_EYES + CHEEKS + BIG_GRIN
+  };
+  const STEPS = [
+    ['happy', 'Hehe, that tickles~'],
+    ['wink', 'Sunny side up, always.'],
+    ['shy', 'Have you tried Lumi yet?'],
+    ['wow', "Whoa, careful! I'm fragile."],
+    ['wow', 'Okay okay… one more poke?'],
+    ['love', 'You found the eggs-ter egg!']
+  ];
+  let step = 0, idle;
+
+  const setFace = name => { face.innerHTML = FACES[name]; };
+  const say = text => {
+    bubble.textContent = text;
+    bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop');
+  };
+
+  eggBtn.addEventListener('click', () => {
+    const [mood, line] = STEPS[step];
+    setFace(mood);
+    say(line);
+    eggBtn.classList.remove('boing'); void eggBtn.offsetWidth; eggBtn.classList.add('boing');
+    try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}
+    if (step === STEPS.length - 1) rain();
+    step = (step + 1) % STEPS.length;
+    clearTimeout(idle);
+    idle = setTimeout(() => setFace('smile'), 2600);
+  });
+
+  /* Eyes follow your finger or cursor */
+  const yolkEl = eggBtn.querySelector('.yolk');
+  window.addEventListener('pointermove', e => {
+    if (reduce) return;
+    const eyes = document.getElementById('eyes');
+    if (!eyes) return;
+    const r = yolkEl.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width / 2);
+    const dy = e.clientY - (r.top + r.height / 2);
+    const d = Math.hypot(dx, dy) || 1;
+    const m = Math.min(2, d / 50);
+    eyes.setAttribute('transform', 'translate(' + (dx / d * m).toFixed(2) + ' ' + (dy / d * m).toFixed(2) + ')');
+  }, { passive: true });
+
+  /* Cards tilt toward the cursor */
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('pointermove', e => {
+      if (reduce || e.pointerType !== 'mouse') return;
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = 'perspective(700px) rotateX(' + (-y * 6).toFixed(2) + 'deg) rotateY(' + (x * 6).toFixed(2) + 'deg) translateY(-2px)';
+    });
+    card.addEventListener('pointerleave', () => { card.style.transform = ''; });
+  });
+
+  /* Raining eggs */
+  const cv = document.getElementById('rain');
+  const ctx = cv.getContext('2d');
+  let raf = 0;
+  function rain() {
+    if (reduce || !ctx) return;
+    cancelAnimationFrame(raf);
+    const dpr = window.devicePixelRatio || 1;
+    const W = window.innerWidth, H = window.innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cv.hidden = false;
+    const yolk = getComputedStyle(root).getPropertyValue('--yolk').trim() || '#f5b324';
+    const eggs = Array.from({ length: 36 }, () => ({
+      x: Math.random() * W, y: -30 - Math.random() * H * 0.7,
+      vx: (Math.random() - 0.5) * 1.2, vy: 2 + Math.random() * 3,
+      r: 9 + Math.random() * 9, a: Math.random() * 6.28, va: (Math.random() - 0.5) * 0.08
+    }));
+    const frame = () => {
+      ctx.clearRect(0, 0, W, H);
+      let alive = 0;
+      for (const e of eggs) {
+        e.x += e.vx; e.y += e.vy; e.vy += 0.05; e.a += e.va;
+        if (e.y - e.r * 1.2 < H) alive++;
+        ctx.save();
+        ctx.translate(e.x, e.y); ctx.rotate(e.a);
+        ctx.fillStyle = '#fffdf8';
+        ctx.beginPath(); ctx.ellipse(0, 0, e.r * 1.15, e.r, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,.12)'; ctx.lineWidth = 1; ctx.stroke();
+        ctx.fillStyle = yolk;
+        ctx.beginPath(); ctx.arc(e.r * 0.12, -e.r * 0.05, e.r * 0.48, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+      }
+      if (alive) raf = requestAnimationFrame(frame);
+      else { ctx.clearRect(0, 0, W, H); cv.hidden = true; }
+    };
+    frame();
+  }
+
+  /* Share button copies the page link */
+  const shareBtn = document.getElementById('share');
+  const shareLabel = document.getElementById('share-label');
+  const shareUrl = document.getElementById('share-url');
+  const URL_TEXT = 'https://makiyakinabe.github.io/links/';
+  let shareTimer;
+  shareBtn.addEventListener('click', () => {
+    const done = ok => {
+      shareLabel.textContent = ok ? 'Link copied!' : 'Copy this link:';
+      shareBtn.classList.toggle('done', ok);
+      if (!ok) {
+        const range = document.createRange();
+        range.selectNodeContents(shareUrl);
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      }
+      clearTimeout(shareTimer);
+      shareTimer = setTimeout(() => { shareLabel.textContent = 'Share this page'; shareBtn.classList.remove('done'); }, 2400);
+    };
+    try { navigator.clipboard.writeText(URL_TEXT).then(() => done(true), () => done(false)); }
+    catch (e) { done(false); }
+  });
+})();
+</script>
 </body>
 </html>
