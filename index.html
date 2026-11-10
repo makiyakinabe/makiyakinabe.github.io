@@ -1027,10 +1027,41 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .bus-q .chg b{color:#FF9A1F}
 .bus-q h3{font-size:20px;margin:12px 0 6px;color:#fff}
 .bus-q p{margin:0;font-size:15px;line-height:1.5;color:#B8BEC7}
-.bus-res{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.bus-res div{background:var(--plate);border-radius:var(--r-md,18px);padding:20px;border-top:5px solid #FFD400}
-.bus-res h3{font-size:17px;margin:0 0 6px}
-.bus-res p{margin:0;font-size:15px;line-height:1.5;color:var(--muted)}
+.br-who{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.br-who button{border:1.5px solid var(--line,#3A3F45);background:transparent;color:inherit;font:inherit;font-weight:700;font-size:14px;padding:8px 14px;border-radius:99px;cursor:pointer;transition:all .2s}
+.br-who button[aria-pressed="true"]{background:#FFD400;border-color:#FFD400;color:#0B0D10}
+.br-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.br-card{position:relative;perspective:1400px;transition:opacity .35s,transform .35s,filter .35s}
+.br-card.dim{opacity:.28;filter:grayscale(1);transform:scale(.97)}
+.br-in{position:relative;display:grid;width:100%;min-height:330px;border:0;padding:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.br-in[aria-pressed="true"]{transform:rotateY(180deg)}
+.br-f,.br-b{grid-area:1/1;display:flex;flex-direction:column;gap:8px;padding:22px;border-radius:var(--r-md,18px);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.br-f{background:var(--plate);border-top:5px solid #FFD400;transition:box-shadow .25s,transform .25s}
+.br-in:hover .br-f{box-shadow:0 14px 30px -14px rgba(0,0,0,.5)}
+.br-b{background:#0B0D10;color:#F3F2EC;transform:rotateY(180deg);border-top:5px solid #4F8A3F}
+.br-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.br-ic{width:44px;height:44px;border-radius:12px;background:#FFD400;color:#0B0D10;display:grid;place-items:center;flex:none}
+.br-ic svg{width:24px;height:24px}
+.br-stat{font-family:var(--display);font-size:22px;color:#D96F0A;letter-spacing:-.01em}
+.br-f q{display:block;font-family:var(--display);font-size:19px;line-height:1.3;margin-top:6px;quotes:"“" "”"}
+.br-f strong{font-size:15px;color:var(--pa)}
+.br-d{font-size:14.5px;line-height:1.5;color:var(--muted)}
+.br-b .br-d{color:#B8BEC7}
+.br-src{font-size:12.5px;color:var(--muted);opacity:.8;margin-top:auto}
+.br-flip{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:14px;color:var(--pa)}
+.br-flip svg{width:16px;height:16px;transition:transform .2s}
+.br-in:hover .br-flip svg{transform:translateX(3px)}
+.br-b small{font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#8EE6A0}
+.br-b strong{font-family:var(--display);font-size:20px;line-height:1.25}
+.br-img{display:block;background:#15181C;border-radius:10px;padding:8px;height:120px}
+.br-img img{width:100%;height:100%;object-fit:contain;display:block}
+.br-go{position:absolute;left:22px;bottom:20px;display:inline-flex;align-items:center;gap:6px;border:0;background:#FFD400;color:#0B0D10;font:inherit;font-weight:800;font-size:13.5px;padding:8px 14px;border-radius:99px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s .25s;z-index:2}
+.br-go svg{width:14px;height:14px}
+.br-card.flipped .br-go{opacity:1;pointer-events:auto}
+.br-card.flipped .br-b{padding-bottom:64px}
+.br-in:focus-visible,.br-who button:focus-visible,.br-go:focus-visible{outline:3px solid #FF9A1F;outline-offset:3px;border-radius:18px}
+@media (max-width:900px){.br-grid{grid-template-columns:minmax(0,1fr)}.br-in{min-height:290px}}
+@media (prefers-reduced-motion: reduce){.br-in{transition:none}.br-card{transition:none}}
 .bus-ride{display:grid;grid-template-columns:220px minmax(0,1fr);gap:clamp(16px,3vw,32px);align-items:start}
 .bus-steps{list-style:none;margin:0;padding:0;display:grid;gap:6px;position:relative}
 .bus-steps::before{content:"";position:absolute;left:21px;top:20px;bottom:20px;width:3px;background:repeating-linear-gradient(#C9CDD0 0 6px,transparent 6px 12px)}
@@ -1116,7 +1147,7 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .bus-film{border-radius:var(--r-lg);overflow:hidden;background:#0B0D10;aspect-ratio:16/9;box-shadow:0 24px 50px -24px rgba(0,0,0,.5)}
 .bus-film video{width:100%;height:100%;display:block;object-fit:contain;background:#0B0D10}
 .bus-film-cap{margin:12px 0 22px;font-size:14px;color:var(--muted)}
-@media (max-width:900px){.bus-screen{height:clamp(220px,62vw,420px)}.bus-q,.bus-res,.bus-pt{grid-template-columns:minmax(0,1fr)}.bus-sys{grid-template-columns:minmax(0,1fr)}
+@media (max-width:900px){.bus-screen{height:clamp(220px,62vw,420px)}.bus-q,.bus-pt{grid-template-columns:minmax(0,1fr)}.bus-sys{grid-template-columns:minmax(0,1fr)}
   .bus-ride{grid-template-columns:minmax(0,1fr)}.bus-steps{display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.bus-steps::before{display:none}.bus-steps button{white-space:nowrap;padding-right:14px}}
 @media (prefers-reduced-motion: reduce){.bus-screen.in img{animation:none}.bus-hs::after{animation:none}.bus-cam,.bus-bg{transition:none}}
 /* Lumi case study */
@@ -1939,6 +1970,27 @@ const BUS_STEPS = [
                     c:{img:"bus-kiosk-audio.jpg", t:"Audio and large text", alt:"Audio mode", w:1350/2400, q:[["I can't see the board","Tap the yellow audio button and a bus fills the screen and is read aloud."],["Deaf riders too","Captions on screen, in four languages."]]}},
   {t:"At the berth", n:{img:"bus-berth.jpg", t:"Overhead berth sign", w:5, q:[["Am I at the right berth?","The berth letter is the biggest thing on the sign."],["Is my bus leaving from here?","Each service from this berth, with minutes and bus type."]]}}
 ];
+const BUS_WHO = [["all","Everyone"],["commuter","Daily commuters"],["senior","Seniors"],["wheel","Wheelchair users"],["blind","Blind and low vision"],["tourist","Tourists"]];
+const BUS_RES = [
+  {t:"Live times can't be trusted", q:"It said 3 min. I waited 40.", stat:"30–44 min", who:["commuter","senior"], ic:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>`,
+   d:"The Jan to Feb 2026 failure showed 30 to 44 min waits for buses “3 min away”, with more outages in June and July.", src:"MS News · Land Transport Guru",
+   fix:"Honest when it breaks", img:"bus-kiosk.jpg", how:"When live data drops, times switch to “~11 min · Timetable only”, so riders know what they can trust.", step:5},
+  {t:"Screens blank or frozen", q:"I had to guess my stop from the card reader.", who:["commuter","senior","tourist"], ic:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M9 9l6 4M15 9l-6 4"/></svg>`,
+   d:"Riders work out the next stop from the card reader; stop panels stick on “loading”.", src:"The Independent SG · TripAdvisor",
+   fix:"Works on the hardware buses already have", img:"bus-strip.jpg", how:"A fixed, no-scroll layout for the amber LED strip, so even older buses show the next stop clearly.", step:3},
+  {t:"Interchange boards lag the app", q:"Is that when it arrives, or when it leaves?", who:["commuter","tourist"], ic:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg>`,
+   d:"Times change but boards don't, and people mix up arrival and departure times.", src:"LTA reply 2022 · MOT written reply",
+   fix:"“Leaves in”, with a unit", img:"bus-kiosk.jpg", how:"Every time says “Leaves in … min”, the next bus gets its own card, and each row names its berth.", step:5},
+  {t:"Wheelchair users can't plan", q:"Will there even be space for me?", stat:"~1 in 4", who:["wheel"], ic:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4.5" r="1.6"/><path d="M11 7.5v6h5l3 5M11 10.5h4"/><path d="M8 11.5a5 5 0 1 0 7 6.5"/></svg>`,
+   d:"Unsure they'll get a bay; only about a quarter of buses have two.", src:"Disabled People's Association · MOT",
+   fix:"Wheelchair space, shown early", img:"bus-headsign.jpg", how:"A wheelchair symbol on the front and side signs, and bays shown on the kiosk's next-bus cards.", step:1},
+  {t:"Blind riders can't tell which bus is here", q:"I can't see which bus just pulled in.", who:["blind","senior"], ic:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 22 12a14 14 0 0 1-2.3 3.2M6.6 6.6A14 14 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 4.4-1"/></svg>`,
+   d:"No audio at stops, and most buses still have no next-stop screen or audio.", src:"MOT · LTA · Singapore Polytechnic",
+   fix:"Audio and large text, on request", img:"bus-kiosk-audio.jpg", how:"One tap on the kiosk reads a bus aloud and fills the screen, with captions in four languages.", step:5, mode:1},
+  {t:"Hard to know your stop or your bus", q:"Which stop is this? Which bus am I on?", who:["senior","tourist"], ic:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><path d="M10 8.5a2 2 0 1 1 2.6 1.9c-.5.2-.6.6-.6 1.1M12 14.2v.1"/></svg>`,
+   d:"MPs asked for clearer stop codes; seniors want the service number shown inside every bus.", src:"Parliament 2023 · MustShareNews",
+   fix:"The next stop is the biggest thing", img:"bus-screen.jpg", how:"The service number and next stop sit in fixed places, labelled in four languages, with the stop code.", step:2}
+];
 const BUS_SC = {stop:[2400,1400], bus:[2400,1400], int:[2000,1300], ic:[2400,1500]};
 const H = {
   board:{x:400,y:500,w:504,h:340,l:"Stop info board"}, closed:{x:1760,y:300,w:196,h:250,l:"Closed sign"}, walk:{x:2030,y:966,w:240,h:250,l:"Walk sign"},
@@ -2205,14 +2257,28 @@ const CONTENT = {
       <div class="chg"><b>3</b><h3>What do I do when something changes?</h3><p>Diversions, closed stops and the last bus, explained on every display with a clear next step.</p></div>
     </div>`)}
   ${blk("Research","Six frustrations keep coming up",`
-    <p class="body-strong" style="margin-bottom:22px">From forum posts, news coverage, Parliament questions and LTA replies.</p>
-    <div class="bus-res">
-      <div><h3>Live times can't be trusted</h3><p>The Jan to Feb 2026 failure showed 30 to 44 min waits for buses "3 min away", with more outages in June and July.</p></div>
-      <div><h3>Screens blank or frozen</h3><p>Riders work out the next stop from the card reader; stop panels stick on "loading".</p></div>
-      <div><h3>Interchange boards lag the app</h3><p>Times change but boards don't, and people mix up arrival and departure times.</p></div>
-      <div><h3>Wheelchair users can't plan</h3><p>Unsure they'll get a bay; only about a quarter of buses have two.</p></div>
-      <div><h3>Blind riders can't tell which bus is here</h3><p>No audio at stops, and most buses still have no next-stop screen or audio.</p></div>
-      <div><h3>Hard to know your stop or your bus</h3><p>MPs asked for clearer stop codes; seniors want the service number inside every bus.</p></div>
+    <p class="body-strong" style="margin-bottom:18px">From forum posts, news coverage, Parliament questions and LTA replies. Pick a rider to see what hits them, then flip a card to see the fix.</p>
+    <div class="br-who" role="group" aria-label="Filter by rider">${BUS_WHO.map((w,i)=>`<button type="button" data-w="${w[0]}" aria-pressed="${i===0}">${w[1]}</button>`).join("")}</div>
+    <div class="br-grid" id="busRes">${BUS_RES.map((r,i)=>`
+      <div class="br-card" data-tags="${r.who.join(" ")}">
+        <button type="button" class="br-in" aria-pressed="false" aria-label="${r.t}. Flip to see the fix">
+          <span class="br-f">
+            <span class="br-top"><i class="br-ic" aria-hidden="true">${r.ic}</i>${r.stat?`<b class="br-stat">${r.stat}</b>`:""}</span>
+            <q>${r.q}</q>
+            <strong>${r.t}</strong>
+            <span class="br-d">${r.d}</span>
+            <span class="br-src">${r.src}</span>
+            <span class="br-flip">See the fix <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+          <span class="br-b">
+            <small>The fix</small>
+            <strong>${r.fix}</strong>
+            <span class="br-img"><img src="${IMG(r.img)}" alt="" loading="lazy"></span>
+            <span class="br-d">${r.how}</span>
+          </span>
+        </button>
+        <button type="button" class="br-go" data-step="${r.step}" data-mode="${r.mode||0}" tabindex="-1">See it in the trip <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v9M4.5 8.5 8 12l3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>`).join("")}
     </div>`)}
   ${blk("Ride along","One trip on bus 3",`
     <p class="body-strong" style="margin-bottom:22px">Follow service 3 from Blk 237 in Tampines. Pick a step to see each display on the real thing. Tap a glowing display to zoom in, then switch to see what it says when something changes.</p>
@@ -3498,6 +3564,17 @@ const INIT = {
     {src:IMG("bus-film-closed.jpg"), t:"Diversion day", c:"An auntie with a market trolley reads the stop-closed notice."},
     {src:IMG("bus-film-night.jpg"), t:"The last bus", c:"A nurse, a hawker uncle and a student wait for the last 3 home."}
   ]);
+  const res = $("#busRes");
+  if (res){
+    $$(".br-who button").forEach(b => b.onclick = () => {
+      $$(".br-who button").forEach(x=>x.setAttribute("aria-pressed", x===b));
+      const w = b.dataset.w; $$(".br-card", res).forEach(c => c.classList.toggle("dim", w !== "all" && !c.dataset.tags.split(" ").includes(w)));
+    });
+    $$(".br-card", res).forEach(c => { const inn = $(".br-in", c), go = $(".br-go", c);
+      inn.onclick = () => { const on = inn.getAttribute("aria-pressed") !== "true"; inn.setAttribute("aria-pressed", on); c.classList.toggle("flipped", on); go.tabIndex = on ? 0 : -1; };
+      go.onclick = () => { const r = $("#busRide"); if (r && r.__go){ r.scrollIntoView({behavior: reduce ? "auto" : "smooth", block:"start"}); setTimeout(()=>r.__go(+go.dataset.step, +go.dataset.mode), reduce ? 0 : 500); } };
+    });
+  }
   const root = $("#busRide"); if (!root) return;
   const steps = $$(".bus-steps button", root), modes = $$(".bus-mode button", root), T = $("#busT"), Q = $("#busQ");
   const stage = $("#busStage"), cam = $("#busCam"), bgs = $$(".bus-bg", cam), hsBox = $("#busHs"), chips = $("#busChips"), flat = $("#busFlat"), tip = $("#busTip"), outB = $("#busOut"), flatB = $("#busFlatBtn");
@@ -3554,6 +3631,7 @@ const INIT = {
   outB.onclick = () => { hideFlat(); zoom(-1); };
   flatB.onclick = showFlat;
   addEventListener("resize", () => { if (zi >= 0) zoom(zi, false); });
+  root.__go = (i, m) => { cur = i; mode = m || 0; paint(true); };
   steps.forEach(b => b.onclick = () => { cur = +b.dataset.i; paint(true); });
   modes.forEach(b => b.onclick = () => { mode = +b.dataset.m; paint("keep"); });
   root.addEventListener("keydown", e => { if (e.key === "Escape"){ hideFlat(); zoom(-1); return; } if (e.target.closest(".bus-steps") && (e.key==="ArrowDown"||e.key==="ArrowRight"||e.key==="ArrowUp"||e.key==="ArrowLeft")){ e.preventDefault(); cur = (cur + (e.key==="ArrowDown"||e.key==="ArrowRight"?1:-1) + BUS_STEPS.length) % BUS_STEPS.length; paint(true); steps[cur].focus(); } });
