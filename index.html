@@ -1066,11 +1066,16 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 @keyframes busPulse{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.12)}}
 .bus-tip{position:absolute;left:12px;bottom:12px;margin:0;background:rgba(11,13,16,.8);color:#fff;font-size:13px;font-weight:700;padding:7px 12px;border-radius:99px;pointer-events:none;transition:opacity .4s}
 .bus-tip.off{opacity:0}
-.bus-flat{position:absolute;inset:0;display:grid;place-items:center;background:rgba(11,13,16,.55);backdrop-filter:blur(3px);opacity:0;transition:opacity .25s;cursor:zoom-out}
+.bus-flat{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(8,10,14,.86);backdrop-filter:blur(6px);opacity:0;transition:opacity .25s;cursor:zoom-out}
 .bus-flat.in{opacity:1}
-.bus-flat-in{position:relative;width:88%;height:84%;display:flex;align-items:center;justify-content:center;cursor:default;pointer-events:none;transform:translateY(12px) scale(.97);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.bus-flat-in{position:relative;width:min(94vw,1500px);height:min(80vh,1000px);display:flex;align-items:center;justify-content:center;cursor:default;pointer-events:none;transform:translateY(12px) scale(.97);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
 .bus-flat.in .bus-flat-in{transform:none}
 .bus-flat img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.5);border:6px solid #2A2D31;background:#0B0D10;pointer-events:auto}
+.bus-flat-cap{margin:0;color:#fff;font-weight:700;font-size:15px}
+.bus-hs em{display:none;position:absolute;left:50%;top:100%;transform:translate(-50%,calc(6px / var(--z))) scale(calc(1 / var(--z)));transform-origin:50% 0;align-items:center;gap:6px;background:#0B0D10;color:#fff;font-style:normal;font-weight:700;font-size:13px;line-height:1;padding:7px 11px;border-radius:99px;white-space:nowrap;pointer-events:none;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.bus-hs em svg{width:14px;height:14px}
+.bus-hs.on em{display:inline-flex}
+.bus-hs.on{cursor:zoom-in}
 .bus-x{pointer-events:auto;position:absolute;right:0;top:0;width:34px;height:34px;border-radius:50%;border:0;background:#FFD400;color:#0B0D10;font:800 20px/1 inherit;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.3)}
 .bus-ctl{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:12px}
 .bus-chips,.bus-act{display:flex;flex-wrap:wrap;gap:6px}
@@ -2217,10 +2222,10 @@ const CONTENT = {
         <div class="bus-mode" role="group" aria-label="Situation"><button type="button" aria-pressed="true" data-m="0">Normal day</button><button type="button" aria-pressed="false" data-m="1" class="o">Something changed</button></div>
         <div class="bus-stage" id="busStage">
           <div class="bus-cam" id="busCam"><img class="bus-bg" alt=""><img class="bus-bg" alt="" aria-hidden="true"><div class="bus-hss" id="busHs"></div></div>
-          <div class="bus-flat" id="busFlat" hidden><div class="bus-flat-in"><img alt=""><button type="button" class="bus-x" aria-label="Close close-up">×</button></div></div>
+          <div class="bus-flat" id="busFlat" hidden role="dialog" aria-modal="true" aria-label="Display close-up"><div class="bus-flat-in"><img alt=""><button type="button" class="bus-x" aria-label="Close close-up">×</button></div><p class="bus-flat-cap"></p></div>
           <p class="bus-tip" id="busTip">Tap a glowing display to look closer</p>
         </div>
-        <div class="bus-ctl"><div class="bus-chips" id="busChips"></div><div class="bus-act"><button type="button" id="busOut">Zoom out</button><button type="button" id="busFlatBtn" class="y">View flat</button></div></div>
+        <div class="bus-ctl"><div class="bus-chips" id="busChips"></div><div class="bus-act"><button type="button" id="busOut">Zoom out</button><button type="button" id="busFlatBtn" class="y">View full screen</button></div></div>
         <div class="bus-info"><h3 id="busT"></h3><div class="bus-qs" id="busQ"></div></div>
       </div>
     </div>`)}
@@ -3497,6 +3502,7 @@ const INIT = {
   const steps = $$(".bus-steps button", root), modes = $$(".bus-mode button", root), T = $("#busT"), Q = $("#busQ");
   const stage = $("#busStage"), cam = $("#busCam"), bgs = $$(".bus-bg", cam), hsBox = $("#busHs"), chips = $("#busChips"), flat = $("#busFlat"), tip = $("#busTip"), outB = $("#busOut"), flatB = $("#busFlatBtn");
   let cur = 0, mode = 0, front = 0, zi = -1, sc = null, timer = 0;
+  document.body.appendChild(flat); onCleanup(()=>flat.remove());
   const pre = new Set(); const preload = u => { if (!pre.has(u)) { pre.add(u); const i = new Image(); i.src = IMG(u); } };
   BUS_SCENES.slice(0,2).forEach(x=>{ preload(x.n.bg); x.c && preload(x.c.bg); });
   const v = () => { const st = BUS_SCENES[cur]; return (mode && st.c) ? st.c : st.n; };
@@ -3514,7 +3520,7 @@ const INIT = {
     cam.style.transform = `translate(${tx}px,${ty}px) scale(${z})`; cam.style.setProperty("--z", z);
     stage.classList.add("zoomed"); tip.classList.add("off"); outB.disabled = false; flatB.disabled = !h.img;
   };
-  const showFlat = () => { const h = v().hs[zi]; if (!h || !h.img) return; $("img", flat).src = IMG(h.img); $("img", flat).alt = h.l + " close-up"; flat.hidden = false; requestAnimationFrame(()=>flat.classList.add("in")); };
+  const showFlat = () => { const h = v().hs[zi]; if (!h || !h.img) return; $("img", flat).src = IMG(h.img); $("img", flat).alt = h.l + " close-up"; $(".bus-flat-cap", flat).textContent = h.l + (mode ? " · changed" : ""); flat.hidden = false; requestAnimationFrame(()=>flat.classList.add("in")); };
   const hideFlat = () => { flat.classList.remove("in"); setTimeout(()=>flat.hidden = true, 250); };
   const paint = (autoZoom) => {
     const st = BUS_SCENES[cur], info = (mode && BUS_STEPS[cur].c) ? BUS_STEPS[cur].c : BUS_STEPS[cur].n, s = v();
@@ -3530,7 +3536,7 @@ const INIT = {
     nb.onload = () => { nb.classList.add("show"); ob.classList.remove("show"); };
     nb.src = IMG(s.bg); nb.alt = info.t; front = 1-front;
     if (nb.complete) nb.onload();
-    hsBox.innerHTML = s.hs.map((h,j)=>`<button type="button" class="bus-hs${h.main?' main':''}" data-j="${j}" style="left:${h.x/W*100}%;top:${h.y/H2*100}%;width:${h.w/W*100}%;height:${h.h/H2*100}%" aria-label="Zoom to ${h.l}"><span>${h.l}</span></button>`).join("");
+    hsBox.innerHTML = s.hs.map((h,j)=>`<button type="button" class="bus-hs${h.main?' main':''}" data-j="${j}" style="left:${h.x/W*100}%;top:${h.y/H2*100}%;width:${h.w/W*100}%;height:${h.h/H2*100}%" aria-label="Zoom to ${h.l}"><span>${h.l}</span>${h.img?`<em><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10.5 10.5 14 14M7 5v4M5 7h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Tap to enlarge</em>`:""}</button>`).join("");
     chips.innerHTML = s.hs.map((h,j)=>`<button type="button" data-j="${j}" aria-pressed="false">${h.l}</button>`).join("");
     $$(".bus-hs, .bus-chips button", root).forEach(b => b.onclick = e => { e.stopPropagation(); const j = +b.dataset.j; if (zi === j && v().hs[j].img) showFlat(); else zoom(j); });
     T.textContent = info.t;
@@ -3541,7 +3547,9 @@ const INIT = {
     else { zoom(-1, false); if (autoZoom && !reduce) timer = setTimeout(()=>zoom(mainI), 650); }
     const nx = BUS_SCENES[cur+1]; if (nx){ preload(nx.n.bg); nx.c && preload(nx.c.bg); } st.c && preload(st.c.bg);
   };
-  stage.addEventListener("click", e => { if (e.target.closest(".bus-flat img, .bus-hs, .bus-x")) return; if (!flat.hidden) hideFlat(); else if (zi >= 0) zoom(-1); });
+  stage.addEventListener("click", e => { if (e.target.closest(".bus-hs")) return; if (zi >= 0) zoom(-1); });
+  flat.addEventListener("click", e => { if (!e.target.closest(".bus-flat img")) hideFlat(); });
+  addEventListener("keydown", e => { if (e.key === "Escape" && !flat.hidden) hideFlat(); });
   $(".bus-x", flat).onclick = e => { e.stopPropagation(); hideFlat(); };
   outB.onclick = () => { hideFlat(); zoom(-1); };
   flatB.onclick = showFlat;
