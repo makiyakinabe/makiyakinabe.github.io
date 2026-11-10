@@ -1075,6 +1075,9 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .bus-sw span{font-size:14px;color:var(--muted)}
 .bus-rule{grid-column:1/-1;margin:6px 0 0;font-size:15px;line-height:1.5;color:var(--muted)}
 .bus-note{margin-top:22px;font-size:14px;color:var(--muted)}
+.bus-film{border-radius:var(--r-lg);overflow:hidden;background:#0B0D10;aspect-ratio:16/9;box-shadow:0 24px 50px -24px rgba(0,0,0,.5)}
+.bus-film video{width:100%;height:100%;display:block;object-fit:contain;background:#0B0D10}
+.bus-film-cap{margin:12px 0 22px;font-size:14px;color:var(--muted)}
 @media (max-width:900px){.bus-screen{height:clamp(220px,62vw,420px)}.bus-q,.bus-res,.bus-pt{grid-template-columns:minmax(0,1fr)}.bus-sys{grid-template-columns:minmax(0,1fr)}
   .bus-ride{grid-template-columns:minmax(0,1fr)}.bus-steps{display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.bus-steps::before{display:none}.bus-steps button{white-space:nowrap;padding-right:14px}}
 @media (prefers-reduced-motion: reduce){.bus-screen.in img{animation:none}}
@@ -2182,7 +2185,9 @@ const CONTENT = {
       </div>
     </div>`)}
   ${blk("In context","A day on bus 3",`
-    <p class="body-strong" style="margin-bottom:22px">Frames from an illustrated concept film, following a mix of riders through a normal day and a diversion day.</p>
+    <p class="body-strong" style="margin-bottom:22px">An illustrated concept film following a mix of riders through a normal day and a diversion day. Turn your sound on.</p>
+    <div class="bus-film"><video controls playsinline preload="none" poster="${IMG("bus-film-poster.jpg")}" src="${IMG("bus-film.mp4")}" aria-label="A day on bus 3, concept film, 1 minute 58 seconds"></video></div>
+    <p class="bus-film-cap">1 min 58 s. Below: stills from the film.</p>
     ${viewerHTML("busFilm", "", "16/9", "#0B0D10")}`)}
   ${blk("Next","Built on what LTA already does",`
     <div class="two">
