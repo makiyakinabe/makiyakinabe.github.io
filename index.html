@@ -1046,6 +1046,39 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .bus-mode button[aria-pressed="true"]{background:#FFD400;color:#0B0D10}
 .bus-mode button.o[aria-pressed="true"]{background:#FF9A1F}
 .bus-mode button:disabled{opacity:.35;cursor:not-allowed}
+.bus-stage{position:relative;overflow:hidden;border-radius:14px;background:#15181C;border:2px solid #2A2D31;transition:border-color .3s;cursor:zoom-in;aspect-ratio:12/7}
+.bus-stage.zoomed{cursor:zoom-out}
+.bus-stage.chg{border-color:#FF9A1F}
+.bus-cam{position:absolute;inset:0;transform-origin:0 0;transition:transform .9s cubic-bezier(.22,.7,.18,1);--z:1}
+.bus-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s}
+.bus-bg.show{opacity:1}
+.bus-hs{position:absolute;border:calc(3px / var(--z)) solid rgba(255,212,0,.85);border-radius:calc(8px / var(--z));background:rgba(255,212,0,.06);padding:0;cursor:pointer;transition:border-color .3s,background .3s}
+.bus-hs::after{content:"";position:absolute;inset:calc(-6px / var(--z));border-radius:inherit;border:calc(3px / var(--z)) solid #FFD400;opacity:0;animation:busPulse 2s ease-out infinite}
+.bus-stage.chg .bus-hs,.bus-stage.chg .bus-hs::after{border-color:#FF9A1F}
+.bus-hs span{position:absolute;left:50%;bottom:100%;transform:translate(-50%,calc(-6px / var(--z))) scale(calc(1 / var(--z)));transform-origin:50% 100%;background:#FFD400;color:#0B0D10;font-weight:800;font-size:13px;line-height:1;padding:6px 10px;border-radius:99px;white-space:nowrap;pointer-events:none;box-shadow:0 4px 10px rgba(0,0,0,.25);transition:opacity .3s}
+.bus-stage.chg .bus-hs span{background:#FF9A1F}
+.bus-hs:not(.main) span{opacity:.0}
+.bus-hs:hover span,.bus-hs:focus-visible span,.bus-hs.on span{opacity:1}
+.bus-stage.zoomed .bus-hs:not(.on) span{opacity:0}
+.bus-hs.on{background:transparent}
+.bus-hs.on::after{animation:none}
+.bus-stage.zoomed .bus-hs:not(.on){border-color:rgba(255,212,0,.35)}
+@keyframes busPulse{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.12)}}
+.bus-tip{position:absolute;left:12px;bottom:12px;margin:0;background:rgba(11,13,16,.8);color:#fff;font-size:13px;font-weight:700;padding:7px 12px;border-radius:99px;pointer-events:none;transition:opacity .4s}
+.bus-tip.off{opacity:0}
+.bus-flat{position:absolute;inset:0;display:grid;place-items:center;background:rgba(11,13,16,.55);backdrop-filter:blur(3px);opacity:0;transition:opacity .25s;cursor:zoom-out}
+.bus-flat.in{opacity:1}
+.bus-flat-in{position:relative;width:88%;height:84%;display:flex;align-items:center;justify-content:center;cursor:default;pointer-events:none;transform:translateY(12px) scale(.97);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.bus-flat.in .bus-flat-in{transform:none}
+.bus-flat img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.5);border:6px solid #2A2D31;background:#0B0D10;pointer-events:auto}
+.bus-x{pointer-events:auto;position:absolute;right:0;top:0;width:34px;height:34px;border-radius:50%;border:0;background:#FFD400;color:#0B0D10;font:800 20px/1 inherit;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.bus-ctl{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:12px}
+.bus-chips,.bus-act{display:flex;flex-wrap:wrap;gap:6px}
+.bus-chips button,.bus-act button{border:1.5px solid #3A3F45;background:#15181C;color:#DDE2E6;font:inherit;font-weight:700;font-size:13.5px;padding:7px 13px;border-radius:99px;cursor:pointer}
+.bus-chips button[aria-pressed="true"]{background:#FFD400;border-color:#FFD400;color:#0B0D10}
+.bus-act button.y{border-color:#FFD400;color:#FFD400}
+.bus-act button:disabled{opacity:.35;cursor:not-allowed}
+.bus-chips button:focus-visible,.bus-act button:focus-visible,.bus-hs:focus-visible,.bus-x:focus-visible{outline:3px solid #FF9A1F;outline-offset:2px}
 .bus-screen{position:relative;background:#15181C;border-radius:14px;height:clamp(240px,34vw,440px);padding:12px;overflow:hidden;border:2px solid #2A2D31;transition:border-color .3s}
 .bus-screen.chg{border-color:#FF9A1F}
 .bus-screen img{position:absolute;left:12px;top:12px;width:calc(100% - 24px);height:calc(100% - 24px);object-fit:contain;display:block}
@@ -1080,7 +1113,7 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .bus-film-cap{margin:12px 0 22px;font-size:14px;color:var(--muted)}
 @media (max-width:900px){.bus-screen{height:clamp(220px,62vw,420px)}.bus-q,.bus-res,.bus-pt{grid-template-columns:minmax(0,1fr)}.bus-sys{grid-template-columns:minmax(0,1fr)}
   .bus-ride{grid-template-columns:minmax(0,1fr)}.bus-steps{display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.bus-steps::before{display:none}.bus-steps button{white-space:nowrap;padding-right:14px}}
-@media (prefers-reduced-motion: reduce){.bus-screen.in img{animation:none}}
+@media (prefers-reduced-motion: reduce){.bus-screen.in img{animation:none}.bus-hs::after{animation:none}.bus-cam,.bus-bg{transition:none}}
 /* Lumi case study */
 .lumi-tab{position:relative;background:#1E2422;border-radius:clamp(20px,3vw,38px);padding:clamp(10px,1.4vw,18px);box-shadow:0 30px 60px -20px rgba(0,0,0,.45);max-width:980px;margin:0 auto}
 .lumi-tab::before{content:"";position:absolute;left:50%;top:clamp(3px,.55vw,7px);width:8px;height:8px;margin-left:-4px;border-radius:50%;background:#3a4643}
@@ -1901,6 +1934,29 @@ const BUS_STEPS = [
                     c:{img:"bus-kiosk-audio.jpg", t:"Audio and large text", alt:"Audio mode", w:1350/2400, q:[["I can't see the board","Tap the yellow audio button and a bus fills the screen and is read aloud."],["Deaf riders too","Captions on screen, in four languages."]]}},
   {t:"At the berth", n:{img:"bus-berth.jpg", t:"Overhead berth sign", w:5, q:[["Am I at the right berth?","The berth letter is the biggest thing on the sign."],["Is my bus leaving from here?","Each service from this berth, with minutes and bus type."]]}}
 ];
+const BUS_SC = {stop:[2400,1400], bus:[2400,1400], int:[2000,1300], ic:[2400,1500]};
+const H = {
+  board:{x:400,y:500,w:504,h:340,l:"Stop info board"}, closed:{x:1760,y:300,w:196,h:250,l:"Closed sign"}, walk:{x:2030,y:966,w:240,h:250,l:"Walk sign"},
+  front:{x:688,y:776,w:150,h:78,l:"Front sign"}, side:{x:1083,y:838,w:167,h:64,l:"Side sign"}, pole:{x:1960,y:600,w:272,h:190,l:"Stop board"},
+  screen:{x:1258,y:196,w:762,h:452,l:"Lower-deck screen"}, strip:{x:845,y:398,w:310,h:88,l:"LED strip"},
+  kiosk:{x:250,y:436,w:420,h:747,l:"Departures kiosk"}, berth:{x:1110,y:176,w:1077,h:216,l:"Berth sign"}
+};
+const hp = (k, img, main) => ({...H[k], img, main:!!main});
+const BUS_SCENES = [
+  {n:{sc:"stop", bg:"bs-stop.jpg", hs:[hp("board","bus-stoppanel.jpg",1)]},
+   c:{sc:"stop", bg:"bs-stop-c.jpg", hs:[hp("board","bus-stop-closed.jpg",1), hp("closed"), hp("walk")]}},
+  {n:{sc:"bus", bg:"bs-bus.jpg", hs:[hp("front","bus-headsign.jpg",1), hp("side","bus-headsign.jpg"), hp("pole","bus-stoppanel.jpg")]},
+   c:{sc:"bus", bg:"bs-bus-c.jpg", hs:[hp("front","bus-headsign-divert.jpg",1), hp("side","bus-headsign-divert.jpg"), hp("pole","bus-stoppanel.jpg")]}},
+  {n:{sc:"int", bg:"bs-int.jpg", hs:[hp("screen","bus-screen.jpg",1), hp("strip","bus-strip.jpg")]},
+   c:{sc:"int", bg:"bs-int-c.jpg", hs:[hp("screen","bus-screen-divert.jpg",1), hp("strip","bus-strip-divert.jpg")]}},
+  {n:{sc:"int", bg:"bs-int.jpg", hs:[hp("strip","bus-strip.jpg",1), hp("screen","bus-screen.jpg")]},
+   c:{sc:"int", bg:"bs-int-c.jpg", hs:[hp("strip","bus-strip-divert.jpg",1), hp("screen","bus-screen-divert.jpg")]}},
+  {n:{sc:"int", bg:"bs-bell.jpg", hs:[hp("screen","bus-bell.jpg",1), hp("strip","bus-strip.jpg")]},
+   c:{sc:"int", bg:"bs-last.jpg", hs:[hp("screen","bus-screen-lastbus.jpg",1), hp("strip","bus-strip.jpg")]}},
+  {n:{sc:"ic", bg:"bs-ic.jpg", hs:[hp("kiosk","bus-kiosk.jpg",1), hp("berth","bus-berth.jpg")]},
+   c:{sc:"ic", bg:"bs-ic-c.jpg", hs:[hp("kiosk","bus-kiosk-audio.jpg",1), hp("berth","bus-berth.jpg")]}},
+  {n:{sc:"ic", bg:"bs-ic.jpg", hs:[hp("berth","bus-berth.jpg",1), hp("kiosk","bus-kiosk.jpg")]}}
+];
 const CONTENT = {
 "synapsys": () => `
   ${blk("Research","A Ferrari with bicycle brakes",`
@@ -2154,12 +2210,17 @@ const CONTENT = {
       <div><h3>Hard to know your stop or your bus</h3><p>MPs asked for clearer stop codes; seniors want the service number inside every bus.</p></div>
     </div>`)}
   ${blk("Ride along","One trip on bus 3",`
-    <p class="body-strong" style="margin-bottom:22px">Follow service 3 from Blk 237 in Tampines. Pick a step, then switch to see what that display says when something changes.</p>
+    <p class="body-strong" style="margin-bottom:22px">Follow service 3 from Blk 237 in Tampines. Pick a step to see each display on the real thing. Tap a glowing display to zoom in, then switch to see what it says when something changes.</p>
     <div class="bus-ride" id="busRide">
       <ol class="bus-steps" role="tablist" aria-label="Steps in the trip">${BUS_STEPS.map((st,i)=>`<li><button role="tab" type="button" aria-selected="${i===0}" data-i="${i}"><span>${i+1}</span>${st.t}</button></li>`).join("")}</ol>
       <div class="bus-view">
         <div class="bus-mode" role="group" aria-label="Situation"><button type="button" aria-pressed="true" data-m="0">Normal day</button><button type="button" aria-pressed="false" data-m="1" class="o">Something changed</button></div>
-        <div class="bus-screen" id="busScreen"><img id="busImg" alt=""></div>
+        <div class="bus-stage" id="busStage">
+          <div class="bus-cam" id="busCam"><img class="bus-bg" alt=""><img class="bus-bg" alt="" aria-hidden="true"><div class="bus-hss" id="busHs"></div></div>
+          <div class="bus-flat" id="busFlat" hidden><div class="bus-flat-in"><img alt=""><button type="button" class="bus-x" aria-label="Close close-up">×</button></div></div>
+          <p class="bus-tip" id="busTip">Tap a glowing display to look closer</p>
+        </div>
+        <div class="bus-ctl"><div class="bus-chips" id="busChips"></div><div class="bus-act"><button type="button" id="busOut">Zoom out</button><button type="button" id="busFlatBtn" class="y">View flat</button></div></div>
         <div class="bus-info"><h3 id="busT"></h3><div class="bus-qs" id="busQ"></div></div>
       </div>
     </div>`)}
@@ -3433,24 +3494,62 @@ const INIT = {
     {src:IMG("bus-film-night.jpg"), t:"The last bus", c:"A nurse, a hawker uncle and a student wait for the last 3 home."}
   ]);
   const root = $("#busRide"); if (!root) return;
-  const steps = $$(".bus-steps button", root), modes = $$(".bus-mode button", root), img = $("#busImg"), scr = $("#busScreen"), T = $("#busT"), Q = $("#busQ");
-  let cur = 0, mode = 0;
-  const paint = () => {
-    const st = BUS_STEPS[cur], v = (mode && st.c) ? st.c : st.n;
+  const steps = $$(".bus-steps button", root), modes = $$(".bus-mode button", root), T = $("#busT"), Q = $("#busQ");
+  const stage = $("#busStage"), cam = $("#busCam"), bgs = $$(".bus-bg", cam), hsBox = $("#busHs"), chips = $("#busChips"), flat = $("#busFlat"), tip = $("#busTip"), outB = $("#busOut"), flatB = $("#busFlatBtn");
+  let cur = 0, mode = 0, front = 0, zi = -1, sc = null, timer = 0;
+  const pre = new Set(); const preload = u => { if (!pre.has(u)) { pre.add(u); const i = new Image(); i.src = IMG(u); } };
+  BUS_SCENES.slice(0,2).forEach(x=>{ preload(x.n.bg); x.c && preload(x.c.bg); });
+  const v = () => { const st = BUS_SCENES[cur]; return (mode && st.c) ? st.c : st.n; };
+  const zoom = (i, anim = true) => {
+    const s = v(), [W, H2] = BUS_SC[s.sc]; zi = i;
+    cam.style.transition = (anim && !reduce) ? "" : "none";
+    $$(".bus-hs", hsBox).forEach((b,j)=>b.classList.toggle("on", j===i));
+    $$("button", chips).forEach((b,j)=>b.setAttribute("aria-pressed", j===i));
+    if (i < 0){ cam.style.transform = ""; cam.style.setProperty("--z", 1); stage.classList.remove("zoomed"); flatB.disabled = true; outB.disabled = true; return; }
+    const h = s.hs[i], Wd = stage.clientWidth, Hd = stage.clientHeight;
+    const rx = h.x/W*Wd, ry = h.y/H2*Hd, rw = h.w/W*Wd, rh = h.h/H2*Hd;
+    let z = Math.min(.6*Wd/rw, .6*Hd/rh, 2.6); z = Math.max(z, 1.25);
+    let tx = Wd/2 - z*(rx+rw/2), ty = Hd/2 - z*(ry+rh/2);
+    tx = Math.min(0, Math.max(Wd - z*Wd, tx)); ty = Math.min(0, Math.max(Hd - z*Hd, ty));
+    cam.style.transform = `translate(${tx}px,${ty}px) scale(${z})`; cam.style.setProperty("--z", z);
+    stage.classList.add("zoomed"); tip.classList.add("off"); outB.disabled = false; flatB.disabled = !h.img;
+  };
+  const showFlat = () => { const h = v().hs[zi]; if (!h || !h.img) return; $("img", flat).src = IMG(h.img); $("img", flat).alt = h.l + " close-up"; flat.hidden = false; requestAnimationFrame(()=>flat.classList.add("in")); };
+  const hideFlat = () => { flat.classList.remove("in"); setTimeout(()=>flat.hidden = true, 250); };
+  const paint = (autoZoom) => {
+    const st = BUS_SCENES[cur], info = (mode && BUS_STEPS[cur].c) ? BUS_STEPS[cur].c : BUS_STEPS[cur].n, s = v();
     steps.forEach((b,j)=>b.setAttribute("aria-selected", j===cur));
     modes[1].disabled = !st.c; if (!st.c) mode = 0;
     modes.forEach((b,j)=>b.setAttribute("aria-pressed", j===mode));
-    if (st.c) modes[1].textContent = st.c.alt || "Something changed";
-    scr.classList.toggle("tall", v.w < 1); scr.classList.toggle("thin", v.w > 3); scr.classList.toggle("chg", !!mode);
-    scr.classList.remove("in"); void scr.offsetWidth; scr.classList.add("in");
-    img.src = IMG(v.img); img.alt = v.t;
-    T.textContent = v.t;
-    Q.innerHTML = v.q.map(([a,b])=>`<div class="${mode?'o':''}"><b>“${a}”</b><span>${b}</span></div>`).join("");
+    if (BUS_STEPS[cur].c) modes[1].textContent = BUS_STEPS[cur].c.alt || "Something changed";
+    stage.classList.toggle("chg", !!mode);
+    const sceneChanged = sc !== s.sc; sc = s.sc;
+    const [W, H2] = BUS_SC[s.sc]; stage.style.aspectRatio = W + "/" + H2;
+    // crossfade background
+    const nb = bgs[1-front], ob = bgs[front];
+    nb.onload = () => { nb.classList.add("show"); ob.classList.remove("show"); };
+    nb.src = IMG(s.bg); nb.alt = info.t; front = 1-front;
+    if (nb.complete) nb.onload();
+    hsBox.innerHTML = s.hs.map((h,j)=>`<button type="button" class="bus-hs${h.main?' main':''}" data-j="${j}" style="left:${h.x/W*100}%;top:${h.y/H2*100}%;width:${h.w/W*100}%;height:${h.h/H2*100}%" aria-label="Zoom to ${h.l}"><span>${h.l}</span></button>`).join("");
+    chips.innerHTML = s.hs.map((h,j)=>`<button type="button" data-j="${j}" aria-pressed="false">${h.l}</button>`).join("");
+    $$(".bus-hs, .bus-chips button", root).forEach(b => b.onclick = e => { e.stopPropagation(); const j = +b.dataset.j; if (zi === j && v().hs[j].img) showFlat(); else zoom(j); });
+    T.textContent = info.t;
+    Q.innerHTML = info.q.map(([a,b])=>`<div class="${mode?'o':''}"><b>“${a}”</b><span>${b}</span></div>`).join("");
+    hideFlat(); clearTimeout(timer);
+    const mainI = Math.max(0, s.hs.findIndex(h=>h.main));
+    if (autoZoom === "keep" && zi >= 0 && !sceneChanged) zoom(Math.min(zi, s.hs.length-1), false);
+    else { zoom(-1, false); if (autoZoom && !reduce) timer = setTimeout(()=>zoom(mainI), 650); }
+    const nx = BUS_SCENES[cur+1]; if (nx){ preload(nx.n.bg); nx.c && preload(nx.c.bg); } st.c && preload(st.c.bg);
   };
-  steps.forEach(b => b.onclick = () => { cur = +b.dataset.i; paint(); });
-  modes.forEach(b => b.onclick = () => { mode = +b.dataset.m; paint(); });
-  root.addEventListener("keydown", e => { if (e.target.closest(".bus-steps") && (e.key==="ArrowDown"||e.key==="ArrowRight"||e.key==="ArrowUp"||e.key==="ArrowLeft")){ e.preventDefault(); cur = (cur + (e.key==="ArrowDown"||e.key==="ArrowRight"?1:-1) + BUS_STEPS.length) % BUS_STEPS.length; paint(); steps[cur].focus(); } });
-  paint();
+  stage.addEventListener("click", e => { if (e.target.closest(".bus-flat img, .bus-hs, .bus-x")) return; if (!flat.hidden) hideFlat(); else if (zi >= 0) zoom(-1); });
+  $(".bus-x", flat).onclick = e => { e.stopPropagation(); hideFlat(); };
+  outB.onclick = () => { hideFlat(); zoom(-1); };
+  flatB.onclick = showFlat;
+  addEventListener("resize", () => { if (zi >= 0) zoom(zi, false); });
+  steps.forEach(b => b.onclick = () => { cur = +b.dataset.i; paint(true); });
+  modes.forEach(b => b.onclick = () => { mode = +b.dataset.m; paint("keep"); });
+  root.addEventListener("keydown", e => { if (e.key === "Escape"){ hideFlat(); zoom(-1); return; } if (e.target.closest(".bus-steps") && (e.key==="ArrowDown"||e.key==="ArrowRight"||e.key==="ArrowUp"||e.key==="ArrowLeft")){ e.preventDefault(); cur = (cur + (e.key==="ArrowDown"||e.key==="ArrowRight"?1:-1) + BUS_STEPS.length) % BUS_STEPS.length; paint(true); steps[cur].focus(); } });
+  paint(false);
 },
 "gift-set"(){
   initTurbine();
