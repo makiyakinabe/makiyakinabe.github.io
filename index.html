@@ -1170,16 +1170,30 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .lr-list{display:grid;gap:8px}
 .lr-list button{display:flex;align-items:center;gap:12px;text-align:left;border:0;background:var(--plate);color:inherit;border-radius:14px;padding:11px 14px;cursor:pointer;font:inherit;transition:transform .2s,background .2s}
 .lr-list button:hover{transform:translateX(3px)}
-.lr-list button i{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:13px;background:rgba(127,127,127,.18)}
+.lr-list button i{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--t);color:var(--k)}
+.lumi-res svg{width:58%;height:58%;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.lr-face{display:flex;gap:clamp(14px,2vw,22px);align-items:center}
+.lr-big{flex:none;width:clamp(64px,8vw,96px);aspect-ratio:1;border-radius:28%;display:grid;place-items:center;background:var(--t);color:var(--k)}
+.lr-box small em{font-style:normal;font-weight:600;opacity:.7;margin-left:6px;letter-spacing:.04em}
+.lr-arrow{justify-self:center;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--k,var(--p));color:#fff;margin:-4px 0}
+.lr-arrow svg{width:60%;height:60%;stroke-width:2.4}
+.lr-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:14px;align-items:start}
+.lr-shot{margin:0}
+.lr-shot .lumi-tab{max-width:none;border-radius:clamp(14px,2vw,24px);padding:clamp(7px,1vw,12px)}
+.lr-shot .lumi-tab::before{display:none}
+.lr-shot figcaption{margin-top:8px;font-size:13.5px;color:var(--muted);text-align:center}
+.lr-shot figcaption b{color:var(--ink,inherit)}
+.lr-panel.sw .lr-shot{animation:lrIn .45s .08s ease both}
+@media (max-width:1000px){.lr-pair{grid-template-columns:minmax(0,1fr)}}
 .lr-list button b{font-family:var(--display);font-size:16px}
 .lr-list button[aria-selected="true"]{background:var(--p);color:#fff}
-.lr-list button[aria-selected="true"] i{background:rgba(255,255,255,.25)}
+.lr-list button[aria-selected="true"] i{background:#fff}
 .lr-list button:focus-visible{outline:3px solid var(--pa);outline-offset:2px}
 .lr-panel{display:grid;gap:14px;min-width:0}
 .lr-box{background:var(--plate);border-radius:var(--r-md,18px);padding:clamp(18px,2.4vw,26px)}
 .lr-box small{display:block;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px;color:var(--muted);margin-bottom:8px}
 .lr-box p{margin:0;font-size:clamp(16px,1.5vw,18.5px);line-height:1.55}
-.lr-box.does{border:2px solid var(--p)}
+.lr-box.does{border:2px solid var(--k,var(--p))}
 .lr-box.does small{color:var(--pa)}
 .lr-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .lr-chips span{font-size:13.5px;font-weight:700;border-radius:999px;padding:6px 12px;background:rgba(127,127,127,.16)}
@@ -1920,15 +1934,15 @@ const OE_GROUPS = [
      p:[["oe-p-parent.webp","Parent weekly summary","Days practised, stars won, what their child is better at and working on, their best reading to listen to, and an idea to try at home."]]}
 ];
 const LUMI_RES = [
-  {t:"Being understood", f:"Many non-speaking children understand far more than they can say, so people underestimate them. Even simple needs like “I'm in pain” or “I want the other one” are hard to get across.", d:"A talk board where tapping pictures builds a sentence that Lumi says out loud, with whole phrases ready to go and the family's home-language words underneath.", c:["Talk board","Phrases","Home languages"]},
-  {t:"Big feelings", f:"Naming a feeling is hard, and behaviour often stands in for words. A meltdown might really mean “this is too loud” or “I didn't know this was happening”.", d:"Lumi helps name the feeling first, then calms down together. Stories ask how the child feels before and after, and a Break button sits on every screen.", c:["Feelings check","Calm corner","Break button"]},
-  {t:"Noise, light and crowds", f:"Hawker centres, malls and the MRT can be overwhelming. Sudden sounds and fast movement on a screen can be too much as well.", d:"A sensory comfort setting turns the sound down, slows Lumi's voice and reduces motion. In stories, the child chooses what helps, like putting on headphones.", c:["Softer sound","Less motion","Low-colour theme"]},
-  {t:"Changes to the day", f:"An unexpected change, like a different bus route or a new teacher, can cause real distress. Stopping one activity to start the next is hard too.", d:"A picture timetable shows the whole day, Now and Next shows just two things, and Coming up prepares the child for something new before it happens.", c:["My day","Now and Next","Coming up"]},
-  {t:"Waiting and focus", f:"Waiting for the bus or for food with nothing to do is hard, and so is staying with one task when the body wants to move.", d:"A waiting game that starts at ten seconds and grows a little each time, with things to do while waiting, plus movement breaks when the child is restless.", c:["Waiting game","Move breaks","A slower guide hand"]},
-  {t:"Playing with others", f:"Joining in, taking turns and sharing attention don't come easily, and other children often don't know how to include them.", d:"A Together mode for a grown-up, sibling or friend, with turn-taking games, and stories that practise a birthday party or meeting a new teacher.", c:["Together mode","Turn-taking games","Party story"]},
-  {t:"Everyday tasks", f:"Tasks with many steps, like brushing teeth, getting dressed or packing a bag, are hard. So are money, shopping and crossing the road safely.", d:"Lessons acted out one small step at a time, and everyday games for shopping with money, crossing the road, telling the time and doing up zips and buttons.", c:["Learn with Lumi","Everyday games","Try it for real"]},
-  {t:"Small, precise touches", f:"Small buttons and precise drags make many apps impossible to use for children with fine-motor difficulties.", d:"Big buttons everywhere, an “easier touch” setting that swaps every drag for a tap and makes text bigger, and “Do it with me” so nobody gets stuck.", c:["Tap instead of drag","Bigger text","Do it with me"]},
-  {t:"Being treated their age", f:"Teenagers are often handed content made for toddlers, and other people make most of their decisions for them.", d:"Three looks that grow up with the child. Teens get a calmer look and real life skills, and every story has choices and ends with the child's own plan.", c:["Three age looks","Teen life skills","Choices in stories"]}
+  {img:"lumi-talk.jpg", cap:"Talk board", tint:"#DDF0EC", ink:"#2F7E79", ic:'<path d="M4 5h16v11H10l-4 4v-4H4z"/><path d="M8 9h8M8 12h5"/>', t:"Being understood", f:"Many non-speaking children understand far more than they can say, so people underestimate them. Even simple needs like “I'm in pain” or “I want the other one” are hard to get across.", d:"A talk board where tapping pictures builds a sentence that Lumi says out loud, with whole phrases ready to go and the family's home-language words underneath.", c:["Talk board","Phrases","Home languages"]},
+  {img:"lumi-calm.jpg", cap:"Calm corner", tint:"#ECE7F8", ink:"#7E64C8", ic:'<path d="M12 20s-7-4.4-7-9.5A4 4 0 0 1 12 8a4 4 0 0 1 7 2.5C19 15.6 12 20 12 20z"/>', t:"Big feelings", f:"Naming a feeling is hard, and behaviour often stands in for words. A meltdown might really mean “this is too loud” or “I didn't know this was happening”.", d:"Lumi helps name the feeling first, then calms down together. Stories ask how the child feels before and after, and a Break button sits on every screen.", c:["Feelings check","Calm corner","Break button"]},
+  {img:"lumi-story.jpg", cap:"Hawker centre story", tint:"#F3EBDD", ink:"#9A6A2A", ic:'<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>', t:"Noise, light and crowds", f:"Hawker centres, malls and the MRT can be overwhelming. Sudden sounds and fast movement on a screen can be too much as well.", d:"A sensory comfort setting turns the sound down, slows Lumi's voice and reduces motion. In stories, the child chooses what helps, like putting on headphones.", c:["Softer sound","Less motion","Low-colour theme"]},
+  {img:"lumi-nownext.jpg", cap:"Now and Next", tint:"#E1ECF7", ink:"#4A78A8", ic:'<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M8 3v4M16 3v4M9 15l2 2 4-4"/>', t:"Changes to the day", f:"An unexpected change, like a different bus route or a new teacher, can cause real distress. Stopping one activity to start the next is hard too.", d:"A picture timetable shows the whole day, Now and Next shows just two things, and Coming up prepares the child for something new before it happens.", c:["My day","Now and Next","Coming up"]},
+  {img:"lumi-wait.jpg", cap:"Waiting game", tint:"#FBEFD9", ink:"#B07A12", ic:'<path d="M7 3h10M7 21h10M8 3c0 5 8 5 8 9s-8 4-8 9M16 3c0 5-8 5-8 9s8 4 8 9"/>', t:"Waiting and focus", f:"Waiting for the bus or for food with nothing to do is hard, and so is staying with one task when the body wants to move.", d:"A waiting game that starts at ten seconds and grows a little each time, with things to do while waiting, plus movement breaks when the child is restless.", c:["Waiting game","Move breaks","A slower guide hand"]},
+  {img:"lumi-together.jpg", cap:"Together mode", tint:"#F8E4EC", ink:"#C2577A", ic:'<circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M2.5 20c.5-3.5 2.7-5 5.5-5s5 1.5 5.5 5M13 15.3c.9-.2 1.9-.3 3-.3 2.800 0 5 1.5 5.5 5"/>', t:"Playing with others", f:"Joining in, taking turns and sharing attention don't come easily, and other children often don't know how to include them.", d:"A Together mode for a grown-up, sibling or friend, with turn-taking games, and stories that practise a birthday party or meeting a new teacher.", c:["Together mode","Turn-taking games","Party story"]},
+  {img:"lumi-n-road.jpg", cap:"Cross the road game", tint:"#E6E8FA", ink:"#5B6ABF", ic:'<path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.3 1.3L7 5M3.5 12l1.3 1.3L7 11M3.5 18l1.3 1.3L7 17"/>', t:"Everyday tasks", f:"Tasks with many steps, like brushing teeth, getting dressed or packing a bag, are hard. So are money, shopping and crossing the road safely.", d:"Lessons acted out one small step at a time, and everyday games for shopping with money, crossing the road, telling the time and doing up zips and buttons.", c:["Learn with Lumi","Everyday games","Try it for real"]},
+  {img:"lumi-learn.jpg", cap:"Learn with Lumi", tint:"#EEF2E6", ink:"#5E7A3A", ic:'<path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V11m0-.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.5a6 6 0 0 1-5-2.7L4 14.5a1.5 1.5 0 0 1 2.5-1.7L9 15"/>', t:"Small, precise touches", f:"Small buttons and precise drags make many apps impossible to use for children with fine-motor difficulties.", d:"Big buttons everywhere, an “easier touch” setting that swaps every drag for a tap and makes text bigger, and “Do it with me” so nobody gets stuck.", c:["Tap instead of drag","Bigger text","Do it with me"]},
+  {img:"lumi-setup.jpg", cap:"Three age looks", tint:"#E3F1FA", ink:"#3E6E9A", ic:'<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.3 6L12 16.4 6.6 19.4l1.3-6L3.4 9.3l6-.7z"/>', t:"Being treated their age", f:"Teenagers are often handed content made for toddlers, and other people make most of their decisions for them.", d:"Three looks that grow up with the child. Teens get a calmer look and real life skills, and every story has choices and ends with the child's own plan.", c:["Three age looks","Teen life skills","Choices in stories"]}
 ];
 function initLumiResearch(){
   const root = $("#lumiRes"); if (!root) return;
@@ -1937,6 +1951,9 @@ function initLumiResearch(){
     tabs.forEach((b,n) => b.setAttribute("aria-selected", n===i));
     $("#lrF", root).textContent = r.f; $("#lrD", root).textContent = r.d;
     $("#lrC", root).innerHTML = r.c.map(x=>`<span>${x}</span>`).join("");
+    panel.style.setProperty("--t", r.tint); panel.style.setProperty("--k", r.ink);
+    $("#lrI", root).innerHTML = `<svg viewBox="0 0 24 24">${r.ic}</svg>`; $("#lrN", root).textContent = `${i+1} of ${LUMI_RES.length}`;
+    const im = $("#lrS", root); im.src = IMG(r.img); im.alt = `Lumi screen: ${r.cap}`; $("#lrSC", root).textContent = r.cap;
     panel.classList.remove("sw"); void panel.offsetWidth; panel.classList.add("sw"); };
   tabs.forEach((b,i) => { b.onclick = () => show(i);
     b.addEventListener("keydown", e => { const d = e.key==="ArrowDown"||e.key==="ArrowRight" ? 1 : e.key==="ArrowUp"||e.key==="ArrowLeft" ? -1 : 0;
@@ -2209,10 +2226,14 @@ const CONTENT = {
   ${blk("Research","Nine everyday hurdles, and what Lumi does about each",`
     <p class="body-strong">Before designing anything, I read up on what daily life is like for non-speaking children and young people with special needs. Nine hurdles came up again and again, and each one became part of Lumi. Pick one to see how.</p>
     <div class="lumi-res" id="lumiRes">
-      <div class="lr-list" role="tablist" aria-label="Everyday hurdles">${LUMI_RES.map((r,i)=>`<button role="tab" aria-selected="${i===0}" type="button"><i>${i+1}</i><b>${r.t}</b></button>`).join("")}</div>
+      <div class="lr-list" role="tablist" aria-label="Everyday hurdles">${LUMI_RES.map((r,i)=>`<button role="tab" aria-selected="${i===0}" type="button" style="--t:${r.tint};--k:${r.ink}"><i><svg viewBox="0 0 24 24" aria-hidden="true">${r.ic}</svg></i><b>${r.t}</b></button>`).join("")}</div>
       <div class="lr-panel">
-        <div class="lr-box"><small>What children face</small><p id="lrF" aria-live="polite"></p></div>
-        <div class="lr-box does"><small>What Lumi does</small><p id="lrD"></p><div class="lr-chips" id="lrC"></div></div>
+        <div class="lr-box lr-face"><span class="lr-big" id="lrI" aria-hidden="true"></span><div><small>What children face <em id="lrN"></em></small><p id="lrF" aria-live="polite"></p></div></div>
+        <div class="lr-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v15M6 13l6 6 6-6"/></svg></div>
+        <div class="lr-pair">
+          <div class="lr-box does"><small>What Lumi does</small><p id="lrD"></p><div class="lr-chips" id="lrC"></div></div>
+          <figure class="lr-shot"><div class="lumi-tab"><div class="lumi-scr"><img id="lrS" class="zoom" alt="" loading="lazy"></div></div><figcaption>In Lumi: <b id="lrSC"></b></figcaption></figure>
+        </div>
       </div>
     </div>
     <div class="two lumi-ask">
