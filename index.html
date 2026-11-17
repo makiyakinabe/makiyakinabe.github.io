@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Portfolio of Natalie Ang, product experience designer and Computer Science (IMGD) student at SIT and DigiPen.">
+<meta name="description" content="Portfolio of Natalie Ang, a game and product designer studying Computer Science (Interactive Media &amp; Game Development) at SIT and DigiPen.">
 <meta property="og:title" content="Natalie Ang Portfolio">
-<meta property="og:description" content="Product, service and app design projects by Natalie Ang.">
+<meta property="og:description" content="Game, product and UI/UX design projects by Natalie Ang.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%237C6CF2'/%3E%3Ctext x='32' y='44' font-family='Arial' font-weight='700' font-size='32' fill='white' text-anchor='middle'%3ENA%3C/text%3E%3C/svg%3E">
 <title>Natalie Ang Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,7 +69,10 @@ button{font:inherit;color:inherit}
 /* ---------- nav ---------- */
 .nav{position:fixed;z-index:50;top:0;left:0;right:0;padding-block:calc(10px + env(safe-area-inset-top,0px)) 10px;background:var(--foot);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border-bottom:1px solid rgba(255,255,255,.08);box-shadow:0 8px 24px -18px rgba(5,12,35,.5)}
 
-.navbar{display:flex;align-items:center;justify-content:flex-end;gap:10px}
+.navbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.navbar .nbtn.brand{color:#F2F0EA;padding:10px 0;font-size:18px}
+.navbar .nbtn.brand:hover{color:#FFDB6E;background:transparent}
+@media (max-width:860px){.navbar .nbtn.brand{display:none}.navbar{justify-content:flex-end}}
 .nlinks{display:flex;gap:8px;align-items:center}
 .nbtn{pointer-events:auto;display:inline-flex;align-items:center;gap:0;background:transparent;color:#C9D8EE;text-decoration:none;font-weight:600;font-size:15px;
   padding:9px 16px;border-radius:999px;border:0;transition:background .2s,color .2s}
@@ -143,6 +146,7 @@ p{margin:0}
 .hbtn:hover{transform:translateY(-2px);box-shadow:0 8px 0 rgba(0,0,0,.4)}
 .hbtn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.4)}
 .hbtn svg{width:18px;height:18px}
+.hbtn-ic{padding:13px 14px}
 /* instant camera in the hero: print slides out of the front slot */
 .ixcol{position:relative;padding:8px 0 0}
 .ix{position:relative;width:min(430px,100%);aspect-ratio:100/175;margin:0 auto;container-type:inline-size;
@@ -291,7 +295,7 @@ p{margin:0}
 .meta div{display:flex;gap:28px;align-items:end}
 .meta div::after{content:"/";color:var(--muted);font-size:18px}
 .meta div:last-child::after{content:none}
-@media (max-width:600px){.meta{display:grid;grid-template-columns:1fr 1fr;gap:14px}.meta div::after{content:none}}
+@media (max-width:600px){.meta{display:grid;grid-template-columns:1fr 1fr;gap:16px 14px}.meta div{align-items:start}.meta div::after{content:none}}
 .meta small{display:block;color:var(--muted);font-size:13px}
 .meta span{font-size:16px;font-weight:500}
 .plate{border-radius:var(--r-lg);overflow:hidden;background:var(--plate)}
@@ -709,6 +713,11 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .qlinks a{background:var(--foot-ink);color:var(--foot);text-decoration:none;padding:9px 18px;border-radius:999px;font-size:14px;font-weight:600;transition:transform .2s,opacity .2s,background .2s}
 .qlinks a:hover{transform:translateY(-2px);background:#9ED4FF;color:#0B1630}
 .contact-list{display:grid;gap:12px;font-size:15px}
+.f-cta{margin:18px 0 0;color:var(--foot-muted);font-size:16px;line-height:1.5;max-width:30ch}
+.f-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.f-btns a{background:#FFDB6E;color:#14122E;text-decoration:none;font-weight:700;font-size:15px;padding:11px 20px;border-radius:999px;transition:transform .2s}
+.f-btns a+a{background:var(--foot-ink);color:var(--foot)}
+.f-btns a:hover{transform:translateY(-2px)}
 .contact-list a{text-decoration:none;word-break:break-all}
 .contact-list a:hover{text-decoration:underline}
 .copy-btn{border:1px solid var(--foot-muted);background:none;color:var(--foot-ink);border-radius:8px;padding:3px 10px;font-size:12px;cursor:pointer;margin-left:8px}
@@ -1326,6 +1335,7 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 <nav class="nav" aria-label="Main">
   <div class="wrap">
     <div class="navbar">
+      <a class="nbtn brand" href="#home" aria-label="Natalie Ang, home">Natalie Ang</a>
       <div class="nlinks">
         <a class="nbtn" href="#home" data-nav="home">Home</a>
         <a class="nbtn" href="#journey" data-nav="journey"><span class="lg">My&nbsp;</span>Journey</a>
@@ -1342,7 +1352,11 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 <footer>
   <div class="wrap">
     <div class="f-grid">
-      <h2>You've reached the end!</h2>
+      <div>
+        <h2>You've reached the end!</h2>
+        <p class="f-cta">Like what you see? I'd love to hear from you.</p>
+        <div class="f-btns"><a href="mailto:natalieang2203@gmail.com">Email me</a><a href="cv/Natalie-Ang-CV.pdf" target="_blank" rel="noopener">Download my CV</a></div>
+      </div>
       <div>
         <h4>Quick links</h4>
         <div class="qlinks"><a href="#home">Home</a><a href="#journey">My Journey</a><a href="#works">My Works</a><a href="#recognition">Recognition</a></div>
@@ -1352,49 +1366,50 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
         <div class="contact-list">
           <div><a href="mailto:natalieang2203@gmail.com" id="mail">natalieang2203@gmail.com</a><button class="copy-btn" id="copyMail">Copy</button></div>
           <a href="https://www.linkedin.com/in/natalieangkaixin2203/" target="_blank" rel="noopener">linkedin.com/in/natalieangkaixin2203</a>
+          <a href="https://www.instagram.com/eggsperimenting/" target="_blank" rel="noopener">instagram.com/eggsperimenting</a>
           <span style="color:var(--foot-muted)">Singapore</span>
         </div>
       </div>
     </div>
-    <p class="f-small">© 2026 Natalie Ang · Product experience designer &amp; Computer Science (IMGD) student</p>
+    <p class="f-small">© 2026 Natalie Ang · Game &amp; product designer · Computer Science (IMGD) student at SIT &amp; DigiPen</p>
   </div>
 </footer>
 
 <script>
 const PROJECTS = [
  {id:"synapsys", num:"01", name:"SynapSys", sub:"Designing Calm Within Daily Flow", p:"#2E6F9E", pd:"#7DB3DA",
-  cat:"Product Design · App", year:"2025–26", ctx:"Final year project · Temasek Polytechnic", tags:["product","uiux"], tagLabels:["Product Design","App","Research"],
+  cat:"Product Design · App", year:"2025–26", ctx:"Final year project · Temasek Polytechnic", tags:["product","uiux","game"], tagLabels:["Product Design","Play Design","Research"],
   hero:"syn-cover.jpg", thumb:"syn-cover.jpg", thumbPos:"0% 50%",
   blurb:"A modular play system that helps children with ADHD turn restless energy into purposeful play, building coordination, confidence and focus at home."},
- {id:"lumi", num:"02", name:"Lumi", sub:"A Calm Companion App", p:"#2F7E79", pd:"#7CC9C2",
-  cat:"UI/UX · Game &amp; App Design", year:"2026", ctx:"Passion project · Companion app", tags:["uiux"], tagLabels:["UI/UX","Game Design","Accessibility"],
+ {id:"lumi", role:"Solo · design, art &amp; code", num:"02", name:"Lumi", sub:"A Calm Companion App", p:"#2F7E79", pd:"#7CC9C2",
+  cat:"UI/UX · Game &amp; App Design", year:"2026", ctx:"Passion project · Companion app", tags:["uiux","game"], tagLabels:["UI/UX","Game Design","Accessibility"],
   hero:"lumi-cover.jpg", thumb:"lumi-cover.jpg", thumbPos:"0% 50%",
   blurb:"A free tablet game for non-speaking children and young people: talk with pictures, plan the day, calm down, and practise real life with Lumi."},
- {id:"bus", num:"03", name:"SG Bus Displays", sub:"Reading the Bus, for Everyone", p:"#8A6A00", pd:"#FFD400",
+ {id:"bus", role:"Solo designer", num:"03", name:"SG Bus Displays", sub:"Reading the Bus, for Everyone", p:"#8A6A00", pd:"#FFD400",
   cat:"UI/UX · Wayfinding", year:"2026", ctx:"Self-initiated concept redesign", tags:["uiux"], tagLabels:["UI/UX","Wayfinding","Accessibility"],
   hero:"bus-cover.jpg", thumb:"bus-thumb.jpg", thumbPos:"0% 50%",
   blurb:"A redesign of every display a Singapore bus rider reads in one trip, from the stop panel to the interchange, easier to understand and easier to see for everyone."},
- {id:"gift-set", num:"04", name:"Corporate Gift Set", sub:"Air Force Museum", p:"#2B47A8", pd:"#8EA6F0",
+ {id:"gift-set", role:"Team lead · team of 3", num:"04", name:"Corporate Gift Set", sub:"Air Force Museum", p:"#2B47A8", pd:"#8EA6F0",
   cat:"Product Design", year:"2025", ctx:"Industry studio · Singapore Air Force Museum", tags:["product"], tagLabels:["Product Design","Industry Project"],
   hero:"safm-cover.jpg", thumb:"safm-cover.jpg", thumbPos:"0% 50%",
   blurb:"A desk set for Singapore Air Force Museum VIP guests: a turbine fan, stationery holder and wireless charger shaped by the museum itself."},
- {id:"carecircle", num:"05", name:"CareCircle+", sub:"Caregiving App", p:"#B83A78", pd:"#EE8DBD",
+ {id:"carecircle", role:"Solo designer", num:"05", name:"CareCircle+", sub:"Caregiving App", p:"#B83A78", pd:"#EE8DBD",
   cat:"UI/UX · Mobile App", year:"2025", ctx:"Passion project", tags:["uiux"], tagLabels:["UI/UX","Mobile App"],
   hero:"cc-cover.jpg", thumb:"cc-cover.jpg", thumbPos:"0% 50%",
   blurb:"An all-in-one caregiving app with shared calendars, mood check-ins, peer support and service booking. Every caregiver deserves care too."},
- {id:"ae-queue", num:"06", name:"A&amp;E Queue System", sub:"Changi General Hospital", p:"#0B6CC4", pd:"#7CC4F2",
+ {id:"ae-queue", role:"UI/UX design intern", num:"06", name:"A&amp;E Queue System", sub:"Changi General Hospital", p:"#0B6CC4", pd:"#7CC4F2",
   cat:"UI/UX · Dashboards &amp; App", year:"2025", ctx:"UI/UX internship · Changi General Hospital", tags:["uiux","service"], tagLabels:["UI/UX","Dashboards","Service Design"],
   hero:"ae-cover.jpg", thumb:"ae-cover.jpg", thumbPos:"0% 50%",
   blurb:"One live A&amp;E queue shared by triage nurses, doctors, duty managers, the waiting room and patients, so everyone knows who's next and why."},
- {id:"lung-fft", num:"07", name:"Lung FFT", sub:"Visualisation Dashboard", p:"#5B47B8", pd:"#B7A6F5",
+ {id:"lung-fft", role:"UI/UX design intern", num:"07", name:"Lung FFT", sub:"Visualisation Dashboard", p:"#5B47B8", pd:"#B7A6F5",
   cat:"UI/UX · Data Visualisation", year:"2025", ctx:"UI/UX internship project", tags:["uiux"], tagLabels:["UI/UX","Data Viz","Dashboards"],
   hero:"lf-cover.jpg", thumb:"lf-cover.jpg", thumbPos:"0% 50%",
   blurb:"A dashboard that turns lung sound recordings into clear frequency charts doctors can trust, plus an app for recording at home."},
- {id:"oral-exam", num:"08", name:"Oral Exam Mastery", sub:"AI Oral Practice", p:"#D4561A", pd:"#FFAE6E",
-  cat:"UI/UX · Web &amp; Mobile App", year:"2025", ctx:"UI/UX internship · Ministry of Education", tags:["uiux"], tagLabels:["UI/UX","EdTech","Web &amp; Mobile"],
+ {id:"oral-exam", role:"UI/UX design intern", num:"08", name:"Oral Exam Mastery", sub:"AI Oral Practice", p:"#D4561A", pd:"#FFAE6E",
+  cat:"UI/UX · Web &amp; Mobile App", year:"2025", ctx:"UI/UX internship · Ministry of Education", tags:["uiux","game"], tagLabels:["UI/UX","Gamification","EdTech"],
   hero:"oe-cover.jpg", thumb:"oe-cover.jpg", thumbPos:"0% 50%",
   blurb:"AI-marked oral practice for primary and secondary students, with Echo as a friendly examiner and one place for teachers to manage every class."},
- {id:"tray-dispenser", num:"09", name:"Tray Dispenser", sub:"Mandai Wildlife Reserve", p:"#3D7A4C", pd:"#86C796",
+ {id:"tray-dispenser", role:"Project manager · team of 5", num:"09", name:"Tray Dispenser", sub:"Mandai Wildlife Reserve", p:"#3D7A4C", pd:"#86C796",
   cat:"Service & Product Design", year:"2024–25", ctx:"Industry studio · Mandai Wildlife Group", tags:["service","product"], tagLabels:["Service Design","Product Design"],
   hero:"tray-cover4.jpg", thumb:"tray-cover4.jpg", thumbPos:"0% 50%",
   blurb:"A back-end tray dispenser for Mandai's food courts. Each tray shows its order number, so tourists always grab the right one."},
@@ -1406,7 +1421,7 @@ const PROJECTS = [
   cat:"Product Design", year:"2023–24", ctx:"Studio project", tags:["product"], tagLabels:["Product Design","Prototyping"],
   hero:"bon-cover.jpg", thumb:"bon-cover.jpg", thumbPos:"0% 50%",
   blurb:"A crochet storage unit with sliding, rotating compartments that keeps yarn, hooks and tools tidy and tangle-free."},
- {id:"vase", num:"12", name:"Flower Vase", sub:"Laser-Cut Gift", p:"#B5562F", pd:"#F0A27C",
+ {id:"vase", role:"Solo maker", num:"12", name:"Flower Vase", sub:"Laser-Cut Gift", p:"#B5562F", pd:"#F0A27C",
   cat:"Product Design · Laser Cutting", year:"2024", ctx:"Personal project · Mother's Day gift", tags:["product"], tagLabels:["Laser Cutting","Product Design"],
   hero:"vase-cover.jpg", thumb:"vase-cover.jpg", thumbPos:"0% 50%",
   blurb:"A Mother's Day gift cut from a single sheet of scrap wood, with flat pieces that slot together into a 3D vase of flowers."}
@@ -1423,7 +1438,7 @@ const arrow = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" strok
 function card(p, wide){
   return `<a class="card rv${wide?' wide':''}" href="#${p.id}" data-tags="${p.tags.join(' ')}" style="--p:${p.p};--p-d:${p.pd}">
     <div class="thumb" ${p.thumbBg?`style="background:${p.thumbBg}"`:""}><img src="${IMG(p.thumb)}" alt="${p.name}" loading="lazy" ${p.thumbBg?'style="object-fit:contain"':""}><span class="badge">${arrow}</span>${p.thumbPos?"":`<span class="num">${p.num}</span>`}</div>
-    <h3>${p.name} <span style="color:var(--muted);font-weight:500">- ${p.sub}</span></h3>
+    <h3>${p.name} <span style="color:var(--muted);font-weight:500">– ${p.sub}</span></h3>
     <p>${p.blurb}</p>
     <div class="tags">${p.tagLabels.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
   </a>`;
@@ -1607,13 +1622,14 @@ function viewHome(){
             <div class="cm">I am</div>
             <div class="nm"><span>Natalie</span></div>
           </div>
-          <h1 class="sx-role">Product Experience Designer <em>&amp;</em> CS (IMGD) Student</h1>
-          <p class="sx-kw">Product design · UI/UX · Service design · User research</p>
-          <p class="sx-p">I design products and apps around the people who use them, from the first sketch and cardboard mock-up to a tested prototype. Now at SIT &amp; DigiPen, learning to build what I design.</p>
+          <h1 class="sx-role">Game <em>&amp;</em> Product Designer</h1>
+          <p class="sx-kw">Game design · Product design · UI/UX · User research</p>
+          <p class="sx-p">I design games, products and apps around the people who use them, from the first sketch and cardboard mock-up to a tested prototype. Now studying Computer Science (Interactive Media &amp; Game Development) at SIT &amp; DigiPen, so I can build what I design.</p>
           <div class="sx-btns">
-            <a class="hbtn" style="background:#FFDB6E" href="mailto:natalieang2203@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Email me</a>
-            <a class="hbtn" style="background:#9ED4FF" href="https://www.linkedin.com/in/natalieangkaixin2203/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="4" fill="currentColor"/><path d="M7.2 10.2v6.6M7.2 7.3v.1M11 16.8v-3.9c0-1.6 1-2.6 2.4-2.6s2.3 1 2.3 2.6v3.9M11 10.2v6.6" stroke="#9ED4FF" stroke-width="2" stroke-linecap="round" fill="none"/></svg>LinkedIn</a>
-            <button class="hbtn" style="background:#FFB38A" id="heroWorks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>See my works</button>
+            <button class="hbtn" style="background:#FFB38A" id="heroWorks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>See my works</button>
+            <a class="hbtn" style="background:#FFDB6E" href="cv/Natalie-Ang-CV.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>My CV</a>
+            <a class="hbtn" style="background:#C9F2DF" href="mailto:natalieang2203@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Email me</a>
+            <a class="hbtn hbtn-ic" style="background:#9ED4FF" href="https://www.linkedin.com/in/natalieangkaixin2203/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="4" fill="currentColor"/><path d="M7.2 10.2v6.6M7.2 7.3v.1M11 16.8v-3.9c0-1.6 1-2.6 2.4-2.6s2.3 1 2.3 2.6v3.9M11 10.2v6.6" stroke="#9ED4FF" stroke-width="2" stroke-linecap="round" fill="none"/></svg></a>
           </div>
         </div>
         <div class="ixcol">
@@ -1637,10 +1653,28 @@ function viewHome(){
     </div>
   </section>
 
+  <section class="statement wrap">
+    <p id="stmt">How do we translate complex functionality into intuitive, delightful experiences? That's the question that drives my work every day.</p>
+  </section>
+
+  <section class="wrap" id="worksSec">
+    <div class="sec-head">
+      <h2>Selected Works<sup id="workCount">(${String(PROJECTS.length).padStart(2,"0")})</sup></h2>
+      <div class="filters" role="group" aria-label="Filter projects">
+        <button class="chip" aria-pressed="true" data-f="all">All</button>
+        <button class="chip" aria-pressed="false" data-f="game">Games &amp; Play</button>
+        <button class="chip" aria-pressed="false" data-f="product">Product Design</button>
+        <button class="chip" aria-pressed="false" data-f="uiux">UI/UX</button>
+        <button class="chip" aria-pressed="false" data-f="service">Service Design</button>
+      </div>
+    </div>
+    <div class="grid" id="workGrid">${PROJECTS.map((p,i)=>card(p, i===0)).join("")}</div>
+  </section>
+
   <section class="wrap hey">
     <div class="rv">
       <h2>Hey!</h2>
-      <p class="intro">I'm Natalie, a product experience designer who turns everyday frustrations into thoughtful products and apps.</p>
+      <p class="intro">I'm Natalie, a designer who turns everyday frustrations into thoughtful products, apps and games.</p>
     </div>
     <div class="copy rv">
       <p><b>I like designing for people who usually get overlooked:</b> children with ADHD who struggle with daily routines, older adults whose hands shake, and caregivers with no time for themselves.</p>
@@ -1656,7 +1690,7 @@ function viewHome(){
             <li>Ministry of Education<em>Intern project</em></li>
           </ul></div>
       </div>
-      <div style="margin-top:6px"><button class="btn" id="toWorks">View My Works <span class="arr">${arrow}</span></button></div>
+      <div style="margin-top:6px"><a class="btn" href="#journey">My Journey <span class="arr">${arrow}</span></a></div>
     </div>
   </section>
 
@@ -1664,23 +1698,6 @@ function viewHome(){
     <div class="tape-row cta2"><div class="tape-track">${Array(12).fill(`<span>Learn more about me here</span>`).join("")}</div></div>
     <div class="tape-row cta"><div class="tape-track">${Array(12).fill(`<span>Wanna know more about me?</span>`).join("")}</div></div>
   </a>
-
-  <section class="statement wrap">
-    <p id="stmt">How do we translate complex functionality into intuitive, delightful experiences? That's the question that drives my work every day.</p>
-  </section>
-
-  <section class="wrap" id="worksSec">
-    <div class="sec-head">
-      <h2>Selected Works<sup id="workCount">(${String(PROJECTS.length).padStart(2,"0")})</sup></h2>
-      <div class="filters" role="group" aria-label="Filter projects">
-        <button class="chip" aria-pressed="true" data-f="all">All</button>
-        <button class="chip" aria-pressed="false" data-f="product">Product Design</button>
-        <button class="chip" aria-pressed="false" data-f="uiux">UI/UX</button>
-        <button class="chip" aria-pressed="false" data-f="service">Service Design</button>
-      </div>
-    </div>
-    <div class="grid" id="workGrid">${PROJECTS.map((p,i)=>card(p, i===0)).join("")}</div>
-  </section>
 
   <section class="wrap honours" id="recSec">
     <div class="sec-head"><h2>Recognition</h2><a class="btn" href="#journey">My Journey <span class="arr">${arrow}</span></a></div>
@@ -1705,7 +1722,6 @@ function initHome(){
     $$("#heroName span").forEach((s,i)=> s.style.transform = `translateX(${(i?1:-1)*x*-14}px)`);
   };
   if(!reduce){ addEventListener("pointermove", move); onCleanup(()=>removeEventListener("pointermove", move)); }
-  $("#toWorks").onclick = () => $("#worksSec").scrollIntoView({behavior: reduce?"auto":"smooth"});
   // statement word reveal
   const st = $("#stmt");
   st.innerHTML = st.textContent.split(" ").map(w=>`<span class="w">${w}</span>`).join(" ");
@@ -1734,10 +1750,10 @@ function initHome(){
 function projectShell(p, inner){
   const i = PROJECTS.indexOf(p);
   const nexts = [PROJECTS[(i+1)%PROJECTS.length], PROJECTS[(i+2)%PROJECTS.length]];
-  const meta = [["Category",p.cat], p.year?["Year",p.year]:null, ["Context",p.ctx]].filter(Boolean);
+  const meta = [["Category",p.cat], p.year?["Year",p.year]:null, ["Context",p.ctx], p.role?["My role",p.role]:null].filter(Boolean);
   return `<article class="proj" style="--p:${p.p};--p-d:${p.pd}">
     <header class="wrap p-head">
-      <h1>${p.name} <em>-</em> ${p.sub}</h1>
+      <h1>${p.name} <em>–</em> ${p.sub}</h1>
       <p class="lead">${p.blurb}</p>
       <div class="meta">${meta.map(([k,v])=>`<div><p><small>${k}</small><span>${v}</span></p></div>`).join("")}</div>
       <div class="plate p-hero" style="${p.heroBg?`background:${p.heroBg};`:""}${p.heroAspect?`aspect-ratio:${p.heroAspect};`:""}"><img class="zoom" id="pHeroImg" src="${IMG(p.hero)}" alt="${p.name} hero render" ${p.heroBg?'style="object-fit:contain"':""}></div>
