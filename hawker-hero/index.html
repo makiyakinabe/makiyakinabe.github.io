@@ -1124,6 +1124,54 @@ button.stall:active{transform:perspective(56rem) rotateX(var(--rx,0deg)) rotateY
 }
 #kdsQueue,.kb-q{min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .kb-top{min-width:0;overflow:hidden}
+
+/* ---------- business layer ---------- */
+.biz{display:grid;gap:0.6rem;background:#fffdf6;border:0.125rem solid var(--ink);border-radius:0.875rem;padding:0.625rem 0.75rem;box-shadow:0 0.2rem 0 var(--ink)}
+.biz .label{margin:0 0 0.2rem}
+.biz-fc{display:flex;gap:0.6rem;align-items:flex-start}
+.biz-fc p{margin:0;font-size:.9rem;line-height:1.35}
+.biz-ic{font-size:1.9rem;line-height:1}
+.biz-ev{margin-top:0.3rem!important;background:#fff1d6;border-radius:0.5rem;padding:0.3rem 0.5rem}
+.biz-ck ul{list-style:none;margin:0;padding:0;display:grid;gap:0.25rem}
+.biz-ck li{display:grid;grid-template-columns:1.3rem minmax(0,1fr) auto;gap:0.4rem;align-items:center;font-size:.9rem}
+.biz-ck li i{width:1.15rem;height:1.15rem;border:0.125rem solid var(--ink);border-radius:0.3rem;display:grid;place-items:center;font-style:normal;font-weight:900;font-size:.75rem;background:#fff}
+.biz-ck li.ok i{background:#2f9e5b;color:#fff;border-color:#1f6a3d}
+.biz-ck li.ok span{color:#5b6a63}
+.biz-ck small{color:#c2541c;font-weight:700;font-size:.75rem;white-space:nowrap}
+.biz-pr .hint2{margin:0.3rem 0 0;font-size:.8rem}
+.biz-goal{margin:0;font-weight:800;font-size:.9rem;background:#e9f6ee;border-radius:0.5rem;padding:0.35rem 0.55rem}
+.inc-banner{position:fixed;left:50%;top:calc(4.5rem + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:30;display:flex;gap:0.6rem;align-items:center;max-width:min(34rem,calc(100vw - 2rem));padding:0.6rem 0.9rem;border-radius:0.875rem;border:0.1875rem solid var(--ink);box-shadow:0 0.3rem 0 var(--ink);font-size:.95rem;line-height:1.3;pointer-events:none}
+.inc-banner.good{background:#e3f7e9}.inc-banner.bad{background:#ffe6dc}
+.inc-banner b{font-family:var(--display);font-weight:400;white-space:nowrap}
+.inc-banner.show{animation:incIn .5s cubic-bezier(.3,1.5,.6,1)}
+@keyframes incIn{from{transform:translate(-50%,-2rem);opacity:0}to{transform:translateX(-50%);opacity:1}}
+.sum-review{border-top:0.0625rem dashed #b9b09a;margin-top:0.5rem;padding-top:0.5rem}
+.sum-review .rc-h{margin:0 0 0.3rem;font-family:var(--mono);font-weight:700;letter-spacing:.06em;font-size:.8rem}
+.sum-review .up{color:#1f7a45;font-weight:800}.sum-review .down{color:#c2341f;font-weight:800}
+.sum-review li.inc span{font-size:.8rem}
+.rv-why p{margin:0.3rem 0;font-size:.85rem;line-height:1.35}
+.rv-goal{margin:0.35rem 0 0;font-weight:800;font-size:.85rem;background:#fff1d6;border-radius:0.4rem;padding:0.3rem 0.5rem}
+.rv-goal.done{background:#e3f7e9;color:#1f6a3d}
+.dish-fact{margin:0.25rem 0 0;font-size:.85rem;line-height:1.35;background:#fff6dc;border-radius:0.6rem;padding:0.4rem 0.6rem;text-align:left}
+.ledger-biz{display:grid;gap:0.35rem;text-align:left}
+.ledger-biz .label{margin:0.4rem 0 0}
+.ledger.small li{font-size:.85rem}
+.ledger .neg{color:#c2341f}
+.ld-best,.ld-goal,.ld-tmr{margin:0;font-weight:800}
+.ld-fb{margin:0;font-style:italic;color:#3b4a43}
+.ld-tmr{font-weight:700;color:#3b4a43;font-size:.9rem}
+.rank-card{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(5rem,10rem);grid-template-areas:"b t bar" "b t nx";column-gap:0.75rem;align-items:center;background:rgba(255,255,255,.08);border:0.0625rem solid rgba(255,255,255,.2);border-radius:0.875rem;padding:0.45rem 0.75rem;color:#fff;max-width:40rem}
+.rk-badge{grid-area:b;width:2.4rem;height:2.4rem;border-radius:50%;display:grid;place-items:center;font-family:var(--display);color:var(--ink);background:radial-gradient(circle at 35% 30%,#fff 0 8%,#f6cf4a 35%,#b8892a);border:0.125rem solid var(--ink)}
+.rank-card > div:first-of-type{grid-area:t;min-width:0}
+.rank-card b{display:block;font-family:var(--display);font-weight:400;color:var(--yellow)}
+.rank-card small{display:block;font-size:.78rem;opacity:.85}
+.rk-bar{grid-area:bar;height:0.5rem;border-radius:9px;background:rgba(255,255,255,.2);overflow:hidden}
+.rk-bar i{display:block;height:100%;background:var(--yellow)}
+.rk-next{grid-area:nx;text-align:right}
+
+.close-cv{flex:none;min-height:0}
+.close-card.done .close-cv{aspect-ratio:auto;height:clamp(6rem,22vh,10rem)}
+.close-card.done #closeCv{object-fit:cover;object-position:50% 40%}
 </style>
 <script>
 /* UI scale: the whole interface is sized in rem, so one root font size fits it to any screen */
@@ -9144,6 +9192,380 @@ centreBg = function(t, lit, dark){
   for (let i = 0; i < 4; i++){ const x = 40 + i*100; g.fillStyle = 'rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(x, 206, 30, 4, 0, 0, Math.PI*2); g.fill(); box(x - 26, 176, 52, 8, 3, lin(0,176,0,184,[[0,'#9a7650'],[1,'#6e5034']]), C.ink, 1.5); line(x - 18, 184, x - 18, 204, C.ink, 2); line(x + 18, 184, x + 18, 204, C.ink, 2); }
   if (dark){ g.fillStyle = `rgba(15,25,20,${dark})`; g.fillRect(0,0,400,220); }
 };
+
+/* =================================================================
+   THE HAWKER BUSINESS: daily forecast and weather, pricing, reputation,
+   an opening checklist, small incidents mid-shift, a shift review with
+   reasons and advice, a full end-of-day ledger with waste, tomorrow's goal,
+   career rank, dish facts and hawker-centre ambience.
+   ================================================================= */
+const kidMode = () => ageCfg().kid;
+const BIZ = {cur:null};
+save.rep = save.rep || {}; save.price = save.price || {};
+const repOf = id => save.rep[id] == null ? 50 : save.rep[id];
+
+/* ---------- forecast: one weather per day, an event per service ---------- */
+const WEATHER = {
+  sunny:{name:'Sunny', icon:'☀️', pat:1, dine:0, note:'A normal crowd. Good day to try something new.'},
+  hot:{name:'Hot & humid', icon:'🥵', pat:0.88, dine:-0.1, note:'Customers get cranky faster. Be quick at the counter.'},
+  rain:{name:'Rainy', icon:'🌧️', pat:1.15, dine:0.3, note:'Nobody wants to walk in the rain, so more people eat in and wait longer.'},
+  storm:{name:'Thunderstorm', icon:'⛈️', pat:1.1, dine:-0.35, note:'People grab takeaway and rush home. Pack fast.'}
+};
+const EVENTS = {
+  none:{name:'Ordinary service', icon:'🍽️', note:'', pat:1, tip:1, dine:null},
+  payday:{name:'Payday', icon:'💰', note:'Everyone just got paid. Tips are doubled for 3-star dishes.', pat:1, tip:2, dine:null},
+  office:{name:'Office lunch rush', icon:'💼', note:'Office workers on a 1-hour break: less patience, mostly takeaway.', pat:0.85, tip:1, dine:'dabao', only:'lunch'},
+  tour:{name:'Tour group', icon:'📸', note:'Tourists want the full experience: they eat in, wait patiently and tip well.', pat:1.15, tip:1.5, dine:'here'},
+  football:{name:'Football final tonight', icon:'⚽', note:'Fans want takeaway before kick-off. Pack fast!', pat:0.9, tip:1, dine:'dabao', only:'dinner'},
+  festival:{name:'Festival eve', icon:'🏮', note:'The whole estate is out. Families eat in and tip happily.', pat:1.05, tip:1.5, dine:'here', only:'dinner'}
+};
+function seeded(n){ let s = (n*2654435761) >>> 0; return () => ((s = (s*1664525 + 1013904223) >>> 0)/4294967296); }
+function forecast(service){
+  const n = dayNo(), r = seeded(n*31 + 7);
+  const w = ['sunny','sunny','hot','rain','sunny','storm','hot','rain'][Math.floor(r()*8)];
+  const pickEv = svc => { const rr = seeded(n*131 + (svc === 'dinner' ? 17 : 3)); if (rr() < 0.45) return 'none'; const pool = Object.keys(EVENTS).filter(k => k !== 'none' && (!EVENTS[k].only || EVENTS[k].only === svc)); return pool[Math.floor(rr()*pool.length)]; };
+  if (n === 1) return {w:'sunny', lunch:'none', dinner:'none', ev:'none'};
+  const f = {w, lunch:pickEv('lunch'), dinner:pickEv('dinner')};
+  f.ev = service ? f[service] : null;
+  return f;
+}
+const curService = () => { const p = dayState().phase; return p === 'afternoon' ? 'dinner' : p === 'night' ? null : 'lunch'; };
+
+/* ---------- pricing ---------- */
+const PRICES = {
+  value:{name:'Value', mul:0.9, pat:1.1, rep:1.5, note:'10% cheaper. Customers are more patient and like you more, but you earn less.'},
+  standard:{name:'Standard', mul:1, pat:1, rep:0, note:'The usual hawker price.'},
+  premium:{name:'Premium', mul:1.15, pat:0.9, rep:-1.5, note:'15% dearer. More money per plate, but customers expect speed and 3-star food. Easier once your reputation is 70+.'}
+};
+const priceOf = id => kidMode() ? 'standard' : (save.price[id] || 'standard');
+const _formPrice = formPrice;
+formPrice = function(st, w, withDabao = true){
+  const base = _formPrice(st, w, withDabao), m = PRICES[priceOf(st.id)].mul;
+  return m === 1 ? base : Math.round(base*m/10)*10;
+};
+
+/* ---------- customers react to weather, events, price and reputation ---------- */
+const _makeCustomers = makeCustomers;
+makeCustomers = function(st, beginner, service){
+  const list = _makeCustomers(st, beginner, service);
+  const f = forecast(service), W = WEATHER[f.w], E = EVENTS[f.ev || 'none'], P = PRICES[priceOf(st.id)], rep = repOf(st.id);
+  let pm = W.pat*E.pat*P.pat*(0.92 + rep/625);
+  if (priceOf(st.id) === 'premium' && rep >= 70) pm /= P.pat;
+  if (kidMode()) pm = Math.max(1, pm);
+  list.forEach(c => {
+    c.pm *= pm;
+    if (c.regular || c.usualMode) return;
+    if (E.dine && Math.random() < 0.7) c.t.dine = E.dine;
+    else if (W.dine && Math.random() < Math.abs(W.dine)) c.t.dine = W.dine > 0 ? 'here' : 'dabao';
+    if (c.sayParts){ c.sayParts.dine = c.t.dine === 'dabao' ? pick(['Dabao.','Take away, thanks.','Tapao ah.']) : pick(['Eat here.','Makan sini.','Dine in, thanks.']); c.speech = `${c.sayParts.greet} ${c.sayParts.order} ${c.sayParts.dine}`; }
+  });
+  return list;
+};
+
+/* ---------- each shift: track steps, schedule one small incident ---------- */
+const _startShift = startShift;
+startShift = function(st, service){
+  const f = forecast(service);
+  BIZ.cur = {st:st.id, service, f, steps:[], incidents:[], tipBoost:1, slowUntil:-1, incAt:28 + Math.random()*30, incDone:false};
+  return _startShift(st, service);
+};
+const _recLogBiz = REC.log;
+REC.log = function(type, data){
+  try { if (type === 'step' && BIZ.cur && data && typeof data.score === 'number') BIZ.cur.steps.push({title:data.title, kind:data.kind, score:data.score}); } catch(e){}
+  return _recLogBiz.call(this, type, data);
+};
+const INCIDENTS = [
+  {id:'gas', bad:true, text:'The gas tank is running low! Your stove cooks 30% slower for the next 30 seconds.', go(){ BIZ.cur.slowUntil = SH.clock + 30; }},
+  {id:'spill', bad:true, text:'Crash! Someone dropped a tray at table 7. The queue gets restless.', go(){ SH.custs.forEach(c => { if (c.state !== 'done' && c.pat > 0.3) c.pat = Math.max(0.3, c.pat - 0.12); }); }},
+  {id:'neighbour', text:'Auntie Mei from the kopi stall brings drinks for your queue. Everyone happily waits a bit longer.', go(){ SH.custs.forEach(c => { c.pat = Math.min(1, c.pat + 0.25); }); }},
+  {id:'bus', text:'A tour bus pulls up! For the rest of this shift, 3-star dishes earn bigger tips.', go(){ BIZ.cur.tipBoost *= 1.5; }},
+  {id:'radio', text:'Your favourite song comes on the radio. You feel fast! Cooking is 20% quicker for 25 seconds.', go(){ BIZ.cur.fastUntil = SH.clock + 25; }}
+];
+setInterval(() => {
+  const b = BIZ.cur;
+  if (!b || b.incDone || !SH || screen !== 'play' || paused) return;
+  if (SH.clock < b.incAt) return;
+  b.incDone = true;
+  if (Math.random() < 0.35) return;
+  const pool = INCIDENTS.filter(i => !kidMode() || !i.bad), inc = pool[Math.floor(Math.random()*pool.length)];
+  try { inc.go(); } catch(e){ return; }
+  b.incidents.push(inc);
+  incidentBanner(inc);
+  REC.log('incident', {id:inc.id});
+}, 1000);
+function incidentBanner(inc){
+  let el = $('#incBanner');
+  if (!el){ el = document.createElement('div'); el.id = 'incBanner'; el.className = 'inc-banner'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+  el.className = 'inc-banner ' + (inc.bad ? 'bad' : 'good');
+  el.innerHTML = `<b>${inc.bad ? 'Uh oh!' : 'Nice!'}</b><span>${esc(inc.text)}</span>`;
+  el.hidden = false; el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+  if (inc.bad){ tone(330, 0.12, 'square', 0.04); setTimeout(() => tone(247, 0.18, 'square', 0.04), 130); } else { [0,1,2].forEach(i => setTimeout(() => tone([660,880,1100][i], 0.1, 'triangle', 0.05), i*90)); }
+  if (typeof sayKid === 'function') sayKid(inc.text);
+  clearTimeout(el._t); el._t = setTimeout(() => { el.hidden = true; }, 5200);
+}
+const _startCookBiz = startCook;
+startCook = function(c){
+  _startCookBiz(c);
+  if (c.cook && BIZ.cur && SH){
+    if (SH.clock < BIZ.cur.slowUntil) c.cook.dur *= 1.3;
+    if (SH.clock < (BIZ.cur.fastUntil || -1)) c.cook.dur *= 0.8;
+  }
+};
+
+/* ---------- rain on the queue ---------- */
+if (typeof counterHall === 'function'){
+  const _counterHall = counterHall;
+  counterHall = function(){
+    const r = _counterHall();
+    const f = BIZ.cur && BIZ.cur.f;
+    if (r && f && (f.w === 'rain' || f.w === 'storm')){
+      const t = performance.now()/1000, n = f.w === 'storm' ? 70 : 40;
+      g.save(); g.strokeStyle = 'rgba(210,225,240,.55)'; g.lineWidth = 0.8;
+      for (let i = 0; i < n; i++){ const x = ((i*53.7 + t*60) % 420) - 10, y = ((i*29.3 + t*260) % 100) - 10; g.beginPath(); g.moveTo(x, y); g.lineTo(x - 3, y + 9); g.stroke(); }
+      if (f.w === 'storm' && (t % 7) < 0.12){ g.fillStyle = 'rgba(255,255,255,.35)'; g.fillRect(0, 0, 400, 150); }
+      g.restore();
+    }
+    return r;
+  };
+}
+
+/* ---------- dish facts ---------- */
+const FACTS = {
+  chicken:'Hainanese chicken rice came to Singapore with immigrants from Hainan. The rice is cooked in chicken stock and fat, which is why it is so fragrant.',
+  kopi:'Kopi beans are traditionally roasted with sugar and margarine, which gives kopi its dark colour and caramel taste.',
+  prata:'Roti prata comes from the Indian paratha. Flipping the dough in the air stretches it paper-thin, so it turns crispy and flaky.',
+  ckt:'Char kway teow was once cheap, filling food for labourers, fried in pork lard with cockles for energy.',
+  satay:'Satay is grilled over charcoal and served with ketupat: rice packed into pouches woven from coconut leaves, then boiled.',
+  kachang:'“Kacang” means beans in Malay. Ice kachang hides red beans, sweet corn and jelly under the mountain of shaved ice.',
+  nasilemak:'Nasi lemak means “rich rice” in Malay: the rice is cooked in coconut milk with pandan leaves.',
+  fishball:'Good fishballs are made by beating fish paste for a long time until it turns smooth and bouncy.',
+  popiah:'Popiah are fresh spring rolls from Fujian. The paper-thin skin is made by quickly smearing a ball of dough on a hot plate.',
+  fruit:'Singapore imports most of its fruit. Hawkers cut it fresh every morning so it is cold and sweet by lunchtime.',
+  waffle:'Min jiang kueh is a folded pancake filled with crushed peanuts and sugar, sold for generations at hawker centres.',
+  hokkien:'Hokkien mee is fried in rich prawn and pork stock, then left to simmer so the noodles soak up the flavour.',
+  bcm:'Bak chor mee means “minced meat noodles” in Hokkien. The noodles are tossed in vinegar, chilli and lard.',
+  western:'Hawker western food began in the 1950s and 60s: chicken chop and black pepper sauce at kopitiam prices.',
+  mala:'Mala means “numbing and spicy”: the numbing comes from Sichuan peppercorns, the heat from dried chillies.'
+};
+try { Object.values(FACTS).forEach(f => LD_TIPS.push('<b>Did you know?</b> ' + esc(f))); } catch(e){}
+const _dishResultBiz = dishResult;
+dishResult = function(q, c, steps, scores, stars, last){
+  const p = _dishResultBiz(q, c, steps, scores, stars, last);
+  try {
+    let el = $('#dishFact'); if (!el){ el = document.createElement('p'); el.id = 'dishFact'; el.className = 'dish-fact'; const host = $('#dishMedal') || $('#dishStars'); host.after(el); }
+    const show = FACTS[c.st.id] && !save.factSeen?.[c.st.id + dayNo()];
+    el.hidden = !show;
+    if (show){ save.factSeen = save.factSeen || {}; save.factSeen[c.st.id + dayNo()] = 1; el.innerHTML = `<b>Did you know?</b> ${esc(FACTS[c.st.id])}`; }
+  } catch(e){}
+  return p;
+};
+
+/* ---------- reputation, rank and goals ---------- */
+const RANKS = [[0,'Apprentice','Learn to cook and serve'],[12,'First Stall','Run your own stall, menu and stock'],[35,'Established Hawker','Regulars, upgrades and a second stall'],[70,'Popular Stall','Busy shifts and a famous name'],[120,'Master Hawker','Mentor others and keep the recipes alive']];
+function hawkerPoints(){ return Object.values(save.best || {}).reduce((a, b) => a + b, 0) + (save.days || 0)*2 + Object.values(save.rep).reduce((a, r) => a + Math.max(0, r - 50), 0)/5; }
+function rankOf(){ const p = hawkerPoints(); let i = 0; RANKS.forEach((r, k) => { if (p >= r[0]) i = k; }); return {i, p, r:RANKS[i], next:RANKS[i + 1]}; }
+const GOALS = {
+  noWalk:{text:'Serve a whole service with no walkouts', check:r => r.walked === 0},
+  stars12:{text:'Score 12+ stars in one service', check:r => r.total >= 12},
+  step:{text:g => `Average 80+ on “${g.title}”`, check:(r, g) => { const s = r.steps.filter(x => x.title === g.title); return s.length && s.reduce((a, x) => a + x.score, 0)/s.length >= 80; }},
+  tips:{text:'Earn $3+ in tips in one service', check:r => r.tips >= 300}
+};
+const goalText = g => !g ? '' : typeof GOALS[g.type].text === 'function' ? GOALS[g.type].text(g) : GOALS[g.type].text;
+
+/* ---------- shift review on the receipt ---------- */
+const STEP_ADVICE = {
+  timing:'Watch the marker and tap a moment before it reaches the middle of the green.',
+  holdZone:'Hold to heat up, then let go as soon as you reach the green, and hold again when it starts to drop.',
+  fill:'Let go just before the dashed line: the level keeps rising a little after you release.',
+  circular:'Make big, steady circles without lifting your finger.',
+  sequence:'Read the recipe card top to bottom before you tap anything.',
+  assemble:'Check the order slip on the right before you plate up.',
+  chop:'Swipe straight down through each dotted line in one smooth stroke.',
+  swipeSeq:'Look at the arrows first, then swipe in that order.',
+  custom:'Slow down a little on this step: accuracy scores more than speed.'
+};
+const _showSummaryBiz = showSummary;
+showSummary = function(st, results){
+  const b = BIZ.cur && BIZ.cur.st === st.id ? BIZ.cur : {steps:[], incidents:[], tipBoost:1, f:forecast(curService() || 'lunch'), service:'lunch'};
+  BIZ.cur = null;
+  const served = results.filter(r => !r.walkout), walked = results.length - served.length, total = results.reduce((a, r) => a + r.stars, 0);
+  /* tips: happy customers leave something extra */
+  const E = EVENTS[b.f.ev || b.f[b.service] || 'none'] || EVENTS.none;
+  const tips = Math.round(served.reduce((a, r) => a + (r.stars >= 3 ? 60 : r.stars === 2 ? 20 : 0), 0)*E.tip*b.tipBoost/10)*10;
+  /* reputation */
+  const before = repOf(st.id), avg = served.length ? served.reduce((a, r) => a + r.stars, 0)/served.length : 0;
+  let delta = Math.round((avg - 1.9)*5 - walked*4 + PRICES[priceOf(st.id)].rep + (served.some(r => r.c.regular) ? 1 : 0));
+  const after = Math.max(0, Math.min(100, before + delta)); save.rep[st.id] = after; delta = after - before;
+  const takings = served.reduce((a, r) => a + r.c.revenue, 0);
+  const g0 = save.goal, goalMet = g0 && (g0.stall === st.id || !g0.stall) && GOALS[g0.type].check({walked, total, steps:b.steps, tips}, g0);
+  /* day log for the closing ledger */
+  const dl = save.dayLog && save.dayLog.n === dayNo() ? save.dayLog : (save.dayLog = {n:dayNo(), sales:0, tips:0, cost:0, dishes:{}, walked:0, stars:0, max:0, steps:[], feedback:[]});
+  dl.sales += takings; dl.tips += tips; dl.cost += Math.round(costPerServing(st.id)*served.length); dl.walked += walked; dl.stars += total; dl.max += MAXSTARS;
+  served.forEach(r => { try { const n = chitLines(r.c.st, r.c.w)[0].text.replace(/\s*\(.*\)$/, '').replace(/^\d+\s*×\s*/, ''); dl.dishes[n] = (dl.dishes[n] || 0) + 1; } catch(e){} });
+  b.steps.forEach(s => dl.steps.push(s));
+  _showSummaryBiz(st, results);
+  if (tips > 0) setTimeout(() => { if (screen === 'summary') earn(tips, $('#sumReview')); }, 2400);
+  if (goalMet){ save.goal = null; setTimeout(() => { if (screen === 'summary'){ earn(1000, $('#sumReview')); toast('Goal complete! +$10.00'); } }, 3000); }
+  persist();
+  /* the review */
+  const by = {}; b.steps.forEach(s => { (by[s.title] = by[s.title] || {kind:s.kind, n:0, sum:0}); by[s.title].n++; by[s.title].sum += s.score; });
+  const avgs = Object.entries(by).map(([t, v]) => ({t, kind:v.kind, a:Math.round(v.sum/v.n)})).sort((x, y) => x.a - y.a);
+  const worst = avgs[0], bestS = avgs[avgs.length - 1];
+  const W = WEATHER[b.f.w];
+  const lines = [];
+  lines.push(`<li><span>${W.icon} ${esc(W.name)}${E !== EVENTS.none ? ` · ${E.icon} ${esc(E.name)}` : ''}</span></li>`);
+  if (!kidMode()) lines.push(`<li><span>Price: ${PRICES[priceOf(st.id)].name}</span><span>${priceOf(st.id) === 'value' ? 'happier customers' : priceOf(st.id) === 'premium' ? 'more per plate' : ''}</span></li>`);
+  lines.push(`<li><span>Reputation</span><span class="${delta > 0 ? 'up' : delta < 0 ? 'down' : ''}">${before} → ${after} ${delta > 0 ? '▲' : delta < 0 ? '▼' : ''}</span></li>`);
+  if (tips) lines.push(`<li><span>Tips from happy customers</span><span>+${money(tips)}</span></li>`);
+  b.incidents.forEach(i => lines.push(`<li class="inc"><span>${i.bad ? '⚠️' : '✨'} ${esc(i.text.split('!')[0])}!</span></li>`));
+  const why = [];
+  if (walked) why.push(`${walked} customer${walked > 1 ? 's' : ''} walked out. Take orders sooner when the patience bars turn red${W.pat < 1 ? ', especially on hot days' : ''}.`);
+  if (bestS && bestS.a >= 85) why.push(`Your best step: <b>${esc(bestS.t)}</b> (${bestS.a}). Steady hands!`);
+  if (worst && worst.a < 75) why.push(`Work on <b>${esc(worst.t)}</b> (average ${worst.a}). ${STEP_ADVICE[worst.kind] || STEP_ADVICE.custom}`);
+  if (!why.length) why.push('Clean service. Try Premium pricing or a busier stall for a bigger challenge.');
+  /* tomorrow's goal */
+  let ng = null;
+  if (!save.goal){
+    if (walked) ng = {type:'noWalk'};
+    else if (worst && worst.a < 80) ng = {type:'step', title:worst.t, stall:st.id};
+    else if (total < 12) ng = {type:'stars12'};
+    else ng = {type:'tips'};
+    save.goal = ng; persist();
+  }
+  let rv = $('#sumReview');
+  if (!rv){ rv = document.createElement('div'); rv.id = 'sumReview'; rv.className = 'sum-review'; $('#sumAllow').after(rv); }
+  rv.innerHTML = `<p class="rc-h">SHIFT REVIEW</p><ul class="rc-rows">${lines.join('')}</ul>
+    <div class="rv-why">${why.map(w => `<p>${w}</p>`).join('')}</div>
+    ${goalMet ? `<p class="rv-goal done">✓ Goal complete: ${esc(goalText(g0))} · +$10.00</p>` : ''}
+    ${save.goal ? `<p class="rv-goal">Next goal: ${esc(goalText(save.goal))} · $10 reward</p>` : ''}`;
+  renderRank();
+};
+
+/* ---------- the end-of-day ledger: money, waste, best seller, feedback ---------- */
+const FRESH = /chicken|prawn|fish|egg|cockle|sprout|fruit|cucumber|lettuce|veg|meat|beef|pork|mutton|squid|tofu|fresh milk|dough|noodle|cabbage|mango|dragon|papaya|watermelon|durian|ice\b|batter|coconut/i;
+const FEEDBACK = {
+  high:['“Best chicken rice in the estate!”', '“Steady lah, boss. I come again tomorrow.”', '“Very fast, very nice. Ten out of ten.”', '“My grandmother says it tastes like last time.”'],
+  mid:['“Not bad, but the queue was a bit slow.”', '“Nice, but can be hotter.”', '“Okay lah. Next time I try something else.”'],
+  low:['“Waited so long, my break almost finished.”', '“Aiyo, not as good as before.”', '“Can be better, boss.”']
+};
+function wasteTonight(){
+  if (kidMode()) return [];
+  const out = [];
+  const dl = save.dayLog && save.dayLog.n === dayNo() ? save.dayLog : null, ran = new Set(dayState().shifts.map(x => x.stall));
+  if (dayNo() <= 1 || !ran.size) return out;
+  STALLS.filter(s => save.built[s.id] && ran.has(s.id)).forEach(s => {
+    const stock = stockOf(s.id);
+    (MARKET[s.id] || []).forEach(([k, name, , cost]) => {
+      if (!FRESH.test(name) || /condensed|powder|leaves|sugar|cups|flour|dried|sauce|syrup/i.test(name)) return;
+      const lost = Math.floor((stock[k] || 0)*0.25);
+      if (lost > 0) out.push({stall:s, k, name, lost, value:Math.round(lost/PACK_N*cost)});
+    });
+  });
+  return out;
+}
+const _showLedger = showLedger;
+showLedger = function(){
+  const spentToday = Object.values(save.spent || {}).reduce((a, v) => a + v, 0);
+  _showLedger();
+  const d = dayState(), dl = save.dayLog && save.dayLog.n === d.n ? save.dayLog : null;
+  const waste = save.wasteDay === d.n ? (save.wasteList || []) : wasteTonight();
+  if (save.wasteDay !== d.n){
+    waste.forEach(w => { const st = stockOf(w.stall.id); st[w.k] = Math.max(0, (st[w.k] || 0) - w.lost); });
+    save.wasteDay = d.n; save.wasteList = waste.map(w => ({stall:{id:w.stall.id}, name:w.name, lost:w.lost, value:w.value})); persist();
+  }
+  const wasteVal = waste.reduce((a, w) => a + w.value, 0);
+  const sales = dl ? dl.sales : d.takings, tips = dl ? dl.tips : 0, used = dl ? dl.cost : 0;
+  const profit = sales + tips - spentToday - wasteVal;
+  const best = dl && Object.entries(dl.dishes).sort((a, b) => b[1] - a[1])[0];
+  const pct = dl && dl.max ? dl.stars/dl.max : 0;
+  const fb = (pct >= 0.8 ? FEEDBACK.high : pct >= 0.55 ? FEEDBACK.mid : FEEDBACK.low).slice().sort(() => Math.random() - 0.5).slice(0, 2);
+  const W = WEATHER[forecast().w];
+  const extra = document.createElement('div'); extra.className = 'ledger-biz';
+  extra.innerHTML = `<p class="label">Money</p>
+    <ul class="ledger"><li><span>Sales</span><b>${money(sales)}</b></li>${tips ? `<li><span>Tips</span><b>+${money(tips)}</b></li>` : ''}
+      ${spentToday ? `<li><span>Market spending today</span><b>-${money(spentToday)}</b></li>` : ''}
+      ${wasteVal ? `<li><span>Spoiled overnight</span><b>-${money(wasteVal)}</b></li>` : ''}
+      <li class="tot"><span>Day’s profit</span><b class="${profit < 0 ? 'neg' : ''}">${profit < 0 ? '-' : ''}${money(Math.abs(profit))}</b></li></ul>
+    ${used ? `<p class="hint2">Ingredients you actually cooked with: ${money(used)}. The rest is stock for tomorrow.</p>` : ''}
+    ${waste.length ? `<p class="label">Waste report</p><ul class="ledger small">${waste.map(w => `<li><span>${w.lost} × ${esc(w.name.toLowerCase())}</span><b>-${money(w.value)}</b></li>`).join('')}</ul><p class="hint2">Fresh ingredients don’t keep. Buy closer to what you’ll sell tomorrow.</p>` : ''}
+    ${best ? `<p class="label">Best seller</p><p class="ld-best">🏆 ${esc(best[0])} · ${best[1]} sold</p>` : ''}
+    ${dl ? `<p class="label">What customers said</p>${fb.map(f => `<p class="ld-fb">${esc(f)}</p>`).join('')}` : ''}
+    ${save.goal ? `<p class="label">Tomorrow’s goal</p><p class="ld-goal">${esc(goalText(save.goal))} · $10 reward</p>` : ''}
+    <p class="ld-tmr">Tomorrow: ${forecastLine(dayNo() + 1)}</p>`;
+  const btn = $('#closeDone'); if (btn) btn.before(extra);
+  const card = $('#closeOv .close-card'); if (card){ card.classList.add('done'); card.scrollTop = 0; }
+};
+function forecastLine(n){
+  const saved = save.days; save.days = n - 1;
+  let f; try { f = forecast('lunch'); } finally { save.days = saved; }
+  const W = WEATHER[f.w], E = EVENTS[f.lunch];
+  return `${W.icon} ${W.name}${f.lunch !== 'none' ? ` · lunch: ${E.icon} ${E.name}` : ''}`;
+}
+
+/* ---------- the Open tab: forecast, price and an opening checklist ---------- */
+function bizPanelHTML(st){
+  const svc = curService(), f = forecast(svc || 'lunch'), W = WEATHER[f.w], E = EVENTS[(svc && f[svc]) || 'none'];
+  const stockOk = servingsLeft(st.id) >= NEED, pr = priceOf(st.id), rep = repOf(st.id);
+  const checks = [
+    [stockOk, 'Enough stock for a service', stockOk ? '' : 'Restock below'],
+    [isPrepped(st.id), 'Garnish prepped', 'Step inside → prep table'],
+    [isClean(st.id), 'Plates washed', 'Step inside → sink'],
+    [!!save.price[st.id] || kidMode(), 'Price checked', 'Pick a price below']
+  ];
+  const doneN = checks.filter(c => c[0]).length;
+  return `<div class="biz">
+    <div class="biz-fc"><span class="biz-ic" aria-hidden="true">${W.icon}</span><div><p class="label">Today’s forecast</p><p><b>${W.name}.</b> ${esc(W.note)}</p>
+      ${svc && E !== EVENTS.none ? `<p class="biz-ev">${E.icon} <b>${E.name}:</b> ${esc(E.note)}</p>` : ''}</div></div>
+    <div class="biz-ck"><p class="label">Opening checklist · ${doneN}/${checks.length}</p><ul>${checks.map(([ok, t, how]) => `<li class="${ok ? 'ok' : ''}"><i aria-hidden="true">${ok ? '✓' : ''}</i><span>${t}</span>${ok ? '' : `<small>${how}</small>`}</li>`).join('')}</ul></div>
+    ${kidMode() ? '' : `<div class="biz-pr"><p class="label">Price · reputation ${rep}/100</p><div class="chips" id="priceChips">${Object.entries(PRICES).map(([k, p]) => `<button type="button" class="chip" data-price="${k}" aria-pressed="${pr === k}">${p.name}</button>`).join('')}</div><p class="hint2">${esc(PRICES[pr].note)}</p></div>`}
+    ${save.goal ? `<p class="biz-goal">🎯 Goal: ${esc(goalText(save.goal))} · $10</p>` : ''}
+  </div>`;
+}
+const _renderTabBiz = renderTab;
+renderTab = function(){
+  _renderTabBiz();
+  if (curTab !== 'shift' || !curStall || SH) return;
+  const body = $('#tabBody'), strip = body.querySelector('.daystrip');
+  const wrap = document.createElement('div'); wrap.innerHTML = bizPanelHTML(curStall);
+  const node = wrap.firstElementChild;
+  if (strip) strip.after(node); else body.prepend(node);
+  node.querySelectorAll('[data-price]').forEach(b => b.addEventListener('click', () => { save.price[curStall.id] = b.dataset.price; persist(); sfx.tick(); renderTab(); }));
+};
+
+/* ---------- career rank on the home screen ---------- */
+function renderRank(){
+  const host = $('#hubPrompt'); if (!host) return;
+  let el = $('#rankCard');
+  if (!el){ el = document.createElement('div'); el.id = 'rankCard'; el.className = 'rank-card'; host.after(el); }
+  const R = rankOf(), pct = R.next ? Math.round((R.p - R.r[0])/(R.next[0] - R.r[0])*100) : 100;
+  el.innerHTML = `<span class="rk-badge">${R.i + 1}</span><div><b>${R.r[1]}</b><small>${esc(R.r[2])}</small></div>
+    <div class="rk-bar" title="${Math.floor(R.p)} hawker points"><i style="width:${pct}%"></i></div><small class="rk-next">${R.next ? `Next: ${R.next[1]}` : 'Top rank!'}</small>`;
+}
+const _renderHubBiz = renderHub;
+renderHub = function(){ _renderHubBiz(); renderRank(); };
+renderRank();
+
+/* ---------- hawker-centre ambience under the music ---------- */
+const AMB = {src:null, gain:null};
+function ambienceSet(on){
+  try {
+    if (on && !AMB.src){
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const len = actx.sampleRate*4, buf = actx.createBuffer(2, len, actx.sampleRate);
+      for (let ch = 0; ch < 2; ch++){ const d = buf.getChannelData(ch); let a = 0; for (let i = 0; i < len; i++){ a = a*0.97 + (Math.random()*2 - 1)*0.03; d[i] = a*(0.7 + 0.3*Math.sin(i/len*Math.PI*2*3 + ch)); } }
+      const src = actx.createBufferSource(); src.buffer = buf; src.loop = true;
+      const bp = actx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 520; bp.Q.value = 0.6;
+      const gn = actx.createGain(); gn.gain.value = 0; src.connect(bp).connect(gn).connect(actx.destination); src.start();
+      AMB.src = src; AMB.gain = gn;
+    }
+    if (AMB.gain) AMB.gain.gain.setTargetAtTime(on ? 0.9 : 0, actx.currentTime, 0.4);
+  } catch(e){}
+}
+setInterval(() => ambienceSet(screen === 'play' && !paused && !muted && save.music !== false && document.visibilityState === 'visible'), 700);
+
+/* reset the closing card for the next night */
+const _openClose = typeof openClose === 'function' ? openClose : null;
+document.addEventListener('click', e => { if (e.target && e.target.id === 'goClose'){ const card = $('#closeOv .close-card'); if (card) card.classList.remove('done'); } }, true);
 
 /* =================================================================
    GUIDED FIRST TRIES for the hand-built steps (templates are handled in guideState)
