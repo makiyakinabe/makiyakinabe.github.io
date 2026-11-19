@@ -1172,6 +1172,20 @@ button.stall:active{transform:perspective(56rem) rotateX(var(--rx,0deg)) rotateY
 .close-cv{flex:none;min-height:0}
 .close-card.done .close-cv{aspect-ratio:auto;height:clamp(6rem,22vh,10rem)}
 .close-card.done #closeCv{object-fit:cover;object-position:50% 40%}
+
+/* ---------- text-fit fixes ---------- */
+.htp-card,.htp-nav{min-width:0}
+.htp-nav .big{min-width:0;padding-inline:0.9rem;flex:none}
+.htp-dots{flex-wrap:wrap!important;min-width:0;gap:0.3rem;justify-content:center}
+@media (max-width:560px){ .htp-dots button{width:0.6rem;height:0.6rem;border-width:0.1rem} .htp-nav{gap:0.4rem} }
+.pl-head > *{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-head b{flex:none}
+.kds-type,.kds-pay{flex:none}
+@media (max-width:560px){
+  .kb-top{flex-wrap:wrap;row-gap:0.2rem}
+  .kb-top .kb-name{flex:1 1 calc(100% - 2.4rem)}
+  #kdsQueue{flex:1 1 0}
+}
 </style>
 <script>
 /* UI scale: the whole interface is sized in rem, so one root font size fits it to any screen */
@@ -9113,7 +9127,7 @@ function posLive(el, s){
     if (acc > 0.25){
       acc = 0;
       const waiting = o.queue.filter(c => c !== me), longest = waiting.reduce((m, c) => Math.max(m, SH.clock - c.arriveAt), 0);
-      const sTxt = waiting.length ? `${waiting.length} waiting · longest ${mmss(longest)}` : 'Nobody else waiting';
+      const sTxt = waiting.length ? `${waiting.length} waiting · ${mmss(longest)}` : 'None waiting';
       if (sTxt !== lastSum){ lastSum = sTxt; sum.textContent = sTxt; root.classList.toggle('busy', waiting.some(c => c.pat <= 0.28)); }
       const items = o.tickets.map(c => {
         let cls = 'next', tag = esc(nextStepOf(c)), timer = '';
