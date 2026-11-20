@@ -13,3 +13,13 @@ A Singapore hawker-centre cooking game. Take over Uncle Lim's chicken rice stall
 - Works on phones, tablets and desktops, in portrait or landscape
 
 The whole game is one self-contained `index.html` (no build step, no server). `hawker-hero-intro.mp4` is the intro film.
+
+### New in this update (from the gameplay review)
+- Every shift starts with your role and today's goals, and the receipt ticks them off
+- The closing receipt shows the full cost of running a stall: rent, gas and electricity, packaging, market spending and waste. Tap any line to learn what it means
+- Customers have personalities (office worker, student, elderly regular, tourist, family, food lover) that change their patience, orders and tips
+- Some customers ask questions; pick the best answer to keep them happy and learn something
+- Hawker Book: collect dish cards and hawker words (chope, dabao, kopi-o kosong, wok hei…) plus 12 achievements
+- Surprise rush events: a sudden crowd, a visiting food blogger, a neighbour lending a hand
+- Six career stages from Apprentice to Mentor
+- Settings: Relaxed / Standard / Challenge pace, bigger text and calm motion
