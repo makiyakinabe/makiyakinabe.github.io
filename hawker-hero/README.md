@@ -32,3 +32,12 @@ The whole game is one self-contained `index.html` (no build step, no server). `h
 - New neighbourhood events: community clean-up, school holidays, exam results day, supper crowd; after-school students at dinner
 - Hawker Book: Heritage cards (one a day) and a Hawker Trail of real places to try each dish
 - My Hawker Journey: a shareable card, plus a visit link that lets friends see your stall
+
+### Living hawker centre update
+- Centre Board: a shared centre rating, a daily centre issue you can help with, set meals with neighbouring stalls, a weekly challenge, Hawker of the Week awards (customer love, consistency, community, sustainability) and a centre committee vote from Business Owner rank
+- Green upgrades and an eco score; food-waste sorting and the committee's digester cut spoilage
+- Festivals every 7th day (Chinese New Year, Hari Raya, Deepavali, National Day, Mid-Autumn) and MRT disruptions
+- A comeback plan when a stall's reputation falls or you lose money two days running
+- Hawker Academy: lessons and quizzes on menu costing, food safety, customer service and going digital
+- Pass a recipe on to an apprentice at Mentor rank
+- Colour-blind friendly patience bars

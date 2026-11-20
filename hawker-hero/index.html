@@ -6220,7 +6220,7 @@ const queueCv = $('#queueCv'), dishCv = $('#dishCv');
 const Q = {t:0};
 const PQ = 80, PW = 300, LINE_X = 268, LINE_GAP = 50, WALK = 100;
 let SH = null;
-const patCol = p => p > 0.55 ? '#2f9e5b' : p > 0.28 ? '#e8a22a' : '#d6402e';
+const patCol = p => (typeof save !== 'undefined' && save.cb31) ? (p > 0.55 ? '#0072b2' : p > 0.28 ? '#e69f00' : '#d55e00') : p > 0.55 ? '#2f9e5b' : p > 0.28 ? '#e8a22a' : '#d6402e';
 const firstName = n => n.replace(/^(Mdm|Mr|Uncle|Auntie|Ah) /,'');
 function moodFace(x, y, p, r){
   circle(x, y, r, p > 0.55 ? '#ffd774' : p > 0.28 ? '#ffc04a' : '#ff8a6a', C.ink, Math.max(0.8, r*0.14));
@@ -10729,10 +10729,11 @@ showLedger = function(){
     const d = dayState(), D = save.d29 && save.d29.n === d.n ? save.d29 : {stalls:{}, served:0, dabao:0};
     const dl = save.dayLog && save.dayLog.n === d.n ? save.dayLog : null;
     const nSt = Object.keys(D.stalls).length;
-    const rent = COST.rent*nSt, util = COST.util*nSt, pack = COST.pack*D.dabao;
+    const G = save.green31 || {}, rent = COST.rent*nSt, util = Math.round(COST.util*(G.stove ? 0.65 : 1))*nSt, pack = Math.round(COST.pack*D.dabao*(G.byo ? 0.6 : 1));
     const waste = (save.wasteDay === d.n ? (save.wasteList || []) : []).reduce((a, w) => a + w.value, 0);
     const sales = dl ? dl.sales : d.takings, tips = dl ? dl.tips : 0;
     const gross = sales + tips, exp = spentToday + waste + rent + util + pack, net = gross - exp;
+    if (save.netDay31 !== d.n){ save.netDay31 = d.n; save.netLog31 = (save.netLog31 || []).concat([{n:d.n, net, waste, dabao:D.dabao, nSt}]).slice(-7); persist(); }
     if (save.cost29Day !== d.n && (rent + util + pack) > 0){ save.wallet = Math.max(0, save.wallet - (rent + util + pack)); save.cost29Day = d.n; persist(); try { renderHub(); } catch(e){} }
     if (nSt && !waste && d.n > 1) flagAch('nowaste');
     if (nSt && net >= 2000) flagAch('black');
@@ -10819,7 +10820,7 @@ renderRank = function(){
    ================================================================= */
 (function css30(){
   const s = document.createElement('style'); s.textContent = `
-.ch-card{width:min(36rem,calc(100% - 1.5rem));max-height:calc(100dvh - 2rem);overflow:auto}
+.ch-card{text-align:left;width:min(36rem,calc(100% - 1.5rem));max-height:calc(100dvh - 2rem);overflow:auto}
 .ch-card h2{margin:.1rem 0 .35rem}
 .ch-card .ch-lead{margin:0 0 .7rem;line-height:1.45}
 .ch-opts{display:grid;gap:.5rem}
@@ -11166,6 +11167,331 @@ renderRank = function(){
   how.closest('.set-row').insertAdjacentHTML('beforebegin', `<div class="set-row"><span>Hawker identity<small id="setIdInfo">Not chosen yet</small></span><button class="buy" type="button" id="setId">Choose</button></div>`);
   $('#setId').addEventListener('click', () => { $('#setOv').hidden = true; openIdentity(false); });
   const _rs = renderSettings; renderSettings = function(){ _rs(); const I = ID30[save.id30]; $('#setIdInfo').textContent = I ? `${I.ic} ${I.name}` : 'Not chosen yet'; $('#setId').textContent = I ? 'Change' : 'Choose'; };
+})();
+
+/* =================================================================
+   A LIVING HAWKER CENTRE (v31): the centre has its own rating, daily
+   issues you can help with, a committee vote, set meals with neighbours,
+   a weekly challenge and “Hawker of the Week” awards. Plus green upgrades
+   and an eco score, festivals and MRT disruptions, a comeback plan when
+   things go wrong, the Hawker Academy, passing a recipe on, and a
+   colour-blind friendly option.
+   ================================================================= */
+(function css31(){
+  const s = document.createElement('style'); s.textContent = `
+.ctr-card{text-align:left;width:min(42rem,calc(100% - 1.5rem));max-height:calc(100dvh - 2rem);overflow:auto}
+.ctr-sec{border:.12rem solid #d6dcd8;border-radius:.8rem;padding:.6rem .7rem;margin:.55rem 0;background:#fff}
+.ctr-sec h3{margin:0 0 .3rem;font-size:.82rem;letter-spacing:.07em;color:#2a4a3a;text-transform:uppercase}
+.ctr-sec p{margin:.2rem 0;line-height:1.4;font-size:.9rem}
+.ctr-bar{height:.7rem;border-radius:1rem;background:#e6ece8;overflow:hidden;margin:.3rem 0}
+.ctr-bar i{display:block;height:100%;background:linear-gradient(90deg,#f2c53d,#2f9e5b)}
+.ctr-row{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.4rem}
+.ctr-row .buy{flex:1 1 9rem}
+.ctr-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.45rem;margin-top:.4rem}
+.ctr-opts button{text-align:left;padding:.5rem .6rem;border-radius:.6rem;border:.12rem solid #14211b;background:#fff;font:inherit;cursor:pointer;min-height:2.75rem}
+.ctr-opts button[disabled]{opacity:.5;cursor:default}
+.ctr-opts button[aria-pressed=true]{background:#e3f4e8;border-color:#2f9e5b}
+.ctr-opts b{display:block;font-size:.9rem}
+.ctr-opts small{display:block;font-size:.78rem;color:#4a5a52;line-height:1.3;margin-top:.1rem}
+.awd{width:100%;border-collapse:collapse;font-size:.84rem}
+.awd td,.awd th{padding:.3rem .25rem;border-bottom:1px dashed #d6dcd8;text-align:left}
+.awd th{font-size:.7rem;letter-spacing:.06em;color:#5b6b63}
+.awd .me{font-weight:900;color:#1d6a50}
+.awd-wrap{overflow-x:auto}
+.ac-q{margin:.55rem 0 .3rem;font-weight:800;line-height:1.35}
+.ac-opts{display:grid;gap:.35rem}
+.ac-opts button{text-align:left;padding:.45rem .6rem;border-radius:.55rem;border:.12rem solid #b9c7bf;background:#fff;font:inherit;font-size:.86rem;cursor:pointer;min-height:2.5rem}
+.ac-opts button.right{background:#e3f4e8;border-color:#2f9e5b}
+.ac-opts button.wrong{background:#fde6e2;border-color:#d55e00}
+.ac-exp{font-size:.82rem;color:#2f6db0;margin:.25rem 0 0;line-height:1.35}
+.rk-ctr{flex:0 0 auto}
+`; document.head.appendChild(s);
+})();
+
+/* ---------- 1. FESTIVALS and FOOT TRAFFIC ---------- */
+Object.assign(EVENTS, {
+  cny:{name:'Chinese New Year eve', icon:'🧧', note:'Families stock up before the reunion dinner. Big takeaway orders, generous tips.', pat:1.05, tip:1.6, dine:'dabao'},
+  raya:{name:'Hari Raya Puasa', icon:'🌙', note:'After a month of fasting, families come out together to celebrate. Lots of dine-in, festive mood.', pat:1.15, tip:1.5, dine:'here'},
+  deepavali:{name:'Deepavali', icon:'🪔', note:'The Festival of Lights: friends and neighbours visit one another and eat together.', pat:1.1, tip:1.5, dine:'here'},
+  national:{name:'National Day', icon:'🇸🇬', note:'Everyone grabs food before the parade on TV. Busy and cheerful!', pat:1, tip:1.4, dine:'dabao'},
+  midautumn:{name:'Mid-Autumn Festival', icon:'🏮', note:'Lanterns at the void deck tonight. Families eat in before the lantern walk.', pat:1.1, tip:1.3, dine:'here'},
+  mrt:{name:'MRT disruption', icon:'🚇', note:'Trains are down: fewer office workers make it here, and those who do are stressed and in a hurry.', pat:0.85, tip:0.9, dine:'dabao', only:'lunch'}
+});
+const FEST = ['cny','raya','deepavali','national','midautumn'];
+Object.assign(TERMS, {
+  cny:['CHINESE NEW YEAR','Reunion dinners, mandarin oranges and red packets. Many hawkers close for a few days, so the eve is one of the busiest days of the year.'],
+  raya:['HARI RAYA PUASA','Celebrates the end of Ramadan. Families visit each other in new baju and share ketupat, rendang and kueh.'],
+  deepavali:['DEEPAVALI','The Hindu Festival of Lights. Homes are lit with oil lamps, and friends share murukku and sweets.'],
+  national:['NATIONAL DAY','9 August, Singapore’s birthday. Hawker food is part of almost every watch party.'],
+  midautumn:['MID-AUTUMN FESTIVAL','Mooncakes and lanterns. Children carry lanterns around the estate at night.'],
+  eco:['WASTE LESS','Hawker centres are trying food-waste digesters, reusable tableware and “bring your own container” campaigns. Order only what you can finish!']
+});
+const _forecast31 = forecast;
+forecast = function(service){
+  const f = _forecast31(service), n = dayNo();
+  if (n > 1 && n % 7 === 0){ const k = FEST[(n/7 - 1) % FEST.length]; f.lunch = k; f.dinner = k; f.ev = service ? k : null; f.fest = k; }
+  return f;
+};
+const _startShift31 = startShift;
+startShift = function(st, service){ const r = _startShift31(st, service); try { const f = forecast(service); if (f.fest) discover(f.fest); } catch(e){} return r; };
+
+/* ---------- 2. THE CENTRE: rating, issues, committee, neighbours ---------- */
+function ctr(){ return save.ctr31 || (save.ctr31 = {rating:60, cp:0, helped:{}, votes:{}, collab:null, lastVote:0}); }
+const ctrPat = () => 0.9 + ctr().rating/500 + (ctr().votes.tables ? 0.05 : 0);
+const ISSUES = [
+  {id:'trays', t:'Trays are piling up on the tables after the rush. Diners can’t find a seat.', a:'Help clear the trays', cost:0, rating:3, cp:2},
+  {id:'birds', t:'Birds are pecking at leftovers on the tables, and the cleaners can’t keep up.', a:'Chip in $3 for bird netting', cost:300, rating:4, cp:2},
+  {id:'queue', t:'The queues from two popular stalls are blocking the walkway.', a:'Put out queue lines (free)', cost:0, rating:2, cp:1},
+  {id:'mei', t:'Auntie Mei’s drinks stall is short-handed today. Her helper is sick.', a:'Lend her a hand for an hour', cost:0, rating:2, cp:3, pat:0.97},
+  {id:'teo', t:'Uncle Teo’s sales have dropped. People say he might close his stall for good.', a:'Recommend his stall to your customers', cost:0, rating:3, cp:3, tip:0.92},
+  {id:'drain', t:'A drain near the tray return is blocked and starting to smell.', a:'Call the town council and report it', cost:0, rating:2, cp:1},
+  {id:'reno', t:'Renovation works at the next block are noisy all day. Nothing you can do: customers will be a bit grumpier.', a:null, rating:0, cp:0}
+];
+function todayIssue(){ const n = dayNo(); if (n < 2) return null; const r = seeded(n*53 + 11); return r() < 0.75 ? ISSUES[Math.floor(r()*ISSUES.length)] : null; }
+const COMMITTEE = [
+  {id:'fans', t:'Ceiling fans', d:'Hot days hurt patience half as much.', need:6},
+  {id:'tables', t:'More tables', d:'Diners wait 5% longer everywhere.', need:8},
+  {id:'robots', t:'Tray-return robots', d:'Cleaner tables: centre rating +8.', need:8},
+  {id:'digester', t:'Food-waste digester', d:'Half as much food spoils overnight.', need:10},
+  {id:'stage', t:'Weekend stage for buskers', d:'Festive events tip 20% more.', need:10}
+];
+const NEIGH = [
+  {id:'mei', n:'Auntie Mei’s Kopi', d:'A kopi with every plate', per:30},
+  {id:'teo', n:'Uncle Teo’s Satay', d:'3 sticks on the side', per:40},
+  {id:'siti', n:'Kak Siti’s Kueh', d:'A piece of kueh for dessert', per:25}
+];
+const _mkCust31 = makeCustomers;
+makeCustomers = function(st, beginner, service){
+  const list = _mkCust31(st, beginner, service), C = ctr(), iss = todayIssue(), f = forecast(service), W = WEATHER[f.w];
+  let pm = ctrPat();
+  if (iss && iss.id === 'reno') pm *= 0.95;
+  if (iss && C.helped[dayNo()] === iss.id && iss.pat) pm *= iss.pat;
+  if (C.votes.fans && W.pat < 1) pm *= 1 + (1 - W.pat)/2;
+  list.forEach(c => { c.pm *= pm; });
+  return list;
+};
+const _wasteTonight31 = wasteTonight;
+wasteTonight = function(){
+  const out = _wasteTonight31(), half = ctr().votes.digester || (save.green31 || {}).segregate;
+  return half ? out.map(w => Object.assign({}, w, {lost:Math.ceil(w.lost/2), value:Math.round(w.value/2)})).filter(w => w.lost > 0) : out;
+};
+
+/* ---------- 3. WEEKLY CHALLENGE and HAWKER OF THE WEEK ---------- */
+const WEEKLY = [
+  {id:'dinein', t:'Serve 15 dine-in customers this week', goal:15},
+  {id:'nowalk', t:'Finish 4 services with nobody walking out', goal:4},
+  {id:'value', t:'“Best $5 lunch”: run 3 services on Value pricing', goal:3},
+  {id:'regular', t:'Serve your regulars 6 times', goal:6},
+  {id:'nowaste', t:'Close 3 days with nothing spoiled', goal:3},
+  {id:'stars', t:'Cook 15 dishes to 3 stars', goal:15}
+];
+const weekNo = () => Math.floor((dayNo() - 1)/7);
+function wk(){ const w = weekNo(); if (!save.wk31 || save.wk31.w !== w) save.wk31 = {w, type:WEEKLY[w % WEEKLY.length].id, n:0, done:false}; return save.wk31; }
+function wkAdd(type, k){ const W = wk(); if (W.type !== type || W.done) return; W.n += k || 1; const def = WEEKLY.find(x => x.id === type);
+  if (W.n >= def.goal){ W.done = true; earn(1500, walletEl()); ctr().cp += 2; pop29('🏆', 'WEEKLY CHALLENGE', 'Challenge complete! +$15.00', def.t); } persist(); }
+function ecoScore(){ const L = (save.netLog31 || []).slice(-5); if (!L.length) return 60;
+  const G = save.green31 || {}; let s = 80 - L.reduce((a, d) => a + (d.waste || 0), 0)/(L.length*40) - L.reduce((a, d) => a + (d.dabao || 0), 0)/L.length*1.6 + (G.stove ? 6 : 0) + (G.byo ? 8 : 0) + (G.segregate ? 8 : 0) + (ctr().votes.digester ? 6 : 0);
+  return Math.max(5, Math.min(100, Math.round(s))); }
+function myScores(){
+  const reps = STALLS.filter(s => save.built[s.id]).map(s => repOf(s.id)), best = Math.max(0, ...reps);
+  const revs = Object.values(save.rev30 || {}).flat(), rv = revs.length ? revs.reduce((a, r) => a + r.s, 0)/revs.length*20 : 50;
+  const L = save.life29 || {}, cons = L.served ? Math.min(100, Math.round((L.three || 0)/L.served*100)) : 40;
+  return {sat:Math.round(rv), cons, comm:Math.min(100, 30 + ctr().cp*4), eco:ecoScore(), rep:best};
+}
+function awardsTable(){
+  const w = weekNo(), r = seeded(w*97 + 5), me = myScores();
+  const rivals = ['Auntie Mei’s Kopi','Uncle Teo’s Satay','Kak Siti’s Kueh','Ah Seng Fruits'].map(n => ({n, sat:55 + Math.floor(r()*40), cons:45 + Math.floor(r()*45), comm:35 + Math.floor(r()*55), eco:40 + Math.floor(r()*50)}));
+  const cats = [['sat','Customer love'],['cons','Consistency'],['comm','Community'],['eco','Sustainability']];
+  const rows = [{n:'You', ...me, me:true}, ...rivals];
+  const win = {}; cats.forEach(([k]) => { win[k] = rows.reduce((a, x) => x[k] > a[k] ? x : a, rows[0]).n; });
+  return {rows, cats, win, wonAny:cats.some(([k]) => win[k] === 'You')};
+}
+
+/* ---------- 4. GREEN UPGRADES ---------- */
+const GREEN = [
+  {id:'stove', t:'Energy-saving stove', d:'Gas and electricity cost 35% less.', cost:4000},
+  {id:'byo', t:'“Bring your own container” discount', d:'Many takeaway customers bring a tub: 40% less packaging.', cost:1500},
+  {id:'segregate', t:'Food-waste sorting and compost', d:'Half as much food spoils overnight.', cost:2500}
+];
+
+/* ---------- 5. THE CENTRE BOARD ---------- */
+function centreHTML(){
+  const C = ctr(), n = dayNo(), iss = todayIssue(), helped = C.helped[n], W = wk(), def = WEEKLY.find(x => x.id === W.type), A = awardsTable(), G = save.green31 || (save.green31 = {});
+  const canVote = n - (C.lastVote || -99) >= 5, rank = rankOf().i;
+  const collabOn = C.collab && C.collab.until >= n ? NEIGH.find(x => x.id === C.collab.id) : null;
+  return `<span class="ch-tag">BAHAGIA FOOD CENTRE</span><h2>🏛️ The Centre Board</h2>
+  <div class="ctr-sec"><h3>Centre rating · ${C.rating}/100</h3><div class="ctr-bar"><i style="width:${C.rating}%"></i></div>
+    <p>A clean, friendly centre brings more patient customers to <b>every</b> stall. Right now everyone waits ${Math.round((ctrPat() - 1)*100) >= 0 ? '+' : ''}${Math.round((ctrPat() - 1)*100)}% longer. Community points: <b>${C.cp}</b></p></div>
+  <div class="ctr-sec"><h3>Today in the centre</h3>${iss ? `<p>${esc(iss.t)}</p>${iss.a ? (helped ? `<p>✓ You helped today. Thank you, boss!</p>` : `<div class="ctr-row"><button type="button" class="buy" data-help>${esc(iss.a)}</button></div><p class="hint2">Ignore it and the centre rating drops a little tonight.</p>`) : ''}` : '<p>All quiet today. The cleaners are on top of things.</p>'}</div>
+  <div class="ctr-sec"><h3>Set meal with a neighbour</h3>${collabOn ? `<p>✓ Running a set meal with <b>${esc(collabOn.n)}</b> until day ${C.collab.until}: +${money(collabOn.per)} on every plate, and their customers send people your way.</p>`
+    : `<p>Team up with a neighbouring stall for 3 days. Each plate earns a bit more, and you share customers.</p><div class="ctr-opts">${NEIGH.map(x => `<button type="button" data-collab="${x.id}"><b>${esc(x.n)}</b><small>${esc(x.d)} · +${money(x.per)} a plate</small></button>`).join('')}</div>`}</div>
+  <div class="ctr-sec"><h3>Weekly challenge · week ${weekNo() + 1}</h3><p>${W.done ? '✓ ' : ''}${esc(def.t)}</p><div class="ctr-bar"><i style="width:${Math.min(100, W.n/def.goal*100)}%"></i></div><p class="hint2">${Math.min(W.n, def.goal)}/${def.goal} · reward $15 and 2 community points</p></div>
+  <div class="ctr-sec"><h3>Hawker of the Week</h3><p class="hint2">Not just who earns the most. Who customers love, who cooks steadily, who helps out, and who wastes least.</p>
+    <div class="awd-wrap"><table class="awd"><tr><th>Stall</th>${A.cats.map(([, l]) => `<th>${l}</th>`).join('')}</tr>${A.rows.map(r => `<tr class="${r.me ? 'me' : ''}"><td>${esc(r.n)}</td>${A.cats.map(([k]) => `<td>${r[k]}${A.win[k] === r.n ? ' 🏆' : ''}</td>`).join('')}</tr>`).join('')}</table></div></div>
+  <div class="ctr-sec"><h3>Centre committee</h3>${rank >= 3 ? `<p>${canVote ? 'Vote on the next improvement. It helps every stall in the centre.' : `Next vote on day ${C.lastVote + 5}.`}</p>
+    <div class="ctr-opts">${COMMITTEE.map(x => `<button type="button" data-vote="${x.id}" ${C.votes[x.id] || !canVote || C.cp < x.need ? 'disabled' : ''} aria-pressed="${!!C.votes[x.id]}"><b>${C.votes[x.id] ? '✓ ' : ''}${esc(x.t)}</b><small>${esc(x.d)}${C.votes[x.id] ? '' : ` · needs ${x.need} community points`}</small></button>`).join('')}</div>`
+    : `<p>Reach <b>Business Owner</b> rank to join the centre committee and vote on improvements.</p>`}</div>
+  <div class="ctr-sec"><h3>Green upgrades · eco score ${ecoScore()}/100</h3><p class="hint2">Waste and packaging lower your eco score. These upgrades cost money now and save money later.</p>
+    <div class="ctr-opts">${GREEN.map(x => `<button type="button" data-green="${x.id}" ${G[x.id] ? 'disabled' : ''} aria-pressed="${!!G[x.id]}"><b>${G[x.id] ? '✓ ' : ''}${esc(x.t)}</b><small>${esc(x.d)}${G[x.id] ? '' : ` · ${money(x.cost)}`}</small></button>`).join('')}</div></div>
+  ${legacyHTML()}
+  <button class="big" type="button" data-x>Close</button>`;
+}
+function legacyHTML(){
+  const L = save.legacy31, R = rankOf().i;
+  if (L) return `<div class="ctr-sec"><h3>Your legacy</h3><p>📜 You passed the <b>${esc((STALLS.find(s => s.id === L.stall) || {}).dish || '')}</b> recipe to <b>${esc(L.name)}</b> on day ${L.day}. The stall’s reputation will never drop below 60.</p></div>`;
+  if (R < 5) return `<div class="ctr-sec"><h3>Your legacy</h3><p>Reach <b>Mentor</b> rank to pass a recipe on to an apprentice, so it never disappears.</p></div>`;
+  const built = STALLS.filter(s => save.built[s.id]);
+  return `<div class="ctr-sec"><h3>Pass on a recipe</h3><p>You’ve become a mentor. Choose a recipe to hand down and name your apprentice.</p>
+    <div class="ctr-row"><input type="text" id="lgName" maxlength="20" placeholder="Apprentice’s name" style="flex:1 1 9rem;min-width:0;padding:.5rem .6rem;border-radius:.5rem;border:.12rem solid #b9c7bf;font:inherit"></div>
+    <div class="ctr-opts">${built.map(s => `<button type="button" data-legacy="${s.id}"><b>${esc(s.dish)}</b><small>${esc(stallLabel(s))}</small></button>`).join('')}</div></div>`;
+}
+function openCentre(){
+  const ov = modal30('ctrOv', centreHTML(), 'ctr-card'), C = ctr(), n = dayNo();
+  const redo = () => { try { refreshWallet(); } catch(e){} openCentre(); };
+  ov.querySelector('[data-x]').addEventListener('click', () => { ov.hidden = true; try { renderHub(); } catch(e){} });
+  const h = ov.querySelector('[data-help]');
+  if (h) h.addEventListener('click', () => { const iss = todayIssue(); if (iss.cost && save.wallet < iss.cost){ toast('Not enough money'); return; }
+    save.wallet -= iss.cost || 0; C.helped[n] = iss.id; C.rating = Math.min(100, C.rating + iss.rating); C.cp += iss.cp;
+    if (iss.tip) (save.mods30 = mods30()).push({until:n, tip:iss.tip, note:'Sending customers to Uncle Teo'});
+    persist(); sfx.tick(); toast(`The centre thanks you! +${iss.cp} community points`); REC.log('centre_help', {id:iss.id}); redo(); });
+  ov.querySelectorAll('[data-collab]').forEach(b => b.addEventListener('click', () => { const x = NEIGH.find(y => y.id === b.dataset.collab);
+    C.collab = {id:x.id, until:n + 2}; (save.mods30 = mods30()).push({until:n + 2, per:x.per, pat:1.05, note:`Set meal with ${x.n}`}); C.cp += 1; persist(); sfx.tick(); toast(`Set meal with ${x.n} for 3 days!`); redo(); }));
+  ov.querySelectorAll('[data-vote]').forEach(b => b.addEventListener('click', () => { const x = COMMITTEE.find(y => y.id === b.dataset.vote);
+    C.votes[x.id] = n; C.cp -= x.need; C.lastVote = n; if (x.id === 'robots') C.rating = Math.min(100, C.rating + 8); persist(); sfx.tick(); pop29('🏛️', 'COMMITTEE VOTE', `${x.t} approved!`, x.d); redo(); }));
+  ov.querySelectorAll('[data-green]').forEach(b => b.addEventListener('click', () => { const x = GREEN.find(y => y.id === b.dataset.green);
+    if (save.wallet < x.cost){ toast(`You need ${money(x.cost)}`); return; } save.wallet -= x.cost; (save.green31 || (save.green31 = {}))[x.id] = n; discover('eco'); persist(); sfx.tick(); toast(`${x.t} installed!`); redo(); }));
+  ov.querySelectorAll('[data-legacy]').forEach(b => b.addEventListener('click', () => { const nm = ($('#lgName').value || '').replace(/\s+/g, ' ').trim().slice(0, 20) || 'Mei Ling';
+    save.legacy31 = {stall:b.dataset.legacy, name:nm, day:n}; save.rep[b.dataset.legacy] = Math.max(60, repOf(b.dataset.legacy)); persist(); pop29('📜', 'LEGACY', `${nm} carries the recipe on`, 'Your recipe will never disappear.'); redo(); }));
+  REC.log('centre_open', {});
+}
+const _renderRank31 = renderRank;
+renderRank = function(){
+  _renderRank31();
+  const el = $('#rankCard'); if (!el || el.querySelector('.rk-ctr')) return;
+  el.insertAdjacentHTML('beforeend', `<button type="button" class="buy rk-ctr">🏛️ Centre${todayIssue() && todayIssue().a && !ctr().helped[dayNo()] ? ' •' : ''}</button>`);
+  el.querySelector('.rk-ctr').addEventListener('click', () => { sfx.tick(); openCentre(); });
+};
+/* legacy keeps the passed-on stall’s reputation from falling below 60 */
+setInterval(() => { const L = save.legacy31; if (L && repOf(L.stall) < 60){ save.rep[L.stall] = 60; } }, 3000);
+
+/* ---------- 6. TRACKING: challenges, the centre at night, eco ---------- */
+const _dishResult31 = dishResult;
+dishResult = function(q, c, steps, scores, stars, last){
+  const r = _dishResult31.apply(this, arguments);
+  try { if (c.w && c.w.dine === 'here') wkAdd('dinein'); if (c.reg) wkAdd('regular'); if (stars >= 3) wkAdd('stars'); } catch(e){}
+  return r;
+};
+const _showSummary31 = showSummary;
+showSummary = function(st, results){
+  _showSummary31(st, results);
+  try { const walked = results.filter(r => r.walkout).length; if (!walked) wkAdd('nowalk'); if (priceOf(st.id) === 'value') wkAdd('value'); } catch(e){}
+};
+const _showLedger31 = showLedger;
+showLedger = function(){
+  _showLedger31();
+  try {
+    const n = dayNo(), C = ctr(), iss = todayIssue();
+    if (save.ctrNight31 !== n){ save.ctrNight31 = n;
+      if (iss && iss.a && !C.helped[n]) C.rating = Math.max(0, C.rating - 2);
+      C.rating = Math.max(0, Math.min(100, C.rating + (C.votes.robots ? 1 : 0)));
+      const last = (save.netLog31 || []).slice(-1)[0]; if (last && last.n === n && !last.waste && last.nSt) wkAdd('nowaste');
+      persist(); }
+    const box = document.createElement('div'); box.className = 'ledger-biz';
+    box.innerHTML = `<p class="label">The centre & the planet</p><ul class="ledger small"><li><span>Centre rating</span><b>${C.rating}/100</b></li><li><span>Eco score</span><b>${ecoScore()}/100</b></li><li><span>Weekly challenge</span><b>${Math.min(wk().n, WEEKLY.find(x => x.id === wk().type).goal)}/${WEEKLY.find(x => x.id === wk().type).goal}</b></li></ul>
+      ${iss && iss.a && !C.helped[n] ? `<p class="hint2">Nobody dealt with “${esc(iss.t.split('.')[0].toLowerCase())}” today, so the centre rating dipped.</p>` : ''}`;
+    const btn = $('#closeDone'); if (btn) btn.before(box);
+  } catch(e){ console.warn(e); }
+};
+
+/* ---------- 7. FAILURE WITH RECOVERY: a comeback plan ---------- */
+function struggling(){
+  const low = STALLS.filter(s => save.built[s.id] && (save.rep || {})[s.id] != null && repOf(s.id) < 35);
+  const L = (save.netLog31 || []).slice(-2), broke = L.length === 2 && L.every(d => d.net < 0);
+  return low.length || broke ? {low:low[0] || null, broke} : null;
+}
+setInterval(() => {
+  try {
+    if (!(screen === 'hub' || screen === 'stall') || SH) return;
+    if (['#storyOv','#closeOv','#loadOv','#introOv','#dilOv','#idOv','#bookOv','#jrOv','#ctrOv','#cbOv'].some(q => $(q) && !$(q).hidden)) return;
+    const n = dayNo(); if (save.cbDay31 && n - save.cbDay31 < 4) return;
+    const S = struggling(); if (!S) return;
+    save.cbDay31 = n; persist();
+    const st = S.low || STALLS.find(s => save.built[s.id]);
+    const why = S.low ? `${stallLabel(S.low)}’s reputation has dropped to ${repOf(S.low.id)}.` : 'You’ve lost money two days in a row.';
+    const ov = modal30('cbOv', `<span class="ch-tag">A ROUGH PATCH</span><h2>Every hawker has bad weeks</h2>
+      <p class="ch-lead">${esc(why)} ${esc(st.mentor)} sits down with you: “Aiya, don’t give up. I almost closed in my third year. Let’s make a plan.”</p>
+      <div class="ch-opts">
+        <button type="button" data-cb="tasting"><b>Free tasting day</b><small>Give out samples. Costs $10, +6 reputation at ${esc(stallLabel(st))}.</small></button>
+        <button type="button" data-cb="simple"><b>Simplify the menu for 3 days</b><small>Fewer choices, faster service: customers wait 12% longer.</small></button>
+        <button type="button" data-cb="listen"><b>Ask your regulars for honest feedback</b><small>Free. +3 reputation, and you learn what to fix.</small></button>
+      </div>`);
+    ov.querySelectorAll('[data-cb]').forEach(b => b.addEventListener('click', () => {
+      const k = b.dataset.cb; ov.hidden = true; sfx.tick();
+      if (k === 'tasting'){ save.wallet = Math.max(0, save.wallet - 1000); save.rep[st.id] = Math.min(100, repOf(st.id) + 6); toast('Free tasting day! +6 reputation'); }
+      if (k === 'simple'){ (save.mods30 = mods30()).push({until:n + 2, pat:1.12, note:'Simpler menu'}); toast('Simpler menu for 3 days'); }
+      if (k === 'listen'){ save.rep[st.id] = Math.min(100, repOf(st.id) + 3); discover('regular', true); toast('“Boss, a bit less salt and faster at lunch.” Noted! +3 reputation'); }
+      save.comeback31 = (save.comeback31 || 0) + 1; persist(); REC.log('comeback', {pick:k}); try { renderHub(); } catch(e){}
+    }));
+  } catch(e){}
+}, 2500);
+
+/* ---------- 8. HAWKER ACADEMY: short lessons for aspiring hawkers ---------- */
+const ACADEMY = [
+  {id:'costing', t:'Menu costing', lead:'A plate’s price has to cover ingredients, rent, gas and packaging, and still leave something for you.', qs:[
+    ['Ingredients for a plate cost $1.80. Rent and utilities work out to $1.20 a plate, and packaging is 20¢. What’s the lowest price that doesn’t lose money?', ['$3.20','$1.80','$2.50'], 0, '$1.80 + $1.20 + $0.20 = $3.20. Anything below that loses money on every plate.'],
+    ['Sales were $300 today. Costs were $210. What did you earn?', ['$90','$300','$510'], 0, 'Profit is sales minus costs: $300 − $210 = $90.'],
+    ['Why do many hawkers keep prices low even when costs rise?', ['Hawker food is meant to stay affordable for everyone','Customers never notice prices','It’s against the law to change prices'], 0, 'Affordable food is part of what makes hawker culture special, so every cent matters.']]},
+  {id:'safety', t:'Food safety', lead:'Clean hands, separate raw and cooked food, and keep food out of the temperature “danger zone”.', qs:[
+    ['You just cut raw chicken. What next, before slicing the cooked chicken?', ['Use a separate, clean board and knife','Wipe the board with a cloth','Keep going: it’s all chicken'], 0, 'Raw meat can carry bacteria. Separate boards stop them reaching cooked food.'],
+    ['Bacteria grow fastest between about…', ['5°C and 60°C','−10°C and 0°C','100°C and 150°C'], 0, 'Keep cold food cold and hot food hot. The “danger zone” is roughly 5–60°C.'],
+    ['When should you wash your hands?', ['After raw meat, rubbish, money and the toilet','Only at the start of the day','Only when they look dirty'], 0, 'Germs are invisible. Wash often, especially between handling money and food.']]},
+  {id:'service', t:'Customer service', lead:'Remember faces, stay calm in the rush, and fix mistakes kindly.', qs:[
+    ['A customer says their order is wrong. What do you do first?', ['Listen, apologise and remake it','Argue that they ordered it','Ignore them, the queue is long'], 0, 'Fixing it quickly turns an unhappy customer into a regular.'],
+    ['The queue is getting long. What helps most?', ['Take orders early and tell people how long the wait is','Stop serving and take a break','Cook only for regulars'], 0, 'People wait more happily when they know what to expect.'],
+    ['A regular orders “the usual”. You…', ['Remember it, or keep a little notebook','Ask them to repeat their whole order every day','Guess something random'], 0, 'Remembering regulars’ orders makes them feel at home.']]},
+  {id:'digital', t:'Going digital', lead:'Most stalls now accept e-payments, and many use QR codes and online ordering.', qs:[
+    ['Why is one SGQR code useful at a stall?', ['One code works with many payment apps','It makes food cook faster','It replaces the stove'], 0, 'SGQR combines many payment methods into one QR code, so customers can use the app they have.'],
+    ['After a customer scans to pay, what should you check?', ['The payment screen shows your stall and the right amount','Nothing, scanning means it worked','Their phone wallpaper'], 0, 'Always check the confirmation shows the right amount and stall before handing over food.'],
+    ['A delivery app brings more orders but takes a cut. What should you think about?', ['Whether the price still covers your costs','Nothing, more orders are always better','Closing your walk-in counter'], 0, 'More orders only help if each one still makes money after the app’s cut.']]}
+];
+function acadState(){ return save.acad31 || (save.acad31 = {}); }
+const _bookHTML31 = bookHTML;
+bookHTML = function(tab){
+  const A = acadState(), done = ACADEMY.filter(a => A[a.id] && A[a.id].pass).length;
+  ACADEMY.forEach(a => { const S = A[a.id]; if (S && !S.pass && S.a && Object.keys(S.a).length === a.qs.length && S.day !== dayNo()) S.a = {}; });
+  const tabBtn = `<button type="button" data-tab="academy" aria-pressed="${tab === 'academy'}">Academy ${done}/${ACADEMY.length}</button>`;
+  if (tab !== 'academy') return _bookHTML31(tab).replace(/(<div class="book-tabs"[\s\S]*?)(<\/div>)/, `$1${tabBtn}$2`);
+  const base = _bookHTML31('dish').replace(/(<div class="book-tabs"[\s\S]*?)(<\/div>)/, `$1${tabBtn}$2`).replace(/aria-pressed="true"/, 'aria-pressed="false"');
+  const grid = ACADEMY.map(a => { const S = A[a.id] || {};
+    return `<div class="bk-item" data-ac="${a.id}"><h4>${S.pass ? '🎓 ' : ''}${esc(a.t.toUpperCase())}</h4><p>${esc(a.lead)}</p>
+      ${a.qs.map(([q, o, right, exp], qi) => { const ans = S.a && S.a[qi]; return `<p class="ac-q">${qi + 1}. ${esc(q)}</p><div class="ac-opts">${o.map((t, oi) => ({t, oi})).sort((x, y) => ((x.oi*7 + qi*3) % 5) - ((y.oi*7 + qi*3) % 5)).map(({t, oi}) => `<button type="button" data-q="${qi}" data-o="${oi}" class="${ans != null && oi === right ? 'right' : ans === oi && oi !== right ? 'wrong' : ''}" ${ans != null ? 'disabled' : ''}>${esc(t)}</button>`).join('')}</div>${ans != null ? `<p class="ac-exp">${esc(exp)}</p>` : ''}`; }).join('')}
+      ${S.a && Object.keys(S.a).length === a.qs.length ? `<p class="ac-exp"><b>${S.pass ? 'Certificate earned! +$5.00' : 'Not quite: try again tomorrow.'}</b></p>` : ''}</div>`; }).join('');
+  return base.replace(/<p class="bk-sum">[\s\S]*?<\/p>/, '<p class="bk-sum">Short lessons for aspiring hawkers, based on what real hawkers need to know. Pass 2 of 3 questions to earn each certificate.</p>')
+    .replace(/<div class="book-grid">[\s\S]*<\/div>\s*<button class="big"/, `<div class="book-grid">${grid}</div>\n    <button class="big"`);
+};
+document.addEventListener('click', e => {
+  const b = e.target.closest('#bookOv [data-ac] [data-q]'); if (!b || b.disabled) return;
+  const id = b.closest('[data-ac]').dataset.ac, a = ACADEMY.find(x => x.id === id), S = acadState()[id] || (acadState()[id] = {a:{}});
+  if (S.day && S.day !== dayNo() && !S.pass && Object.keys(S.a).length === a.qs.length) S.a = {};
+  const qi = +b.dataset.q; if (S.a[qi] != null) return;
+  S.a[qi] = +b.dataset.o; S.day = dayNo();
+  if (Object.keys(S.a).length === a.qs.length){ const ok = a.qs.filter((q, i) => S.a[i] === q[2]).length;
+    if (ok >= 2 && !S.pass){ S.pass = dayNo(); earn(500, walletEl()); pop29('🎓', 'HAWKER ACADEMY', `${a.t} certificate`, 'Lesson passed: +$5.00'); }
+    if (ACADEMY.every(x => acadState()[x.id] && acadState()[x.id].pass)) flagAch('academy'); }
+  persist(); sfx.tick(); openBook('academy');
+});
+ACH.push({id:'academy', ic:'🎓', t:'Hawker Academy Graduate', d:'Pass all four Hawker Academy lessons.', ok:() => !!save.ach29x?.academy},
+  {id:'centre', ic:'🏛️', t:'Pillar of the Centre', d:'Raise the centre rating to 85.', ok:() => ctr().rating >= 85},
+  {id:'green', ic:'🌱', t:'Green Hawker', d:'Install all three green upgrades.', ok:() => GREEN.every(x => (save.green31 || {})[x.id])},
+  {id:'comeback', ic:'💪', t:'The Comeback', d:'Bounce back from a rough patch.', ok:() => (save.comeback31 || 0) >= 1 && !struggling()},
+  {id:'legacy', ic:'📜', t:'Pass It On', d:'Hand a recipe down to an apprentice.', ok:() => !!save.legacy31});
+
+/* ---------- 9. SETTINGS: colour-blind friendly colours ---------- */
+(function cbSetting(){
+  const anchor = $('#setBig'); if (!anchor) return;
+  anchor.closest('.set-row').insertAdjacentHTML('afterend', `<div class="set-row"><span>Colour-blind friendly<small>Blue, orange and vermilion instead of green, yellow and red for patience bars</small></span><button class="tog" type="button" id="setCb" aria-label="Colour-blind friendly colours" aria-pressed="false"></button></div>`);
+  $('#setCb').addEventListener('click', () => { save.cb31 = !save.cb31; persist(); $('#setCb').setAttribute('aria-pressed', String(!!save.cb31)); sfx.tick(); });
+  const _rs = renderSettings; renderSettings = function(){ _rs(); $('#setCb').setAttribute('aria-pressed', String(!!save.cb31)); };
 })();
 
 /* =================================================================
