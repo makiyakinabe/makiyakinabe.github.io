@@ -23,3 +23,12 @@ The whole game is one self-contained `index.html` (no build step, no server). `h
 - Surprise rush events: a sudden crowd, a visiting food blogger, a neighbour lending a hand
 - Six career stages from Apprentice to Mentor
 - Settings: Relaxed / Standard / Challenge pace, bigger text and calm motion
+
+### Hawker-life update
+- Choose your hawker identity: the Perfectionist, the Inventive Young Hawker, a Third-Generation Family Stall or a Late-Night Supper Stall. Each one changes who comes and what pays off
+- Name a signature dish; good shifts with it spread the word
+- A Hawker's Choice every other day: follow a trend or keep the recipe, raise prices or absorb costs, join a delivery app, take in an apprentice and more
+- Customer reviews after every service, plus a chance of going viral
+- New neighbourhood events: community clean-up, school holidays, exam results day, supper crowd; after-school students at dinner
+- Hawker Book: Heritage cards (one a day) and a Hawker Trail of real places to try each dish
+- My Hawker Journey: a shareable card, plus a visit link that lets friends see your stall
