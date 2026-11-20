@@ -10812,6 +10812,363 @@ renderRank = function(){
 })();
 
 /* =================================================================
+   HAWKER-LIFE (v30): your hawker identity, a signature dish, hard choices
+   (keep the recipe or follow the trend), reviews and going viral, more
+   neighbourhood events, heritage cards and a real-world hawker trail, and a
+   shareable “My Hawker Journey” card with a link friends can visit.
+   ================================================================= */
+(function css30(){
+  const s = document.createElement('style'); s.textContent = `
+.ch-card{width:min(36rem,calc(100% - 1.5rem));max-height:calc(100dvh - 2rem);overflow:auto}
+.ch-card h2{margin:.1rem 0 .35rem}
+.ch-card .ch-lead{margin:0 0 .7rem;line-height:1.45}
+.ch-opts{display:grid;gap:.5rem}
+.ch-opts button{display:block;width:100%;text-align:left;padding:.65rem .8rem;border-radius:.7rem;border:.13rem solid #14211b;background:#fff;font:inherit;cursor:pointer;min-height:2.75rem}
+.ch-opts button:hover,.ch-opts button[aria-pressed=true]{background:#fff7d6}
+.ch-opts b{display:block;font-size:.98rem}
+.ch-opts small{display:block;margin-top:.15rem;color:#4a5a52;font-size:.82rem;line-height:1.35}
+.ch-tag{display:inline-block;font-size:.7rem;font-weight:900;letter-spacing:.08em;color:#c7372c;margin-bottom:.2rem}
+.sig-card,.rev-card{margin-top:.7rem;border:.12rem solid #c9d3cd;border-radius:.8rem;padding:.6rem .7rem;background:#fff}
+.sig-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.35rem}
+.sig-row input{flex:1 1 10rem;min-width:0;padding:.5rem .6rem;border-radius:.5rem;border:.12rem solid #b9c7bf;font:inherit}
+.rev-avg{font-size:1.4rem;font-weight:900}
+.rev-stars{color:#e8a21a;letter-spacing:.05em}
+.rev-list{list-style:none;margin:.4rem 0 0;padding:0;display:grid;gap:.35rem}
+.rev-list li{background:#f6f8f7;border-radius:.55rem;padding:.4rem .55rem;font-size:.85rem;line-height:1.35}
+.rev-list small{display:block;color:#6a7a72;font-size:.72rem;margin-top:.1rem}
+.jr-card{width:min(30rem,calc(100% - 1.5rem));max-height:calc(100dvh - 2rem);overflow:auto;text-align:center}
+.jr-card canvas{width:100%;height:auto;border-radius:.8rem;box-shadow:0 .3rem 1rem rgba(0,0,0,.2);display:block;margin:.3rem 0 .7rem}
+.jr-btns{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:.45rem}
+.jr-note{font-size:.8rem;color:#4a5a52;margin:.5rem 0 0;line-height:1.4}
+.rk-jr{flex:0 0 auto}
+.bk-trail h4::before{content:'📍 '}
+`; document.head.appendChild(s);
+})();
+function modal30(id, html, cls){
+  let ov = $('#' + id);
+  if (!ov){ ov = document.createElement('div'); ov.id = id; ov.className = 'overlay'; ov.innerHTML = `<div class="ov-card ${cls || 'ch-card'}" role="dialog" aria-modal="true"></div>`; document.body.appendChild(ov); }
+  ov.firstElementChild.innerHTML = html; ov.hidden = false; return ov;
+}
+const stallLabel = st => (save.names && save.names[st.id]) || st.name;
+
+/* ---------- 1. NEIGHBOURHOOD EVENTS and who turns up when ---------- */
+Object.assign(EVENTS, {
+  cleanup:{name:'Community clean-up day', icon:'🧹', note:'Residents tidied the estate this morning and come to eat together. Patient, chatty, eating in.', pat:1.15, tip:1.2, dine:'here', only:'lunch'},
+  schoolhols:{name:'School holidays', icon:'🎒', note:'Students and families all day. More budget orders, lots of dine-in.', pat:1.05, tip:1, dine:'here'},
+  results:{name:'Exam results day', icon:'🎓', note:'Families celebrating after the results. They eat in and tip happily.', pat:1.1, tip:1.5, dine:'here', only:'dinner'},
+  supper:{name:'Supper crowd', icon:'🌙', note:'Night-shift workers, taxi uncles and supper regulars. Mostly takeaway, quick orders.', pat:0.95, tip:1.2, dine:'dabao', only:'dinner'}
+});
+const _personaPool30 = personaPool;
+personaPool = function(service){
+  const p = _personaPool30(service), f = forecast(service), ev = f.ev || 'none';
+  if (service === 'dinner') p.push('student', 'family');          /* after-school crowd and families at night */
+  if (ev === 'schoolhols') p.push('student', 'student', 'family');
+  if (ev === 'results') p.push('family', 'family', 'family');
+  if (ev === 'cleanup') p.push('elderly', 'elderly', 'family');
+  if (ev === 'supper') p.push('office', 'elderly');
+  if (save.id30 === 'inventive') p.push('student', 'tourist');
+  return p;
+};
+Object.assign(TERMS, {
+  centres:['FROM STREET TO CENTRE','In the 1960s and 70s, street hawkers were moved into purpose-built hawker centres with clean water, drains and licences. Today there are more than 100 hawker centres and over 6,000 cooked-food stalls.'],
+  dining:['THE COMMUNITY DINING ROOM','At a hawker centre, strangers of every race and age share tables. UNESCO calls these centres “community dining rooms”.'],
+  dialect:['MANY KITCHENS, ONE TABLE','Hokkien, Teochew, Cantonese and Hainanese immigrants, Malay, Indian and Peranakan cooks all brought their dishes. Hawker food mixes them together.'],
+  incubation:['BECOMING A HAWKER','NEA runs training for new hawkers and an Incubation Stall Programme: ready-fitted stalls with lower rent for a start-up period, so newcomers can try the trade.'],
+  passon:['PASSING IT ON','Many hawkers are in their 60s and older. When a recipe isn’t passed on, it can disappear, which is why apprentices matter.']
+});
+
+/* ---------- 2. YOUR HAWKER IDENTITY ---------- */
+const ID30 = {
+  perfectionist:{ic:'🧐', name:'The Perfectionist', d:'Every plate must be perfect, or it doesn’t leave the stall.', perk:'3-star dishes earn an extra 30¢ tip each. Customers are a little less patient with you.'},
+  inventive:{ic:'💡', name:'The Inventive Young Hawker', d:'Old recipes, new ideas. You read every review.', perk:'More students and tourists, and they tip extra. Trying a trend pays off more.'},
+  heritage:{ic:'🏮', name:'Third-Generation Family Stall', d:'Grandma’s recipe, unchanged since 1968.', perk:'Regulars and elderly customers wait longer, and every good shift adds +1 reputation.'},
+  supper:{ic:'🌙', name:'The Late-Night Supper Stall', d:'Open until the last bus goes by.', perk:'Dinner customers are more patient, and dinner tips are bigger.'}
+};
+function openIdentity(first){
+  const cur = save.id30;
+  const ov = modal30('idOv', `<span class="ch-tag">WHO ARE YOU AS A HAWKER?</span><h2>Pick your hawker identity</h2>
+    <p class="ch-lead">${first ? 'You’ve survived your first day! What kind of hawker do you want to become? ' : ''}It changes who comes to your stall and what pays off. You can change it later in Settings.</p>
+    <div class="ch-opts">${Object.entries(ID30).map(([k, v]) => `<button type="button" data-id="${k}" aria-pressed="${cur === k}"><b>${v.ic} ${esc(v.name)}</b><small>${esc(v.d)}</small><small><b style="display:inline;font-size:inherit">Perk:</b> ${esc(v.perk)}</small></button>`).join('')}</div>
+    <button class="big" type="button" data-x style="margin-top:.7rem">${first ? 'Decide later' : 'Close'}</button>`);
+  ov.querySelectorAll('[data-id]').forEach(b => b.addEventListener('click', () => { save.id30 = b.dataset.id; save.idAsked30 = true; persist(); sfx.tick(); ov.hidden = true; toast(`You are ${ID30[save.id30].name}!`); try { renderHub(); } catch(e){} }));
+  ov.querySelector('[data-x]').addEventListener('click', () => { save.idAsked30 = true; persist(); ov.hidden = true; });
+}
+
+/* ---------- 3. HARD CHOICES: keep the recipe, or change with the times? ---------- */
+const DILEMMAS = [
+  {id:'trend', q:'A video of a cheese-topped version of your dish is going viral. Students keep asking for it.', o:[
+    {t:'Try the trend for 3 days', h:'Bigger tips from young customers. Some regulars grumble (−1 reputation per shift).', m:{days:3, tip:1.35, rep:-1, note:'Trying the viral trend'}},
+    {t:'Keep the recipe as it is', h:'Regulars are proud of you (+1 reputation per shift).', m:{days:3, rep:1, note:'Keeping it classic'}}]},
+  {id:'prices', q:'The price of your main ingredients went up 15% this week.', o:[
+    {t:'Raise prices by 50¢', h:'You earn more per plate, but customers are a bit less patient.', m:{days:3, per:50, pat:0.92, note:'Prices up 50¢'}},
+    {t:'Absorb the cost', h:'Customers stay happy (+1 reputation), but you lose 30¢ on every plate.', m:{days:3, per:-30, rep:1, note:'Holding prices steady'}}]},
+  {id:'mild', q:'Some students say your dish is “too spicy and old-fashioned”. They ask for a mild version.', o:[
+    {t:'Add a mild version for 3 days', h:'Students and families tip more. More work, less patience.', m:{days:3, tip:1.2, pat:0.95, note:'Mild version on the menu'}},
+    {t:'Explain the dish instead', h:'You teach them why it tastes that way. Customers wait more happily.', m:{days:3, pat:1.1, note:'Telling the dish’s story'}}]},
+  {id:'supplier', q:'A new supplier offers cheaper frozen ingredients instead of fresh ones from the wet market.', o:[
+    {t:'Switch to cheaper frozen', h:'You save 40¢ a plate, but people can taste it (−2 reputation per shift).', m:{days:3, per:40, rep:-2, note:'Cheaper frozen stock'}},
+    {t:'Stay with the wet market', h:'Fresh is fresh (+1 reputation per shift).', m:{days:3, rep:1, note:'Fresh from the wet market'}}]},
+  {id:'critic', q:'A newspaper food critic wants an interview, but only during your lunch rush.', o:[
+    {t:'Do the interview', h:'+5 reputation now, but the queue waits longer today.', m:{days:1, pat:0.85, note:'Interview day'}, once:{rep:5}},
+    {t:'Stay at the wok', h:'Customers come first. +1 reputation per shift today.', m:{days:1, rep:1, note:'Customers first'}}]},
+  {id:'apprentice', q:'A shy 19-year-old asks to become your apprentice. She’s never cooked for customers.', o:[
+    {t:'Take her in', h:'An extra pair of hands: customers are more patient. You pay her 20¢ a plate.', m:{days:4, pat:1.15, per:-20, note:'Training an apprentice'}, once:{learn:'passon'}},
+    {t:'Not right now', h:'Nothing changes. Maybe next time.', m:null}]},
+  {id:'charity', q:'The community centre asks if you can give 30 free meals to elderly residents living alone.', o:[
+    {t:'Yes, cook for them', h:'It costs you $15 today, but the whole estate hears about it (+4 reputation).', m:{days:2, pat:1.1, note:'The estate is talking about you'}, once:{cash:-1500, rep:4}},
+    {t:'Politely say no', h:'You keep the money. Nothing else changes.', m:null}]},
+  {id:'delivery', q:'A food delivery app wants to list your stall. They take 30% of each order.', o:[
+    {t:'Join the app for 3 days', h:'More takeaway customers and extra sales, but less profit per plate.', m:{days:3, per:-15, crowd:true, note:'On the delivery app'}},
+    {t:'Stay walk-in only', h:'Simpler, and regulars get your full attention (+1 reputation per shift).', m:{days:3, rep:1, note:'Walk-in only'}}]}
+];
+function mods30(){ const n = dayNo(); save.mods30 = (save.mods30 || []).filter(m => m.until >= n); return save.mods30; }
+function modProd(k){ return mods30().reduce((a, m) => a*(m[k] || 1), 1); }
+function modSum(k){ return mods30().reduce((a, m) => a + (m[k] || 0), 0); }
+function maybeDilemma(){
+  const n = dayNo();
+  if (n < 3 || save.dil30Day === n || SH || kidMode()) return;
+  if (['#storyOv','#nameOv','#closeOv','#jobOv','#ageOv','#loadOv','#introOv','#htpOv','#confirmOv','#idOv','#bookOv','#jrOv'].some(q => $(q) && !$(q).hidden)) return;
+  if (n % 2 === 0 && !save.dil30Force) { save.dil30Day = n; persist(); return; }
+  save.dil30Day = n; save.dil30Force = false;
+  const seen = save.dil30Seen || (save.dil30Seen = {});
+  const pool = DILEMMAS.filter(d => !seen[d.id]); const D = (pool.length ? pool : DILEMMAS)[Math.floor(Math.random()*(pool.length || DILEMMAS.length))];
+  seen[D.id] = n; persist();
+  const ov = modal30('dilOv', `<span class="ch-tag">DAY ${n} · A HAWKER’S CHOICE</span><h2>What would you do?</h2><p class="ch-lead">${esc(D.q)}</p>
+    <div class="ch-opts">${D.o.map((o, i) => `<button type="button" data-i="${i}"><b>${esc(o.t)}</b><small>${esc(o.h)}</small></button>`).join('')}</div>
+    <p class="jr-note">There’s no wrong answer. Real hawkers face choices like this every week.</p>`);
+  ov.querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', () => {
+    const o = D.o[+b.dataset.i]; ov.hidden = true; sfx.tick();
+    if (o.m){ const m = Object.assign({}, o.m, {until:n + o.m.days - 1, from:D.id}); if (save.id30 === 'inventive' && m.tip) m.tip = 1 + (m.tip - 1)*1.5; (save.mods30 = mods30()).push(m); }
+    if (o.once){ const st = curStall || STALLS.find(s => save.built[s.id]);
+      if (o.once.rep && st) save.rep[st.id] = Math.min(100, repOf(st.id) + o.once.rep);
+      if (o.once.cash) save.wallet = Math.max(0, save.wallet + o.once.cash);
+      if (o.once.learn) discover(o.once.learn); }
+    persist(); REC.log('dilemma', {id:D.id, pick:+b.dataset.i}); toast(o.m ? `${o.m.note}${o.m.days > 1 ? ` · next ${o.m.days} days` : ' · today'}` : 'Noted.');
+    try { renderHub(); if (screen === 'stall') renderTab(); } catch(e){}
+  }));
+}
+setInterval(() => { try { if (screen === 'hub' || screen === 'stall'){ maybeDilemma(); if ((save.days || 0) >= 1 && !save.idAsked30 && !save.id30 && $('#loadOv').hidden && (!$('#storyOv') || $('#storyOv').hidden) && (!$('#closeOv') || $('#closeOv').hidden) && (!$('#dilOv') || $('#dilOv').hidden)) openIdentity(true); } } catch(e){} }, 1500);
+
+/* identity + choices change the customers… */
+const _mkCust30 = makeCustomers;
+makeCustomers = function(st, beginner, service){
+  const list = _mkCust30(st, beginner, service), id = save.id30, pm = modProd('pat');
+  list.forEach(c => {
+    c.pm *= pm;
+    if (id === 'perfectionist') c.pm *= 0.93;
+    if (id === 'heritage' && (c.reg || c.persona === 'elderly')) c.pm *= 1.2;
+    if (id === 'supper' && service === 'dinner') c.pm *= 1.15;
+    if (mods30().some(m => m.crowd) && c.t && Math.random() < 0.5){ c.t.dine = 'dabao'; if (c.sayParts){ c.sayParts.dine = 'Delivery order!'; c.speech = `${c.sayParts.greet} ${c.sayParts.order} ${c.sayParts.dine}`; } }
+  });
+  return list;
+};
+
+/* ---------- 4. REVIEWS and going viral ---------- */
+const REV = {
+  5:['Shiok! Best {d} in the estate.','Worth the queue. {d} done properly.','Came back three days in a row. No regrets.','Boss is fast and friendly. Perfect {d}.'],
+  4:['Solid {d}. Will come again.','Good portion, good price.','Nice, but the queue was long.','Tasty! Next time I try the add-ons.'],
+  3:['Okay lah. Not bad, not amazing.','Bit inconsistent today.','The {d} was alright, service a bit slow.'],
+  2:['Waited quite long for an average {d}.','Not like last time.'],
+  1:['Waited so long I gave up and left.','Queue never moved. Went to another stall.']
+};
+const WHO = {office:'Office worker', student:'Student', elderly:'Regular', tourist:'Tourist', family:'Family', foodie:'Food lover'};
+function addReviews(st, results){
+  const R = save.rev30 || (save.rev30 = {}), list = R[st.id] || (R[st.id] = []);
+  const pickR = results.slice().sort(() => Math.random() - 0.5).slice(0, 2);
+  pickR.forEach(r => {
+    const s = r.walkout ? 1 : r.stars >= 3 ? (Math.random() < 0.8 ? 5 : 4) : r.stars === 2 ? (Math.random() < 0.6 ? 4 : 3) : 2;
+    const tx = pick(REV[s]).replace('{d}', st.dish.toLowerCase());
+    list.unshift({s, tx, who:(r.c.blogger ? 'Food blogger' : r.c.reg ? 'Regular' : WHO[r.c.persona] || 'Customer'), name:firstName(r.c.cust.name), day:dayNo()});
+  });
+  R[st.id] = list.slice(0, 24);
+}
+function revAvg(id){ const l = (save.rev30 || {})[id] || []; return l.length ? l.reduce((a, r) => a + r.s, 0)/l.length : 0; }
+const stars5 = s => '★★★★★'.slice(0, Math.round(s)) + '☆☆☆☆☆'.slice(0, 5 - Math.round(s));
+
+/* …and how the shift pays */
+const _showSummary30 = showSummary;
+showSummary = function(st, results){
+  const service = BIZ.cur ? BIZ.cur.service : 'lunch';
+  _showSummary30(st, results);
+  try {
+    const served = results.filter(r => !r.walkout), id = save.id30, notes = [];
+    let cash = 0, rep = 0;
+    const baseTips = served.reduce((a, r) => a + (r.stars >= 3 ? 60 : r.stars === 2 ? 20 : 0), 0);
+    if (id === 'perfectionist'){ const n3 = served.filter(r => r.stars >= 3).length; if (n3){ cash += 30*n3; notes.push(`Perfectionist: ${n3} perfect plate${n3 > 1 ? 's' : ''} +${money(30*n3)}`); } }
+    if (id === 'inventive'){ const n = served.filter(r => r.c.persona === 'student' || r.c.persona === 'tourist').length; if (n){ cash += 20*n; notes.push(`Young and curious customers loved your ideas +${money(20*n)}`); } }
+    if (id === 'heritage' && served.length >= CUST - 1){ rep += 1; notes.push('Family recipe: regulars spread the word (+1 reputation)'); }
+    if (id === 'supper' && service === 'dinner' && baseTips){ const x = Math.round(baseTips*0.3/10)*10; if (x){ cash += x; notes.push(`Supper crowd tips +${money(x)}`); } }
+    const tipM = modProd('tip'), per = modSum('per'), mrep = modSum('rep');
+    if (tipM !== 1 && baseTips){ const x = Math.round(baseTips*(tipM - 1)/10)*10; if (x){ cash += x; notes.push(`${tipM > 1 ? 'Trend tips' : 'Fewer tips'} ${x > 0 ? '+' : '-'}${money(Math.abs(x))}`); } }
+    if (per && served.length){ cash += per*served.length; notes.push(`${mods30().filter(m => m.per).map(m => m.note).join(', ')}: ${per > 0 ? '+' : '-'}${money(Math.abs(per*served.length))}`); }
+    if (mrep){ rep += mrep; notes.push(`${mods30().filter(m => m.rep).map(m => m.note).join(', ')}: ${mrep > 0 ? '+' : ''}${mrep} reputation`); }
+    /* signature dish: word of mouth */
+    const avg = served.length ? served.reduce((a, r) => a + r.stars, 0)/served.length : 0;
+    if (save.sig30 && save.sig30.stall === st.id && avg >= 2.5){ rep += 1; notes.push(`People come for your signature “${save.sig30.name}” (+1 reputation)`); }
+    /* reviews, and sometimes going viral */
+    addReviews(st, results);
+    const total = results.reduce((a, r) => a + r.stars, 0), blog = served.some(r => r.c.blogger && r.stars >= 3);
+    let viral = false;
+    if ((total >= 14 && repOf(st.id) >= 55 && Math.random() < 0.22) || blog){
+      viral = true; rep += 3; (save.mods30 = mods30()).push({until:dayNo() + 1, tip:1.25, pat:1.05, note:'Gone viral'});
+      notes.push('📱 A customer’s photo of your food went viral! +3 reputation, bigger tips for 2 days');
+    }
+    if (rep){ save.rep[st.id] = Math.max(0, Math.min(100, repOf(st.id) + rep)); }
+    if (cash){ const dl = save.dayLog; if (dl && dl.n === dayNo()) dl.tips += cash;
+      if (cash > 0) setTimeout(() => { if (screen === 'summary') earn(cash, $('#sumReview')); }, 4200); else save.wallet = Math.max(0, save.wallet + cash); }
+    persist();
+    const rv = $('#sumReview');
+    if (rv){
+      const box = document.createElement('div');
+      const last = ((save.rev30 || {})[st.id] || []).slice(0, 2);
+      box.innerHTML = `${notes.length ? `<p class="rc-h">YOUR CHOICES</p><ul class="sg-list">${notes.map(n => `<li class="${/-\$|−|-\d|Fewer/.test(n) ? 'no' : 'ok'}">${esc(n)}</li>`).join('')}</ul>` : ''}
+        ${last.length ? `<p class="rc-h">NEW REVIEWS</p><ul class="rev-list">${last.map(r => `<li><span class="rev-stars">${stars5(r.s)}</span> ${esc(r.tx)}<small>${esc(r.name)} · ${esc(r.who)}</small></li>`).join('')}</ul>` : ''}`;
+      rv.append(box);
+    }
+    if (viral) setTimeout(() => pop29('📱', 'GONE VIRAL', 'Your food is all over social media!', 'Expect happier crowds for the next 2 days.'), 1500);
+  } catch(e){ console.warn(e); }
+};
+
+/* ---------- 5. STALL TAB: signature dish and reviews ---------- */
+const _renderTab30 = renderTab;
+renderTab = function(){
+  _renderTab30();
+  try {
+    if (curTab !== 'shift' || !curStall || SH || !save.built[curStall.id]) return;
+    const st = curStall, body = $('#tabBody'), sig = save.sig30, mine = sig && sig.stall === st.id;
+    const list = (save.rev30 || {})[st.id] || [], avg = revAvg(st.id);
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `<div class="sig-card"><p class="label">Signature dish</p>
+        ${mine ? `<p>⭐ <b>“${esc(sig.name)}”</b> is your signature. Good shifts here spread the word.</p>` : `<p class="hint2">${sig ? `Your signature is at ${esc(stallLabel(STALLS.find(s => s.id === sig.stall) || st))}. Move it here?` : 'Give one dish your own name. Every good shift with it builds your reputation.'}</p>`}
+        <div class="sig-row"><input type="text" maxlength="28" id="sigName" placeholder="e.g. Ah Ma’s ${esc(st.dish)}" value="${mine ? esc(sig.name) : ''}" aria-label="Signature dish name"><button type="button" class="buy" id="sigSet">${mine ? 'Rename' : 'Make it my signature'}</button></div></div>
+      <div class="rev-card"><p class="label">What people say</p>
+        ${list.length ? `<p><span class="rev-avg">${avg.toFixed(1)}</span> <span class="rev-stars">${stars5(avg)}</span> <small>(${list.length} review${list.length > 1 ? 's' : ''})</small></p>
+          <ul class="rev-list">${list.slice(0, 3).map(r => `<li><span class="rev-stars">${stars5(r.s)}</span> ${esc(r.tx)}<small>${esc(r.name)} · ${esc(r.who)} · day ${r.day}</small></li>`).join('')}</ul>`
+        : '<p class="hint2">No reviews yet. Customers write one after each service.</p>'}
+        ${mods30().length ? `<p class="hint2" style="margin-top:.4rem">Right now: ${mods30().map(m => esc(m.note)).join(' · ')}</p>` : ''}</div>`;
+    const anchor = body.querySelector('.biz') || body.lastElementChild;
+    anchor.after(...wrap.children);
+    $('#sigSet').addEventListener('click', () => {
+      const v = $('#sigName').value.replace(/\s+/g, ' ').trim().slice(0, 28) || `Ah Ma’s ${st.dish}`;
+      save.sig30 = {stall:st.id, name:v}; persist(); sfx.tick(); toast(`“${v}” is now your signature dish!`); renderTab();
+    });
+  } catch(e){ console.warn(e); }
+};
+
+/* ---------- 6. HAWKER BOOK: heritage cards and a real-world hawker trail ---------- */
+const HERITAGE = ['unesco','centres','dining','dialect','incubation','passon'];
+const TRAIL = {
+  chicken:'Maxwell Food Centre in Chinatown is famous for its chicken rice stalls.',
+  satay:'Lau Pa Sat: in the evening, Boon Tat Street closes to traffic and becomes “Satay Street”.',
+  laksa:'Katong, in the east, gave “Katong laksa” its name. The area is full of Peranakan food.',
+  nasilemak:'Adam Road Food Centre and Changi Village are both known for nasi lemak.',
+  prata:'Jalan Kayu in the north is famous for prata, and many prata shops open late into the night.',
+  chendol:'Geylang Serai Market is a great place for Malay desserts like chendol.',
+  bkt:'The Balestier and Rangoon Road area is known for peppery Teochew-style bak kut teh.',
+  bcm:'Crawford Lane, near Lavender, has one of the most famous bak chor mee stalls in Singapore.',
+  kopi:'Almost every kopitiam has a drinks stall. Order kopi with kaya toast and soft-boiled eggs for breakfast.',
+  ckt:'Old Airport Road Food Centre is one of the biggest hawker centres, with well-known char kway teow stalls.'
+};
+const _bookHTML30 = bookHTML;
+bookHTML = function(tab){
+  const D = discovered();
+  const tabs = `<button type="button" data-tab="heritage" aria-pressed="${tab === 'heritage'}">Heritage ${HERITAGE.filter(k => D[k]).length}/${HERITAGE.length}</button><button type="button" data-tab="trail" aria-pressed="${tab === 'trail'}">Hawker Trail</button>`;
+  if (tab !== 'heritage' && tab !== 'trail') return _bookHTML30(tab).replace(/(<div class="book-tabs"[\s\S]*?)(<\/div>)/, `$1${tabs}$2`);
+  const base = _bookHTML30('dish').replace(/(<div class="book-tabs"[\s\S]*?)(<\/div>)/, `$1${tabs}$2`).replace(/aria-pressed="true"/, 'aria-pressed="false"');
+  let grid, sum;
+  if (tab === 'heritage'){
+    sum = 'The story of hawker centres. A new card unlocks each day you play.';
+    grid = HERITAGE.map(k => { const on = !!D[k], [t, x] = TERMS[k]; return `<div class="bk-item${on ? '' : ' locked'}"><h4>${esc(on ? t : '???')}</h4><p>${on ? esc(x) : 'Keep playing day by day to unlock.'}</p></div>`; }).join('');
+  } else {
+    sum = 'Real places to try the dishes from your stalls. Stalls change over time, so check before you go!';
+    grid = STALLS.filter(s => TRAIL[s.id]).map(s => { const on = !!D['dish:' + s.id]; return `<div class="bk-item bk-trail${on ? '' : ' locked'}"><h4>${esc(on ? s.dish.toUpperCase() : '???')}</h4><p>${on ? esc(TRAIL[s.id]) : `Cook at ${esc(s.name)} to unlock this stop.`}</p></div>`; }).join('');
+  }
+  return base.replace(/<p class="bk-sum">[\s\S]*?<\/p>/, `<p class="bk-sum">${sum}</p>`).replace(/<div class="book-grid">[\s\S]*<\/div>\s*<button class="big"/, `<div class="book-grid">${grid}</div>\n    <button class="big"`);
+};
+/* a new heritage card each day */
+setInterval(() => { try {
+  const n = save.days || 0, due = HERITAGE.filter((k, i) => n >= i && !discovered()[k]);
+  if (due.length === 1) discover(due[0]);
+  else if (due.length > 1){ due.forEach(k => discover(k, true)); pop29('🏛️', 'HAWKER BOOK', `${due.length} heritage cards unlocked`, 'Open the Hawker Book → Heritage to read them.'); }
+} catch(e){} }, 5000);
+
+/* ---------- 7. MY HAWKER JOURNEY: a shareable card, and visiting a friend ---------- */
+function journeyData(){
+  const built = STALLS.filter(s => save.built[s.id]);
+  const best = Object.entries(save.best || {}).sort((a, b) => b[1] - a[1])[0];
+  const sig = save.sig30, sigSt = sig ? sig.stall : (best ? best[0] : built[0] && built[0].id);
+  const regs = Object.values(save.regs || {}).reduce((a, m) => a + Object.values(m || {}).filter(r => r && r.visits > 0).length, 0);
+  return {v:1, n:save.player || 'Hawker', id:save.id30 || '', r:rankOf().i, d:save.days || 0, st:built.length, s:sigSt || 'chicken',
+    sn:sig ? sig.name : '', b:best ? best[1] : 0, a:Object.keys(achGot()).length, k:Object.keys(discovered()).length, g:regs, rv:+revAvg(sigSt || '').toFixed(1)};
+}
+function drawJourney(cv, J){
+  const W = 1080, H = 1350, x = cv.getContext('2d'); cv.width = W; cv.height = H;
+  x.fillStyle = '#104534'; x.fillRect(0, 0, W, H);
+  x.strokeStyle = 'rgba(255,255,255,.05)'; x.lineWidth = 2; for (let i = 0; i < W; i += 54){ x.beginPath(); x.moveTo(i, 0); x.lineTo(i, H); x.stroke(); } for (let j = 0; j < H; j += 54){ x.beginPath(); x.moveTo(0, j); x.lineTo(W, j); x.stroke(); }
+  const T = (s, X, Y, sz, col, w, al) => { x.font = `${w || 900} ${sz}px ${F_DISP}`; x.textAlign = al || 'center'; x.textBaseline = 'middle'; x.fillStyle = col; x.fillText(s, X, Y); };
+  const fit = (s, sz, max) => { x.font = `900 ${sz}px ${F_DISP}`; while (x.measureText(s).width > max && sz > 20){ sz -= 2; x.font = `900 ${sz}px ${F_DISP}`; } return sz; };
+  T('MY HAWKER JOURNEY', W/2, 92, 40, '#f2c53d');
+  T('小贩英雄 · HAWKER HERO', W/2, 140, 28, 'rgba(255,255,255,.7)', 700);
+  T(J.n, W/2, 230, fit(J.n, 96, 960), '#ffffff');
+  const I = ID30[J.id]; T(I ? `${I.ic} ${I.name}` : 'Hawker in training', W/2, 310, 36, '#ffe9a8', 800);
+  const R = RANKS[J.r] || RANKS[0]; x.fillStyle = '#f2c53d'; const rw = 520; x.beginPath(); x.roundRect(W/2 - rw/2, 350, rw, 70, 35); x.fill(); T(`RANK ${J.r + 1} · ${R[1].toUpperCase()}`, W/2, 386, 32, '#14211b');
+  /* the signature dish on a round card */
+  x.save(); x.beginPath(); x.arc(W/2, 640, 190, 0, Math.PI*2); x.fillStyle = '#fffdf3'; x.fill(); x.lineWidth = 10; x.strokeStyle = '#f2c53d'; x.stroke(); x.clip();
+  const st = STALLS.find(s => s.id === J.s) || STALLS[0], prev = g; g = x;
+  try { x.translate(W/2, 640); x.scale(1.45, 1.45); drawFinal(st.id, sampleOrder(st), 0); } catch(e){} g = prev; x.restore();
+  T(J.sn ? `“${J.sn}”` : st.dish, W/2, 880, fit(J.sn ? `“${J.sn}”` : st.dish, 54, 960), '#ffffff');
+  T(J.sn ? `Signature dish · ${st.name}` : st.name, W/2, 935, 28, 'rgba(255,255,255,.75)', 700);
+  const stats = [[J.d, 'days'], [J.st, 'stalls'], [J.g, 'regulars'], [J.a, 'awards']];
+  stats.forEach(([v, l], i) => { const cx = 150 + i*260; x.fillStyle = 'rgba(255,255,255,.08)'; x.beginPath(); x.roundRect(cx - 115, 1000, 230, 150, 24); x.fill(); T(String(v), cx, 1062, 64, '#f2c53d'); T(l.toUpperCase(), cx, 1122, 24, '#ffffff', 800); });
+  T(J.rv ? `${J.rv.toFixed ? J.rv.toFixed(1) : J.rv}★ from customers · ${J.k} discoveries` : `${J.k} hawker discoveries`, W/2, 1210, 30, '#ffffff', 700);
+  T('Play free at makiyakinabe.github.io/hawker-hero', W/2, 1290, 26, 'rgba(255,255,255,.6)', 700);
+}
+const enc30 = o => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/, '');
+const dec30 = s => JSON.parse(decodeURIComponent(escape(atob(s))));
+function visitLink(J){ return location.href.split('#')[0] + '#visit=' + enc30(J); }
+function openJourney(J, visiting){
+  const ov = modal30('jrOv', `<span class="ch-tag">${visiting ? 'VISITING A FRIEND’S STALL' : 'SHARE YOUR STORY'}</span><h2>${visiting ? `${esc(J.n)}’s hawker journey` : 'My Hawker Journey'}</h2>
+    <canvas aria-label="Hawker journey card"></canvas>
+    <div class="jr-btns">${visiting ? `<button type="button" class="buy" data-x>Start my own stall</button>`
+      : `<button type="button" class="buy" data-save>Save picture</button><button type="button" class="buy" data-share>Share</button><button type="button" class="buy" data-link>Copy visit link</button>`}</div>
+    <p class="jr-note">${visiting ? 'Your own save is safe: visiting doesn’t change your game.' : 'Your visit link lets friends see your card. Nothing is uploaded: the card lives inside the link.'}</p>
+    ${visiting ? '' : '<button class="big" type="button" data-x style="margin-top:.6rem">Close</button>'}`, 'jr-card');
+  const cv = ov.querySelector('canvas'); drawJourney(cv, J);
+  ov.querySelectorAll('[data-x]').forEach(b => b.addEventListener('click', () => { ov.hidden = true; if (visiting) history.replaceState(null, '', location.href.split('#')[0]); }));
+  const save1 = ov.querySelector('[data-save]'), share = ov.querySelector('[data-share]'), link = ov.querySelector('[data-link]');
+  if (save1) save1.addEventListener('click', () => cv.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'my-hawker-journey.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); toast('Picture saved'); }));
+  if (link) link.addEventListener('click', async () => { const u = visitLink(J); try { await navigator.clipboard.writeText(u); toast('Visit link copied!'); } catch(e){ prompt && toast('Copy this link: ' + u); } });
+  if (share) share.addEventListener('click', () => cv.toBlob(async b => {
+    const u = visitLink(J), f = new File([b], 'my-hawker-journey.png', {type:'image/png'});
+    try { if (navigator.canShare && navigator.canShare({files:[f]})) await navigator.share({files:[f], title:'My Hawker Journey', text:`Come visit my stall in Hawker Hero! ${u}`});
+      else if (navigator.share) await navigator.share({title:'My Hawker Journey', text:'Come visit my stall in Hawker Hero!', url:u});
+      else { await navigator.clipboard.writeText(u); toast('Sharing isn’t available here, so the visit link was copied instead.'); } } catch(e){}
+  }));
+  REC.log('journey', {visiting:!!visiting});
+}
+const _renderRank30 = renderRank;
+renderRank = function(){
+  _renderRank30();
+  const el = $('#rankCard'); if (!el || el.querySelector('.rk-jr')) return;
+  el.insertAdjacentHTML('beforeend', `<button type="button" class="buy rk-jr">🪪 My Journey</button>`);
+  el.querySelector('.rk-jr').addEventListener('click', () => { sfx.tick(); openJourney(journeyData(), false); });
+};
+/* someone opened a friend's visit link */
+(function visitOnLoad(){
+  const m = location.hash.match(/^#visit=([A-Za-z0-9+/]+)/); if (!m) return;
+  let J; try { J = dec30(m[1]); if (!J || typeof J.n !== 'string') return; J.n = J.n.slice(0, 20); J.sn = String(J.sn || '').slice(0, 28); ['r','d','st','b','a','k','g'].forEach(k => J[k] = Math.max(0, Math.min(9999, +J[k] || 0))); J.r = Math.min(J.r, RANKS.length - 1); J.rv = Math.max(0, Math.min(5, +J.rv || 0)); } catch(e){ return; }
+  const t = setInterval(() => { if ($('#loadOv') && !$('#loadOv').hidden) return; if ($('#introOv') && !$('#introOv').hidden) return; clearInterval(t); openJourney(J, true); }, 600);
+})();
+
+/* ---------- 8. SETTINGS: change identity ---------- */
+(function idSetting(){
+  const how = $('#setPace'); if (!how) return;
+  how.closest('.set-row').insertAdjacentHTML('beforebegin', `<div class="set-row"><span>Hawker identity<small id="setIdInfo">Not chosen yet</small></span><button class="buy" type="button" id="setId">Choose</button></div>`);
+  $('#setId').addEventListener('click', () => { $('#setOv').hidden = true; openIdentity(false); });
+  const _rs = renderSettings; renderSettings = function(){ _rs(); const I = ID30[save.id30]; $('#setIdInfo').textContent = I ? `${I.ic} ${I.name}` : 'Not chosen yet'; $('#setId').textContent = I ? 'Change' : 'Choose'; };
+})();
+
+/* =================================================================
    GUIDED FIRST TRIES for the hand-built steps (templates are handled in guideState)
    ================================================================= */
 const optLabel = (f, v) => { const o = f.opts && f.opts.find(o => o[0] === v); return o ? o[1] : String(v); };
