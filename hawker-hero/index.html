@@ -10362,6 +10362,9 @@ drawStallView = function(sv){
   } catch(e){}
 };
 
+/* ---------- shorter cook timers on the ticket rail: half the old wait, 3 to 7 seconds ---------- */
+Object.values(PASSIVE).forEach(p => { p[2] = Math.max(3, Math.round(p[2] / 2)); });
+
 /* =================================================================
    GUIDED FIRST TRIES for the hand-built steps (templates are handled in guideState)
    ================================================================= */
