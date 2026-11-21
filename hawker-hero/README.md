@@ -41,3 +41,14 @@ The whole game is one self-contained `index.html` (no build step, no server). `h
 - Hawker Academy: lessons and quizzes on menu costing, food safety, customer service and going digital
 - Pass a recipe on to an apprentice at Mentor rank
 - Colour-blind friendly patience bars
+
+### "Living in a hawker centre" update
+- Wok beat: char kway teow and Hokkien mee now have a rhythm toss, with a clang on every beat
+- Mistakes customers notice: the weakest step becomes a specific comment ("a bit greasy, not much wok hei"), and getting a regular's usual wrong costs a heart
+- Break-even line before service, and a "where today's money went" coin bar on the closing receipt
+- The wet market changes every morning: some ingredients fresh and cheap, some pricey
+- Mentor chapters teach real skills: faster cooking, a supplier discount, more patient customers, the recipe, and teaching
+- Lunch-hour tables: a table-flow game where you seat diners, clear trays and respect every chope
+- Ask the hawker: ask your mentor questions at the stall and learn by talking
+- Hawker Moments: honest, kind answers (halal questions, helping an elderly customer with QR payments, a tourist's pronunciation)
+- Lived-in detail: ceiling fans, flickering tube lights, a 1989 photo and a handwritten "Today's special" board
