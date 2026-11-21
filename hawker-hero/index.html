@@ -11495,6 +11495,391 @@ ACH.push({id:'academy', ic:'🎓', t:'Hawker Academy Graduate', d:'Pass all four
 })();
 
 /* =================================================================
+   LIVING IN A HAWKER CENTRE (v32): a wok-beat rhythm for the wok dishes,
+   mistakes customers actually notice, a break-even line and a coin bar on
+   the receipt, a wet market whose prices change each morning, mentor
+   chapters that teach real skills, the lunch-hour table-flow game (chope
+   and tray return), “ask the hawker”, Hawker Moments, and lived-in detail
+   (ceiling fans, flickering tubes, a 1989 photo, a handwritten special).
+   ================================================================= */
+(function css32(){
+  const s = document.createElement('style'); s.textContent = `
+.ask-card{margin-top:.7rem;border:.12rem solid #c9d3cd;border-radius:.8rem;padding:.6rem .7rem;background:#fff}
+.ask-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem}
+.ask-chips button{padding:.4rem .65rem;border-radius:1rem;border:.12rem solid #14211b;background:#fff;font:inherit;font-size:.84rem;font-weight:700;cursor:pointer;min-height:2.5rem;text-align:left}
+.ask-chips button[aria-pressed=true]{background:#fff7d6}
+.ask-ans{margin:.5rem 0 0;padding:.55rem .7rem;border-radius:.7rem;background:#f4f7f5;border-left:.25rem solid #f2c53d;line-height:1.45;font-size:.9rem}
+.ask-ans small{display:block;margin-top:.25rem;color:#2f6db0;font-weight:800}
+.skill-list{list-style:none;margin:.35rem 0 0;padding:0;font-size:.84rem}
+.skill-list li{padding:.15rem 0}
+.skill-list li.got::before{content:'✓ ';color:#2f9e5b;font-weight:900}
+.skill-list li.no{color:#8a958f}
+.skill-list li.no::before{content:'🔒 '}
+.coinbar{margin:.4rem 0 .2rem}
+.coinbar .cb-row{display:flex;height:1.4rem;border-radius:.4rem;overflow:hidden;background:#eef2f0;border:1px solid #d6dcd8}
+.coinbar .cb-row span{display:flex;align-items:center;justify-content:center;font-size:.66rem;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;min-width:0}
+.coinbar .cb-lbl{display:flex;justify-content:space-between;font-size:.72rem;color:#5b6b63;font-weight:700;margin:.15rem 0 .35rem}
+.be-line{margin:.35rem 0 0;font-size:.85rem;background:#fff7d6;border-radius:.55rem;padding:.4rem .6rem;line-height:1.4}
+.mkt-note{margin:0 0 .6rem;padding:.5rem .65rem;border-radius:.6rem;background:#eef6f1;border-left:.25rem solid #2f9e5b;font-size:.86rem;line-height:1.4}
+.tf-card{width:min(40rem,calc(100% - 1rem));max-height:calc(100dvh - 1rem);overflow:auto}
+.ov-card.tf-card,.ov-card.tf-card p,.ov-card.ctr-card,.ov-card.ctr-card p,.ov-card.ch-card,.ov-card.ch-card p{text-align:left}
+.ov-card.tf-card h2,.ov-card.tf-card h3{text-align:center}
+.tf-top{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.4rem;font-size:.85rem;font-weight:800}
+.tf-time{flex:1 1 8rem;height:.6rem;border-radius:1rem;background:#e6ece8;overflow:hidden}
+.tf-time i{display:block;height:100%;background:#f2c53d}
+.tf-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.4rem}
+.tf-grid button{aspect-ratio:1.15;max-width:100%;border-radius:.7rem;border:.13rem solid #14211b;background:#fff;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;padding:.2rem;min-width:0}
+.tf-grid button .ic{font-size:1.5rem;line-height:1}
+.tf-grid button small{font-size:.62rem;font-weight:800;line-height:1.1;text-align:center;overflow-wrap:anywhere}
+.tf-grid button.dirty{background:#fbe7d6}
+.tf-grid button.chope{background:#eef4ff}
+.tf-grid button.busy{background:#eef6f1;cursor:default}
+.tf-grid button.target{outline:.2rem dashed #2f9e5b;outline-offset:-.35rem}
+.tf-q{display:flex;gap:.35rem;flex-wrap:wrap;align-content:flex-start;height:auto;min-height:3rem;margin:.5rem 0;padding:.4rem;border-radius:.6rem;background:#f4f7f5}
+.tf-q button{padding:.35rem .55rem;border-radius:.7rem;border:.12rem solid #14211b;background:#fff;font:inherit;font-size:.8rem;font-weight:800;cursor:pointer;min-height:2.6rem}
+.tf-q button[aria-pressed=true]{background:#f2c53d}
+.tf-q .pat{display:block;height:.25rem;border-radius:1rem;background:#2f9e5b;margin-top:.15rem}
+.tf-msg{min-height:1.4rem;font-size:.85rem;font-weight:800;color:#2a4a3a;margin:.2rem 0}
+.tf-res{display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));gap:.4rem;margin:.5rem 0}
+.tf-res div{background:#f4f7f5;border-radius:.6rem;padding:.4rem .5rem}
+.tf-res small{display:block;font-size:.68rem;font-weight:800;color:#5b6b63;text-transform:uppercase}
+.tf-res b{font-size:1.1rem}
+`; document.head.appendChild(s);
+})();
+
+/* ---------- 1. THE WOK BEAT: a rhythm toss for the wok dishes ---------- */
+function rhythm(o){
+  const LEAD = 1.5, HIT = 0.18;
+  return {
+    kind:'timing', opt:o, guide:o.guide, title:o.title, hint:o.hint, time:o.time || 16, gesture:'Tap on the beat',
+    button:{label:o.btn || 'Toss!', mode:'tap'}, keys:'or press Space',
+    init(s){
+      const gap = (kidMode() ? 0.78 : 0.56)*(LV('tools') >= 2 ? 1.1 : 1);
+      s.notes = []; let t = 1.4;
+      for (let i = 0; i < o.beats; i++){ s.notes.push({t, res:null}); t += gap*(o.swing && i % 4 === 3 ? 1.5 : 1); }
+      s.clock = 0; s.flash = 0; s.last = null; s.lastX = null; s.zc = 0.18; s.zh = 0.07; s.pos = 1; s.round = 0; s.rounds = o.beats; s.ticked = -1; s.res = [];
+    },
+    update(s, dt){
+      s.clock += dt; if (s.flash > 0) s.flash -= dt;
+      s.notes.forEach((n, i) => { if (n.res == null && s.clock - n.t > HIT*1.6){ n.res = 0; s.res.push(0); s.round++; s.last = 0; s.flash = 0.35; sfx.bad(); } });
+      const next = s.notes.find(n => n.res == null);
+      s.pos = next ? clamp(0.18 + (next.t - s.clock)/LEAD*0.82, -0.1, 1.2) : 0.18;
+      /* the wok clangs on every beat so you can feel the rhythm */
+      const k = s.notes.findIndex(n => n.t <= s.clock && n.t > s.clock - dt - 0.001);
+      if (k >= 0 && k !== s.ticked){ s.ticked = k; try { tone(150, 0.05, 'square', 0.025); } catch(e){} }
+    },
+    tap(s){
+      if (s.finished) return;
+      let best = null, bd = 9; s.notes.forEach(n => { if (n.res == null){ const d = Math.abs(n.t - s.clock); if (d < bd){ bd = d; best = n; } } });
+      if (!best || bd > 0.45) return;
+      const sc = bd <= HIT ? Math.round(100 - bd/HIT*35) : Math.max(0, Math.round(55 - (bd - HIT)*200));
+      best.res = sc; s.res.push(sc); s.round++; s.last = sc; s.lastX = 0.18; s.flash = 0.6;
+      if (sc >= 70){ sfx.tick(); try { tone(420 + Math.random()*60, 0.07, 'sawtooth', 0.02); } catch(e){} } else sfx.bad();
+    },
+    down(s){ this.tap(s); },
+    done(s){ return s.notes.every(n => n.res != null) && s.flash <= 0.1; },
+    score(s){ return s.notes.reduce((a, n) => a + (n.res || 0), 0)/s.notes.length; },
+    draw(s){
+      o.scene(s);
+      const x0 = 30, w = 340, y = 252, hx = x0 + 0.18*w;
+      box(x0, y, w, 22, 11, '#ffffff', C.ink, 2);
+      circle(hx, y + 11, 13, s.flash > 0 && s.last >= 70 ? 'rgba(47,158,91,.35)' : 'rgba(242,197,61,.35)', C.ink, 2);
+      s.notes.forEach(n => { if (n.res != null) return; const px = x0 + clamp(0.18 + (n.t - s.clock)/LEAD*0.82, -0.05, 1.05)*w; if (px > x0 + w - 4 || px < x0 + 4) return; circle(px, y + 11, 7.5, '#e8743b', C.ink, 1.6); line(px - 3, y + 8, px + 3, y + 8, 'rgba(255,255,255,.7)', 1.4); });
+      txt('WOK BEAT', x0 + w - 4, y - 7, 9, C.ink, {display:true, align:'right'});
+      for (let i = 0; i < s.notes.length; i++) circle(x0 + w - (s.notes.length - 1 - i)*11, y + 34, 3.8, s.notes[i].res == null ? '#ffffff' : s.notes[i].res >= 70 ? C.good : C.red, C.ink, 1.2);
+      if (s.flash > 0 && s.last != null) txt(grade(s.last), x0, y + 34, 13, s.last >= 70 ? C.good : C.red, {align:'left'});
+    }
+  };
+}
+const WOK_BEAT = rhythm({title:'Toss to the wok beat', beats:8, swing:true, scene:S.toss, hint:'Tap each time a beat reaches the ring. Keep the rhythm and the noodles char evenly.', btn:'Toss!'});
+const HK_BEAT = rhythm({title:'Toss to the wok beat', beats:6, scene:S.toss, hint:'Tap on each beat. The noodles soak up the stock as you toss.', btn:'Toss!'});
+(function rewire(){
+  const ckt = STALLS.find(s => s.id === 'ckt'), hk = STALLS.find(s => s.id === 'hokkien');
+  if (ckt){ ckt.cook = () => [CKT_ADD, CKT_HEAT, WOK_BEAT]; ckt.flow = ['Into the wok','Wok hei','Wok beat']; }
+  if (hk){ hk.cook = () => [HK_FRY, HK_BEAT, HK_SIMMER, HK_PLATE]; hk.flow = ['Fry','Wok beat','Simmer','Plate']; }
+  if (PASSIVE.ckt && PASSIVE.ckt[0] === CKT_TOSS) PASSIVE.ckt[0] = WOK_BEAT;
+})();
+
+/* ---------- 2. MISTAKES CUSTOMERS NOTICE ---------- */
+const FLAWS = [
+  [/poach|simmer/i, 'The meat was a bit dry and tough today.'], [/ice bath|ice/i, 'The skin wasn’t smooth: it wasn’t chilled properly.'],
+  [/wok|toss|fry/i, 'A bit greasy and not much wok hei.'], [/chop|cut|slice|cube/i, 'The pieces were uneven and messy.'],
+  [/ladle|pour|scoop|soup|gravy|santan|sauce/i, 'Too little sauce, the rest went dry.'], [/blanch/i, 'The noodles were soggy.'],
+  [/grill|turn|fan/i, 'Some sticks were charred, some still pale.'], [/shave/i, 'The ice was chunky and melted fast.'],
+  [/drizzle|syrup|gula/i, 'Way too sweet, or not sweet enough.'], [/flip|spin|fold/i, 'The prata wasn’t crispy.'],
+  [/plate|assemble|top|garnish|tray|bowl/i, 'They missed something I asked for.'], [/egg|crack/i, 'The egg was overcooked.']
+];
+const _dishResult32 = dishResult;
+dishResult = function(q, c, steps, scores, stars, last){
+  const r = _dishResult32.apply(this, arguments);
+  try {
+    let worst = -1, ws = 101; (scores || []).forEach((sc, i) => { if (sc < ws){ ws = sc; worst = i; } });
+    if (worst >= 0 && ws < 60 && steps && steps[worst]){ const t = steps[worst].title || ''; const f = FLAWS.find(([re]) => re.test(t)); c.flaw = f ? f[1] : 'Something tasted off today.'; c.flawStep = t; }
+    /* a regular whose usual you get wrong loses a little trust */
+    if (c.reg && stars <= 1){ const rel = relOf(c.st.id, c.reg); if (rel.hearts > 0){ rel.hearts -= 1; c.trustLost = true; persist(); } }
+  } catch(e){}
+  return r;
+};
+const _addReviews32 = addReviews;
+addReviews = function(st, results){
+  _addReviews32(st, results);
+  const list = (save.rev30 || {})[st.id] || [];
+  results.filter(r => r.c.flaw && !r.walkout && r.stars <= 2).slice(0, 1).forEach(r => { list.unshift({s:r.stars === 2 ? 3 : 2, tx:r.c.flaw, who:r.c.reg ? 'Regular' : WHO[r.c.persona] || 'Customer', name:firstName(r.c.cust.name), day:dayNo()}); });
+  if (save.rev30) save.rev30[st.id] = list.slice(0, 24);
+};
+const _showSummary32 = showSummary;
+showSummary = function(st, results){
+  _showSummary32(st, results);
+  try {
+    const noted = results.filter(r => r.c.flaw && !r.walkout), lost = results.filter(r => r.c.trustLost);
+    if (!noted.length && !lost.length) return;
+    const rv = $('#sumReview'); if (!rv) return;
+    const box = document.createElement('div');
+    box.innerHTML = `<p class="rc-h">WHAT CUSTOMERS NOTICED</p><ul class="sg-list">${noted.slice(0, 3).map(r => `<li class="no">${esc(firstName(r.c.cust.name))}: “${esc(r.c.flaw)}” <small>(${esc(r.c.flawStep)})</small></li>`).join('')}
+      ${lost.map(r => `<li class="no">${esc(firstName(r.c.cust.name))} looked disappointed. You got their usual wrong (−1 ♥).</li>`).join('')}</ul>`;
+    rv.append(box);
+  } catch(e){}
+};
+
+/* ---------- 3. THE WET MARKET changes every morning ---------- */
+const MKT_BASE = {}; Object.entries(MARKET).forEach(([id, list]) => { MKT_BASE[id] = list.map(m => m[3]); });
+function hash32(s){ let h = 7; for (const ch of s) h = (h*31 + ch.charCodeAt(0)) >>> 0; return h; }
+function marketToday(id){
+  const r = seeded(dayNo()*71 + hash32(id) % 997), out = {};
+  (MARKET[id] || []).forEach(([k], i) => { const x = r(); out[k] = dayNo() <= 1 ? 1 : x < 0.22 ? 0.8 : x > 0.85 ? 1.2 : 1; });
+  return out;
+}
+function applyMarket(){
+  Object.entries(MARKET).forEach(([id, list]) => {
+    const T = marketToday(id), skill = ssOf(id).p >= 2 ? 0.9 : 1;
+    list.forEach((m, i) => { const b = MKT_BASE[id] ? MKT_BASE[id][i] : m[3]; if (b != null) m[3] = Math.max(10, Math.round(b*T[m[0]]*skill/10)*10); });
+  });
+}
+applyMarket();
+let mktDay32 = dayNo(); setInterval(() => { if (dayNo() !== mktDay32){ mktDay32 = dayNo(); applyMarket(); } }, 2000);
+function marketNote(st){
+  const T = marketToday(st.id), cheap = MARKET[st.id].filter(([k]) => T[k] < 1).map(m => m[1]), dear = MARKET[st.id].filter(([k]) => T[k] > 1).map(m => m[1]);
+  const skill = ssOf(st.id).p >= 2;
+  if (!cheap.length && !dear.length && !skill) return '';
+  return `<p class="mkt-note">🧺 <b>At the wet market this morning:</b> ${cheap.length ? `${esc(cheap.join(', '))} ${cheap.length > 1 ? 'are' : 'is'} fresh and 20% cheaper. ` : ''}${dear.length ? `${esc(dear.join(', '))} ${dear.length > 1 ? 'are' : 'is'} pricey today (+20%). ` : ''}${skill ? `${esc(st.mentor)}’s supplier gives you 10% off everything.` : ''}</p>`;
+}
+
+/* ---------- 4. MENTOR CHAPTERS TEACH REAL SKILLS ---------- */
+const SKILLS = [[1,'Technique','This stall’s food cooks 1 second faster on the rail'],[2,'Cost control','Mentor’s supplier: 10% off at the market'],[3,'Service','Customers here wait 8% longer'],[4,'The recipe','The secret recipe, unlocked in the menu']];
+const PASS_BASE = {}; Object.entries(PASSIVE).forEach(([id, p]) => { PASS_BASE[id] = p[2]; });
+const _startShift32 = startShift;
+startShift = function(st, service){
+  if (PASSIVE[st.id]) PASSIVE[st.id][2] = Math.max(2, PASS_BASE[st.id] - (ssOf(st.id).p >= 1 ? 1 : 0));
+  applyMarket();
+  return _startShift32(st, service);
+};
+const _mkCust32 = makeCustomers;
+makeCustomers = function(st, beginner, service){
+  const list = _mkCust32(st, beginner, service), r = ssOf(st.id);
+  if (r.p >= 3) list.forEach(c => { c.pm *= 1.08; });
+  return list;
+};
+const _ssCard32 = ssCardHTML;
+ssCardHTML = function(st){
+  const html = _ssCard32(st); if (!html) return html;
+  const r = ssOf(st.id), ch2 = (r.q || 0) >= 2;
+  return html + `<div class="sstory"><p class="label">Skills ${esc(st.mentor)} taught you</p><ul class="skill-list">${SKILLS.map(([p, t, d]) => `<li class="${r.p >= p ? 'got' : 'no'}"><b>${t}</b> (Part ${p}): ${esc(d)}</li>`).join('')}
+    <li class="${ch2 ? 'got' : 'no'}"><b>Teaching</b> (Chapter 2): good shifts here add +1 reputation</li></ul></div>`;
+};
+const _showSummary32b = showSummary;
+showSummary = function(st, results){
+  _showSummary32b(st, results);
+  try { const r = ssOf(st.id), served = results.filter(x => !x.walkout), avg = served.length ? served.reduce((a, x) => a + x.stars, 0)/served.length : 0;
+    if ((r.q || 0) >= 2 && avg >= 2.3){ save.rep[st.id] = Math.min(100, repOf(st.id) + 1); persist(); } } catch(e){}
+};
+
+/* ---------- 5. BREAK-EVEN LINE and a coin bar on the receipt ---------- */
+function avgPlate(st){ try { const m = menuStrip(st).match(/\$(\d+(?:\.\d+)?)/); return m ? Math.round(parseFloat(m[1])*100) : 500; } catch(e){ return 500; } }
+function breakEven(st){ const run = COST.rent + Math.round(COST.util*((save.green31 || {}).stove ? 0.65 : 1)), plate = avgPlate(st), ing = Math.round(costPerServing(st.id)); return {run, plate, ing, n:Math.max(1, Math.ceil(run/Math.max(30, plate - ing)))}; }
+const _renderTab32 = renderTab;
+renderTab = function(){
+  _renderTab32();
+  try {
+    if (!curStall || SH || !save.built[curStall.id]) return;
+    const body = $('#tabBody');
+    if (curTab === 'shift'){
+      const B = breakEven(curStall), biz = body.querySelector('.biz');
+      if (biz && !biz.querySelector('.be-line')) biz.insertAdjacentHTML('beforeend', `<p class="be-line">📏 <b>Break-even today:</b> rent and gas cost ${money(B.run)}. Each plate sells for about ${money(B.plate)} and its ingredients cost ${money(B.ing)}, so you need about <b>${B.n} plates</b> before you make any profit.</p>`);
+      askCard(curStall, body);
+    }
+    if (curTab === 'market' || curTab === 'store'){ const n = marketNote(curStall); if (n && !body.querySelector('.mkt-note')) body.insertAdjacentHTML('afterbegin', n); }
+  } catch(e){ console.warn(e); }
+};
+const _showLedger32 = showLedger;
+showLedger = function(){
+  _showLedger32();
+  try {
+    const box = document.querySelector('.cost29'); if (!box || box.querySelector('.coinbar')) return;
+    const n = id => { const el = [...box.querySelectorAll('.cost-list summary')].find(s => s.textContent.includes(id)); return el ? Math.round(parseFloat((el.querySelector('b').textContent.match(/[\d.]+/) || ['0'])[0])*100) : 0; };
+    const gross = (() => { const d = [...box.querySelectorAll('.cost-big div')].find(x => /Gross/.test(x.textContent)); return d ? Math.round(parseFloat(d.querySelector('b').textContent.replace(/[^\d.]/g, ''))*100) : 0; })();
+    const parts = [['Rent', n('Stall rent'), '#7a5530'], ['Gas & water', n('Gas'), '#5f6b68'], ['Packaging', n('Packaging'), '#8a6ab0'], ['Market', n('Market'), '#2f6db0'], ['Waste', n('Food waste'), '#c7372c']].filter(p => p[1] > 0);
+    const cost = parts.reduce((a, p) => a + p[1], 0), top = Math.max(gross, cost, 1), keep = Math.max(0, gross - cost);
+    const bar = document.createElement('div'); bar.className = 'coinbar';
+    bar.innerHTML = `<p class="label">Where today’s money went</p>
+      <div class="cb-row" aria-hidden="true"><span style="width:${gross/top*100}%;background:#e8a21a">🪙 Takings ${money(gross)}</span></div>
+      <div class="cb-lbl"><span>Coins in</span><span></span></div>
+      <div class="cb-row" aria-label="Costs">${parts.map(([l, v, c]) => `<span style="width:${v/top*100}%;background:${c}" title="${l} ${money(v)}">${v/top > 0.12 ? l : ''}</span>`).join('')}${keep ? `<span style="width:${keep/top*100}%;background:#2f9e5b">You keep ${money(keep)}</span>` : ''}</div>
+      <div class="cb-lbl"><span>${parts.map(([l, v]) => `${l} ${money(v)}`).join(' · ')}</span></div>`;
+    box.querySelector('.cost-big').before(bar);
+  } catch(e){ console.warn(e); }
+};
+
+/* ---------- 6. ASK THE HAWKER: learn by asking, at the stall ---------- */
+Object.assign(TERMS, {sgqr:['SGQR','One QR code that works with many payment apps. Most hawker stalls now accept e-payments, and cash is still welcome.']});
+function askList(st){
+  const own = (QA[st.id] || []).map(q => ({q:q.q, a:q.r, learn:q.learn}));
+  return [...own,
+    {q:'Why do people leave tissue packets on tables?', a:'Hah, that’s “chope”! It means the seat is taken. Everybody respects it. Don’t sit there or the auntie will scold you!', learn:'chope'},
+    {q:'Why must customers return their trays?', a:'So the next person gets a clean table, and the cleaners can keep up. Since 2021 it’s the law. Before that, the tables were a mess every lunch.', learn:'tray'},
+    {q:'What does the SGQR sticker do?', a:'One code, many apps. Young people scan, older uncles still pay cash. Both also can. I check the screen every time to see the right amount.', learn:'sgqr'},
+    {q:'What is “wok hei”?', a:'The breath of the wok! Very hot fire, small batch, toss fast. That smoky smell you cannot fake.', learn:'wokhei'},
+    {q:'How long have you been doing this?', a:`I’ve been ${st.since}. Long hours, but the regulars keep me going.`}];
+}
+function askCard(st, body){
+  if (body.querySelector('.ask-card')) return;
+  const L = askList(st), asked = (save.ask32 || (save.ask32 = {}))[st.id] || [];
+  const el = document.createElement('div'); el.className = 'ask-card';
+  el.innerHTML = `<p class="label">Ask ${esc(st.mentor)}</p><div class="ask-chips">${L.map((x, i) => `<button type="button" data-ask="${i}" aria-pressed="false">${asked.includes(i) ? '✓ ' : ''}${esc(x.q)}</button>`).join('')}</div><div class="ask-out" aria-live="polite"></div>`;
+  (body.querySelector('.sig-card') || body.querySelector('.biz') || body.lastElementChild).before(el);
+  el.querySelectorAll('[data-ask]').forEach(b => b.addEventListener('click', () => {
+    const i = +b.dataset.ask, x = L[i]; el.querySelectorAll('[data-ask]').forEach(y => y.setAttribute('aria-pressed', String(y === b)));
+    el.querySelector('.ask-out').innerHTML = `<p class="ask-ans">“${esc(x.a)}”${x.learn ? `<small>📖 ${esc(TERMS[x.learn][0])} is in your Hawker Book</small>` : ''}</p>`;
+    if (x.learn) discover(x.learn, true);
+    const A = save.ask32[st.id] || (save.ask32[st.id] = []); if (!A.includes(i)){ A.push(i); b.textContent = '✓ ' + x.q; b.setAttribute('aria-pressed', 'true'); }
+    persist(); sfx.tick(); try { if (typeof sayKid === 'function') sayKid(x.a); } catch(e){} REC.log('ask', {stall:st.id, i});
+  }));
+}
+
+/* ---------- 7. HAWKER MOMENTS: honest, kind answers matter ---------- */
+const MOMENTS = [
+  {who:['tourist','family'], stalls:['chicken','bkt','bcm','hokkien','ckt','fishball','western'], q:'Is your food halal?', o:[['It isn’t halal-certified, but there are halal stalls in this centre. Let me point you there.',1],['Yes, yes, all halal!',0],['Don’t know lah.',0]], r:'Being honest matters: only certified stalls can call their food halal. Pointing the way helps everyone eat together.'},
+  {who:['elderly'], q:'Ah boy, this QR thing how to use? My phone very new.', o:[['No problem. Cash is fine too, or I can show you slowly, step by step.',1],['Just scan lah, very easy.',0],['Sorry, QR only.',0]], r:'Patience helps older customers go digital at their own pace, and most stalls still take cash.', learn:'sgqr'},
+  {who:['tourist'], q:'One… “char kway tee-oh”, please? Did I say it right?', o:[['So close! “Char kway teow”. Very good! Want it spicy?',1],['Laugh and repeat it back in a funny voice.',0],['Just point at the picture.',0]], r:'A friendly correction makes visitors feel welcome to try more local food.'},
+  {who:['student'], q:'Can you add cheese and truffle oil? It’s trending!', o:[['Try the original first, then tell me what you think. If you still want cheese, we talk!',1],['Eww, never.',0],['Sure, anything you want.',0]], r:'Respect the recipe and the customer. Curiosity is a good start, even if you don’t follow every trend.'},
+  {who:['office'], q:'Boss, I’m in a hurry. How long?', o:[['About five minutes. I’ll call your buzzer number the moment it’s ready.',1],['Don’t know, wait and see.',0],['Go to another stall.',0]], r:'Telling people how long they’ll wait makes the queue feel shorter.'},
+  {who:['family','elderly'], q:'My grandson can’t eat chilli. Can?', o:[['Can! I’ll leave the chilli on the side for you.',1],['All got chilli, sorry.',0],['Just scrape it off.',0]], r:'Small changes, like sauce on the side, let the whole family eat at your stall.'}
+];
+const _pickQA32 = pickQA;
+pickQA = function(c){
+  const seen = save.mom32 || (save.mom32 = {});
+  const pool = MOMENTS.map((m, i) => ['m' + i, m]).filter(([k, m]) => !seen[k] && m.who.includes(c.persona) && (!m.stalls || m.stalls.includes(c.st.id)));
+  if (pool.length && Math.random() < 0.6){ const p = pick(pool); seen[p[0]] = 1; return p; }
+  return _pickQA32(c);
+};
+
+/* ---------- 8. LUNCH-HOUR TABLES: chope, seating and tray return ---------- */
+const TF_PEOPLE = [['🧓','Elderly uncle',true],['👩‍💼','Office lady',false],['🧑‍🎓','Student',false],['👨‍👩‍👧','Family',false],['👵','Auntie',true],['🧑‍🔧','Worker',false]];
+function openTables(reward){
+  const N = 12, DUR = 45;
+  const S = {t:0, tables:[], q:[], sel:null, seated:0, cleared:0, left:0, chopeOK:0, chopeBad:0, elderFirst:0, nextArr:1.2, msg:'Seat the queue, clear trays, and respect every chope!', over:false};
+  for (let i = 0; i < N; i++){ const r = Math.random(); S.tables.push(r < 0.3 ? {st:'dirty'} : r < 0.5 ? {st:'busy', until:2 + Math.random()*10} : {st:'free'}); }
+  [2, 7].forEach((i, k) => { S.tables[i] = {st:'chope', owner:k === 0 ? '☂️ Mr Lee' : '🧻 Kak Nur', ownerArr:6 + k*12}; });
+  const ov = modal30('tfOv', `<span class="ch-tag">THE CENTRE · LUNCH HOUR</span><h2>Find everyone a seat</h2>
+    <p class="hint2" style="margin:.1rem 0 .4rem">Tap a person, then a clean table. Tap a table with trays to clear it and return the trays. Tables marked with a tissue packet or umbrella are <b>choped</b>: save them for their owner. Older folks shouldn’t wait long.</p>
+    <div class="tf-top"><span id="tfStats">Seated 0 · Trays 0</span><div class="tf-time"><i id="tfBar" style="width:100%"></i></div></div>
+    <p class="tf-msg" id="tfMsg" aria-live="polite"></p><div class="tf-q" id="tfQ" aria-label="Waiting for a seat"></div>
+    <div class="tf-grid" id="tfGrid"></div><div id="tfEnd"></div>`, 'tf-card');
+  const grid = ov.querySelector('#tfGrid'), qEl = ov.querySelector('#tfQ');
+  const paint = () => {
+    grid.innerHTML = S.tables.map((t, i) => { const ic = t.st === 'dirty' ? '🍽️' : t.st === 'busy' ? '🍜' : t.st === 'chope' ? (t.owner.split(' ')[0]) : '🪑';
+      const lab = t.st === 'dirty' ? 'Trays left: tap to clear' : t.st === 'busy' ? 'Eating' : t.st === 'chope' ? `Choped: ${t.owner.split(' ').slice(1).join(' ')}` : 'Clean';
+      return `<button type="button" class="${t.st}${S.sel != null && t.st === 'free' ? ' target' : ''}" data-t="${i}" aria-label="Table ${i + 1}: ${lab}"><span class="ic" aria-hidden="true">${ic}</span><small>${lab}</small></button>`; }).join('');
+    qEl.innerHTML = S.q.length ? S.q.map((p, i) => `<button type="button" data-p="${i}" aria-pressed="${S.sel === i}">${p.ic} ${esc(p.name)}${p.elder ? ' ★' : ''}${p.owner ? ' (choped a table)' : ''}<span class="pat" style="width:${Math.max(0, 1 - p.wait/p.max)*100}%;background:${patCol(1 - p.wait/p.max)}"></span></button>`).join('') : '<small style="color:#6a7a72;font-weight:700">Nobody waiting… yet.</small>';
+    ov.querySelector('#tfStats').textContent = `Seated ${S.seated} · Trays returned ${S.cleared} · Left ${S.left}`;
+    ov.querySelector('#tfMsg').textContent = S.msg;
+  };
+  grid.addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b || S.over) return; const t = S.tables[+b.dataset.t];
+    if (t.st === 'dirty'){ t.st = 'free'; S.cleared++; S.msg = 'Trays back at the tray return. Table is clean!'; sfx.tick(); }
+    else if (S.sel != null){ const p = S.q[S.sel];
+      if (t.st === 'free'){ seat(p, t); }
+      else if (t.st === 'chope'){ if (p.owner && t.owner === p.owner){ S.chopeOK++; seat(p, t); S.msg = `${p.name} found their choped table. Nice!`; } else { S.chopeBad++; S.msg = 'That table is choped! Someone is coming back for it.'; sfx.bad(); } }
+      else { S.msg = 'Someone is still eating there.'; } }
+    else S.msg = t.st === 'free' ? 'Tap someone in the queue first.' : t.st === 'chope' ? 'Choped with a tissue packet. Leave it for the owner.' : 'Still eating, let them enjoy.';
+    paint(); });
+  qEl.addEventListener('click', e => { const b = e.target.closest('[data-p]'); if (!b || S.over) return; S.sel = S.sel === +b.dataset.p ? null : +b.dataset.p; S.msg = S.sel != null ? 'Now tap a clean table for them.' : ''; sfx.tick(); paint(); });
+  function seat(p, t){ const elders = S.q.filter(x => x.elder), oldestElder = elders.length ? elders.reduce((a, x) => x.wait > a.wait ? x : a) : null;
+    if (p.elder || !oldestElder || oldestElder.wait < 4) S.elderFirst++;
+    t.st = 'busy'; t.until = S.t + 6 + Math.random()*6; S.q.splice(S.q.indexOf(p), 1); S.sel = null; S.seated++; if (!S.msg.includes('choped')) S.msg = `${p.name} is seated. Enjoy!`; sfx.tick(); }
+  let prev = performance.now();
+  const loop = now => {
+    if (ov.hidden || S.over) return;
+    const dt = Math.min(0.1, (now - prev)/1000); prev = now; S.t += dt;
+    S.tables.forEach(t => { if (t.st === 'busy' && S.t >= t.until) t.st = Math.random() < 0.55 ? 'dirty' : 'free'; if (t.st === 'chope' && !t.arrived && S.t >= t.ownerArr){ t.arrived = true; S.q.push({ic:t.owner.split(' ')[0], name:t.owner.split(' ').slice(1).join(' '), owner:t.owner, wait:0, max:12}); } });
+    if (S.t >= S.nextArr && S.t < DUR - 4){ const P = pick(TF_PEOPLE); S.q.push({ic:P[0], name:P[1], elder:P[2], wait:0, max:P[2] ? 11 : 15}); S.nextArr = S.t + 1.6 + Math.random()*2; }
+    S.q.slice().forEach(p => { p.wait += dt; if (p.wait > p.max){ S.q.splice(S.q.indexOf(p), 1); S.left++; S.sel = null; S.msg = `${p.name} gave up and took away instead.`; } });
+    ov.querySelector('#tfBar').style.width = `${Math.max(0, 1 - S.t/DUR)*100}%`;
+    if (Math.floor(S.t*4) !== Math.floor((S.t - dt)*4)) paint();
+    if (S.t >= DUR) return finish();
+    requestAnimationFrame(loop);
+  };
+  function finish(){
+    S.over = true;
+    const score = Math.max(0, Math.round(S.seated*8 + S.cleared*5 + S.chopeOK*10 - S.chopeBad*8 - S.left*10));
+    const stars = score >= 120 ? 3 : score >= 70 ? 2 : score >= 30 ? 1 : 0;
+    const C = ctr(); let gain = '';
+    if (reward){ const add = [0, 2, 4, 6][stars]; C.rating = Math.min(100, C.rating + add); C.cp += stars; C.helped[dayNo()] = C.helped[dayNo()] || 'tables'; gain = add ? `Centre rating +${add}, +${stars} community points` : 'No reward this time. Try again tomorrow!'; }
+    persist(); discover('chope', true); discover('tray', true); REC.log('tables', {score, stars});
+    ov.querySelector('#tfEnd').innerHTML = `<h3 style="margin:.7rem 0 .2rem">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)} Lunch hour over!</h3>
+      <div class="tf-res"><div><small>Seated</small><b>${S.seated}</b></div><div><small>Trays returned</small><b>${S.cleared}</b></div><div><small>Chopes respected</small><b>${S.chopeOK}</b></div><div><small>Walked away</small><b>${S.left}</b></div></div>
+      <p class="hint2">${esc(gain || 'Practice round.')} Returning trays means the next diner gets a clean table and the cleaners can keep up.</p>
+      <button type="button" class="big" data-x>Done</button>`;
+    ov.querySelector('[data-x]').addEventListener('click', () => { ov.hidden = true; if ($('#ctrOv') && !$('#ctrOv').hidden) openCentre(); });
+    paint();
+  }
+  paint(); requestAnimationFrame(loop);
+}
+/* the Centre Board gets a “lunch-hour tables” button; the tray issue opens the game */
+const _centreHTML32 = centreHTML;
+centreHTML = function(){
+  const played = ctr().tables32 === dayNo();
+  return _centreHTML32().replace('<div class="ctr-sec"><h3>Set meal', `<div class="ctr-sec"><h3>Lunch-hour tables</h3><p>Help seat diners, clear trays and respect every chope. ${played ? 'You helped today: play again for fun.' : 'Do it well to raise the centre rating.'}</p><div class="ctr-row"><button type="button" class="buy" data-tables>${played ? 'Play again' : 'Help at the tables'}</button></div></div><div class="ctr-sec"><h3>Set meal`);
+};
+const _openCentre32 = openCentre;
+openCentre = function(){
+  _openCentre32();
+  const ov = $('#ctrOv'), b = ov && ov.querySelector('[data-tables]');
+  if (b) b.addEventListener('click', () => { const first = ctr().tables32 !== dayNo(); ctr().tables32 = dayNo(); persist(); ov.hidden = true; openTables(first); });
+  const iss = todayIssue(), h = ov && ov.querySelector('[data-help]');
+  if (h && iss && iss.id === 'trays'){ const nb = h.cloneNode(true); nb.textContent = 'Go help at the tables'; h.replaceWith(nb); nb.addEventListener('click', () => { ctr().helped[dayNo()] = 'trays'; ctr().tables32 = dayNo(); persist(); ov.hidden = true; openTables(true); }); }
+};
+
+/* ---------- 9. LIVED-IN DETAIL: fans, flickering tubes, an old photo, a handwritten special ---------- */
+const _counterHall32 = counterHall;
+counterHall = function(){
+  const r = _counterHall32.apply(this, arguments);
+  try {
+    const t = performance.now()/1000;
+    [[100, 9], [300, 9]].forEach(([x, y], k) => { g.save(); g.translate(x, y); line(0, -9, 0, -2, '#3d4442', 1.4); g.rotate(t*7 + k);
+      for (let i = 0; i < 3; i++){ g.save(); g.rotate(i*2.094); g.fillStyle = 'rgba(70,80,76,.75)'; g.beginPath(); g.ellipse(13, 0, 13, 2.6, 0, 0, Math.PI*2); g.fill(); g.restore(); }
+      circle(0, 0, 3, '#5f6b68'); g.restore(); });
+    const fl = Math.sin(t*37) > 0.97 ? 0.25 : 0.85;
+    [[170, 4], [230, 4]].forEach(([x, y]) => { box(x - 22, y, 44, 4, 2, `rgba(255,255,245,${fl})`, 'rgba(120,130,125,.6)', 0.6); g.fillStyle = `rgba(255,255,230,${fl*0.12})`; g.beginPath(); g.moveTo(x - 22, y + 4); g.lineTo(x + 22, y + 4); g.lineTo(x + 40, y + 40); g.lineTo(x - 40, y + 40); g.closePath(); g.fill(); });
+  } catch(e){}
+  return r;
+};
+function oldPhoto(x, y){ g.save(); g.translate(x, y); g.rotate(-0.08); box(0, 0, 30, 26, 1.5, '#f6efdc', '#b8a888', 0.8); g.fillStyle = '#a8916a'; g.fillRect(3, 3, 24, 16);
+  g.fillStyle = 'rgba(70,50,30,.55)'; [[8, 13], [15, 11], [22, 13]].forEach(([px, py]) => { g.beginPath(); g.arc(px, py, 2.2, 0, Math.PI*2); g.fill(); g.fillRect(px - 2.5, py + 2, 5, 5); });
+  txt('1989', 15, 22.5, 4.2, '#5a4a30', {display:true}); box(11, -2, 8, 4, 1, 'rgba(240,230,200,.7)'); g.restore(); }
+function specialBoard(x, y, text){ box(x, y, 58, 28, 2, '#2a3a32', '#7a5530', 1.6); txt('TODAY’S SPECIAL', x + 29, y + 6.5, 4, '#f2c53d', {display:true});
+  let fs = 6.4; g.font = `italic 700 ${fs}px ${F_DISP}`; while (g.measureText(text).width > 52 && fs > 3.6){ fs -= 0.2; g.font = `italic 700 ${fs}px ${F_DISP}`; }
+  g.fillStyle = '#fffdf3'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, x + 29, y + 16); line(x + 8, y + 22.5, x + 50, y + 22.5, 'rgba(255,255,255,.35)', 0.6); }
+const _drawStallView32 = drawStallView;
+drawStallView = function(sv){
+  _drawStallView32(sv);
+  try {
+    if (!sv || !sv.st || sv.build != null || !save.built[sv.st.id]) return;
+    oldPhoto(96, 203);
+    const sig = save.sig30 && save.sig30.stall === sv.st.id ? save.sig30.name : sv.st.dish;
+    specialBoard(244, 203, sig);
+  } catch(e){}
+};
+
+/* =================================================================
    GUIDED FIRST TRIES for the hand-built steps (templates are handled in guideState)
    ================================================================= */
 const optLabel = (f, v) => { const o = f.opts && f.opts.find(o => o[0] === v); return o ? o[1] : String(v); };
