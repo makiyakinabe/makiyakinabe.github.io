@@ -3782,13 +3782,14 @@ Object.assign(DISH, {
     /* the wooden tray */
     box(-108, -84, 216, 168, 12, lin(0, -84, 0, 84, [[0, '#c99a62'], [1, '#a87a44']]), '#7a5530', 2);
     g.strokeStyle = 'rgba(122,85,48,.3)'; g.lineWidth = 1.2; for (let i = 0; i < 6; i++){ g.beginPath(); g.moveTo(-100, -70 + i * 28); g.bezierCurveTo(-40, -76 + i * 28, 40, -64 + i * 28, 100, -70 + i * 28); g.stroke(); }
-    /* the soup */
-    g.save(); g.translate(-20, -6);
+    /* the soup: the fewer the sides, the bigger and more central the bowl */
+    const sides = ['rice','youtiao','saltveg','taupok','teapot','trotter'].filter(k => N(k)).length;
+    g.save(); if (sides <= 1){ g.translate(-4, 0); g.scale(1.45, 1.45); } else if (sides <= 3){ g.translate(-14, -2); g.scale(1.2, 1.2); } else g.translate(-20, -6);
     shadow(3, 6, 54, 50); circle(0, 0, 54, rad(-16, -16, 3, 58, [[0, '#ffffff'], [1, '#e2e7e5']]), '#b9c3c0', 2); circle(0, 0, 44, rad(-12, -12, 3, 46, [[0, '#e9d8b4'], [1, '#c9a874']]));
     const ribs = w.cut === 'spare' ? 3 : 2;
     for (let i = 0; i < ribs; i++) porkRib(-10 + i * 12, -12 + i * 14, 0.9, -0.5 + i * 0.6, 390 + i);
     garlicBulb(18, -18, 1); garlicBulb(-22, 18, 0.9);
-    speckle(392, 30, 0, 0, 38, 38, ['rgba(60,40,20,.55)', 'rgba(255,240,200,.7)'], 1.4);
+    speckle(392, 30, 0, 0, 38, 38, ['rgba(60,40,20,.55)', 'rgba(255,240,200,.7)'], 1.4); for (let i = 0; i < 9; i++) ell(-26 + (i*17) % 52, -24 + (i*23) % 48, 2.2, 1.3, 'rgba(255,220,140,.75)'); ell(-16, -20, 12, 3, 'rgba(255,255,255,.35)');
     if (N('trotter')) trotterPiece(14, 16, 0.9);
     g.restore();
     if (N('rice')){ g.save(); g.translate(64, -46); circle(0, 0, 24, rad(-6, -6, 1, 26, [[0, '#ffffff'], [1, '#e2e7e5']]), '#b9c3c0', 1.5); riceDome(0, 0, 18, 14, '#fffdf5', 11); g.restore(); }
@@ -3809,7 +3810,7 @@ Object.assign(DISH, {
     if (N('pulut')) speckle(52, 30, 24, -30, 22, 18, ['#3a1a2a', '#5a2a3e', '#2a0e1a'], 2.8);
     if (N('chendol')) for (let i = 0; i < 16 * N('chendol'); i++){ const a = i * 2.39, d = 16 + (i * 13) % 50; jellyStrand(Math.cos(a) * d, Math.sin(a) * d * 0.9, a, 1); }
     if (N('durian')){ blob(-30, -26, 20, 15, 0.3, 53, rad(-34, -30, 2, 22, [[0, '#fff1a8'], [1, '#e8c84a']]), '#c8a42a', 1); }
-    if (ice > 0) iceMound(0, -2, 62 * ice, 56 * ice, 54);
+    if (ice > 0) iceMound(0, -2, 72 * ice, 66 * ice, 54);
     if (san > 0){ g.save(); g.globalAlpha = Math.min(0.85, san); blob(0, 4, 70 * Math.sqrt(san), 62 * Math.sqrt(san), 0.18, 55, 'rgba(255,255,250,.8)'); g.restore(); }
     if (ice > 0 && N('chendol')){ const r = rng(59); for (let i = 0; i < 9 + 5 * N('chendol'); i++){ const a = r() * 6.28, d = Math.sqrt(r()) * 44 * ice; jellyStrand(Math.cos(a) * d, Math.sin(a) * d * 0.9 - 4, r() * 6.28, 1); } }
     if (gm > 0){
@@ -9367,6 +9368,197 @@ DISH.chendol = function(has, w){
 };
 
 /* =================================================================
+   MORE FOOD DETAIL (v34): popiah with real fillings, properly drawn fruit,
+   shaved ice that looks like ice, and a richer curry for prata.
+   ================================================================= */
+/* ---------- popiah: soft skin, turnip, egg, lettuce, peanuts, sweet sauce ---------- */
+function popiahPiece(x, y, s, rot, seed, w){
+  const r = rng(seed), spicy = w.spicy === 'yes', add = w.add || [];
+  g.save(); g.translate(x, y); g.rotate(rot); g.scale(s, s);
+  ell(2, 13, 22, 6, 'rgba(60,40,20,.18)');
+  /* the rolled body, seen from the side: thin translucent skin with lettuce showing through */
+  box(-24, -12, 30, 24, 11, lin(0, -12, 0, 12, [[0, '#fbf3df'], [0.5, '#efe1c0'], [1, '#d9c7a0']]), '#c9b48a', 1);
+  g.save(); g.globalAlpha = 0.45; blob(-10, -2, 12, 7, 0.4, seed, '#8ccf6a'); g.restore();
+  for (let i = 0; i < 3; i++) line(-20 + i*8, -10, -18 + i*8, 10, 'rgba(190,170,130,.35)', 0.7);
+  /* sweet sauce brushed on the skin */
+  g.beginPath(); g.moveTo(-22, -4); g.quadraticCurveTo(-8, -10, 4, -6); g.strokeStyle = 'rgba(90,40,16,.55)'; g.lineWidth = 2; g.lineCap = 'round'; g.stroke(); g.lineCap = 'butt';
+  /* the cut face */
+  ell(8, 0, 12.5, 13, '#f6eedb', '#cdb88e', 1.2);
+  ell(8, 0, 10.6, 11.2, '#e8f3d6');                         /* lettuce lining */
+  g.beginPath(); for (let a = 0; a <= 6.3; a += 0.45){ const rr = 10.6 + Math.sin(a*5)*0.9; g.lineTo(8 + Math.cos(a)*rr, Math.sin(a)*rr*1.05); } g.closePath(); g.strokeStyle = '#7cbf55'; g.lineWidth = 1.4; g.stroke();
+  ell(8, 0.5, 8.4, 9, spicy ? '#c99a62' : '#d9b98a');        /* braised turnip */
+  for (let i = 0; i < 9; i++){ const a = r()*6.28, d = r()*6; g.beginPath(); g.moveTo(8 + Math.cos(a)*d, Math.sin(a)*d); g.quadraticCurveTo(8 + Math.cos(a + 0.6)*(d + 2), Math.sin(a + 0.6)*(d + 2), 8 + Math.cos(a + 1)*(d + 1), Math.sin(a + 1)*(d + 1)); g.strokeStyle = 'rgba(150,100,50,.65)'; g.lineWidth = 0.9; g.stroke(); }
+  speckle(seed + 1, 7, 8, 0, 6.5, 7, ['#f6d55c', '#f1c232'], 1.8);   /* egg */
+  speckle(seed + 2, 6, 8, 0, 6.5, 7, ['#c98a4a', '#e2b070'], 1.5);   /* peanuts */
+  if (spicy) speckle(seed + 3, 4, 8, 0, 6, 6, ['#d0352b'], 1.4);
+  if (add.includes('prawn')) prawnHalf(10, -3, 0.4, 0.42);
+  if (add.includes('crab')) blob(4, 4, 3, 2, 0.4, seed + 4, '#f2a07a', '#c96a48', 0.5);
+  if (add.includes('lapcheong')) { circle(12, 5, 2.4, '#b0383e', '#7a1e22', 0.5); circle(11.4, 4.4, 0.8, '#f2c6c0'); }
+  g.restore();
+}
+FINAL.popiah = function(w){
+  plate(94, 72);
+  /* a swoosh of sweet sauce and garlic, then the rolls in two neat rows */
+  g.save(); g.globalAlpha = 0.5; g.beginPath(); g.moveTo(-70, 30); g.bezierCurveTo(-30, 46, 30, 44, 72, 28); g.strokeStyle = '#6a3418'; g.lineWidth = 7; g.lineCap = 'round'; g.stroke(); g.restore(); g.lineCap = 'butt';
+  const n = Math.min(8, (w.rolls || 1)*4), perRow = n > 4 ? 4 : n;
+  for (let i = 0; i < n; i++){
+    const row = i < perRow ? 0 : 1, k = row ? i - perRow : i, cnt = row ? n - perRow : perRow;
+    const x = -((cnt - 1)*36)/2 + k*36 - 4, y = row ? 20 : -18;
+    popiahPiece(x, y, 1.15, -0.06 + row*0.08, 1200 + i*7, w);
+  }
+  saucer(74, -44, '#c9312a', 20, () => speckle(21, 8, 74, -44, 7, 7, ['#f6c26b'], 1.3));
+  speckle(22, 10, -60, 40, 10, 5, ['#f6efe0', '#e8dcc0'], 1.6);
+};
+
+/* ---------- fruit, drawn like fruit ---------- */
+function fruitWedge(x, y, R, rot, flesh, flesh2, rind, rind2, seeds, seed){
+  g.save(); g.translate(x, y); g.rotate(rot);
+  ell(2, R*0.12, R*0.8, R*0.12, 'rgba(40,30,20,.1)');
+  /* rind band */
+  g.beginPath(); g.moveTo(-R, 0); g.arc(0, 0, R, Math.PI, 0); g.closePath(); paint(rind, rind2, 1);
+  if (rind === '#3f8a33') for (let i = 0; i < 6; i++){ g.beginPath(); g.arc(0, 0, R - 0.5, Math.PI + 0.15 + i*0.5, Math.PI + 0.35 + i*0.5); g.strokeStyle = '#2a5f22'; g.lineWidth = 2.4; g.stroke(); }
+  g.beginPath(); g.moveTo(-R*0.9, 0); g.arc(0, 0, R*0.9, Math.PI, 0); g.closePath(); paint('#eef4d8');
+  g.beginPath(); g.moveTo(-R*0.84, 0); g.arc(0, 0, R*0.84, Math.PI, 0); g.closePath();
+  paint(rad(0, -R*0.2, 1, R*0.9, [[0, flesh2], [0.75, flesh], [1, mix(flesh, '#ffffff', 0.25)]]));
+  /* juicy sparkle */
+  const r = rng(seed); for (let i = 0; i < 10; i++){ const a = Math.PI + r()*Math.PI, d = r()*R*0.75; circle(Math.cos(a)*d, Math.sin(a)*d, 0.8, 'rgba(255,255,255,.65)'); }
+  if (seeds === 'drop') for (let i = 0; i < 6; i++){ const a = Math.PI + 0.35 + i*0.45, d = R*(0.45 + (i % 2)*0.12); g.save(); g.translate(Math.cos(a)*d, Math.sin(a)*d); g.rotate(a + Math.PI/2); ell(0, 0, 1.6, 2.8, '#1a1210'); ell(-0.5, -0.8, 0.5, 0.9, 'rgba(255,255,255,.5)'); g.restore(); }
+  if (seeds === 'cavity'){ g.beginPath(); g.moveTo(-R*0.45, 0); g.quadraticCurveTo(0, -R*0.38, R*0.45, 0); g.closePath(); paint('#e2763a'); for (let i = 0; i < 9; i++) circle(-R*0.36 + i*R*0.09, -R*0.08 - Math.sin(i/8*Math.PI)*R*0.18, 1.7, '#1e1410', '#000', 0.3); }
+  if (seeds === 'line'){ g.beginPath(); g.moveTo(-R*0.4, 0); g.quadraticCurveTo(0, -R*0.18, R*0.4, 0); g.strokeStyle = 'rgba(200,190,120,.8)'; g.lineWidth = 2.2; g.stroke(); }
+  ell(-R*0.25, -R*0.45, R*0.25, R*0.06, 'rgba(255,255,255,.4)');
+  g.restore();
+}
+function pineappleChunks(x, y, n){
+  const r = rng(1301);
+  for (let i = 0; i < n; i++){ const cx = x + (i % 3 - 1)*13 + (r() - 0.5)*3, cy = y + Math.floor(i/3)*11 - 6 + (r() - 0.5)*3;
+    g.save(); g.translate(cx, cy); g.rotate((r() - 0.5)*0.6);
+    ell(1, 6, 7, 2.5, 'rgba(60,40,10,.18)');
+    g.beginPath(); g.moveTo(-7, 5); g.lineTo(-5, -6); g.lineTo(6, -7); g.lineTo(7, 4); g.closePath(); paint(lin(0, -7, 0, 5, [[0, '#fff3a8'], [1, '#f2c42c']]), '#c9a020', 0.8);
+    for (let k = 0; k < 4; k++) line(-5 + k*3.5, -5, -4.5 + k*3.5, 4, 'rgba(210,160,20,.55)', 0.6);
+    box(-7, -7.5, 13, 2, 1, '#fffbe0'); g.restore(); }
+}
+function mangoHedgehog(x, y){
+  g.save(); g.translate(x, y);
+  ell(2, 14, 26, 6, 'rgba(60,40,10,.18)');
+  ell(0, 4, 26, 15, '#e8b030', '#b5741a', 1);   /* the skin underneath, turned inside out */
+  for (let i = -2; i <= 2; i++) for (let j = -1; j <= 1; j++){
+    const cx = i*9.5, cy = j*8 - 2 - Math.abs(i)*0.5;
+    box(cx - 4.4, cy - 4.4, 8.8, 8.8, 2, rad(cx - 2, cy - 2, 1, 7, [[0, '#ffd36a'], [1, '#f4a21c']]), '#d58a12', 0.6);
+    ell(cx - 1.5, cy - 2, 1.6, 0.8, 'rgba(255,255,255,.55)');
+  }
+  g.restore();
+}
+function dragonSlices(x, y){
+  const r = rng(1311);
+  for (let i = 0; i < 3; i++){ const cx = x - 14 + i*14, cy = y + (i % 2)*6;
+    g.save(); g.translate(cx, cy); g.rotate(-0.2 + i*0.2);
+    ell(1, 3, 12, 10, 'rgba(60,40,40,.18)');
+    ell(0, 0, 12, 10, '#e0367a', '#a81e56', 1); ell(0, 0, 10.4, 8.6, '#fbf7f2');
+    for (let k = 0; k < 26; k++){ const a = r()*6.28, d = Math.sqrt(r())*8; ell(Math.cos(a)*d, Math.sin(a)*d*0.82, 0.7, 0.45, '#141010'); }
+    ell(-3, -3, 3, 1.2, 'rgba(255,255,255,.6)'); g.restore(); }
+}
+Object.assign(FRUIT, {
+  watermelon:(x, y) => { fruitWedge(x - 10, y + 6, 24, -0.25, '#e8434f', '#ff7a7f', '#3f8a33', '#255a1c', 'drop', 1321); fruitWedge(x + 14, y - 6, 22, 0.35, '#ee5560', '#ff8a8c', '#3f8a33', '#255a1c', 'drop', 1322); },
+  papaya:(x, y) => { fruitWedge(x - 8, y + 6, 23, -0.2, '#f38a2e', '#ffb05a', '#e0b84a', '#9a7a20', 'cavity', 1331); fruitWedge(x + 14, y - 6, 21, 0.45, '#f5952e', '#ffbb6a', '#e0b84a', '#9a7a20', 'cavity', 1332); },
+  honeydew:(x, y) => { fruitWedge(x - 8, y + 6, 23, -0.3, '#c6e69a', '#e6f7c6', '#b9cf7a', '#7f9a40', 'line', 1341); fruitWedge(x + 14, y - 6, 21, 0.4, '#cdeaa2', '#ecf9d0', '#b9cf7a', '#7f9a40', 'line', 1342); },
+  pineapple:(x, y) => pineappleChunks(x, y, 6),
+  mango:(x, y) => mangoHedgehog(x, y),
+  dragon:(x, y) => dragonSlices(x, y)
+});
+
+/* ---------- ice kachang: crystals, syrup soaking in, a drizzle of milk ---------- */
+const _kachang34 = DISH.kachang;
+DISH.kachang = function(has, phase){
+  _kachang34(has, phase);
+  if (!(phase === 'top' || phase === 'full')) return;
+  g.save();
+  g.beginPath(); g.moveTo(-80, 20); g.quadraticCurveTo(-74, -40, -40, -66); g.quadraticCurveTo(0, -100, 40, -66); g.quadraticCurveTo(74, -40, 80, 20); g.closePath(); g.clip();
+  /* shaved-ice crystals and sparkle */
+  const r = rng(1401);
+  for (let i = 0; i < 140; i++){ const x = -78 + r()*156, y = -92 + r()*112; circle(x, y, 0.6 + r()*0.9, r() < 0.5 ? 'rgba(255,255,255,.95)' : 'rgba(200,225,235,.7)'); }
+  for (let i = 0; i < 12; i++){ const x = -60 + r()*120, y = -80 + r()*90; line(x - 2, y, x + 2, y, 'rgba(255,255,255,.95)', 0.7); line(x, y - 2, x, y + 2, 'rgba(255,255,255,.95)', 0.7); }
+  /* syrup soaking down in streaks */
+  [['#d9466a', -46], ['#3f9f4a', -6], ['#7a4a2a', 34]].forEach(([c, x0], k) => { for (let i = 0; i < 4; i++){ const x = x0 + i*6 + r()*3; g.beginPath(); g.moveTo(x, -60 + r()*14); g.quadraticCurveTo(x + 3, -20, x - 2, 18); g.strokeStyle = c; g.globalAlpha = 0.35; g.lineWidth = 2.4; g.stroke(); g.globalAlpha = 1; } });
+  /* evaporated milk drizzled over the top */
+  g.beginPath(); g.moveTo(-58, -34); g.bezierCurveTo(-30, -60, -10, -20, 10, -50); g.bezierCurveTo(26, -72, 44, -30, 60, -40);
+  g.strokeStyle = 'rgba(255,253,240,.95)'; g.lineWidth = 3.2; g.lineCap = 'round'; g.stroke(); g.strokeStyle = 'rgba(220,210,180,.5)'; g.lineWidth = 0.8; g.stroke(); g.lineCap = 'butt';
+  g.restore();
+  /* sweet corn kernels and a few peanuts sitting on top */
+  const r2 = rng(1402);
+  for (let i = 0; i < 9; i++){ const x = -6 + r2()*30, y = -84 + r2()*16; box(x - 2, y - 1.6, 4, 3.2, 1.2, '#f6d55c', '#d4a422', 0.5); }
+  for (let i = 0; i < 5; i++){ const x = -40 + r2()*24, y = -70 + r2()*14; ell(x, y, 2.4, 1.6, '#d9a866', '#9a6a30', 0.5); }
+};
+
+/* ---------- prata: a proper bowl of curry with oil and potato ---------- */
+const _curryBowl34 = curryBowl;
+curryBowl = function(x, y, kind){
+  shadow(x + 2, y + 3, 21, 19);
+  circle(x, y, 20, rad(x - 5, y - 5, 1, 21, [[0, '#ffffff'], [1, '#e2e7e5']]), '#bfc8c4', 1.5);
+  circle(x, y, 15.5, rad(x - 4, y - 4, 1, 16, [[0, '#f0a04a'], [0.7, '#d9742a'], [1, '#b85418']]));
+  for (let i = 0; i < 7; i++){ const a = i*0.9, d = 4 + (i % 3)*3.5; ell(x + Math.cos(a)*d, y + Math.sin(a)*d, 1.6, 1, 'rgba(255,210,120,.85)'); }   /* oil beads */
+  if (kind === 'fish'){ blob(x - 4, y + 2, 5, 4, 0.3, 1501, '#f3ead8', '#c9b48a', 0.6); ell(x + 6, y - 3, 3.5, 2, '#5a8a3a'); }
+  else { box(x - 6, y - 2, 6, 6, 1.5, '#f2d28a', '#c9a04a', 0.6); box(x + 2, y + 1, 5, 5, 1.5, '#f2d28a', '#c9a04a', 0.6); }   /* potato */
+  speckle(1502, 6, x, y, 11, 11, ['#3a7a2a'], 1.2);   /* curry leaves */
+  ell(x - 6, y - 7, 5, 2, 'rgba(255,255,255,.45)');
+};
+/* ---------- prata: bigger, overlapping pieces that fill the plate ---------- */
+DISH.prata = function(has){
+  plate(92);
+  const k = has.kosong || 0, t = has.telur || 0, c = has.cheese || 0, p = has.plaster || 0, total = k + t + c + p;
+  const big = total <= 2 ? 1.5 : total <= 3 ? 1.3 : 1.15;
+  const spots = total === 1 ? [[-8, 0]] : [[-26, -22], [-22, 30], [22, -30], [24, 26], [-40, 4], [6, 0]]; let i = 0;
+  const next = () => spots[i++ % spots.length];
+  for (let n = 0; n < k; n++){ const [x, y] = next(); prataPiece(x, y, big, 10 + n*3); }
+  for (let n = 0; n < t; n++){ const [x, y] = next(); telurPiece(x, y, big*0.9, 40 + n); }
+  for (let n = 0; n < c; n++){ const [x, y] = next(); cheesePrata(x, y, big*0.85, 60 + n); }
+  for (let n = 0; n < p; n++){ const [x, y] = next(); plasterPrata(x, y, big*0.85, 70 + n); }
+  if (has.fishcurry) curryBowl(60, -34, 'fish');
+  if (has.chickencurry) curryBowl(62, 6, 'chicken');
+  if (has.sugarside) saucer(58, 46, '#fbfaf3', 16, () => speckle(17, 14, 58, 46, 7, 7, ['#ffffff', '#e9e3d0'], 1.2));
+};
+/* ---------- fruit: whatever was ordered is spread across the plate ---------- */
+const FRUIT_LAYOUT = {1:[[0, 0]], 2:[[-34, 0], [34, 0]], 3:[[-36, -22], [36, -22], [0, 30]], 4:[[-36, -26], [36, -26], [-36, 28], [36, 28]], 5:[[-40, -28], [40, -28], [0, -2], [-40, 30], [40, 30]], 6:[[-42, -28], [0, -36], [42, -28], [-42, 30], [0, 36], [42, 30]]};
+DISH.fruit = function(has, w){
+  const cup = (w && w.item) === 'cup';
+  if (cup){ shadow(4, 6, 86, 86); circle(0, 0, 86, 'rgba(240,248,250,.6)', '#9fb3b8', 2.5); circle(0, 0, 78, 'rgba(225,240,245,.35)'); }
+  else plate(96, 78);
+  const ids = Object.keys(FRUIT_POS).filter(id => has[id]), L = FRUIT_LAYOUT[Math.max(1, Math.min(6, ids.length))] || FRUIT_LAYOUT[6];
+  const k = ids.length <= 1 ? 2 : ids.length <= 2 ? 1.75 : ids.length <= 4 ? 1.5 : 1.3;
+  ids.forEach((id, i) => { const [x, y] = L[i] || [0, 0]; g.save(); g.translate(x, y); g.scale(k, k); FRUIT[id](0, 0); g.restore(); });
+  if (has.plum) FRUIT.plum(0, 0);
+  if (has.toothpick) for (let i = 0; i < 3; i++) line(-10 + i*10, -6, 6 + i*10, -30, '#d8b07a', 2);
+};
+/* popiah pieces stood up, cut side facing you, so every filling shows */
+function popiahFace(x, y, s, seed, w){
+  const r = rng(seed), spicy = w.spicy === 'yes', add = w.add || [];
+  g.save(); g.translate(x, y); g.scale(s, s);
+  ell(2, 6, 15, 8, 'rgba(60,40,20,.2)');
+  ell(0, 4, 14, 13, lin(0, -9, 0, 17, [[0, '#e9dab6'], [1, '#c9b48a']]), '#b8a27a', 1);       /* the roll's depth */
+  ell(0, 0, 14, 13, '#f6eedb', '#cdb88e', 1.2);                                                  /* skin */
+  ell(0, 0, 12, 11, '#e8f3d6');
+  g.beginPath(); for (let a = 0; a <= 6.3; a += 0.4){ const rr = 12 + Math.sin(a*5)*0.9; g.lineTo(Math.cos(a)*rr, Math.sin(a)*rr*0.92); } g.closePath(); g.strokeStyle = '#7cbf55'; g.lineWidth = 1.5; g.stroke();
+  ell(0, 0.5, 9.5, 8.8, spicy ? '#c99a62' : '#d9b98a');
+  for (let i = 0; i < 10; i++){ const a = r()*6.28, d = r()*7; g.beginPath(); g.moveTo(Math.cos(a)*d, Math.sin(a)*d*0.9); g.quadraticCurveTo(Math.cos(a + 0.6)*(d + 2), Math.sin(a + 0.6)*(d + 2)*0.9, Math.cos(a + 1)*(d + 1), Math.sin(a + 1)*(d + 1)*0.9); g.strokeStyle = 'rgba(150,100,50,.65)'; g.lineWidth = 0.9; g.stroke(); }
+  speckle(seed + 1, 8, 0, 0, 7, 6.5, ['#f6d55c', '#f1c232'], 1.9);
+  speckle(seed + 2, 7, 0, 0, 7, 6.5, ['#c98a4a', '#e2b070'], 1.5);
+  if (spicy) speckle(seed + 3, 5, 0, 0, 6.5, 6, ['#d0352b'], 1.4);
+  if (add.includes('prawn')) prawnHalf(2, -2, 0.4, 0.45);
+  if (add.includes('crab')) blob(-3, 3, 3, 2, 0.4, seed + 4, '#f2a07a', '#c96a48', 0.5);
+  if (add.includes('lapcheong')) { circle(4, 4, 2.5, '#b0383e', '#7a1e22', 0.5); circle(3.4, 3.4, 0.8, '#f2c6c0'); }
+  ell(-5, -6, 4, 1.4, 'rgba(255,255,255,.55)');
+  g.restore();
+}
+FINAL.popiah = function(w){
+  plate(94, 72);
+  const n = Math.min(8, (w.rolls || 1)*4), cols = n > 4 ? 4 : n, rows = n > 4 ? 2 : 1, sc = rows === 1 ? 1.6 : 1.3, gap = rows === 1 ? 40 : 36;
+  /* sweet sauce smeared under the rolls */
+  g.save(); g.globalAlpha = 0.5; g.beginPath(); g.moveTo(-cols*gap/2, rows === 1 ? 14 : 30); g.bezierCurveTo(-20, rows === 1 ? 24 : 40, 20, rows === 1 ? 22 : 38, cols*gap/2, rows === 1 ? 10 : 26); g.strokeStyle = '#6a3418'; g.lineWidth = 7; g.lineCap = 'round'; g.stroke(); g.restore(); g.lineCap = 'butt';
+  for (let i = 0; i < n; i++){ const row = Math.floor(i/cols), col = i % cols, cnt = row === rows - 1 ? n - row*cols : cols;
+    popiahFace(-((cnt - 1)*gap)/2 + col*gap, rows === 1 ? -2 : (row ? 20 : -20), sc, 1200 + i*7, w); }
+  saucer(cols*gap/2 + 6, rows === 1 ? -30 : -40, '#c9312a', 20, () => speckle(21, 8, cols*gap/2 + 6, rows === 1 ? -30 : -40, 7, 7, ['#f6c26b'], 1.3));
+};
+
+/* =================================================================
    STALL STORIES: every mentor has a four-part story.
    Parts unlock as you work shifts at that stall (any role).
    Lines: ['m', text] = the mentor, ['', text] = narrator, [key, text] = someone from `cast`.
@@ -12098,6 +12290,62 @@ showLedger = function(){
     }
   } catch(e){}
 };
+
+/* =================================================================
+   SERVED DISHES FILL THE PLATE (v34): the first time a dish is served, the
+   game measures where its food actually lands on the plate, then centres
+   and scales it so it reaches about 90% of the plate, never over the rim.
+   ================================================================= */
+const FIT = {}, FIT_TARGET = 0.9;
+function fullOrderFor(st){
+  const w = JSON.parse(JSON.stringify(sampleOrder(st)));
+  (st.form || []).forEach(f => { if (f.type === 'many' && f.key === 'add') w[f.key] = f.opts.map(o => o[0]); });
+  return w;
+}
+function measureFood(id, w){
+  const S = 240, cv = document.createElement('canvas'); cv.width = cv.height = S;
+  const ctx = cv.getContext('2d'), prev = g; let rec = null;
+  const P = plate; plate = function(rx, ry){ if (!rec) rec = [rx, ry || rx]; return P.apply(this, arguments); };
+  g = ctx; ctx.translate(S/2, S/2);
+  try { FINAL_RAW[id](w, 0); } catch(e){}
+  plate = P;
+  let base = null;
+  if (rec){ const cb = document.createElement('canvas'); cb.width = cb.height = S; g = cb.getContext('2d'); g.translate(S/2, S/2); P(rec[0], rec[1]); base = g.getImageData(0, 0, S, S).data; }
+  g = prev;
+  if (!rec) return null;
+  const a = ctx.getImageData(0, 0, S, S).data, pts = [];
+  for (let y = 0; y < S; y += 2) for (let x = 0; x < S; x += 2){ const i = (y*S + x)*4;
+    if (Math.abs(a[i] - base[i]) + Math.abs(a[i + 1] - base[i + 1]) + Math.abs(a[i + 2] - base[i + 2]) + Math.abs(a[i + 3] - base[i + 3]) > 40) pts.push([x - S/2, y - S/2]); }
+  return {rec, pts};
+}
+function computeFit(id, w){
+  const A = measureFood(id, w);
+  if (!A) return {none:true};
+  const pts = A.pts, [rx, ry] = A.rec;
+  if (!pts.length) return {none:true};
+  /* centre: the middle of the food’s bounding box (but never drift far) */
+  let minx = 1e9, maxx = -1e9, miny = 1e9, maxy = -1e9; pts.forEach(([x, y]) => { minx = Math.min(minx, x); maxx = Math.max(maxx, x); miny = Math.min(miny, y); maxy = Math.max(maxy, y); });
+  const dx = clamp(-(minx + maxx)/2, -rx*0.15, rx*0.15), dy = clamp(-(miny + maxy)/2, -ry*0.15, ry*0.15);
+  /* scale: the food’s outer edge (98th percentile) sits at 90% of the plate */
+  const rs = pts.map(([x, y]) => Math.hypot((x + dx)/rx, (y + dy)/ry)).sort((p, q) => p - q);
+  const r98 = rs[Math.floor(rs.length*0.995)] || 1;
+  return {dx, dy, s:clamp(FIT_TARGET/r98, 0.75, 1.6)};
+}
+const FINAL_RAW = {};
+Object.keys(FINAL).forEach(id => {
+  FINAL_RAW[id] = FINAL[id];
+  FINAL[id] = function(w, t){
+    const key = id + '|' + JSON.stringify(w || {});
+    if (!(key in FIT)) { try { FIT[key] = computeFit(id, w); } catch(e){ FIT[key] = null; } if (Object.keys(FIT).length > 400) for (const k in FIT){ delete FIT[k]; break; } }
+    const F = FIT[key];
+    if (!F || F.none) return FINAL_RAW[id](w, t);
+    const P = plate; let done = false;
+    plate = function(){ const r = P.apply(this, arguments); if (!done){ done = true; g.translate(F.dx*F.s, F.dy*F.s); g.scale(F.s, F.s); } return r; };
+    g.save();
+    try { FINAL_RAW[id](w, t); } finally { plate = P; g.restore(); }
+  };
+});
+window.__FIT = FIT;
 
 /* =================================================================
    GUIDED FIRST TRIES for the hand-built steps (templates are handled in guideState)
