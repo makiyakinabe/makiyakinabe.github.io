@@ -9558,6 +9558,92 @@ FINAL.popiah = function(w){
   saucer(cols*gap/2 + 6, rows === 1 ? -30 : -40, '#c9312a', 20, () => speckle(21, 8, cols*gap/2 + 6, rows === 1 ? -30 : -40, 7, 7, ['#f6c26b'], 1.3));
 };
 
+/* ---------- second pass: fries, satay, ikan bilis, cucumber, ketupat, kopi, chicken chop ---------- */
+fries = function(x, y, n){
+  const r = rng(101), N = n || 14;
+  ell(x + 2, y + 10, 30, 10, 'rgba(90,60,20,.16)');
+  for (let i = 0; i < N; i++){
+    const a = -0.9 + r()*1.8, cx = x + (r() - 0.5)*34, cy = y + (r() - 0.5)*22, L = 12 + r()*6, bend = (r() - 0.5)*0.12;
+    g.save(); g.translate(cx, cy); g.rotate(a);
+    ell(1.5, 2.5, L, 2.4, 'rgba(120,70,20,.18)');
+    g.beginPath(); g.moveTo(-L, -3); g.quadraticCurveTo(0, -3 + bend*30, L, -3); g.lineTo(L, 3); g.quadraticCurveTo(0, 3 + bend*30, -L, 3); g.closePath();
+    paint(lin(0, -3, 0, 3, [[0, '#fff0a8'], [0.45, '#f6cf62'], [1, '#d99a32']]), '#b8782a', 0.7);
+    line(-L + 2, -0.6, L - 2, -0.6, 'rgba(255,255,255,.55)', 0.8);       /* the ridge catching light */
+    line(-L + 2, 1.6, L - 2, 1.6, 'rgba(170,110,30,.35)', 0.7);
+    box(-L, -3, 3, 6, 1.4, 'rgba(160,96,30,.75)'); box(L - 3, -3, 3, 6, 1.4, 'rgba(160,96,30,.6)');   /* browned ends */
+    g.restore();
+  }
+  speckle(102, 18, x, y, 28, 18, ['rgba(255,255,255,.9)'], 0.9);        /* salt */
+};
+satayStick = function(x, y, col, seed, ang){
+  g.save(); g.translate(x, y); g.rotate(ang || -0.35);
+  line(-46, 0, 40, 0, lin(-46, 0, 40, 0, [[0, '#d9b47a'], [0.8, '#a37c47'], [1, '#5a3a1a']]), 2.4);
+  g.beginPath(); g.moveTo(40, -1.2); g.lineTo(46, 0); g.lineTo(40, 1.2); g.closePath(); paint('#4a2a10');   /* charred tip */
+  for (let j = 0; j < 4; j++){
+    const cx = -22 + j*13, r = rng(seed + j);
+    blob(cx, 0, 7.2, 5.8, 0.38, seed + j, rad(cx - 2, -2, 1, 8.5, [[0, mix(col, '#f6c86a', 0.45)], [0.7, col], [1, mix(col, '#1a0a02', 0.45)]]), '#2a1206', 0.9);
+    for (let k = 0; k < 3; k++){ const px = cx - 5 + r()*10, py = -4 + r()*8; ell(px, py, 1.8, 0.9, 'rgba(30,10,2,.7)'); }    /* char spots */
+    line(cx - 5, 1.5, cx + 5, 2.5, 'rgba(30,10,2,.45)', 1.2);                                                                 /* grill line */
+    ell(cx - 2, -2.6, 2.6, 1.1, 'rgba(255,240,200,.75)');                                                                      /* glaze glint */
+    speckle(seed + j*3, 3, cx, 0, 5, 4, ['rgba(250,220,120,.7)'], 1.2);                                                       /* turmeric */
+  }
+  g.restore();
+};
+ikanBilis = function(x, y, n, seed){
+  const r = rng(seed);
+  for (let i = 0; i < n; i++){ const cx = x + (r() - 0.5)*30, cy = y + (r() - 0.5)*22, a = r()*Math.PI*2;
+    g.save(); g.translate(cx, cy); g.rotate(a);
+    g.beginPath(); g.moveTo(6, 0); g.quadraticCurveTo(1, -2.4, -4, -0.8); g.lineTo(-6.5, -2.2); g.lineTo(-5.6, 0); g.lineTo(-6.5, 2.2); g.lineTo(-4, 0.8); g.quadraticCurveTo(1, 2.4, 6, 0); g.closePath();
+    paint(lin(0, -2, 0, 2, [[0, '#f0c27a'], [0.5, '#d29a48'], [1, '#a8702a']]), '#7a4a18', 0.5);
+    line(-3, -0.2, 4, -0.4, 'rgba(255,250,230,.75)', 0.6);
+    circle(4.4, -0.3, 0.75, '#1e1008'); g.restore(); }
+  for (let i = 0; i < n/2; i++){ const cx = x + (r() - 0.5)*28, cy = y + (r() - 0.5)*20, a = r()*3;
+    g.save(); g.translate(cx, cy); g.rotate(a); ell(0, 0, 3.4, 2.3, rad(-1, -1, 0.5, 3.6, [[0, '#f6dca8'], [1, '#d6a866']]), '#a8763a', 0.6); line(-2.6, 0, 2.6, 0, 'rgba(150,100,50,.45)', 0.5); ell(-1.2, -1, 1, 0.5, 'rgba(255,255,255,.6)'); g.restore(); }
+};
+function cucSlice(cx, cy, R){
+  shadow(cx + 1, cy + 2, R, R*0.9);
+  circle(cx, cy, R, '#2f6a22'); circle(cx, cy, R*0.86, '#8fc46a');
+  circle(cx, cy, R*0.78, rad(cx - R*0.25, cy - R*0.25, 1, R*0.8, [[0, '#f2fae6'], [1, '#c6e4a2']]));
+  circle(cx, cy, R*0.36, 'rgba(200,225,160,.9)');
+  for (let k = 0; k < 6; k++){ const a = k*Math.PI/3; ell(cx + Math.cos(a)*R*0.26, cy + Math.sin(a)*R*0.26, R*0.08, R*0.05, 'rgba(250,255,240,.95)'); }
+  ell(cx - R*0.35, cy - R*0.4, R*0.25, R*0.1, 'rgba(255,255,255,.55)');
+}
+cucumberRow = function(x, y, n){ for (let i = 0; i < (n || 5); i++) cucSlice(x - 24 + i*12, y, 9.5); };
+cucOnion = function(x, y){
+  [[-8, -4], [2, 4], [-2, -12]].forEach(([dx, dy], i) => { g.save(); g.translate(x + dx, y + dy); g.rotate(i);
+    box(-5.5, -5, 11, 10, 2, '#e4f3d0', '#2f6a22', 2.2); box(-3, -2.5, 6, 5, 1.5, 'rgba(200,228,160,.9)'); circle(-1, 0, 0.6, '#f6fff0'); circle(1.2, 0.6, 0.6, '#f6fff0'); g.restore(); });
+  [[8, -6], [10, 6]].forEach(([dx, dy], i) => { g.save(); g.translate(x + dx, y + dy); g.rotate(i*1.3);
+    box(-6, -4.5, 12, 9, 3, '#f6e8f4', '#8a3f86', 2); for (let k = 1; k < 3; k++) box(-6 + k*1.8, -4.5 + k*1.6, 12 - k*3.6, 9 - k*3.2, 2, null, 'rgba(160,90,150,.45)', 0.8); g.restore(); });
+};
+ketupat = function(x, y, n){
+  for (let i = 0; i < n; i++){ const cx = x - 8 + (i % 2)*16, cy = y - 8 + Math.floor(i/2)*16;
+    shadow(cx + 1, cy + 2, 8, 7);
+    box(cx - 7, cy - 7, 14, 14, 2, '#f6f2e2', '#6a9a3f', 1.6);
+    g.save(); g.beginPath(); g.rect(cx - 7, cy - 7, 14, 14); g.clip();
+    for (let k = -2; k <= 2; k++){ line(cx - 8 + k*5, cy - 8, cx + 8 + k*5, cy + 8, 'rgba(106,154,63,.55)', 1.6); line(cx + 8 + k*5, cy - 8, cx - 8 + k*5, cy + 8, 'rgba(106,154,63,.35)', 1.1); }
+    g.restore(); circle(cx, cy, 2.6, 'rgba(255,255,250,.9)'); }
+};
+const _kopi35 = FINAL.kopi;
+FINAL.kopi = function(w, t){
+  _kopi35(w, t);
+  if (w.temp === 'peng') return;
+  /* a crema of tiny bubbles and a swirl of condensed milk on top */
+  const milky = /c|kopi$|teh$/i.test(w.drink || '') || !/o/i.test(w.drink || '');
+  g.save(); g.beginPath(); g.ellipse(0, -23, 39, 7, 0, 0, Math.PI*2); g.clip();
+  const r = rng(1601); for (let i = 0; i < 40; i++){ const a = r()*6.28, d = Math.sqrt(r()); circle(Math.cos(a)*d*36, -23 + Math.sin(a)*d*6, 0.5 + r()*0.9, 'rgba(255,245,225,.75)'); }
+  if (milky){ g.beginPath(); for (let k = 0; k < 40; k++){ const a = k*0.32, rr = 2 + k*0.75; g.lineTo(Math.cos(a)*rr, -23 + Math.sin(a)*rr*0.18); } g.strokeStyle = 'rgba(255,240,215,.6)'; g.lineWidth = 1.4; g.stroke(); }
+  ell(-14, -25, 12, 1.4, 'rgba(255,255,255,.55)');
+  g.restore();
+};
+const _chickenChop35 = chickenChop;
+chickenChop = function(x, y, s){
+  _chickenChop35(x, y, s);
+  g.save(); g.translate(x, y); g.scale(s, s);
+  g.beginPath(); g.ellipse(0, 0, 40, 26, 0, 0, Math.PI*2); g.clip();
+  const r = rng(1611); for (let i = 0; i < 40; i++){ const px = -38 + r()*76, py = -24 + r()*48; ell(px, py, 1.6 + r(), 1 + r()*0.6, r() < 0.5 ? 'rgba(255,230,170,.55)' : 'rgba(120,60,20,.45)'); }   /* crispy crumb */
+  g.restore();
+};
+
 /* =================================================================
    STALL STORIES: every mentor has a four-part story.
    Parts unlock as you work shifts at that stall (any role).
