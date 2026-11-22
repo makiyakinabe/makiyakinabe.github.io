@@ -9154,7 +9154,7 @@ S.ice = function(s){
   line(16, 34, 384, 34, C.steelDark, 4);
   const hx = 40 + s.pos * 320;
   box(hx - 11, 27, 22, 12, 3, C.ink); line(hx, 39, hx, 52, C.ink, 2);
-  g.save(); g.translate(hx, 52); g.scale(0.62, 0.62); hangingChicken(0, 0, 1, Math.sin(s.t * 5) * 0.05, 1); g.restore();
+  g.save(); g.translate(hx, 50); g.scale(0.8, 0.8); hangingChicken(0, 0, 1, Math.sin(s.t * 5) * 0.05, 1); g.restore();
   if (s.flash > 0 && s.lastX != null){ const kk = s.flash / 0.6, lx = 40 + s.lastX * 320; for (let i = 0; i < 7; i++) circle(lx - 24 + i * 8, 146 - (1 - kk) * 22 * (i % 2 ? 1 : 1.5), 3, `rgba(110,180,205,${kk})`); }
 };
 CHOP_CHICKEN.opt.food = function(s){
@@ -9175,6 +9175,195 @@ EQUIP.chicken = function(t){
   box(224, 124, 64, 46, 6, lin(224, 0, 288, 0, [[0, '#b9c2bf'], [0.45, '#eef2f1'], [1, '#a9b3b0']]), C.steelDark, 2); ell(256, 124, 32, 6, '#f6efd8', '#9aa5a2', 1); steamLines(256, 120, t, 3, 24, 0.55);
   ell(196, 160, 24, 9, lin(0, 151, 0, 169, [[0, '#d7b07a'], [1, '#a87a44']]), '#7a5530', 1.5); ell(196, 156, 24, 8, '#e2c08a', '#8a6236', 1.2); for (let r = 4; r < 22; r += 6) g.beginPath(), g.ellipse(196, 156, r, r * 0.33, 0, 0, Math.PI * 2), g.strokeStyle = 'rgba(138,98,54,.35)', g.lineWidth = 0.8, g.stroke();
   g.save(); g.translate(204, 150); g.rotate(-0.5); box(-4, -2, 22, 14, 2, lin(0, -2, 0, 12, [[0, '#eef2f1'], [1, '#9aa5a2']]), '#5f6b68', 1); box(-14, 2, 11, 5, 2, '#3a2a20'); g.restore();
+};
+
+/* =================================================================
+   MORE DETAIL ON THE CHICKEN (v33): bone-in chopped pieces laid over
+   cucumber in a pool of soy-sesame sauce, rice with a pandan knot and
+   fried shallots, a glossier bird with pores, tail and wing tips, a
+   cleaver on the chopping board, and an ice bath you can see into.
+   ================================================================= */
+/* one chopped piece: yellow skin on top, white meat on the cut side, sometimes a bone */
+function chickenPiece(x, y, w, h, rot, seed, bone){
+  /* seen from above: glossy golden skin, with the white cut face showing along the front edge */
+  const r = rng(seed);
+  g.save(); g.translate(x, y); g.rotate(rot);
+  ell(1, h*0.5, w*0.52, h*0.2, 'rgba(60,30,10,.2)');
+  g.beginPath(); g.moveTo(-w/2, -h*0.42); g.quadraticCurveTo(0, -h*0.6, w/2, -h*0.42); g.lineTo(w/2 + 1, h*0.18); g.quadraticCurveTo(0, h*0.32, -w/2 - 1, h*0.18); g.closePath();
+  paint(lin(-w/2, -h*0.5, w/2, h*0.2, [[0, '#fff3c6'], [0.45, '#f3d27a'], [1, '#e2b453']]), '#c3953e', 0.8);
+  g.beginPath(); g.moveTo(-w/2 - 1, h*0.18); g.quadraticCurveTo(0, h*0.32, w/2 + 1, h*0.18); g.lineTo(w/2, h*0.42); g.quadraticCurveTo(0, h*0.56, -w/2, h*0.42); g.closePath();
+  paint(lin(0, h*0.18, 0, h*0.5, [[0, '#fffaf0'], [1, '#eadcc0']]), '#cbb38a', 0.7);
+  line(-w/2, h*0.2, w/2, h*0.2, 'rgba(255,232,160,.95)', 0.9);
+  for (let i = 0; i < 3; i++) line(-w/2 + 3 + i*w*0.32, h*0.28, -w/2 + 4 + i*w*0.32, h*0.44, 'rgba(200,175,135,.6)', 0.5);
+  ell(-w*0.1, -h*0.25, w*0.28, h*0.07, 'rgba(255,255,255,.7)');
+  for (let i = 0; i < 6; i++) circle(-w*0.4 + r()*w*0.8, -h*0.35 + r()*h*0.45, 0.4, 'rgba(170,120,50,.5)');
+  if (bone){ box(w/2 - 1, -h*0.05, 5, 3, 1.4, '#f6efe0', '#b8a888', 0.6); circle(w/2 + 4, h*0.0 + 1.4, 2, '#f3e9d6', '#b8a888', 0.6); }
+  g.restore();
+}
+function chickenSlices33(x, y, n){
+  const N = n || 7;
+  /* the sauce pools under the chicken */
+  g.save(); g.globalAlpha = 0.6; blob(x + 2, y + 4, 40, 28, 0.22, 801, rad(x, y, 4, 42, [[0, 'rgba(150,82,30,.7)'], [1, 'rgba(120,60,20,.15)']])); g.restore();
+  /* cucumber slices peeking out underneath */
+  for (let i = 0; i < 6; i++){ const cx = x - 32 + i*13, cy = y + 20 + (i % 2)*2; circle(cx, cy, 5.6, '#3d7a2b'); circle(cx, cy, 4.5, rad(cx - 2, cy - 2, 1, 5, [[0, '#e6f4d4'], [1, '#bcdc9a']])); }
+  /* two overlapping rows of bone-in pieces, like a real chicken rice plate */
+  for (let row = 0; row < 2; row++){
+    const m = row ? N - 3 : 4;
+    for (let i = 0; i < m; i++){
+      const px = x - 27 + i*15 + (row ? 7 : 0), py = y - 9 + row*13;
+      chickenPiece(px, py, 18, 16, -0.08 + (i % 2)*0.08, 811 + row*10 + i, (i + row) % 3 === 0);
+    }
+  }
+  /* soy-sesame drizzle, sesame seeds, spring onion rings and coriander */
+  g.save(); g.lineCap = 'round'; g.strokeStyle = 'rgba(110,56,18,.4)'; g.lineWidth = 1;
+  for (let i = 0; i < 2; i++){ g.beginPath(); g.moveTo(x - 34, y - 10 + i*14); g.bezierCurveTo(x - 10, y - 16 + i*14, x + 10, y - 2 + i*14, x + 36, y - 8 + i*14); g.stroke(); }
+  g.restore();
+  speckle(821, 12, x, y - 2, 30, 16, ['#f8f0d8', '#efe0b6'], 1.1);
+  for (let i = 0; i < 6; i++){ const sx = x - 24 + i*10, sy = y - 16 + (i % 3)*9; g.beginPath(); g.arc(sx, sy, 1.9, 0, Math.PI*2); g.strokeStyle = '#4f9e3a'; g.lineWidth = 1.1; g.stroke(); }
+  coriander(x - 16, y - 18); coriander(x + 18, y - 4); coriander(x + 2, y + 6);
+}
+chickenSlices = chickenSlices33;
+function pandanKnot(x, y, s){ g.save(); g.translate(x, y); g.scale(s || 1, s || 1);
+  g.beginPath(); g.moveTo(-12, 3); g.quadraticCurveTo(-2, -9, 6, -2); g.quadraticCurveTo(12, 4, 3, 6); g.quadraticCurveTo(-4, 7, 2, -3); g.quadraticCurveTo(8, -12, 16, -6);
+  g.strokeStyle = '#2f7d3a'; g.lineWidth = 4; g.lineCap = 'round'; g.stroke(); g.strokeStyle = 'rgba(160,220,120,.6)'; g.lineWidth = 1; g.stroke(); g.lineCap = 'butt'; g.restore(); }
+/* the plate itself, rebuilt with more care */
+DISH.chicken = function(has){
+  const N = id => has[id] || 0;
+  plate(90);
+  if (N('rice')){ const big = N('rice') > 1, rx = big ? 50 : 44, ry = big ? 38 : 33;
+    riceDome(-30, -6, rx, ry, '#f1dfae', 3);
+    speckle(4, 40, -30, -6, rx*0.85, ry*0.8, ['rgba(255,255,255,.9)', 'rgba(222,196,130,.8)'], 1.6);
+    speckle(5, 10, -30, -8, rx*0.6, ry*0.55, ['#a8641e', '#c98a3a'], 1.6);
+    pandanKnot(-42, -24, 0.8); }
+  if (N('chicken')) grow(32, -4, 1.3, () => chickenSlices(32, -4, 7));
+  if (N('cucumber')) grow(0, 60, 1.2, () => cucumberRow(0, 60, 6));
+  if (N('chilli')) saucer(-60, 44, '#e04e26', 11, () => { speckle(14, N('chilli') > 1 ? 14 : 8, -60, 44, 7, 7, ['#f6c26b', '#ff8a5a'], 1.3); ell(-62, 41, 3, 1.4, 'rgba(255,220,200,.6)'); });
+  if (N('ginger')) saucer(60, 44, '#efd27a', 12, () => { speckle(15, 14, 60, 44, 7, 7, ['#d9b44e', '#fff1b8', '#c9a23e'], 1.4); ell(58, 41, 3, 1.3, 'rgba(255,255,230,.7)'); });
+  if (N('soy')) saucer(-60, -52, '#2a160c', 13, () => ell(-62, -55, 4, 1.6, 'rgba(255,255,255,.25)'));
+  if (N('braisedegg')) braisedEgg(60, -52);
+  if (N('charsiew')) charSiew(14, 30);
+  if (N('soup')) soupBowl(-82, 6);
+};
+
+/* ---------- a glossier whole bird ---------- */
+const _wholeChicken33 = wholeChicken;
+wholeChicken = function(x, y, s, o = {}){
+  _wholeChicken33(x, y, s, o);
+  const k = o.k == null ? 1 : o.k;
+  g.save(); g.translate(x, y); g.scale(s, s);
+  /* skin pores and tiny fat beads along the back */
+  g.save(); g.beginPath(); g.ellipse(-2, -2, 46, 28, 0, 0, Math.PI*2); g.clip();
+  const r = rng(851); for (let i = 0; i < 46; i++){ const px = -44 + r()*88, py = -30 + r()*52; circle(px, py, 0.55, `rgba(170,120,50,${0.25 + 0.2*k})`); }
+  for (let i = 0; i < 10; i++){ const px = -36 + r()*70, py = -28 + r()*14; circle(px, py, 0.9, 'rgba(255,255,255,.85)'); }
+  g.restore();
+  /* sesame-oil sheen: a few bright highlights where the light catches */
+  ell(14, -26, 9, 2.2, `rgba(255,255,255,${0.35 + 0.35*k})`); ell(-36, -6, 4, 1.6, 'rgba(255,255,255,.5)'); ell(26, 12, 5, 1.4, 'rgba(255,250,220,.55)');
+  /* the parson's nose tucked between the legs, and the wing tip */
+  ell(44, -2, 5, 4, mix('#f3d38a', '#e0b65a', 0.4), '#a8803a', 0.9);
+  g.beginPath(); g.moveTo(-26, 22); g.quadraticCurveTo(-30, 28, -22, 30); g.strokeStyle = 'rgba(150,100,40,.6)'; g.lineWidth = 1.2; g.stroke();
+  /* skin creases at the joints */
+  g.beginPath(); g.moveTo(10, 6); g.quadraticCurveTo(14, 12, 12, 18); g.moveTo(-6, -8); g.quadraticCurveTo(-2, -2, -4, 4); g.strokeStyle = 'rgba(160,110,40,.28)'; g.lineWidth = 1.1; g.stroke();
+  if (o.garnish) for (let i = 0; i < 6; i++){ g.beginPath(); g.arc(-26 + i*10, -22 + (i % 2)*5, 1.8, 0, Math.PI*2); g.strokeStyle = '#4f9e3a'; g.lineWidth = 1; g.stroke(); }
+  g.restore();
+};
+
+/* ---------- the chopping board: a cleaver, and pieces that come apart ---------- */
+CHOP_CHICKEN.opt.food = function(s){
+  const lines = s && s.lines ? s.lines : [], cuts = lines.filter(l => l.cut).map(l => l.x).sort((a, b) => a - b);
+  g.save(); g.beginPath(); g.rect(70, 92, 260, 134); g.clip();
+  if (!cuts.length) wholeChicken(200, 164, 1.55, {k:1});
+  else {
+    /* draw the bird in strips between cuts, nudged apart */
+    const edges = [70, ...cuts, 330];
+    for (let i = 0; i < edges.length - 1; i++){
+      g.save(); g.beginPath(); g.rect(edges[i] + 1, 92, edges[i + 1] - edges[i] - 2, 134); g.clip(); g.translate((i - cuts.length/2)*3, 0);
+      wholeChicken(200, 164, 1.55, {k:1, noShadow:i > 0});
+      g.restore();
+    }
+    cuts.forEach(cx => { g.fillStyle = 'rgba(250,244,230,.95)'; g.fillRect(cx - 1.5, 126, 3, 62); speckle(860 + Math.round(cx), 4, cx, 190, 6, 3, ['rgba(255,240,200,.9)'], 1.2); });
+  }
+  g.restore();
+  /* the cleaver waits over the next line */
+  const next = lines.find(l => !l.cut); if (!next) return;
+  const t = performance.now()/1000, bob = Math.sin(t*4)*2;
+  g.save(); g.translate(next.x + 18, 92 + bob); g.rotate(0.12); g.scale(1.5, 1.5);
+  box(-10, -30, 30, 26, 2.5, lin(-10, 0, 20, 0, [[0, '#9aa5a2'], [0.4, '#eef2f1'], [1, '#b9c2bf']]), '#4f5a57', 1.4);
+  circle(13, -24, 2.2, 'rgba(60,70,66,.6)'); line(-9, -6, 19, -6, 'rgba(255,255,255,.8)', 1);
+  box(17, -27, 22, 7, 3, lin(0, -27, 0, -20, [[0, '#6a4a2a'], [1, '#3a2614']]), '#2a1a0c', 1); circle(24, -23.5, 1.2, '#c9b38a'); circle(32, -23.5, 1.2, '#c9b38a');
+  g.restore();
+};
+
+/* ---------- the ice bath: water you can see into ---------- */
+const _ice33 = S.ice;
+S.ice = function(s){
+  _ice33(s);
+  const bx = 40 + s.zc*320, bw = s.zh*640 + 24, hx = 40 + s.pos*320, inZone = Math.abs(hx - bx) < bw/2;
+  g.save(); box(bx - bw/2 + 3, 153, bw - 6, 52, 8); g.clip();
+  g.fillStyle = 'rgba(120,190,215,.28)'; g.fillRect(bx - bw/2, 162, bw, 50);
+  line(bx - bw/2, 162, bx + bw/2, 162, 'rgba(255,255,255,.8)', 1.4);
+  const t = performance.now()/1000;
+  for (let i = 0; i < 3; i++){ const rr = ((t*0.7 + i/3) % 1); g.beginPath(); g.ellipse(inZone ? hx : bx, 162, 6 + rr*bw*0.35, 1.5 + rr*2, 0, 0, Math.PI*2); g.strokeStyle = `rgba(255,255,255,${0.6*(1 - rr)})`; g.lineWidth = 1; g.stroke(); }
+  g.restore();
+  if (inZone) txt('Plunge now!', bx, 222, 11, '#2f6db0', {display:true});
+};
+/* the cooking steps keep their own reference to the scene, so point them at the new drawings */
+POACH.opt.scene = function(s){ S.poach(s); };
+ICE.opt.scene = function(s){ S.ice(s); };
+
+/* ---------- a proper folded waffle: deep pockets, a crisp rim, filling oozing out ---------- */
+const _finalWaffle33 = FINAL.waffle;
+FINAL.waffle = function(w){
+  if (w.item === 'mjk') return _finalWaffle33(w);
+  const col = FILL_COL[w.filling] || FILL_COL.kaya, extra = (w.add || []).includes('xfill');
+  plate(92, 70);
+  /* greaseproof paper */
+  g.save(); g.rotate(-0.06); box(-78, -40, 156, 70, 3, 'rgba(250,246,236,.95)', 'rgba(200,190,170,.8)', 1); line(-78, -30, 78, -30, 'rgba(200,190,170,.35)', 1); g.restore();
+  g.save(); g.translate(0, 12); shadow(3, 8, 72, 30);
+  const R = 72;
+  g.beginPath(); g.moveTo(-R, 10); g.arc(0, 10, R, Math.PI, 0); g.closePath();
+  paint(rad(-20, -40, 6, R*1.2, [[0, '#f8d996'], [0.6, '#e6a94e'], [1, '#c47e2e']]), '#7a4a18', 1.8);
+  g.save(); g.beginPath(); g.moveTo(-R + 6, 6); g.arc(0, 10, R - 6, Math.PI, 0); g.closePath(); g.clip();
+  /* each pocket: a little square with a shadow on top-left and a glint on bottom-right */
+  for (let gx = -R; gx < R; gx += 13) for (let gy = -R; gy < 10; gy += 13){
+    g.fillStyle = 'rgba(150,84,26,.55)'; g.fillRect(gx + 2, gy + 2, 9, 9);
+    g.fillStyle = 'rgba(220,150,70,.9)'; g.fillRect(gx + 3.5, gy + 3.5, 7, 7);
+    g.fillStyle = 'rgba(255,235,180,.55)'; g.fillRect(gx + 8, gy + 8, 2.5, 2.5);
+  }
+  speckle(901, 10, 0, -26, 50, 24, ['rgba(120,60,10,.45)'], 2.2);
+  g.restore();
+  /* the crisp outer rim */
+  g.beginPath(); g.arc(0, 10, R - 3, Math.PI, 0); g.strokeStyle = 'rgba(255,220,150,.55)'; g.lineWidth = 2; g.stroke();
+  /* filling squeezing out of the fold, with a drip or two */
+  box(-R + 4, 6, (R - 4)*2, extra ? 10 : 7, 4, col, mix(col, '#2a1a0a', 0.35), 0.9);
+  for (let i = 0; i < (extra ? 4 : 2); i++){ const dx = -40 + i*26; blob(dx, 15 + (extra ? 4 : 2), 4, 3 + (i % 2)*2, 0.3, 910 + i, col, mix(col, '#2a1a0a', 0.35), 0.7); }
+  line(-R + 10, 8, R - 10, 8, 'rgba(255,255,255,.35)', 1);
+  if (w.filling === 'butter') speckle(905, 14, 0, 9, 50, 2, ['#ffffff', '#f6efd8'], 1.6);
+  g.restore();
+};
+
+/* ---------- chendol: gula melaka that pools and runs down the ice ---------- */
+const _chendol33 = DISH.chendol;
+DISH.chendol = function(has, w){
+  const gm = has.gm || 0;
+  _chendol33(Object.assign({}, has, {gm:0}), w);
+  if (gm <= 0) return;
+  const r = rng(931);
+  g.save();
+  /* a soft pool where the syrup soaks into the ice */
+  g.globalAlpha = 0.3 + gm*0.25;
+  blob(0, -2, 22 + gm*14, 18 + gm*12, 0.35, 932, rad(-4, -8, 2, 36, [[0, '#a85a1c'], [1, 'rgba(150,80,24,0)']]));
+  g.globalAlpha = 1;
+  /* one looping drizzle, poured back and forth over the mound */
+  const loops = 3 + Math.round(gm*3), pts = [];
+  for (let i = 0; i <= loops; i++){ const y = -34 + i*(64/loops), half = Math.sqrt(Math.max(0, 1 - (y/48)**2))*40; pts.push([(i % 2 ? 1 : -1)*half*(0.8 + r()*0.2), y]); }
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  const path = () => { g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++){ const [px, py] = pts[i - 1], [qx, qy] = pts[i]; g.bezierCurveTo(px + (qx - px)*0.1, py + 9, qx - (qx - px)*0.1, qy - 9, qx, qy); } };
+  path(); g.strokeStyle = 'rgba(150,80,24,.3)'; g.lineWidth = 7; g.stroke();
+  path(); g.strokeStyle = 'rgba(96,44,10,.85)'; g.lineWidth = 3; g.stroke();
+  path(); g.strokeStyle = 'rgba(240,180,110,.5)'; g.lineWidth = 0.9; g.stroke();
+  g.lineCap = 'butt';
+  ell(-6, -10, 6 + gm*4, 2, 'rgba(255,220,170,.55)');
+  g.restore();
 };
 
 /* =================================================================
@@ -10539,7 +10728,7 @@ makeCustomers = function(st, beginner, service){
     if (P.dine && !c.usualMode && Math.random() < 0.75) c.t.dine = P.dine;
     if (P.budget && !kidMode()){
       const t = JSON.parse(JSON.stringify(c.t));
-      (st.form || []).forEach(f => { if (f.type === 'many' && f.key !== 'notes' && Array.isArray(t[f.key])) t[f.key] = []; });
+      (st.form || []).forEach(f => { if (f.type === 'many' && (f.key === 'add' || f.key === 'extras') && Array.isArray(t[f.key])) t[f.key] = []; });
       let ok = true; try { if (st.valid && !st.valid(t)) ok = false; } catch(e){ ok = false; }
       if (ok){ t.dine = c.t.dine; c.t = t; }
     }
@@ -10588,6 +10777,7 @@ function pickQA(c){
 }
 function askQuestion(el, c){
   const P = PERSONA[c.persona]; if (!P || !P.asks || c.asked) return;
+  if ((save.days || 0) < 1 || (SH && SH.beginner)) return;   /* no questions during the very first day: one new thing at a time */
   const cur = BIZ.cur || {}; cur.qn = cur.qn || 0;
   if (cur.qn >= 2 || Math.random() > P.asks) return;
   const got = pickQA(c); if (!got) return;
@@ -10662,7 +10852,7 @@ function goalBanner(st, service){
   el = document.createElement('div'); el.id = 'goalBanner'; el.className = 'goal-banner'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Today’s goals');
   el.innerHTML = `<h3>${service === 'dinner' ? 'DINNER' : 'LUNCH'} SERVICE · DAY ${n + 1}</h3>
     <p>You’re at <b>${esc(st.name)}</b> ${role}.${first ? ` ${esc(st.mentor)} taught you the basics; this rush is yours.` : ''}</p>
-    <ul><li>Serve all ${CUST} customers</li><li>Nobody walks out</li><li>Average 2★ or better</li><li>Take in ${money(costShift)}+ to cover today’s running costs</li></ul>
+    <ul><li>Serve all ${SH && SH.custs ? SH.custs.length : CUST} customers</li><li>Nobody walks out</li><li>Average 2★ or better</li><li>Take in ${money(costShift)}+ to cover today’s running costs</li></ul>
     <button type="button" class="buy" data-go>Let’s go!</button>`;
   document.body.appendChild(el);
   const close = () => { el.remove(); };
@@ -10706,8 +10896,8 @@ showSummary = function(st, results){
     });
     if (bonus){ const dl = save.dayLog; if (dl && dl.n === dayNo()) dl.tips += bonus; setTimeout(() => { if (screen === 'summary') earn(bonus, $('#sumReview')); }, 3400); }
     const D = d29(); D.sales += takings; D.shifts++;
-    if (service === 'lunch' && walked === 0 && served.length >= CUST) flagAch('rush');
-    const goals = [[`Served ${served.length} of ${CUST} customers`, served.length >= CUST], [walked ? `${walked} walked out` : 'Nobody walked out', walked === 0],
+    if (service === 'lunch' && walked === 0 && served.length >= Math.min(CUST, results.length) && results.length >= 3) flagAch('rush');
+    const goals = [[`Served ${served.length} of ${results.length} customers`, served.length >= results.length], [walked ? `${walked} walked out` : 'Nobody walked out', walked === 0],
       [`Average ${avg.toFixed(1)}★`, avg >= 2], [`Took in ${money(takings)} (running costs this shift: ${money(need)})`, takings >= need]];
     const rv = $('#sumReview');
     if (rv){
@@ -11010,7 +11200,7 @@ showSummary = function(st, results){
     addReviews(st, results);
     const total = results.reduce((a, r) => a + r.stars, 0), blog = served.some(r => r.c.blogger && r.stars >= 3);
     let viral = false;
-    if ((total >= 14 && repOf(st.id) >= 55 && Math.random() < 0.22) || blog){
+    if (dayNo() >= 3 && ((total >= 14 && repOf(st.id) >= 55 && Math.random() < 0.22) || blog)){
       viral = true; rep += 3; (save.mods30 = mods30()).push({until:dayNo() + 1, tip:1.25, pat:1.05, note:'Gone viral'});
       notes.push('📱 A customer’s photo of your food went viral! +3 reputation, bigger tips for 2 days');
     }
@@ -11876,6 +12066,36 @@ drawStallView = function(sv){
     oldPhoto(96, 203);
     const sig = save.sig30 && save.sig30.stall === sv.st.id ? save.sig30.name : sv.st.dish;
     specialBoard(244, 203, sig);
+  } catch(e){}
+};
+
+/* =================================================================
+   PLAYTEST FIXES (v33)
+   ================================================================= */
+/* 1. never get stuck broke with no stock: the supplier gives credit, repaid from later takings */
+const _restock33 = restockShift;
+restockShift = function(st, btn){
+  const stock = stockOf(st.id), need = MARKET[st.id].filter(([k]) => stock[k] < NEED), total = need.reduce((a, m) => a + m[3], 0);
+  const anyStock = STALLS.some(s => save.built[s.id] && servingsLeft(s.id) >= NEED);
+  if (need.length && save.wallet < total && !anyStock && !(save.debt33 > 0)){
+    const ov = modal30('creditOv', `<span class="ch-tag">SHORT OF MONEY</span><h2>Take stock on credit?</h2>
+      <p class="ch-lead">You need ${money(total)} for stock and have ${money(save.wallet)}. ${esc(st.mentor)} calls the supplier: “This one is my apprentice. Give first, pay later.”</p>
+      <div class="ch-opts"><button type="button" data-yes><b>Take ${money(total)} of stock on credit</b><small>It’s paid back automatically from tonight’s takings.</small></button><button type="button" data-no><b>Not now</b><small>Try a cheaper stall or a helper shift instead.</small></button></div>`);
+    ov.querySelector('[data-yes]').addEventListener('click', () => { need.forEach(([k]) => { stock[k] = Math.min(capOf(st.id), stock[k] + PACK_N); }); save.debt33 = (save.debt33 || 0) + total; save.spent[st.id] = (save.spent[st.id] || 0) + total; persist(); ov.hidden = true; sfx.good(); toast(`Stock delivered on credit (${money(total)} owed).`); renderTab(); });
+    ov.querySelector('[data-no]').addEventListener('click', () => { ov.hidden = true; });
+    return;
+  }
+  return _restock33(st, btn);
+};
+const _ledger33 = showLedger;
+showLedger = function(){
+  _ledger33();
+  try {
+    if (save.debt33 > 0 && save.debtDay33 !== dayNo()){
+      const pay = Math.min(save.debt33, save.wallet); save.wallet -= pay; save.debt33 -= pay; save.debtDay33 = dayNo(); persist(); refreshWallet();
+      const box = document.querySelector('.cost29 .cost-list');
+      if (box && pay) box.insertAdjacentHTML('beforeend', `<details><summary><span>Supplier credit repaid</span><b>-${money(pay)}</b></summary><p>Stock you took on credit. ${save.debt33 > 0 ? `${money(save.debt33)} still owed.` : 'All paid off!'}</p></details>`);
+    }
   } catch(e){}
 };
 
