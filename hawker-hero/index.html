@@ -14735,6 +14735,37 @@ drawDishView = function(){
     if (DV.stars === 3) for (let i = 0; i < 10; i++){ const a = i*0.63 + DV.t*1.2, r = 120 + Math.sin(DV.t*3 + i)*8; const x = 150 + Math.cos(a)*r, y = 100 + Math.sin(a)*r*0.6; g.save(); g.translate(x, y); g.rotate(DV.t*2 + i); g.fillStyle = C.yellow; g.beginPath(); for (let j = 0; j < 5; j++){ const an = j*Math.PI*0.4 - Math.PI/2; g.lineTo(Math.cos(an)*6, Math.sin(an)*6); g.lineTo(Math.cos(an + 0.63)*2.6, Math.sin(an + 0.63)*2.6); } g.closePath(); g.fill(); g.restore(); }
   });
 };
+/* =================================================================
+   41. CALMER HIGHLIGHTS: the yellow rings and outlines that flash on
+   buttons are softer, thinner and slower; focus rings only show when
+   you're using a keyboard.
+   ================================================================= */
+(function calm41(){
+  /* remember whether the player last used touch/mouse or the keyboard */
+  const root = document.documentElement;
+  const ptr = () => root.classList.add('ptr41'), key = e => { if (e.key === 'Tab' || e.key.startsWith('Arrow')) root.classList.remove('ptr41'); };
+  window.addEventListener('pointerdown', ptr, true); window.addEventListener('keydown', key, true); ptr();
+  const s = document.createElement('style');
+  s.textContent = `
+  @keyframes ghl41{0%,100%{box-shadow:0 0 0 .1rem rgba(242,197,61,.55),0 0 .7rem rgba(242,197,61,.25)}50%{box-shadow:0 0 0 .14rem rgba(242,197,61,.8),0 0 1rem rgba(242,197,61,.35)}}
+  @keyframes nudge41{0%,100%{box-shadow:0 .4375rem 0 var(--ink),0 0 0 0 rgba(242,197,61,0)}50%{box-shadow:0 .4375rem 0 var(--ink),0 0 0 .3rem rgba(242,197,61,.35)}}
+  @keyframes obPulse41{0%,100%{box-shadow:0 0 0 0 rgba(242,197,61,0)}50%{box-shadow:0 0 0 .25rem rgba(242,197,61,.35)}}
+  html body .g-hl{outline:none;animation:ghl41 2.2s ease-in-out infinite}
+  html body .act.nudge{animation:nudge41 2s ease-in-out infinite}
+  html body .ob-pulse, html body .ld-btns .big.start{animation:obPulse41 2.2s ease-in-out infinite}
+  html body button:focus-visible, html body [tabindex]:focus-visible{outline:.15rem solid var(--yellow);outline-offset:.15rem}
+  html.ptr41 body button:focus-visible, html.ptr41 body [tabindex]:focus-visible, html.ptr41 body a:focus-visible{outline:none}
+  html body .ach-pop{border-width:.125rem;border-color:rgba(242,197,61,.6)}
+  html body .grv-pill{border-width:.125rem;border-color:rgba(242,197,61,.7)}
+  html body .s3d-hint, html body .rhy-top span, html body .s3d-wal{border-width:.125rem}
+  @keyframes fade41{from{opacity:0;transform:translateY(-.25rem)}to{opacity:1;transform:none}}
+  html body .pos-guide{background:#fff8e2;color:var(--ink);border-bottom:.0625rem solid rgba(20,33,27,.12);box-shadow:inset .3rem 0 0 var(--yellow);font-size:clamp(.9rem,1.25vw,1rem);padding-block:.4rem;animation:fade41 .35s ease-out}
+  html body .pos-guide b{color:#8a6410}
+  html body .coach{border-width:.125rem;border-color:rgba(242,197,61,.65)}
+  html body .coach.guided{border-width:.125rem}
+  @media (prefers-reduced-motion:reduce){ html body .g-hl, html body .act.nudge, html body .ob-pulse{animation:none} }`;
+  document.head.appendChild(s);
+})();
 
 /* =================================================================
    GUIDED FIRST TRIES for the hand-built steps (templates are handled in guideState)
