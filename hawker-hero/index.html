@@ -1,15 +1,15 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"><meta name="theme-color" content="#124634"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Hawker Hero"><link rel="icon" type="image/png" sizes="32x32" href="icons/chickenrice-32.png"><link rel="apple-touch-icon" href="icons/chickenrice-180.png"><link rel="manifest" href="manifest.json"><meta name="description" content="Run a Singapore hawker stall: cook, serve and keep the kopitiam spirit alive."><meta property="og:title" content="Hawker Hero"><meta property="og:description" content="Run a Singapore hawker stall: cook, serve and keep the kopitiam spirit alive."><meta property="og:type" content="website"><meta property="og:url" content="https://makiyakinabe.github.io/hawker-hero/"><meta property="og:image" content="https://makiyakinabe.github.io/hawker-hero/icons/chickenrice-512.png"><meta name="twitter:card" content="summary"><title>Hawker Hero</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bungee&family=IBM+Plex+Mono:wght@500;700&family=Patrick+Hand&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Nunito:ital,wght@0,500;0,700;0,800;1,500&family=Space+Mono:wght@400;700&family=Patrick+Hand&family=ZCOOL+KuaiLe&display=swap">
 <style>
 /* Layout: one-screen tablet game. Night-green hawker-centre tiles behind chunky white game cards; play = ticket | stage scaled to fit | thumb rail. */
 :root{
   --bg:#124634; --bg-line:rgba(255,255,255,.06); --ink:#14211b; --muted:#52615a;
   --green:#1d6a50; --red:#c7372c; --yellow:#f2c53d; --paper:#fffef8; --tile:#e6ede4; --cream-btn:#fff;
-  --display:'Bungee','Arial Black',Impact,sans-serif;
-  --body:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  --display:'Fredoka','ZCOOL KuaiLe','Arial Rounded MT Bold','Trebuchet MS',sans-serif;
+  --body:'Nunito','ZCOOL KuaiLe',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'Space Mono',ui-monospace,Menlo,Consolas,monospace;
   --hand:'Patrick Hand','Comic Sans MS','Segoe Print',cursive;
   color-scheme:light;
   padding-top:env(safe-area-inset-top,0); padding-bottom:env(safe-area-inset-bottom,0);
@@ -22,7 +22,7 @@ body{
   background-color:var(--bg);
   background-image:linear-gradient(var(--bg-line) 0.125rem,transparent 0.125rem),linear-gradient(90deg,var(--bg-line) 0.125rem,transparent 0.125rem);
   background-size:2.25rem 2.25rem;
-  color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.45;
+  color:var(--ink);font-family:var(--body);font-weight:500;font-size:1rem;line-height:1.45;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;
   user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
 }
@@ -1538,8 +1538,9 @@ button.stall:active{transform:perspective(56rem) rotateX(var(--rx,0deg)) rotateY
 const $ = s => document.querySelector(s);
 const W = 400, H = 300;
 const C = {ink:'#14211b', green:'#1d6a50', red:'#c7372c', yellow:'#f2c53d', steel:'#c4ccc9', steelDark:'#7f8b88', good:'#2f9e5b', muted:'#52615a'};
-const F_BODY = "'Atkinson Hyperlegible', system-ui, sans-serif";
-const F_DISP = "Bungee, 'Arial Black', Impact, sans-serif";
+const F_BODY = "Nunito, 'ZCOOL KuaiLe', system-ui, sans-serif";
+const F_DISP = "Fredoka, 'ZCOOL KuaiLe', 'Arial Rounded MT Bold', 'Trebuchet MS', sans-serif";
+const F_MONO = "'Space Mono', ui-monospace, monospace";
 const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
 const rand = (a,b) => a + Math.random()*(b-a);
 const pick = a => a[Math.floor(Math.random()*a.length)];
@@ -5097,7 +5098,7 @@ const PAY = {
     else if (!s.paid){ disp = (s.keyed/100).toFixed(2); sub = s.cash && s.noteTaken ? 'PAID ' + money(s.note) : 'TOTAL'; }
     else if (s.cash){ if (s.lv >= 1){ disp = ((s.note - s.keyed)/100).toFixed(2); sub = 'CHANGE'; } else { disp = (s.keyed/100).toFixed(2); sub = 'PAID ' + money(s.note); } }
     else { disp = s.scanT > 1 ? 'PAID' : 'SCAN'; sub = 'PAYNOW'; }
-    g.save(); g.font = `700 24px 'IBM Plex Mono', ui-monospace, monospace`; g.textAlign = 'right'; g.textBaseline = 'middle'; g.fillStyle = '#14211b'; g.fillText(disp, 152, 41); g.restore();
+    g.save(); g.font = `700 24px ${F_MONO}`; g.textAlign = 'right'; g.textBaseline = 'middle'; g.fillStyle = '#14211b'; g.fillText(disp, 152, 41); g.restore();
     txt('$', 46, 41, 16, '#14211b', {display:true}); if (sub) txt(sub, 40, 27, 7, '#3d4a5c', {align:'left', display:true});
     if (s.lv >= 2 && st === 'change' && s.given === s.note - s.keyed) txt('✓ OK', 150, 27, 7, C.good, {align:'right', display:true});
     box(28,70,136,126,6,'#4a7aa0');
@@ -7718,8 +7719,8 @@ const INTRO_AUDIO = 'data:audio/mp4;base64,AAAAHGZ0eXBNNEEgAAACAE00QSBpc29taXNvM
    ================================================================= */
 const INTRO = (() => {
   const INK = '#1b2a24', PAPER = '#fffaf0', RED = '#d0352b', GREEN = '#1d6a50', YEL = '#f2c53d', ORANGE = '#e8743b';
-  const FD = "'Bungee','Inter Display Black','Inter Display','Arial Black',Impact,sans-serif";
-  const FB = "'Atkinson Hyperlegible','Inter',system-ui,sans-serif";
+  const FD = "'Fredoka','ZCOOL KuaiLe','Inter Display Black','Inter Display','Arial Rounded MT Bold',sans-serif";
+  const FB = "'Nunito','ZCOOL KuaiLe','Inter',system-ui,sans-serif";
   let c = null;
   const TAU = Math.PI * 2;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -13384,7 +13385,7 @@ const MODEL37 = {
   register(lv){
     if (lv === 0){ mbCyl(0, 0, 0, 0.13, 0.18, '#c4161c', 12, {top:'#f2b33d'}); return; }
     if (lv === 1){ mbBox(0, 0, 0, 0.36, 0.14, 0.32, DARK); mbBox(0, 0.14, -0.05, 0.3, 0.12, 0.14, '#5a6466', {front:'#20302a'}); return; }
-    mbBox(0, 0, 0, 0.12, 0.2, 0.1, DARK); mbBox(0, 0.2, 0, 0.34, 0.24, 0.03, '#14211b', {front:'#1f4f8a', frontDecal:decal37(34, 24, (c, W, H) => { c.fillStyle = '#7ec8ff'; c.fillRect(3, 3, W - 6, 5); c.fillStyle = '#ffffff'; c.font = 'bold 6px sans-serif'; c.fillText('PAYNOW', 6, 17); })});
+    mbBox(0, 0, 0, 0.12, 0.2, 0.1, DARK); mbBox(0, 0.2, 0, 0.34, 0.24, 0.03, '#14211b', {front:'#1f4f8a', frontDecal:decal37(34, 24, (c, W, H) => { c.fillStyle = '#7ec8ff'; c.fillRect(3, 3, W - 6, 5); c.fillStyle = '#ffffff'; c.font = `700 6px ${F_DISP}`; c.fillText('PAYNOW', 6, 17); })});
   },
   tools(lv){ mbBox(0, 1.3, 0, 0.9, 0.06, 0.05, WOOD37); for (let i = 0; i < 3 + lv; i++){ mbBox(-0.35 + i*0.2, 1.05, 0.05, 0.12, 0.24, 0.01, '#d6dede'); mbBox(-0.35 + i*0.2, 1.29, 0.05, 0.04, 0.12, 0.03, '#2a1408'); } if (lv >= 2){ mbCyl(0.55, 1.35, 0.02, 0.1, 0.04, '#ffffff', 12); } },
   helper(lv, t){ person37('#2f9e5b', '#f4f4ee', '#d9a77a', '#1a1410', false); if (lv >= 2){ MB.T.x += 0.45; person37('#e8743b', '#ffffff', '#c8875a', '#2a1a10', false); } },
@@ -13392,10 +13393,10 @@ const MODEL37 = {
   lantern(t){ mbCyl(0, 0.35, 0, 0.005, 0.4, '#3a2a1a', 3); mbSphere(0, 0.18, 0, 0.18, '#d9262e', 10, 6, {sy:1.15}); mbCyl(0, 0.36, 0, 0.08, 0.05, '#f2b33d', 8); mbCyl(0, -0.04, 0, 0.08, 0.05, '#f2b33d', 8); mbCyl(0, -0.22, 0, 0.012, 0.18, '#f2b33d', 4); },
   plant(){ mbCyl(0, 0.35, 0, 0.005, 0.4, '#3a2a1a', 3); mbCyl(0, 0.1, 0, 0.13, 0.18, '#c96a3a', 10, {r2:0.16, top:'#4a2a10'}); for (let i = 0; i < 9; i++){ const a = i*0.7; mbSphere(Math.cos(a)*0.17, 0.12 - (i % 3)*0.18, Math.sin(a)*0.17, 0.07, i % 2 ? '#3f9f3a' : '#5ab84a', 6, 3); } },
   chimes(t){ mbCyl(0, 0.3, 0, 0.12, 0.02, '#c9a04a', 10); for (let i = 0; i < 5; i++){ const a = i*1.26; mbCyl(Math.cos(a)*0.09, 0.0 - (i % 2)*0.06, Math.sin(a)*0.09, 0.012, 0.28, '#d6dede', 5); } },
-  cert(){ mbBox(0, 1.3, 0, 0.34, 0.42, 0.02, '#ffffff', {front:'#ffffff', frontDecal:decal37(34, 42, (c, W, H) => { c.strokeStyle = '#2f9e5b'; c.lineWidth = 2; c.strokeRect(2, 2, W - 4, H - 4); c.fillStyle = '#2f9e5b'; c.font = 'bold 22px sans-serif'; c.textAlign = 'center'; c.fillText('A', W/2, 30); c.font = 'bold 6px sans-serif'; c.fillText('NEA', W/2, 10); })}); },
+  cert(){ mbBox(0, 1.3, 0, 0.34, 0.42, 0.02, '#ffffff', {front:'#ffffff', frontDecal:decal37(34, 42, (c, W, H) => { c.strokeStyle = '#2f9e5b'; c.lineWidth = 2; c.strokeRect(2, 2, W - 4, H - 4); c.fillStyle = '#2f9e5b'; c.font = `700 22px ${F_DISP}`; c.textAlign = 'center'; c.fillText('A', W/2, 30); c.font = `700 6px ${F_DISP}`; c.fillText('NEA', W/2, 10); })}); },
   clock(){ mbCyl(0, 1.5, 0, 0.18, 0.04, '#ffffff', 14, {}); MB.faces[MB.faces.length - 1].decal = null; const T = MB.T; mbFace([[-0.16, 1.34, 0.045], [0.16, 1.34, 0.045], [0.16, 1.66, 0.045], [-0.16, 1.66, 0.045]], '#ffffff', [0, 0, 1], {flat:true, decal:decal37(32, 32, (c, W, H) => { c.beginPath(); c.arc(16, 16, 15, 0, 6.3); c.fillStyle = '#ffffff'; c.fill(); c.strokeStyle = '#14211b'; c.lineWidth = 2; c.stroke(); const d = new Date(), h = d.getHours()%12 + d.getMinutes()/60, m = d.getMinutes(); c.beginPath(); c.moveTo(16, 16); c.lineTo(16 + Math.sin(h/12*6.28)*8, 16 - Math.cos(h/12*6.28)*8); c.moveTo(16, 16); c.lineTo(16 + Math.sin(m/60*6.28)*12, 16 - Math.cos(m/60*6.28)*12); c.stroke(); })}); },
-  review(){ mbBox(0, 1.25, 0, 0.42, 0.52, 0.02, '#f4f0e0', {front:'#f4f0e0', frontDecal:decal37(42, 52, (c, W, H) => { c.fillStyle = '#14211b'; c.font = 'bold 6px serif'; c.fillText('THE STRAITS', 4, 8); c.fillStyle = '#9a8a6a'; c.fillRect(4, 12, 34, 14); for (let i = 0; i < 7; i++) c.fillRect(4, 30 + i*3, 34 - (i % 3)*6, 1.2); })}); },
-  calendar(){ mbBox(0, 1.2, 0, 0.3, 0.42, 0.02, '#ffffff', {front:'#ffffff', frontDecal:decal37(30, 42, (c, W, H) => { c.fillStyle = '#c4161c'; c.fillRect(0, 0, W, 12); c.fillStyle = '#ffffff'; c.font = 'bold 7px sans-serif'; c.textAlign = 'center'; c.fillText('福', W/2, 9); c.fillStyle = '#c4161c'; c.font = 'bold 18px sans-serif'; c.fillText(String(new Date().getDate()), W/2, 34); })}); },
+  review(){ mbBox(0, 1.25, 0, 0.42, 0.52, 0.02, '#f4f0e0', {front:'#f4f0e0', frontDecal:decal37(42, 52, (c, W, H) => { c.fillStyle = '#14211b'; c.font = `700 6px ${F_DISP}`; c.fillText('THE STRAITS', 4, 8); c.fillStyle = '#9a8a6a'; c.fillRect(4, 12, 34, 14); for (let i = 0; i < 7; i++) c.fillRect(4, 30 + i*3, 34 - (i % 3)*6, 1.2); })}); },
+  calendar(){ mbBox(0, 1.2, 0, 0.3, 0.42, 0.02, '#ffffff', {front:'#ffffff', frontDecal:decal37(30, 42, (c, W, H) => { c.fillStyle = '#c4161c'; c.fillRect(0, 0, W, 12); c.fillStyle = '#ffffff'; c.font = `700 7px ${F_DISP}`; c.textAlign = 'center'; c.fillText('福', W/2, 9); c.fillStyle = '#c4161c'; c.font = `700 18px ${F_DISP}`; c.fillText(String(new Date().getDate()), W/2, 34); })}); },
   luckycat(t){ mbBox(0, 0, 0, 0.2, 0.18, 0.16, '#ffffff', {top:'#ffffff'}); mbSphere(0, 0.26, 0, 0.1, '#ffffff', 10, 6); mbBox(0, 0.28, 0.09, 0.03, 0.02, 0.01, '#14211b'); mbBox(0, 0.1, 0.085, 0.08, 0.06, 0.01, '#f2b33d'); const w = Math.sin(t*4)*0.05; mbBox(0.11, 0.2 + w, 0.02, 0.05, 0.12, 0.05, '#ffffff'); mbBox(-0.06, 0.33, 0, 0.04, 0.05, 0.03, '#ffffff'); mbBox(0.06, 0.33, 0, 0.04, 0.05, 0.03, '#ffffff'); mbBox(0, 0.17, 0.085, 0.16, 0.02, 0.01, '#d9262e'); },
   radio(){ mbBox(0, 0, 0, 0.36, 0.2, 0.12, '#8a5a2a', {front:'#7a4a20', frontDecal:decal37(36, 20, (c, W, H) => { c.fillStyle = '#e8d9b0'; c.fillRect(3, 4, 18, 12); c.strokeStyle = '#5a3418'; for (let i = 0; i < 5; i++){ c.beginPath(); c.moveTo(4, 6 + i*2.2); c.lineTo(20, 6 + i*2.2); c.stroke(); } c.beginPath(); c.arc(28, 10, 4, 0, 6.3); c.fillStyle = '#c9a04a'; c.fill(); })}); mbCyl(0.12, 0.2, 0, 0.005, 0.25, '#b9c4c4', 3); },
   orchid(){ mbCyl(0, 0, 0, 0.08, 0.14, '#f4f4ee', 10, {r2:0.1, top:'#5a3a1a'}); mbCyl(0, 0.14, 0, 0.006, 0.3, '#3f6a2a', 3); for (let i = 0; i < 5; i++) mbSphere(0.03 + i*0.025, 0.42 - i*0.04, 0.02, 0.035, i % 2 ? '#d9468f' : '#f29ac2', 6, 3); mbBox(0, 0.14, 0, 0.16, 0.01, 0.05, '#3f8f3a'); },
@@ -13408,12 +13409,12 @@ const MODEL37 = {
     mbCyl(0, 1.0, 0, 0.0, 0.0, '#fff', 3); mbBox(0, 0.98, 0, 0.12, 0.14, 0.12, '#f4f4ee'); for (let i = 0; i < 3; i++){ const a = t*14 + i*2.09; mbQuad([[0, 1.05, 0.08], [Math.cos(a)*0.24, 1.05 + Math.sin(a)*0.24, 0.1], [Math.cos(a + 0.5)*0.22, 1.05 + Math.sin(a + 0.5)*0.22, 0.1]], '#7ec8ff', {alpha:0.8}); }
     const ring = []; for (let i = 0; i < 16; i++){ const a = i/16*6.283; ring.push([Math.cos(a)*0.28, 1.05 + Math.sin(a)*0.28, 0.12]); } mbQuad(ring, '#ffffff', {alpha:0.18}); },
   kopitins(){ const C = ['#c4161c', '#f2b33d', '#2f6fb3']; for (let i = 0; i < 6; i++){ const r = i < 3 ? 0 : i < 5 ? 1 : 2, k = i < 3 ? i : i < 5 ? i - 3 : 0; mbCyl(-0.14 + k*0.14 + r*0.07, r*0.18, 0, 0.065, 0.17, C[i % 3], 10, {top:'#d6dede'}); } },
-  tv(t){ mbBox(0, 1.7, -0.02, 0.1, 0.1, 0.25, DARK); mbBox(0, 1.45, 0.18, 0.55, 0.42, 0.36, '#3a3430', {front:'#2a2420', frontDecal:decal37(55, 42, (c, W, H) => { c.fillStyle = '#1a2a2a'; c.fillRect(4, 4, 40, 34); const k = Math.floor(t*2) % 3; c.fillStyle = ['#4a9ad8', '#e8743b', '#2f9e5b'][k]; c.fillRect(6, 6, 36, 20); c.fillStyle = '#ffffff'; c.font = 'bold 5px sans-serif'; c.fillText(['NEWS', 'DRAMA', 'FOOTBALL'][k], 8, 34); c.fillStyle = '#c9a04a'; c.beginPath(); c.arc(49, 12, 2.5, 0, 6.3); c.fill(); c.beginPath(); c.arc(49, 22, 2.5, 0, 6.3); c.fill(); })}); },
+  tv(t){ mbBox(0, 1.7, -0.02, 0.1, 0.1, 0.25, DARK); mbBox(0, 1.45, 0.18, 0.55, 0.42, 0.36, '#3a3430', {front:'#2a2420', frontDecal:decal37(55, 42, (c, W, H) => { c.fillStyle = '#1a2a2a'; c.fillRect(4, 4, 40, 34); const k = Math.floor(t*2) % 3; c.fillStyle = ['#4a9ad8', '#e8743b', '#2f9e5b'][k]; c.fillRect(6, 6, 36, 20); c.fillStyle = '#ffffff'; c.font = `700 5px ${F_DISP}`; c.fillText(['NEWS', 'DRAMA', 'FOOTBALL'][k], 8, 34); c.fillStyle = '#c9a04a'; c.beginPath(); c.arc(49, 12, 2.5, 0, 6.3); c.fill(); c.beginPath(); c.arc(49, 22, 2.5, 0, 6.3); c.fill(); })}); },
   menuboard(){ mbCyl(-0.4, 0.3, 0, 0.005, 0.35, '#3a2a1a', 3); mbCyl(0.4, 0.3, 0, 0.005, 0.35, '#3a2a1a', 3);
-    mbBox(0, -0.1, 0, 1.0, 0.42, 0.04, '#1f2a24', {front:'#1f2a24', back:'#1f2a24', frontDecal:decal37(100, 42, (c, W, H) => { c.strokeStyle = '#c9a04a'; c.lineWidth = 2; c.strokeRect(2, 2, W - 4, H - 4); c.fillStyle = '#ffffff'; c.font = 'bold 9px sans-serif'; c.textAlign = 'center'; c.fillText((S3.st && S3.st.dish || 'MENU').toUpperCase().slice(0, 18), W/2, 16); c.fillStyle = '#f2b33d'; c.font = '7px sans-serif'; c.fillText('$4.50  ·  $5.50  ·  $6.50', W/2, 32); })}); },
-  drinks(){ mbBox(0, 0, 0, 0.7, 0.9, 0.55, '#2f6fb3', {top:'#bfe3ef'}); mbBox(0, 0.92, 0, 0.66, 0.02, 0.5, '#bfe3ef', {alpha:0.55}); const C = ['#e8402e', '#f2b33d', '#2f9e5b', '#f6f0e0']; for (let i = 0; i < 8; i++) mbCyl(-0.24 + (i % 4)*0.16, 0.7, -0.1 + (i >> 2)*0.2, 0.05, 0.2, C[i % 4], 6); mbBox(0, 0.4, 0.28, 0.4, 0.1, 0.01, '#ffffff', {frontDecal:decal37(40, 10, (c) => { c.fillStyle = '#2f6fb3'; c.font = 'bold 7px sans-serif'; c.fillText('COLD DRINKS', 2, 8); })}); },
+    mbBox(0, -0.1, 0, 1.0, 0.42, 0.04, '#1f2a24', {front:'#1f2a24', back:'#1f2a24', frontDecal:decal37(100, 42, (c, W, H) => { c.strokeStyle = '#c9a04a'; c.lineWidth = 2; c.strokeRect(2, 2, W - 4, H - 4); c.fillStyle = '#ffffff'; c.font = `700 9px ${F_DISP}`; c.textAlign = 'center'; c.fillText((S3.st && S3.st.dish || 'MENU').toUpperCase().slice(0, 18), W/2, 16); c.fillStyle = '#f2b33d'; c.font = `700 7px ${F_DISP}`; c.fillText('$4.50  ·  $5.50  ·  $6.50', W/2, 32); })}); },
+  drinks(){ mbBox(0, 0, 0, 0.7, 0.9, 0.55, '#2f6fb3', {top:'#bfe3ef'}); mbBox(0, 0.92, 0, 0.66, 0.02, 0.5, '#bfe3ef', {alpha:0.55}); const C = ['#e8402e', '#f2b33d', '#2f9e5b', '#f6f0e0']; for (let i = 0; i < 8; i++) mbCyl(-0.24 + (i % 4)*0.16, 0.7, -0.1 + (i >> 2)*0.2, 0.05, 0.2, C[i % 4], 6); mbBox(0, 0.4, 0.28, 0.4, 0.1, 0.01, '#ffffff', {frontDecal:decal37(40, 10, (c) => { c.fillStyle = '#2f6fb3'; c.font = `700 7px ${F_DISP}`; c.fillText('COLD DRINKS', 2, 8); })}); },
   trophy(t){ mbBox(0, 0, 0, 0.18, 0.06, 0.18, '#3a2a1a'); mbCyl(0, 0.06, 0, 0.03, 0.12, '#f2b33d', 8); mbCyl(0, 0.18, 0, 0.04, 0.14, '#f2b33d', 12, {r2:0.11, glow:'rgba(255,220,120,.5)'}); mbSphere(-0.12, 0.27, 0, 0.035, '#f2b33d', 6, 4); mbSphere(0.12, 0.27, 0, 0.035, '#f2b33d', 6, 4); },
-  neon(t){ const on = Math.sin(t*3) > -0.85; mbBox(0, 1.35, 0, 0.75, 0.3, 0.03, '#14211b', {front:'#14211b', frontDecal:decal37(75, 30, (c, W, H) => { c.shadowColor = on ? '#ff4ad0' : 'transparent'; c.shadowBlur = on ? 8 : 0; c.strokeStyle = on ? '#ff8ae8' : '#5a3a52'; c.lineWidth = 2; c.font = 'bold 18px sans-serif'; c.textAlign = 'center'; c.strokeText('OPEN', W/2, 22); c.strokeStyle = on ? '#6af0ff' : '#2a4a52'; c.strokeRect(3, 3, W - 6, H - 6); })}); },
+  neon(t){ const on = Math.sin(t*3) > -0.85; mbBox(0, 1.35, 0, 0.75, 0.3, 0.03, '#14211b', {front:'#14211b', frontDecal:decal37(75, 30, (c, W, H) => { c.shadowColor = on ? '#ff4ad0' : 'transparent'; c.shadowBlur = on ? 8 : 0; c.strokeStyle = on ? '#ff8ae8' : '#5a3a52'; c.lineWidth = 2; c.font = `700 18px ${F_DISP}`; c.textAlign = 'center'; c.strokeText('OPEN', W/2, 22); c.strokeStyle = on ? '#6af0ff' : '#2a4a52'; c.strokeRect(3, 3, W - 6, H - 6); })}); },
   aquarium(t){ mbBox(0, 0, 0, 0.42, 0.04, 0.22, DARK); mbBox(0, 0.04, 0, 0.4, 0.26, 0.2, '#7ec8ff', {alpha:0.45, top:'#bfe3ef'}); for (let i = 0; i < 3; i++){ const x = Math.sin(t*0.9 + i*2)*0.14; mbSphere(x, 0.1 + i*0.06, -0.03 + i*0.03, 0.025, ['#f2a33d', '#e8402e', '#f6f0e0'][i], 6, 3, {sy:0.6}); } mbBox(0.12, 0.04, 0, 0.04, 0.12, 0.04, '#3f9f3a'); },
   mural(){ mbBox(0, 0.95, 0, 1.4, 0.9, 0.02, '#f6e8c8', {front:'#f6e8c8', frontDecal:decal37(140, 90, (c, W, H) => {
     c.fillStyle = '#bfe3ef'; c.fillRect(0, 0, W, H); const cols = ['#f2b33d', '#7ec8a0', '#f29ac2', '#7ec8ff', '#f6a04a'];
@@ -13452,14 +13453,14 @@ function buildRoom37(st, t){
   /* the front counter, according to its upgrade level */
   const cCol = lvC === 0 ? '#b98a56' : lvC === 1 ? '#c6d0d0' : '#dfe8e8';
   mbBox(0, 0, 1.3, 4, 0.92, 0.4, cCol, {front:lvC === 0 ? '#a87a44' : lvC === 1 ? '#b9c4c4' : '#cfd9d9', top:lvC === 0 ? '#c99a62' : '#e9eeee',
-    frontDecal:decal37(400, 92, (c, W, H) => { c.fillStyle = paint; c.fillRect(0, 6, W, 16); c.fillStyle = '#ffffff'; c.font = 'bold 11px sans-serif'; c.textAlign = 'center'; c.fillText((st.dish || '').toUpperCase(), W/2, 18); if (lvC === 0){ c.strokeStyle = 'rgba(90,60,30,.35)'; for (let i = 0; i < 8; i++){ c.beginPath(); c.moveTo(i*50, 24); c.lineTo(i*50, H); c.stroke(); } } })});
+    frontDecal:decal37(400, 92, (c, W, H) => { c.fillStyle = paint; c.fillRect(0, 6, W, 16); c.fillStyle = '#ffffff'; c.font = `700 11px ${F_DISP}`; c.textAlign = 'center'; c.fillText((st.dish || '').toUpperCase(), W/2, 18); if (lvC === 0){ c.strokeStyle = 'rgba(90,60,30,.35)'; for (let i = 0; i < 8; i++){ c.beginPath(); c.moveTo(i*50, 24); c.lineTo(i*50, H); c.stroke(); } } })});
   if (lvC >= 2){ mbBox(0, 0.92, 1.3, 3.6, 0.34, 0.3, '#bfe3ef', {alpha:0.35, top:'#dff3f8'}); for (let i = 0; i < 5; i++){ mbCyl(-1.4 + i*0.7, 0.95, 1.3, 0.14, 0.03, '#ffffff', 10); mbSphere(-1.4 + i*0.7, 1.0, 1.3, 0.07, ['#f2c77c', '#e8a07a', '#f6d86a', '#d9566a', '#9fd46a'][i], 6, 3, {sy:0.6}); } }
   /* signboard */
   const sign = save.sign[id] || 'classic', sCol = sign === 'wood' ? '#7a4a20' : sign === 'gold' ? '#a8141c' : sign === 'neon' ? '#14211b' : paint;
   mbBox(0, 2.5, 1.45, 4.1, 0.55, 0.12, sCol, {front:sCol, frontDecal:decal37(410, 55, (c, W, H) => {
     if (sign === 'neon'){ c.shadowColor = '#ff6ad8'; c.shadowBlur = 10; c.strokeStyle = '#ff9ae8'; } else c.fillStyle = sign === 'gold' ? '#f2c24a' : '#ffffff';
-    c.font = 'bold 26px sans-serif'; c.textAlign = 'center'; const nm = dname(st); sign === 'neon' ? (c.lineWidth = 1.5, c.strokeText(nm, W/2, 36)) : c.fillText(nm, W/2, 36);
-    c.shadowBlur = 0; c.fillStyle = 'rgba(255,255,255,.75)'; c.font = 'bold 10px sans-serif'; c.fillText(String(st.unit || ''), 34, 50); })});
+    c.font = `700 26px ${F_DISP}`; c.textAlign = 'center'; const nm = dname(st); sign === 'neon' ? (c.lineWidth = 1.5, c.strokeText(nm, W/2, 36)) : c.fillText(nm, W/2, 36);
+    c.shadowBlur = 0; c.fillStyle = 'rgba(255,255,255,.75)'; c.font = `700 10px ${F_DISP}`; c.fillText(String(st.unit || ''), 34, 50); })});
   mbBox(-2.0, 0, 1.45, 0.12, 2.5, 0.12, '#8a9a94'); mbBox(2.0, 0, 1.45, 0.12, 2.5, 0.12, '#8a9a94');
   /* lights */
   if (lvL === 0) { mbCyl(0, 2.2, 0, 0.005, 0.3, '#3a2a1a', 3); mbSphere(0, 2.15, 0, 0.07, '#fff6c8', 8, 4, {glow:'rgba(255,240,170,.8)'}); }
@@ -13799,7 +13800,7 @@ renderTab = function(){
   /* lunch-hour tables: readable tile labels */
   body .tf-grid button small{font-size:.74rem;line-height:1.12}
   /* nothing smaller than 11px, even on the smallest phones */
-  body .label{font-size:max(.72rem, 11px)} body .sign .unit{font-size:max(.68rem, 11px)} body .ach-pop small{font-size:max(.7rem, 11px)} body .kds-type{font-size:max(.72rem, 11px)} body .kds-pay{font-size:max(.7rem, 11px)} body .kb-q{font-size:max(.68rem, 11px)} body .s3d-cams button{font-size:max(.76rem, 11px)} body .s3d-tabs button{font-size:max(.78rem, 11px)} body .tab-extras .buy small{font-size:max(.74rem, 11px)} body .tf-grid button small{font-size:max(.74rem, 11px)} body .ch-tag{font-size:max(.72rem, 11px)} body .rk-next{font-size:max(.78rem, 11px)} body .rank-card small{font-size:max(.78rem, 11px)} body .daystrip small{font-size:max(.7rem, 11px)}
+  body .label{font-size:max(.72rem, 11px)} body .sign .unit{font-size:max(.68rem, 11px)} body .ach-pop small{font-size:max(.7rem, 11px)} body .kds-type{font-size:max(.72rem, 11px)} body .kds-pay{font-size:max(.7rem, 11px)} body .kb-q{font-size:max(.68rem, 11px)} body .s3d-cams button{font-size:max(.76rem, 11px)} body .s3d-tabs button{font-size:max(.78rem, 11px)} body .tab-extras .buy small{font-size:max(.74rem, 11px)} body .tf-grid button small{font-size:max(.74rem, 11px)} body .ch-tag{font-size:max(.72rem, 11px)} body .rk-next{font-size:max(.78rem, 11px)} body .rank-card small{font-size:max(.78rem, 11px)} body .daystrip li small, body .daystrip small{font-size:max(.7rem, 11px)!important}
   /* short phones: a smaller stall picture and a slimmer button dock, so the day planner isn't hidden */
   @media (max-width:600px) and (max-height:720px) and (orientation:portrait){
     body .stall-layout{grid-template-rows:min(30dvh,calc((100vw - 2rem)*.75)) minmax(0,1fr)}
@@ -13809,7 +13810,7 @@ renderTab = function(){
     body .tab-extras .buy{padding:.4rem .6rem}
   }
   /* kitchen ticket: the queue / READY alert drops to its own line on narrow screens instead of being cut off */
-  @media (max-width:520px){ body .kb-top{flex-wrap:wrap;row-gap:.15rem} body #kdsQueue.kb-q{flex:1 1 100%;margin-left:0;white-space:normal;overflow:visible} }
+  @media (max-width:520px){ body #kdsQueue.kb-q:not(.warn){display:none} body .kb-top{flex-wrap:wrap;row-gap:.1rem} body #kdsQueue.kb-q.warn{flex:1 1 100%;margin-left:0;white-space:normal;overflow:visible;line-height:1.15} }
   `;
   document.head.appendChild(s);
 })();
