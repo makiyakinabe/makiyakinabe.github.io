@@ -12628,11 +12628,12 @@ function measureFood(id, w){
   const ctx = cv.getContext('2d'), prev = g; let rec = null;
   const P = plate; plate = function(rx, ry){ if (!rec) rec = [rx, ry || rx]; return P.apply(this, arguments); };
   g = ctx; ctx.translate(S/2, S/2);
+  const hasRim = typeof rimFor40 !== 'undefined'; if (hasRim) rimFor40 = id;
   try { FINAL_RAW[id](w, 0); } catch(e){}
   plate = P;
   let base = null;
   if (rec){ const cb = document.createElement('canvas'); cb.width = cb.height = S; g = cb.getContext('2d'); g.translate(S/2, S/2); P(rec[0], rec[1]); base = g.getImageData(0, 0, S, S).data; }
-  g = prev;
+  g = prev; if (hasRim) rimFor40 = null;
   if (!rec) return null;
   const a = ctx.getImageData(0, 0, S, S).data, pts = [];
   for (let y = 0; y < S; y += 2) for (let x = 0; x < S; x += 2){ const i = (y*S + x)*4;
@@ -14545,6 +14546,195 @@ showSummary = function(st, results){
   @media (max-width:430px){ .lic-body{grid-template-columns:5.2rem minmax(0,1fr);gap:.6rem} .lic-fields{grid-template-columns:1fr} .lic-tiers{grid-template-columns:repeat(2,minmax(0,1fr))} .lic-bar{display:none} }`;
   document.head.appendChild(s);
 })();
+/* =================================================================
+   40. GLOSSY ART PASS: a candy-bright casual cooking look everywhere.
+   Shinier lighting, soft outlines in each shape's own colour, a dreamy
+   blurred hawker-centre backdrop, porcelain plates with coloured rims,
+   sparkles on served food, and glossy buttons and HUD pills.
+   ================================================================= */
+
+/* ---------- lighting: a brighter glint and richer shading ---------- */
+ballFill = function(x, y, r, fill){
+  const gr = g.createRadialGradient(x - r*0.34, y - r*0.4, r*0.04, x + r*0.05, y + r*0.08, r*1.12);
+  gr.addColorStop(0, tint(fill, 0.5)); gr.addColorStop(0.2, tint(fill, 0.24)); gr.addColorStop(0.58, fill); gr.addColorStop(0.9, tint(fill, -0.18)); gr.addColorStop(1, tint(fill, -0.3)); return gr;
+};
+slabFill = function(y, h, fill){
+  const gr = g.createLinearGradient(0, y, 0, y + h);
+  gr.addColorStop(0, tint(fill, 0.32)); gr.addColorStop(0.18, tint(fill, 0.14)); gr.addColorStop(0.55, fill); gr.addColorStop(1, tint(fill, -0.24)); return gr;
+};
+/* outlines: near-black ink becomes a deep shade of the shape's own colour, like candy-shop art */
+const darkStroke40 = s => typeof s === 'string' && /^#(14211b|0e1212|1a1410|2a1408|14100c|3a4444|2a2420|3b2a1e|14211b55)$/i.test(s);
+const _paint40 = paint;
+paint = function(fill, stroke, lw){
+  if (stroke && FX3D.on && darkStroke40(stroke)){
+    if (typeof fill === 'string' && fill[0] === '#' && (fill.length === 7 || fill.length === 4)) stroke = tint(fill, -0.55);
+    else if (fill) stroke = 'rgba(52,30,44,.72)';
+  }
+  _paint40(fill, stroke, lw);
+};
+/* a crisp specular highlight on round, plain-coloured shapes */
+function glint40(x, y, rx, ry){
+  g.save(); g.globalAlpha = 0.55; g.fillStyle = '#ffffff';
+  g.beginPath(); g.ellipse(x - rx*0.36, y - ry*0.46, rx*0.26, ry*0.13, -0.5, 0, Math.PI*2); g.fill();
+  g.globalAlpha = 0.4; g.beginPath(); g.arc(x - rx*0.06, y - ry*0.58, Math.min(rx, ry)*0.06, 0, Math.PI*2); g.fill();
+  g.restore();
+}
+const _circle40 = circle;
+circle = function(x, y, r, fill, stroke, lw){ _circle40(x, y, r, fill, stroke, lw); if (r >= 7 && isFlat(fill) && !FX3D.lite) glint40(x, y, r, r); };
+const _ell40 = ell;
+ell = function(x, y, rx, ry, fill, stroke, lw){ _ell40(x, y, rx, ry, fill, stroke, lw); if (Math.min(rx, ry) >= 7 && ry >= rx*0.55 && isFlat(fill) && !FX3D.lite) glint40(x, y, rx, ry); };
+/* soft, blurry contact shadows */
+shadow = function(x, y, rx, ry){
+  const gr = g.createRadialGradient(x, y, 0, x, y, Math.max(rx, ry));
+  gr.addColorStop(0, 'rgba(60,30,50,.26)'); gr.addColorStop(0.65, 'rgba(60,30,50,.14)'); gr.addColorStop(1, 'rgba(60,30,50,0)');
+  g.save(); g.translate(x, y); g.scale(1, ry/Math.max(rx, ry)); g.translate(-x, -y);
+  g.fillStyle = gr; g.beginPath(); g.arc(x, y, Math.max(rx, ry)*1.12, 0, Math.PI*2); g.fill(); g.restore();
+};
+
+/* ---------- porcelain plates with a coloured rim, one colour per stall ---------- */
+const RIM40 = {chicken:'#3fb8b0', kopi:'#e8743b', prata:'#f2a33d', ckt:'#4a9ad8', satay:'#e86a5a', kachang:'#d9468f', nasilemak:'#3f9f6a', fishball:'#5aa0e0',
+  popiah:'#9a6ad8', fruit:'#ef5f8a', waffle:'#f2b33d', hokkien:'#e8a03b', bcm:'#c75a3a', western:'#4a7ad8', mala:'#d9262e', laksa:'#f07a5a', carrotcake:'#8a6ad8', bkt:'#3a8a7a', chendol:'#3fb87a'};
+var rimFor40 = null;
+const rimCol40 = () => RIM40[rimFor40] || (curStall && RIM40[curStall.id]) || '#3fb8b0';
+plate = function(rx, ry){
+  ry = ry || rx;
+  const rim = rimCol40();
+  shadow(5, 9, rx*1.02, ry*1.02);
+  _ell40(0, 0, rx, ry, rad(-rx*0.35, -ry*0.4, 4, rx*1.15, [[0, tint(rim, 0.45)], [0.55, rim], [1, tint(rim, -0.28)]]), tint(rim, -0.5), 2);
+  g.save(); g.beginPath(); g.ellipse(0, 0, rx - 1, ry - 1, 0, 0, Math.PI*2); g.clip();
+  for (let k = 0; k < 28; k++){ const a = k/28*Math.PI*2; g.fillStyle = k % 2 ? 'rgba(255,255,255,.28)' : 'rgba(255,255,255,.12)'; g.beginPath(); g.ellipse(Math.cos(a)*rx*0.91, Math.sin(a)*ry*0.91, rx*0.045, ry*0.045, 0, 0, Math.PI*2); g.fill(); }
+  g.restore();
+  _ell40(0, 0, rx*0.82, ry*0.82, rad(-rx*0.3, -ry*0.32, 4, rx, [[0, '#ffffff'], [0.7, '#fbf8f4'], [1, '#ece6df']]), tint(rim, -0.2), 1.6);
+  _ell40(0, 0, rx*0.78, ry*0.78, null, 'rgba(242,197,61,.55)', 1);
+  g.save(); g.globalAlpha = 0.6; g.strokeStyle = '#ffffff'; g.lineWidth = Math.max(1.5, rx*0.05); g.lineCap = 'round';
+  g.beginPath(); g.ellipse(0, 0, rx*0.91, ry*0.91, 0, Math.PI*1.08, Math.PI*1.42); g.stroke(); g.restore();
+};
+
+/* ---------- sparkles on finished food ---------- */
+function sparkle40(x, y, s, a){
+  g.save(); g.translate(x, y); g.globalAlpha = a; g.fillStyle = '#ffffff';
+  g.beginPath(); for (let i = 0; i < 8; i++){ const r = i % 2 ? s*0.22 : s, an = i*Math.PI/4; g.lineTo(Math.cos(an)*r, Math.sin(an)*r); } g.closePath(); g.fill();
+  g.globalAlpha = a*0.5; g.beginPath(); g.arc(0, 0, s*0.45, 0, Math.PI*2); g.fill(); g.restore();
+}
+Object.keys(FINAL).forEach(id => {
+  const f = FINAL[id]; if (typeof f !== 'function') return;
+  FINAL[id] = function(w, tt){
+    const was = rimFor40; rimFor40 = id;
+    let r; try { r = f.apply(this, arguments); } finally { rimFor40 = was; }
+    if (!FX3D.on) return r;
+    const now = performance.now()/1000;
+    [[-48, -44, 9, 0], [44, -58, 7, 1.7], [62, 18, 6, 3.1], [-62, 26, 5, 4.4]].forEach(([x, y, s, ph]) => { const a = Math.max(0, Math.sin(now*2.2 + ph)); if (a > 0.05) sparkle40(x, y, s*(0.7 + a*0.5), a*0.9); });
+    return r;
+  };
+});
+
+/* ---------- the backdrop: a soft, dreamy hawker centre behind a glossy marble counter ---------- */
+let bg40 = null;
+function backdrop40(){
+  const k = 2, c = document.createElement('canvas'); c.width = 400*k; c.height = 205*k;
+  const prev = g; g = c.getContext('2d'); g.setTransform(k, 0, 0, k, 0, 0);
+  try {
+    let gr = g.createLinearGradient(0, 0, 0, 205); gr.addColorStop(0, '#bfe8dc'); gr.addColorStop(0.55, '#d8f1e8'); gr.addColorStop(1, '#f6e7d8'); g.fillStyle = gr; g.fillRect(0, 0, 400, 205);
+    /* arched windows with sky */
+    [40, 200, 360].forEach(x => { g.fillStyle = '#ffffff'; g.beginPath(); g.moveTo(x - 30, 120); g.lineTo(x - 30, 40); g.arc(x, 40, 30, Math.PI, 0); g.lineTo(x + 30, 120); g.closePath(); g.fill();
+      g.fillStyle = lin(0, 20, 0, 120, [[0, '#8fd3ff'], [1, '#e8f6ff']]); g.beginPath(); g.moveTo(x - 24, 116); g.lineTo(x - 24, 42); g.arc(x, 42, 24, Math.PI, 0); g.lineTo(x + 24, 116); g.closePath(); g.fill();
+      g.fillStyle = 'rgba(255,255,255,.8)'; g.fillRect(x - 1.5, 20, 3, 96); g.fillRect(x - 24, 70, 48, 3); });
+    /* ceiling beams, fans and strings of lanterns */
+    g.fillStyle = '#9fd8c8'; g.fillRect(0, 0, 400, 12);
+    [120, 280].forEach(x => { g.fillStyle = '#7a8a86'; g.fillRect(x - 1, 10, 2, 16); g.fillStyle = '#e8eef0'; g.beginPath(); g.ellipse(x, 27, 34, 4, 0, 0, Math.PI*2); g.fill(); g.fillStyle = '#c9d4d0'; g.beginPath(); g.arc(x, 27, 5, 0, Math.PI*2); g.fill(); });
+    g.strokeStyle = 'rgba(120,60,40,.5)'; g.lineWidth = 1; g.beginPath(); g.moveTo(0, 30); g.quadraticCurveTo(100, 52, 200, 34); g.quadraticCurveTo(300, 52, 400, 30); g.stroke();
+    for (let i = 0; i < 9; i++){ const x = 20 + i*45, y = 40 + Math.sin(i*1.3)*6; g.fillStyle = i % 2 ? '#f2a33d' : '#e8403a'; g.beginPath(); g.ellipse(x, y, 7, 8.5, 0, 0, Math.PI*2); g.fill(); g.fillStyle = '#f2c53d'; g.fillRect(x - 3, y - 10, 6, 2.5); g.fillRect(x - 3, y + 7.5, 6, 2.5); }
+    /* a row of colourful stall fronts across the hall */
+    const fronts = [['#ef8fb0', '#ffffff'], ['#7ec8e8', '#fff7d6'], ['#f6c25a', '#ffffff'], ['#9ad48a', '#fffbe8'], ['#c9a2f0', '#ffffff'], ['#f59a7a', '#fffaf0']];
+    fronts.forEach(([a, b2], i) => { const x = -10 + i*72, y = 112;
+      g.fillStyle = a; g.fillRect(x, y, 66, 50); g.fillStyle = b2; g.fillRect(x + 4, y + 16, 58, 30);
+      for (let s = 0; s < 6; s++){ g.fillStyle = s % 2 ? a : '#ffffff'; g.beginPath(); g.moveTo(x + s*11, y + 10); g.lineTo(x + s*11 + 11, y + 10); g.lineTo(x + s*11 + 11, y + 16); g.arc(x + s*11 + 5.5, y + 16, 5.5, 0, Math.PI); g.closePath(); g.fill(); }
+      g.fillStyle = 'rgba(255,255,255,.75)'; g.fillRect(x + 10, y + 2, 46, 6);
+      for (let p = 0; p < 3; p++){ g.fillStyle = ['#f2a33d', '#e86a5a', '#7ec8a0'][(i + p) % 3]; g.beginPath(); g.arc(x + 16 + p*16, y + 40, 5, 0, Math.PI*2); g.fill(); } });
+    /* round marble tables and stools in front */
+    [[60, 176], [190, 182], [330, 176]].forEach(([x, y]) => { g.fillStyle = 'rgba(80,60,70,.18)'; g.beginPath(); g.ellipse(x, y + 18, 34, 6, 0, 0, Math.PI*2); g.fill();
+      g.fillStyle = '#c9d4d0'; g.fillRect(x - 2, y, 4, 18); g.fillStyle = '#fbfbf8'; g.beginPath(); g.ellipse(x, y, 30, 7, 0, 0, Math.PI*2); g.fill();
+      [[-30, 14], [30, 14]].forEach(([dx, dy]) => { g.fillStyle = '#e8606a'; g.beginPath(); g.ellipse(x + dx, y + dy, 8, 3, 0, 0, Math.PI*2); g.fill(); g.fillRect(x + dx - 1.5, y + dy, 3, 8); }); });
+    /* potted palms at the edges */
+    [[8, 150], [392, 150]].forEach(([x, y]) => { g.fillStyle = '#c96a3a'; g.fillRect(x - 10, y + 22, 20, 22); for (let i = 0; i < 7; i++){ const a = -Math.PI/2 + (i - 3)*0.45; g.strokeStyle = i % 2 ? '#3f9f3a' : '#5ab84a'; g.lineWidth = 5; g.lineCap = 'round'; g.beginPath(); g.moveTo(x, y + 22); g.quadraticCurveTo(x + Math.cos(a)*18, y + 6, x + Math.cos(a)*28, y + 14 + Math.abs(Math.sin(a))*-16); g.stroke(); } });
+  } finally { g = prev; }
+  /* soften it like a camera's shallow focus */
+  const b = document.createElement('canvas'); b.width = c.width; b.height = c.height; const bc = b.getContext('2d');
+  bc.filter = 'blur(5px) saturate(1.1) brightness(1.04)'; bc.drawImage(c, 0, 0);
+  if (bc.filter === 'none' || !('filter' in bc)){ bc.globalAlpha = 0.25; for (let i = 0; i < 6; i++) bc.drawImage(c, (i % 3 - 1)*3, (Math.floor(i/3) - 0.5)*3); bc.globalAlpha = 1; }
+  return b;
+}
+kitchenBg = function(){
+  if (!bg40) bg40 = backdrop40();
+  g.drawImage(bg40, 0, 0, 400, 205);
+  /* warm light from above and a gentle vignette */
+  let gr = g.createRadialGradient(200, -40, 20, 200, -40, 330); gr.addColorStop(0, 'rgba(255,246,214,.55)'); gr.addColorStop(1, 'rgba(255,246,214,0)'); g.fillStyle = gr; g.fillRect(0, 0, W, 205);
+  gr = g.createLinearGradient(0, 160, 0, 205); gr.addColorStop(0, 'rgba(90,50,60,0)'); gr.addColorStop(1, 'rgba(90,50,60,.18)'); g.fillStyle = gr; g.fillRect(0, 160, W, 45);
+  /* glossy cream marble counter */
+  gr = g.createLinearGradient(0, 200, 0, 300); gr.addColorStop(0, '#fffaf3'); gr.addColorStop(0.1, '#f8ece0'); gr.addColorStop(0.7, '#efdccb'); gr.addColorStop(1, '#e2c8b4'); g.fillStyle = gr; g.fillRect(0, 200, W, 100);
+  g.strokeStyle = 'rgba(190,150,140,.25)'; g.lineWidth = 1.2;
+  for (let i = 0; i < 7; i++){ g.beginPath(); const y = 214 + i*12; g.moveTo(-10, y); g.bezierCurveTo(80, y - 8 + (i % 3)*5, 220, y + 10, 410, y - 4); g.stroke(); }
+  gr = g.createRadialGradient(200, 230, 8, 200, 230, 210); gr.addColorStop(0, 'rgba(255,255,255,.65)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  g.save(); g.translate(0, 230); g.scale(1, 0.3); g.translate(0, -230); g.fillStyle = gr; g.fillRect(0, 60, W, 340); g.restore();
+  g.fillStyle = 'rgba(255,255,255,.9)'; g.fillRect(0, 200, W, 2.5); g.fillStyle = 'rgba(120,70,80,.18)'; g.fillRect(0, 202.5, W, 4);
+  /* front edge: a strip of Peranakan tiles */
+  for (let x = 0; x < W; x += 20){ const i = x/20; g.fillStyle = i % 2 ? '#3fb8b0' : '#f2f7f4'; g.fillRect(x, 292, 20, 8); g.fillStyle = i % 2 ? '#f2c53d' : '#ef8fb0'; g.beginPath(); g.moveTo(x + 10, 293); g.lineTo(x + 14, 296); g.lineTo(x + 10, 299); g.lineTo(x + 6, 296); g.closePath(); g.fill(); }
+  g.fillStyle = 'rgba(255,255,255,.6)'; g.fillRect(0, 291, W, 1.2);
+  if (FX3D.on && !FX3D.lite && g === mainCtx) fxLayerBegin();
+};
+
+/* ---------- colour pop for food and people: a saturation lift on the scene layer ---------- */
+const _fxFinish40 = fxFinish;
+fxFinish = function(k, dt){
+  const m = mainCtx, had = 'filter' in m && FX3D.active && !FX3D.lite;
+  if (had) m.filter = 'saturate(1.22) contrast(1.04)';
+  try { return _fxFinish40(k, dt); } finally { if (had) m.filter = 'none'; }
+};
+
+/* ---------- glossy buttons, pills and cards ---------- */
+(function css40(){
+  const s = document.createElement('style');
+  s.textContent = `
+  body{background-image:radial-gradient(circle at 12% 18%,rgba(255,255,255,.10) 0 3.5rem,transparent 3.6rem),radial-gradient(circle at 86% 12%,rgba(255,240,190,.10) 0 2.5rem,transparent 2.6rem),radial-gradient(circle at 72% 78%,rgba(255,255,255,.08) 0 5rem,transparent 5.1rem),radial-gradient(circle at 30% 88%,rgba(255,200,220,.08) 0 3rem,transparent 3.1rem),linear-gradient(var(--bg-line) .125rem,transparent .125rem),linear-gradient(90deg,var(--bg-line) .125rem,transparent .125rem);background-size:auto,auto,auto,auto,2.25rem 2.25rem,2.25rem 2.25rem}
+  body .big, body .buy, body .chip, body .rhy-pad, body .lv-item, body .s3d-cams button{background-image:linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.16) 46%,rgba(255,255,255,0) 50%,rgba(0,0,0,.08) 100%)}
+  body .big{box-shadow:inset 0 .18rem 0 rgba(255,255,255,.5),inset 0 -.25rem 0 rgba(0,0,0,.14),0 .3125rem 0 var(--ink),0 .5rem 1rem rgba(0,0,0,.22)}
+  body .buy{box-shadow:inset 0 .16rem 0 rgba(255,255,255,.65),inset 0 -.2rem 0 rgba(150,100,0,.18),0 .25rem 0 var(--ink),0 .45rem .8rem rgba(0,0,0,.18)}
+  body .big:active, body .buy:active{box-shadow:inset 0 .18rem 0 rgba(255,255,255,.4),0 .0625rem 0 var(--ink)}
+  body .ov-card, body .card, body .tile, body .rank-card, body .lic, body .s3d-panel{box-shadow:inset 0 .2rem 0 rgba(255,255,255,.75),0 .3125rem 0 var(--ink),0 .9rem 1.8rem rgba(0,0,0,.22)}
+  body .pb-chip, body .chip-pill, body .wallet, body .s3d-wal, body .grv-pill, body .rhy-top span{background-image:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.04) 48%,rgba(0,0,0,0) 52%,rgba(0,0,0,.12));box-shadow:inset 0 .12rem 0 rgba(255,255,255,.25),0 .2rem .5rem rgba(0,0,0,.25)}
+  body .pb-bar i, body .lp-bar i, body .bar i, body .prog i{background-image:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.1) 50%,rgba(0,0,0,.1)),repeating-linear-gradient(-45deg,rgba(255,255,255,.18) 0 .4rem,transparent .4rem .8rem)!important}
+  body .tier39{box-shadow:inset 0 .14rem 0 rgba(255,255,255,.6),0 .1875rem 0 var(--ink)}
+  body .ach-pop{box-shadow:inset 0 .14rem 0 rgba(255,255,255,.18),0 .6rem 1.4rem rgba(0,0,0,.35)}`;
+  document.head.appendChild(s);
+})();
+/* ---------- the dish showcase: a pastel spotlight, bokeh and a lace doily under the plate ---------- */
+const dvOff40 = document.createElement('canvas');
+drawDishView = function(){
+  withCtx(dishCv, 300, () => {
+    const gr = g.createRadialGradient(150, 96, 10, 150, 110, 200); gr.addColorStop(0, '#fffaf0'); gr.addColorStop(0.45, '#ffe6ee'); gr.addColorStop(1, '#cdeee4');
+    box(4, 4, 292, 192, 16, gr);
+    g.save(); g.beginPath(); if (g.roundRect) g.roundRect(4, 4, 292, 192, 16); else g.rect(4, 4, 292, 192); g.clip();
+    [[30, 30, 22, 'rgba(255,255,255,.55)'], [268, 40, 16, 'rgba(255,240,190,.6)'], [250, 170, 26, 'rgba(255,255,255,.4)'], [44, 168, 18, 'rgba(255,210,225,.6)'], [150, 20, 12, 'rgba(255,255,255,.5)']].forEach(([x, y, r, c]) => { g.fillStyle = c; g.beginPath(); g.arc(x, y, r, 0, Math.PI*2); g.fill(); });
+    /* lace doily */
+    const dy = DV.st.id === 'kachang' ? 150 : 112, R = 96;
+    g.fillStyle = 'rgba(255,255,255,.92)'; g.beginPath();
+    for (let i = 0; i <= 48; i++){ const a = i/48*Math.PI*2, rr = R + (i % 2 ? 0 : 7); g.lineTo(150 + Math.cos(a)*rr, dy + Math.sin(a)*rr*0.42); } g.closePath(); g.fill();
+    g.strokeStyle = 'rgba(230,200,210,.9)'; g.lineWidth = 1; for (let i = 0; i < 24; i++){ const a = i/24*Math.PI*2; g.beginPath(); g.arc(150 + Math.cos(a)*(R - 8), dy + Math.sin(a)*(R - 8)*0.42, 3, 0, Math.PI*2); g.stroke(); }
+    g.restore();
+    /* the dish, drawn on its own and then given the colour lift in one go */
+    if (dvOff40.width !== dishCv.width || dvOff40.height !== dishCv.height){ dvOff40.width = dishCv.width; dvOff40.height = dishCv.height; }
+    const prev = g, k = dishCv.width/300, oc = dvOff40.getContext('2d');
+    oc.setTransform(1, 0, 0, 1, 0, 0); oc.clearRect(0, 0, dvOff40.width, dvOff40.height); oc.setTransform(k, 0, 0, k, 0, 0);
+    g = oc;
+    try {
+      const kk = Math.min(1, DV.t*2.4), s = 0.98*(0.6 + 0.4*bounce(kk));
+      g.save(); g.translate(150, DV.st.id === 'kachang' ? 128 : 104); g.scale(s, s); drawFinal(DV.st.id, DV.w, DV.t); g.restore();
+    } finally { g = prev; }
+    g.save(); g.setTransform(1, 0, 0, 1, 0, 0); if ('filter' in g) g.filter = 'saturate(1.25) contrast(1.05)'; g.drawImage(dvOff40, 0, 0); g.restore();
+    if (DV.st.id !== 'kopi' && DV.st.id !== 'kachang' && DV.st.id !== 'popiah') steamLines(150, 60, DV.t, 3, 40, 0.85);
+    if (DV.stars === 3) for (let i = 0; i < 10; i++){ const a = i*0.63 + DV.t*1.2, r = 120 + Math.sin(DV.t*3 + i)*8; const x = 150 + Math.cos(a)*r, y = 100 + Math.sin(a)*r*0.6; g.save(); g.translate(x, y); g.rotate(DV.t*2 + i); g.fillStyle = C.yellow; g.beginPath(); for (let j = 0; j < 5; j++){ const an = j*Math.PI*0.4 - Math.PI/2; g.lineTo(Math.cos(an)*6, Math.sin(an)*6); g.lineTo(Math.cos(an + 0.63)*2.6, Math.sin(an + 0.63)*2.6); } g.closePath(); g.fill(); g.restore(); }
+  });
+};
 
 /* =================================================================
    GUIDED FIRST TRIES for the hand-built steps (templates are handled in guideState)
