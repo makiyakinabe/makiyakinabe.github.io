@@ -4887,6 +4887,7 @@ const TAKE = {
       const valid = st.form.every(f => f.type !== 'one' || w[f.key]) && w.dine && (w.dine === 'dabao' || w.buzzer) && (!st.valid || st.valid(w));
       ok.disabled = !valid; ok.textContent = valid ? `Send to kitchen · ${money(total)}` : 'Send to kitchen';
     }
+    s.pos46 = {get w(){ return w; }, set(nw){ w = nw; s.draft = w; refresh(); }, refresh};
     el.querySelector('[data-clear]').addEventListener('click', () => { w = blank(); s.draft = w; posBeep(); refresh(); });
     const peek = el.querySelector('[data-peek]');
     const note = el.querySelector('[data-note]');
@@ -14884,6 +14885,1505 @@ drawPointer = function(p, t){
   }
   g.restore();
 };
+
+/* =================================================================
+   43. MENTOR DEBRIEF: after every shift the mentor gives three short,
+   specific insights (where the points went, the best step, what slowed
+   the queue), a one-tap drill for the weakest step, and a single
+   "what to do next" card on the home screen, the stall and the receipt.
+   ================================================================= */
+const CO43 = {cur:null, prac:null};
+function co43(){ const C = save.co43 = save.co43 || {}; C.last = C.last || {}; C.prac = C.prac || {}; return C; }
+const POS_STEPS43 = ['Take the order', 'Collect payment', 'Buzz for collection', 'Pack the dabao'];
+
+/* ---------- what happened during the shift ---------- */
+const _startShift43 = startShift;
+startShift = function(st, service){
+  CO43.cur = {st:st.id, steps:[], walk:[], timers:[], level:!!(typeof LEVEL !== 'undefined' && LEVEL)};
+  return _startShift43(st, service);
+};
+/* beat steps: remember whether taps landed early or late */
+const _beatCook43 = beatCook;
+beatCook = function(cfg){
+  const sp = _beatCook43(cfg), press0 = sp.press;
+  sp.press = function(s){
+    const before = s.notes.map(n => !!(n.res || n.held));
+    press0.call(this, s);
+    s.notes.forEach((n, i) => { if (!before[i] && (n.res || n.held) && !n.flair) (s.__off = s.__off || []).push(s.t - n.t); });
+  };
+  return sp;
+};
+function rec43(spec, s, sc){
+  const e = {t:spec.title, k:spec.kind || 'custom', sc, up:!!(s && s.timeUp), off:s && s.__off ? s.__off.slice() : null, extra:s ? s.extra || 0 : 0,
+    broke:s && s.notes ? s.notes.filter(n => n.res === 'broke').length : 0, flair:!!(s && s.flair)};
+  if (CO43.prac) CO43.prac.log.push(e);
+  else if (CO43.cur) CO43.cur.steps.push(e);
+}
+const _runMinigame43 = runMinigame;
+runMinigame = function(spec, ctx, stepNo, stepCount){
+  const p = _runMinigame43(spec, ctx, stepNo, stepCount);
+  if (!spec || spec.noScore || spec.kind === 'counter') return p;
+  const s = cur && cur.spec === spec ? cur.s : null;
+  return p.then(sc => { if (sc != null){ try { rec43(spec, s, sc); } catch(e){} } return sc; });
+};
+const _walkOut43 = walkOut;
+walkOut = function(c){
+  try { if (CO43.cur) CO43.cur.walk.push({name:c.cust.name, busy:cur && cur.spec && !cur.spec.noScore && cur.spec.kind !== 'counter' ? cur.spec.title : null}); } catch(e){}
+  return _walkOut43(c);
+};
+const _recLog43 = REC.log;
+REC.log = function(type, data){
+  try { if (type === 'step' && data && data.kind === 'timer' && CO43.cur) CO43.cur.timers.push({t:data.title, sc:data.score, burnt:!!data.timeUp}); } catch(e){}
+  return _recLog43.call(this, type, data);
+};
+
+/* ---------- turning the shift into three insights ---------- */
+const mentorFirst43 = st => String(st.mentor || 'Your mentor').replace(/^(Uncle|Auntie|Aunty|Pak|Kak|Mdm|Madam|Mr|Mrs|Nonya)\s+/i, '');
+function debrief43(st, results, cap){
+  const steps = (cap && cap.steps) || [], by = {};
+  steps.forEach(e => {
+    const b = by[e.t] = by[e.t] || {t:e.t, k:e.k, n:0, sum:0, lost:0, up:0, off:[], extra:0, broke:0};
+    b.n++; b.sum += e.sc; b.lost += (100 - e.sc)*10; if (e.up) b.up++; if (e.off) b.off.push(...e.off); b.extra += e.extra; b.broke += e.broke;
+  });
+  const list = Object.values(by).map(b => Object.assign(b, {a:Math.round(b.sum/b.n)})).sort((x, y) => y.lost - x.lost);
+  const worst = list.find(b => b.a < 88), ranked = list.slice().sort((x, y) => y.a - x.a).filter(b => b.a >= 80 && b !== worst), best = ranked.find(b => !POS_STEPS43.includes(b.t)) || ranked[0];
+  const walk = results.filter(r => r.walkout).length, timers = (cap && cap.timers) || [], late = timers.filter(x => x.sc < 90), burnt = timers.filter(x => x.burnt);
+  const out = [];
+  if (worst){
+    let why = '';
+    const off = worst.off.length ? worst.off.reduce((a, b) => a + b, 0)/worst.off.length : 0;
+    if (worst.k === 'beat'){
+      if (worst.broke) why = `You let go of ${worst.broke} long note${worst.broke > 1 ? 's' : ''} too soon. Keep holding until the orange bar has passed the ring.`;
+      else if (off > 0.035) why = `Your taps were mostly late (about ${Math.round(off*1000)} ms). Tap the moment a note touches the ring, not after it passes.`;
+      else if (off < -0.035) why = `Your taps were mostly early (about ${Math.round(-off*1000)} ms). Wait for the note to reach the ring, and count the beat in your head.`;
+      else if (worst.extra > 1) why = `${worst.extra} extra taps between notes cost you points. Only tap when a note arrives.`;
+      else why = 'Some notes slipped past. Listen for the count-in, then tap along with the music.';
+    } else if (worst.up >= Math.ceil(worst.n/2)) why = `The timer ran out ${worst.up > 1 ? `${worst.up} times` : 'once'}. Accuracy scores more than speed, so finish the step calmly before time is up.`;
+    else why = (typeof STEP_ADVICE !== 'undefined' && (STEP_ADVICE[worst.k] || STEP_ADVICE.custom)) || 'Slow down a little on this step.';
+    out.push({ic:'📉', cls:'db-lost', h:`You lost about ${fmtPts43(worst.lost)} points on <b>${esc(worst.t)}</b> (average ${worst.a}).`, p:why});
+  }
+  if (best) out.push({ic:'🌟', cls:'db-best', h:`Best step: <b>${esc(best.t)}</b>, ${best.a}% accuracy.`, p:best.a >= 95 ? 'That’s a perfect-hands score. Keep it up!' : 'Steady hands. That’s the standard to aim for on every step.'});
+  else if (!worst && steps.length) out.push({ic:'🌟', cls:'db-best', h:'Every step scored well.', p:'Clean cooking from start to finish.'});
+  if (walk){
+    const busy = (cap && cap.walk || []).map(w => w.busy).filter(Boolean), top = busy.sort((a, b) => busy.filter(x => x === b).length - busy.filter(x => x === a).length)[0];
+    const up = upgradeHint43(st);
+    out.push({ic:'🚶', cls:'db-walk', h:`${walk} customer${walk > 1 ? 's' : ''} walked out${top ? ` while you were busy with <b>${esc(top)}</b>` : ''}.`, p:`Take the next order when a patience bar turns red${up ? `, or ${up.verb} for more time` : ''}.`, up});
+  } else if (late.length){
+    out.push({ic:'⏲️', cls:'db-walk', h:`${late.length} dish${late.length > 1 ? 'es' : ''} sat on the stove too long${burnt.length ? `, ${burnt.length} burnt` : ''}.`, p:'When you hear the ding, go back to the stove before taking a new order.'});
+  } else if (results.length){
+    out.push({ic:'⏱️', cls:'db-ok', h:'Nobody walked out, and every dish came off the heat on time.', p:'Your queue management is solid.'});
+  }
+  const practise = worst && !POS_STEPS43.includes(worst.t) && worst.a < 85 ? worst : null;
+  const pos = worst && POS_STEPS43.includes(worst.t) && worst.a < 85 ? worst : null;
+  return {out:out.slice(0, 3), worst, best, practise, pos, walk, results, steps:steps.length};
+}
+const fmtPts43 = n => typeof fmtPts39 === 'function' ? fmtPts39(Math.round(n)) : String(Math.round(n));
+function upgradeHint43(st){
+  const order = [['seating', 'add seating'], ['staff', 'hire a helper'], ['counter', 'upgrade the counter']];
+  for (const [id, verb] of order){
+    const cat = STORE.find(c => c.id === id); if (!cat) continue;
+    const lv = LV(id, st.id), nx = cat.levels[lv + 1]; if (!nx) continue;
+    return {id, verb, name:nx[0], cost:nx[1], can:save.wallet >= nx[1]};
+  }
+  return null;
+}
+function mentorMood43(r){ return r >= 85 ? 'perfect' : r >= 70 ? 'great' : r >= 55 ? 'good' : 'normal'; }
+function mentorCanvas43(st, mood, size){
+  const c = document.createElement('canvas'); c.width = c.height = size || 128; c.className = 'db-face'; c.setAttribute('aria-hidden', 'true');
+  try { withCtx(c, 120, () => mentorFace(st.look, mood || 'normal', 0)); } catch(e){}
+  return c;
+}
+
+/* ---------- the debrief card under the receipt ---------- */
+(function css43(){
+  const s = document.createElement('style'); s.textContent = `
+.db43{width:min(25rem,100%);background:var(--paper);border:.1875rem solid var(--ink);border-radius:1.25rem;box-shadow:0 .375rem 0 #0b1712;padding:1rem;display:grid;gap:.7rem;text-align:left;animation:db43in .5s 1.4s cubic-bezier(.3,1.4,.6,1) both}
+@keyframes db43in{from{opacity:0;transform:translateY(1rem) scale(.97)}to{opacity:1;transform:none}}
+.db43 .db-top{display:grid;grid-template-columns:4rem 1fr;gap:.7rem;align-items:center}
+.db43 .db-face{width:4rem;height:4rem;border-radius:50%;border:.1875rem solid var(--ink);background:#fff6dc}
+.db43 .label{color:var(--green)}
+.db43 h3{margin:.1rem 0 0;font-family:var(--display);font-size:1.2rem;line-height:1.15;color:var(--ink)}
+.db43 .db-say{margin:.15rem 0 0;font-family:var(--hand);font-size:1.05rem;color:var(--muted);line-height:1.25}
+.db-list{list-style:none;margin:0;padding:0;display:grid;gap:.45rem}
+.db-list li{display:grid;grid-template-columns:2rem 1fr;gap:.55rem;align-items:start;background:#fff;border:.125rem solid #d9e2dc;border-radius:.85rem;padding:.55rem .6rem}
+.db-list .ic{width:2rem;height:2rem;border-radius:.6rem;display:grid;place-items:center;font-size:1.05rem;background:#eef4ef}
+.db-list .db-lost .ic{background:#fde9e5}.db-list .db-best .ic{background:#fff3cc}.db-list .db-walk .ic{background:#e6f0fb}
+.db43 .nba43{grid-template-columns:2.4rem 1fr}.db43 .nba43 .buy{grid-column:1 / -1}
+.db-list b{color:var(--ink)}
+.db-list p{margin:0;font-size:.9rem;line-height:1.35;color:var(--ink);min-width:0}
+.db-list p + p{margin-top:.15rem;color:var(--muted);font-size:.84rem}
+.db-acts{display:flex;flex-wrap:wrap;gap:.5rem}
+.db-acts .buy{flex:1 1 10rem;white-space:normal;line-height:1.2;min-height:2.9rem}
+.db-acts .prac{background:var(--red);color:#fff}
+.nba43{display:grid;grid-template-columns:2.6rem 1fr auto;gap:.65rem;align-items:center;background:#fff;border:.1875rem solid var(--ink);border-radius:1rem;padding:.6rem .7rem;box-shadow:0 .25rem 0 var(--ink);text-align:left;color:var(--ink)}
+.nba43 .nb-ic{width:2.6rem;height:2.6rem;border-radius:.8rem;background:var(--yellow);border:.125rem solid var(--ink);display:grid;place-items:center;font-size:1.3rem}
+.nba43 .label{color:var(--green);font-size:max(11px,.68rem)}
+.nba43 b{display:block;font-family:var(--display);font-size:1.02rem;line-height:1.2;margin-top:.05rem}
+.nba43 small{display:block;color:var(--muted);font-size:.84rem;line-height:1.3;margin-top:.1rem}
+.nba43 .buy{white-space:nowrap}
+.nba43 .nb-more{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:.35rem;border-top:.0625rem dashed #cfd8d2;padding-top:.45rem}
+.nba43 .nb-more button{font:inherit;font-size:.82rem;font-weight:700;border:.125rem solid #b9c7bf;border-radius:2rem;background:#f4f8f5;padding:.25rem .6rem;min-height:2rem;cursor:pointer;color:var(--ink)}
+#hub .nba43{margin:0 0 .75rem}
+#tabBody .nba43{margin-bottom:.2rem}
+@media (max-width:26rem){ .nba43{grid-template-columns:2.4rem 1fr} .nba43 .buy{grid-column:1 / -1} }
+@media (min-width:56rem){
+  .summary-wrap.has-db43{display:grid;grid-template-columns:25rem 24rem;grid-template-areas:"printer db" "btns db";justify-content:center;align-items:start;column-gap:1.5rem}
+  .summary-wrap.has-db43 .printer{grid-area:printer}.summary-wrap.has-db43 .rc-btns{grid-area:btns}.summary-wrap.has-db43 .db43{grid-area:db;position:sticky;top:1rem}
+}
+.pr43 .pr-tries{display:flex;justify-content:center;gap:.5rem;margin:.2rem 0}
+.pr43 .pr-tries span{min-width:3.4rem;padding:.4rem .5rem;border-radius:.7rem;border:.125rem solid var(--ink);background:#fff;font-family:var(--display);font-size:1.1rem}
+.pr43 .pr-tries span.top{background:var(--yellow)}
+.pr43 .pr-delta{font-weight:800;color:var(--green)}
+.pr43 .pr-delta.down{color:var(--red)}
+.lv-tip43{text-align:left;background:#f4f8f5;border:.125rem solid #d9e2dc;border-radius:.8rem;padding:.55rem .65rem;font-size:.88rem;line-height:1.35;margin:0}
+.lv-tip43 .buy{margin-top:.4rem;width:100%}
+`; document.head.appendChild(s);
+})();
+
+const _showSummary43 = showSummary;
+showSummary = function(st, results){
+  const cap = CO43.cur && CO43.cur.st === st.id ? CO43.cur : null; CO43.cur = null;
+  const inLevel = typeof LEVEL !== 'undefined' && !!LEVEL;
+  const r = _showSummary43(st, results);
+  try {
+    const D = debrief43(st, results, cap), C = co43();
+    if (!inLevel){
+      C.last[st.id] = {day:dayNo(), at:Date.now(), worst:D.worst ? {t:D.worst.t, a:D.worst.a} : null, walk:D.walk, up:D.out.find(x => x.up) ? D.out.find(x => x.up).up.id : null};
+      C.lastStall = st.id; persist();
+    }
+    if (inLevel) levelTip43(st, D);
+    else if (screen === 'summary') renderDebrief43(st, D);
+  } catch(e){ console.warn('debrief', e); }
+  return r;
+};
+function renderDebrief43(st, D){
+  const wrap = $('#summary .summary-wrap'); if (!wrap) return;
+  let el = $('#db43');
+  if (!el){ el = document.createElement('section'); el.id = 'db43'; el.className = 'db43'; el.setAttribute('aria-label', 'Mentor debrief'); wrap.querySelector('.rc-btns').before(el); }
+  wrap.classList.add('has-db43');
+  const served = D.results.filter(r => !r.walkout), starPct = D.results.length ? served.reduce((a, r) => a + r.stars, 0)/(3*Math.max(D.results.length, 1))*100 : 70;
+  const rating = (typeof SC39 !== 'undefined' && SC39.lastShift && D.steps) ? (SC39.lastShift.rating + starPct)/2 : starPct, mood = mentorMood43(rating);
+  const say = rating >= 85 ? 'Wah, very steady today. I’m proud of you.' : rating >= 70 ? 'Good shift. One or two things to sharpen, then you’re flying.' : rating >= 55 ? 'Not bad. Fix one thing at a time, and tomorrow will be easier.' : 'Tough one, but everybody starts here. Let’s practise the hard part.';
+  el.innerHTML = `<div class="db-top"><span class="db-fw"></span><div><p class="label">Mentor debrief · ${esc(st.mentor)}</p><h3>${rating >= 70 ? 'Here’s what went well' : 'Here’s how to improve'}</h3><p class="db-say">“${esc(say)}”</p></div></div>
+    <ul class="db-list">${D.out.map(x => `<li class="${x.cls}"><span class="ic" aria-hidden="true">${x.ic}</span><div><p>${x.h}</p><p>${esc(x.p)}</p></div></li>`).join('')}</ul>
+    <div class="db-acts">${D.practise ? `<button type="button" class="buy prac" data-prac>🎯 Practise “${esc(D.practise.t)}”</button>` : D.pos ? `<button type="button" class="buy prac" data-lv0>🎯 Recipe Practice level</button>` : ''}</div>
+    <div class="db-next"></div>`;
+  el.querySelector('.db-fw').replaceWith(mentorCanvas43(st, mood));
+  const b = el.querySelector('[data-prac]'); if (b) b.addEventListener('click', () => { sfx.tick(); practice43(st, D.practise.t); });
+  const l = el.querySelector('[data-lv0]'); if (l) l.addEventListener('click', () => { sfx.tick(); playLevel36(st, 0); });
+  if (!el.querySelector('.db-acts').children.length) el.querySelector('.db-acts').remove();
+  renderNBA43(el.querySelector('.db-next'), st, {skip:D.practise ? ['practise'] : []});
+}
+function levelTip43(st, D){
+  setTimeout(() => {
+    const card = $('#lvResOv:not([hidden]) .ov-card'); if (!card || card.querySelector('.lv-tip43')) return;
+    const x = D.out.find(o => o.cls === 'db-lost'); if (!x) return;
+    const p = document.createElement('div'); p.className = 'lv-tip43';
+    p.innerHTML = `<b>${esc(mentorFirst43(st))}’s tip:</b> ${x.h} ${esc(x.p)}${D.practise ? `<button type="button" class="buy" data-prac43>🎯 Practise “${esc(D.practise.t)}”</button>` : ''}`;
+    const btns = card.querySelector('.lv-btns'); (btns || card.lastElementChild).before(p);
+    const b = p.querySelector('[data-prac43]'); if (b) b.addEventListener('click', e => { e.stopPropagation(); sfx.tick(); $('#lvResOv').hidden = true; LEVEL = null; practice43(st, D.practise.t); });
+  }, 60);
+}
+
+/* ---------- practise one step: three quick tries, no stock, no clock ---------- */
+function practiceSpec43(st, title, c){
+  const list = withPassive(st, st.cook(c.w));
+  return list.find(x => x && !x.passive && x.title === title) || null;
+}
+function practiceOrder43(st){
+  let t; try { t = kidOrder(st, st.makeOrder()); } catch(e){ t = st.makeOrder(); }
+  t.dine = 'here'; t.buzzer = 1;
+  return {st, t, w:JSON.parse(JSON.stringify(t)), cust:{name:save.player || 'You', shirt:'#f2c53d', hair:'#2a1a12', skin:'#e8bb92'}, qno:'PRC', revenue:0, pat:1, pm:1, steps:[], scores:[], j:0, color:'#f2c53d', initial:'P', practice:true};
+}
+async function practice43(st, title, tries){
+  tries = tries || 3;
+  if (!practiceSpec43(st, title, practiceOrder43(st))){ toast('That step can’t be practised on its own. Try Recipe Practice instead.'); return; }
+  const my = ++token; curStall = st; paused = false; SH = null; shiftCtl = null; if (typeof LEVEL !== 'undefined') LEVEL = null;
+  ['#dishOv', '#lvResOv', '#lvOv'].forEach(id => { const o = $(id); if (o) o.hidden = true; });
+  CO43.prac = {st, t:title, log:[], scores:[], my};
+  show('play'); $('#pbTitle').textContent = `${dname(st)} · Practice`;
+  $('#pbSales').innerHTML = `<span class="st">◎</span>Practice`; $('#pbSales').classList.remove('hit'); $('#pbStars').textContent = '0';
+  $('#qno').textContent = 'PRC'; $('#kdsTimer').textContent = 'Drill'; const av = $('#avatar'); av.textContent = '🎯'; av.style.background = '#f2c53d';
+  $('#custName').textContent = `Practice: ${title}`; $('#kdsType').textContent = 'DRILL'; const pay = $('#kdsPay'); pay.textContent = 'NO STOCK USED'; pay.classList.add('paid'); $('#kdsQueue').textContent = '';
+  $('#chit').innerHTML = `<div class="ki">${esc(title)}</div><div class="ki">${tries} TRIES</div>`; $('#said').hidden = true; $('#kds').classList.remove('bump', 'fresh');
+  requestAnimationFrame(fitStage);
+  REC.log('practice_start', {stall:st.id, title});
+  const before = (co43().last[st.id] && co43().last[st.id].worst && co43().last[st.id].worst.t === title) ? co43().last[st.id].worst.a : null;
+  const job = {steps:Array.from({length:tries}, () => ({title})), scores:CO43.prac.scores};
+  for (let i = 0; i < tries; i++){
+    const c = practiceOrder43(st), spec = practiceSpec43(st, title, c);
+    $('#pbCust').textContent = `${i + 1}/${tries}`; renderSteps(job, i);
+    const sc = await runMinigame(spec, c, i + 1, tries);
+    if (my !== token || sc === null){ if (CO43.prac && CO43.prac.my === my) CO43.prac = null; return; }
+    CO43.prac.scores.push(sc);
+  }
+  renderSteps(job, -1);
+  finishPractice43(st, title, CO43.prac.scores, before);
+}
+function finishPractice43(st, title, scores, before){
+  CO43.prac = null;
+  const C = co43(); C.prac[st.id + '|' + title] = Date.now(); persist();
+  try { if (typeof dailyHit45 === 'function') dailyHit45('practice', 1); } catch(e){}
+  const best = Math.max(...scores), first = scores[0], last = scores[scores.length - 1], ref = before != null ? before : first, d = best - ref;
+  REC.log('practice_end', {stall:st.id, title, scores:scores.join(','), best});
+  const ov = modal30('prac43Ov', `
+    <p class="label">Practice · ${esc(dname(st))}</p>
+    <h2>${best >= 90 ? 'Nailed it!' : best >= 75 ? 'Getting there!' : 'Keep at it'}</h2>
+    <p class="lv-sub">${esc(title)}</p>
+    <div class="pr-tries">${scores.map(s => `<span class="${s === best ? 'top' : ''}">${s}</span>`).join('')}</div>
+    <p>${before != null ? `Your shift average was <b>${before}</b>. ` : ''}Best try: <b>${best}</b> <span class="pr-delta${d < 0 ? ' down' : ''}">${d >= 0 ? '▲ +' : '▼ '}${d}</span></p>
+    <p class="hint2">${best >= 90 ? `${esc(mentorFirst43(st))} says: “Ok, you’re ready. Go open the stall!”` : last > first ? 'Each try was better than the one before. One more round?' : 'Try slowing down and following the hint at the top of the screen.'}</p>
+    <div class="lv-btns"><button type="button" class="buy" data-act="again">Practise again</button><button type="button" class="big" data-act="back">Back to the stall</button></div>`, 'lv-card pr43');
+  for (let i = 0; i < (best >= 90 ? 3 : best >= 75 ? 2 : 1); i++) setTimeout(() => sfx.star(i), 300 + i*200);
+  ov.onclick = e => { const b = e.target.closest('[data-act]'); if (!b) return; sfx.tick(); ov.hidden = true;
+    if (b.dataset.act === 'again') practice43(st, title); else openStall(st, false); };
+}
+const _endShiftEarly43 = endShiftEarly;
+endShiftEarly = function(){
+  if (CO43.prac){ const P = CO43.prac; token++; paused = false; if (cur){ cur.cancel(); cur = null; } CO43.prac = null;
+    if (P.scores.length) finishPractice43(P.st, P.t, P.scores, null); else openStall(P.st, false); return; }
+  return _endShiftEarly43();
+};
+const _goHome43 = goHome;
+goHome = function(){ CO43.prac = null; return _goHome43(); };
+
+/* ---------- the next best action ---------- */
+function homeStall43(st){
+  if (st && save.built[st.id]) return st;
+  const C = co43(), last = C.lastStall && STALLS.find(s => s.id === C.lastStall && save.built[s.id]);
+  return last || STALLS.find(s => save.built[s.id]) || STALLS[0];
+}
+function nba43(stIn, opt){
+  opt = opt || {}; const skip = opt.skip || [];
+  const st = homeStall43(stIn), C = co43(), out = [], day = dayState(), svc = curService();
+  const L = typeof lic39 === 'function' ? lic39() : {shifts:0};
+  const add = (id, pri, o) => { if (!skip.includes(id)) out.push(Object.assign({id, pri}, o)); };
+  if (typeof firstService45 === 'function' && !save.fs45 && !L.shifts && !(save.days > 0)) add('first', 100, {ic:'🍗', t:'Serve your first customer', d:`${STALLS[0].mentor} will walk you through one plate, step by step.`, btn:'Start', go:() => firstService45()});
+  const left = servingsLeft(st.id);
+  if (left < NEED && svc) add('stock', 90, {ic:'🧺', t:`Restock ${dname(st)}`, d:`Only ${left} plate${left === 1 ? '' : 's'} left, and a service needs ${NEED}.`, btn:'Go to market', go:() => { openStall(st, false); setTab('market'); }});
+  const last = C.last[st.id];
+  if (last && last.worst && last.worst.a < 78 && !POS_STEPS43.includes(last.worst.t) && !((C.prac[st.id + '|' + last.worst.t] || 0) > last.at))
+    add('practise', 80, {ic:'🎯', t:`Practise “${last.worst.t}”`, d:`It averaged ${last.worst.a} last shift. Three quick tries, no stock used.`, btn:'Practise', go:() => practice43(st, last.worst.t)});
+  if (last && last.walk && last.up){
+    const cat = STORE.find(c => c.id === last.up), lv = LV(last.up, st.id), nx = cat && cat.levels[lv + 1];
+    if (nx) add('upgrade', save.wallet >= nx[1] ? 70 : 30, {ic:'🛠️', t:`Upgrade: ${nx[0]}`, d:`${last.walk} customer${last.walk > 1 ? 's' : ''} walked out last time. ${nx[2]}. ${money(nx[1])}.`, btn:'See upgrade', go:() => { openStall(st, false); setTab('store'); setTimeout(() => { if (typeof previewUpgrade45 === 'function') previewUpgrade45(st, last.up); }, 120); }});
+  }
+  if (typeof dailyNext45 === 'function'){ const dg = dailyNext45(); if (dg) add('daily', 55, dg); }
+  if (typeof LEVELS36 !== 'undefined' && L.shifts >= 1){
+    const k = LEVELS36.findIndex((x, i) => levelOpen36(st.id, i) && !medalOf36(st.id, i));
+    if (k >= 0) add('level', 50, {ic:LEVELS36[k].ic, t:`Level ${k + 1}: ${LEVELS36[k].name}`, d:LEVELS36[k].d, btn:'Play level', go:() => { openStall(st, false); playLevel36(st, k); }});
+    else { const g = LEVELS36.findIndex((x, i) => medalOf36(st.id, i) && medalOf36(st.id, i) < 3); if (g >= 0) add('level', 32, {ic:'🥇', t:`Go for gold: ${LEVELS36[g].name}`, d:'Gold medals unlock new pieces for your 3D stall.', btn:'Play level', go:() => { openStall(st, false); playLevel36(st, g); }}); }
+  }
+  try { const iss = todayIssue(); if (iss && iss.a && ctr().helped[dayNo()] !== iss.id && L.shifts >= 2) add('centre', 45, {ic:'🏛️', t:'The centre needs a hand', d:iss.t, btn:'Open centre', go:() => openCentre()}); } catch(e){}
+  if (day.phase === 'night') add('close', 40, {ic:'🌙', t:'Close up for the day', d:'Count the takings and see tomorrow’s forecast.', btn:'Close up', go:() => { openStall(st, false); setTimeout(() => openClose(), 100); }});
+  else if (svc && left >= NEED) add('open', (L.shifts || 0) < 3 ? 85 : opt.onStall ? 20 : 12, {ic:'🍜', t:`Open for ${svc}`, d:opt.onStall ? `${CUST} customers are waiting at ${dname(st)}.` : `${dname(st)} is stocked and ready.`, btn:opt.onStall ? `Open for ${svc}` : 'Go to stall', go:() => { if (opt.onStall) startShift(st, svc); else openStall(st, false); }});
+  return out.sort((a, b) => b.pri - a.pri);
+}
+function renderNBA43(host, st, opt){
+  if (!host) return;
+  const list = nba43(st, opt); if (!list.length){ host.innerHTML = ''; return; }
+  const top = list[0], more = list.slice(1, 3);
+  host.innerHTML = `<div class="nba43" role="group" aria-label="Next best action"><span class="nb-ic" aria-hidden="true">${top.ic}</span>
+    <div><p class="label">Next up</p><b>${esc(top.t)}</b><small>${esc(top.d)}</small></div>
+    <button type="button" class="buy" data-nb="0">${esc(top.btn)}</button>
+    ${more.length ? `<div class="nb-more"><span class="hint2" style="font-size:.8rem">Also:</span>${more.map((m, i) => `<button type="button" data-nb="${i + 1}">${m.ic} ${esc(m.t)}</button>`).join('')}</div>` : ''}</div>`;
+  host.querySelectorAll('[data-nb]').forEach(b => b.addEventListener('click', () => { sfx.tick(); obClose && obClose(); const a = list[+b.dataset.nb]; REC.log('nba', {id:a.id}); a.go(); }));
+}
+const _renderHub43 = renderHub;
+renderHub = function(){
+  _renderHub43();
+  try {
+    let host = $('#nbaHub');
+    if (!host){ host = document.createElement('div'); host.id = 'nbaHub'; }
+    const rank = $('#rankCard'); if (rank) rank.before(host); else $('#hubPrompt').after(host);
+    renderNBA43(host, null, {});
+  } catch(e){ console.warn('nba', e); }
+};
+const _renderTab43 = renderTab;
+renderTab = function(){
+  _renderTab43();
+  if (curTab !== 'shift' || !curStall) return;
+  const body = $('#tabBody'); if (!body || body.querySelector('.nba43')) return;
+  const host = document.createElement('div'); host.className = 'nba-host';
+  const ex = body.querySelector('.tab-extras'); if (ex) ex.after(host); else body.prepend(host);
+  const early = (typeof lic39 === 'function' ? lic39().shifts : 0) < 2, top = nba43(curStall, {onStall:true, skip:['open']})[0];
+  if (early && (!top || top.id !== 'first')){ host.remove(); return; }
+  renderNBA43(host, curStall, {onStall:true, skip:['open']});
+  if (!host.innerHTML) host.remove();
+};
+
+/* =================================================================
+   44. SERVICE CONDITIONS, CUSTOMER MEMORY, ROLE SWAPS, CENTRE MOMENTS
+   and HAWKER FLAIR.
+   Shifts change how you have to think, not just how fast you tap:
+   an office wave, a faulty burner, an NEA inspection, a closed
+   neighbour, a short delivery. Customers react to specific things
+   about the food and remember their last visit. Mentors call you to
+   swap stations in a rush, the food centre asks for small favours
+   mid-service, and a golden flair note rewards stylish cooking.
+   ================================================================= */
+const COND44 = {
+  wave:   {ic:'🌊', name:'Office wave', note:'Four office workers arrive almost together. Take all the orders first so nobody waits in the queue, then cook.', only:'lunch'},
+  burner: {ic:'🔧', name:'Burner trouble', note:'One gas ring is acting up, so cooking timers run 35% slower. Pay the repairman before opening, or cope with it.', adult:true},
+  inspect:{ic:'📋', name:'NEA inspection', note:'An inspector visits during service. Washed plates and prepped garnish earn a gold sticker; dirty plates cost reputation.'},
+  closed: {ic:'🚧', name:'Neighbour closed', note:'The stall next door is closed today, so its customers come to you: the queue fills faster, but tips are 30% bigger.'},
+  short:  {ic:'📦', name:'Short delivery', note:'The supplier was short, so one add-on is sold out. It’s crossed out on the till: serve customers without it.', adult:true}
+};
+const BURNER_FIX44 = 1200;
+function cond44(service, n){
+  n = n || dayNo(); if (n < 3 || !service) return null;
+  const r = seeded(n*977 + (service === 'dinner' ? 41 : 5)); if (r() < 0.42) return null;
+  const kid = ageCfg().kid, pool = Object.keys(COND44).filter(k => (!COND44[k].only || COND44[k].only === service) && !(kid && COND44[k].adult));
+  return pool[Math.floor(r()*pool.length)] || null;
+}
+function soldOut44(st){
+  const f = (st.form || []).find(f => f.type === 'many' && f.opts && f.opts.length >= 2); if (!f) return null;
+  const r = seeded(dayNo()*31 + st.id.length*7), o = f.opts[Math.floor(r()*f.opts.length)];
+  return {key:f.key, v:o[0], name:o[1]};
+}
+const activeCond44 = (st, service) => { if (typeof LEVEL !== 'undefined' && LEVEL) return null; const k = cond44(service); if (k === 'short' && !soldOut44(st)) return null; return k; };
+
+/* the Open tab and tomorrow's forecast mention it */
+const _bizPanel44 = bizPanelHTML;
+bizPanelHTML = function(st){
+  let h = _bizPanel44(st);
+  try {
+    const svc = curService(), k = svc && activeCond44(st, svc);
+    if (k){ const C = COND44[k], so = k === 'short' ? soldOut44(st) : null, fixed = k === 'burner' && burnerFixed44(st, svc);
+      h = h.replace(/<\/div>\s*$/, `<p class="biz-ev cond44">${C.ic} <b>${esc(svc === 'dinner' ? 'Dinner' : 'Lunch')}: ${C.name}.</b> ${esc(C.note)}${so ? ` Sold out: <b>${esc(so.name)}</b>.` : ''}${fixed ? ' <b>Fixed ✓</b>' : ''}</p></div>`); }
+  } catch(e){}
+  return h;
+};
+const _forecastLine44 = forecastLine;
+forecastLine = function(n){
+  const s = _forecastLine44(n), k = cond44('lunch', n);
+  return k ? `${s} · ${COND44[k].ic} ${COND44[k].name}` : s;
+};
+const burnerFixed44 = (st, svc) => !!(save.fix44 && save.fix44[st.id] === dayNo() + svc);
+
+/* conditions change who arrives, when, and how the kitchen behaves */
+const _mkCust44 = makeCustomers;
+makeCustomers = function(st, beginner, service){
+  const list = _mkCust44(st, beginner, service);
+  const k = activeCond44(st, service);
+  list.forEach(c => { c.cond44 = k; });
+  if (k === 'wave'){ [4, 6, 8].forEach((t, i) => { const c = list[i + 1]; if (!c) return; c.arriveAt = t; if (!c.reg){ c.persona = 'office'; } c.pm *= 0.95; }); }
+  if (k === 'closed') list.forEach((c, i) => { if (i) c.arriveAt = 3 + i*8; });
+  if (k === 'short'){
+    const so = soldOut44(st);
+    list.forEach(c => {
+      const a = c.t[so.key];
+      if (Array.isArray(a) && a.includes(so.v)){
+        c.t[so.key] = a.filter(x => x !== so.v);
+        let ok = true; try { if (st.valid && !st.valid(c.t)) ok = false; } catch(e){ ok = false; }
+        if (!ok){ c.t[so.key] = a; return; }
+        c.soldAsk44 = so.name;
+        if (c.sayParts){ try { c.sayParts.order = `${saySimple(st, c.t)}. ${so.name} sold out? Ok, skip that.`; } catch(e){} c.speech = `${c.sayParts.greet} ${c.sayParts.order} ${c.sayParts.dine}`; }
+      }
+    });
+  }
+  /* customers remember their last visit to this stall */
+  const M = mem44(st.id);
+  list.forEach(c => {
+    if (c.reg || c.usualMode) return;
+    const m = M[c.cust.name]; if (!m || m.day === dayNo() || !c.sayParts) return;
+    c.mem44 = m;
+    const back = m.stars >= 3 ? pick(['Came back because last time was shiok!', 'Remember me? Last time super nice.', 'Back again! Couldn’t stop thinking about it.']) : m.stars === 2 ? pick(['Back again, boss.', 'Me again! Last time ok, today let’s see.']) : pick(['Ok, I give you another chance ah.', 'Last time a bit disappointing… try again.']);
+    c.sayParts.greet = back; c.speech = `${c.sayParts.greet} ${c.sayParts.order} ${c.sayParts.dine}`;
+  });
+  return list;
+};
+function mem44(id){ const all = save.mem44 = save.mem44 || {}; return all[id] = all[id] || {}; }
+
+const _startShift44 = startShift;
+startShift = function(st, service){
+  service = service || (dayState().phase === 'afternoon' ? 'dinner' : 'lunch');
+  const k = activeCond44(st, service);
+  if (k === 'burner' && !burnerFixed44(st, service) && !(save.fix44 && save.fix44['ask' + st.id] === dayNo() + service)){
+    return new Promise(res => {
+      const ov = modal30('cond44Ov', `<p class="label">${COND44.burner.ic} Before you open</p><h2>The burner is sputtering</h2>
+        <p>One gas ring keeps going out. If you don’t fix it, every dish takes about <b>35% longer</b> to cook this ${service}.</p>
+        <div class="ctr-opts"><button type="button" data-c="fix"><b>Call the repairman · ${money(BURNER_FIX44)}</b><small>Full heat for the whole service.</small></button>
+        <button type="button" data-c="cope"><b>Cope with it</b><small>Save the money, plan around slower cooking.</small></button></div>`, 'ch-card');
+      ov.onclick = e => {
+        const b = e.target.closest('[data-c]'); if (!b) return;
+        const f = save.fix44 = save.fix44 || {};
+        if (b.dataset.c === 'fix'){ if (!spend(BURNER_FIX44, b)) return; f[st.id] = dayNo() + service; toast('Fixed! Full flame again.'); }
+        else { f['ask' + st.id] = dayNo() + service; toast('Ok, slower cooking today. Start dishes early!'); }
+        persist(); ov.hidden = true; sfx.tick(); REC.log('cond_choice', {cond:'burner', pick:b.dataset.c});
+        res(startShift(st, service));
+      };
+    });
+  }
+  const r = _startShift44(st, service);
+  try {
+    if (SH){ SH.cond44 = k; SH.inspect44 = k === 'inspect' ? 30 + Math.random()*25 : null; SH.swapAt44 = 28 + Math.random()*25; SH.momentAt44 = 40 + Math.random()*30; }
+    if (k === 'closed' && BIZ.cur) BIZ.cur.tipBoost *= 1.3;
+    if (k){ const C = COND44[k], so = k === 'short' ? soldOut44(st) : null; setTimeout(() => { if (SH && SH.cond44 === k) banner44(C.ic + ' ' + C.name, C.note + (so ? ` Sold out: ${so.name}.` : ''), k === 'burner' && !burnerFixed44(st, service)); }, 1500); REC.log('cond', {cond:k}); }
+  } catch(e){}
+  return r;
+};
+const _startCook44 = startCook;
+startCook = function(c){
+  _startCook44(c);
+  try { if (c.cook && SH && SH.cond44 === 'burner' && !burnerFixed44(SH.st, SH.service)) c.cook.dur *= 1.35; } catch(e){}
+};
+function banner44(title, text, bad){
+  let el = $('#incBanner');
+  if (!el){ el = document.createElement('div'); el.id = 'incBanner'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+  el.className = 'inc-banner stack44 ' + (bad ? 'bad' : 'good');
+  el.innerHTML = `<b>${esc(title)}</b><span>${esc(text)}</span>`;
+  el.hidden = false; el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+  if (bad){ tone(330, 0.12, 'square', 0.04); } else { [0, 1].forEach(i => setTimeout(() => tone([660, 990][i], 0.1, 'triangle', 0.05), i*90)); }
+  if (typeof sayKid === 'function') sayKid(text);
+  clearTimeout(el._t); el._t = setTimeout(() => { el.hidden = true; }, 5600);
+}
+/* the POS shows the sold-out add-on */
+const _takeMount44 = TAKE.mount;
+TAKE.mount = function(el, s, finish){
+  _takeMount44.call(this, el, s, finish);
+  try {
+    if (SH && SH.cond44 === 'short'){
+      const so = soldOut44(SH.st), b = so && el.querySelector(`.pm-tile[data-k="${so.key}"][data-v="${so.v}"]`);
+      if (b){ b.disabled = true; b.classList.add('sold44'); b.insertAdjacentHTML('beforeend', '<span class="sold-tag">SOLD OUT</span>'); }
+    }
+  } catch(e){}
+};
+
+/* ---------- inspection, role swaps and centre moments during service ---------- */
+const _shiftTick44 = shiftTick;
+shiftTick = function(dt){
+  _shiftTick44(dt);
+  if (!SH || (typeof LEVEL !== 'undefined' && LEVEL)) return;
+  try {
+    if (SH.inspect44 != null && SH.clock >= SH.inspect44){ SH.inspect44 = null; inspect44(SH.st); }
+    if (SH.swapAt44 != null && SH.clock >= SH.swapAt44 && !SH.swap44) trySwap44();
+    if (SH.momentAt44 != null && SH.clock >= SH.momentAt44) tryMoment44();
+  } catch(e){ console.warn(e); }
+};
+function inspect44(st){
+  const clean = isClean(st.id), prep = isPrepped(st.id), id = st.id;
+  let d = 0, t, bad = false;
+  if (clean && prep){ d = 5; t = 'Gold sticker! Clean plates and fresh garnish. +5 reputation.'; save.gold44 = (save.gold44 || 0) + 1; }
+  else if (clean){ d = 1; t = 'You passed. Prep your garnish next time for a gold sticker. +1 reputation.'; }
+  else { d = -5; bad = true; t = 'Dirty plates by the sink! The inspector writes you up. −5 reputation. Wash up before opening.'; }
+  save.rep[id] = Math.max(0, Math.min(100, repOf(id) + d)); persist();
+  banner44('📋 NEA inspection', t, bad); REC.log('inspect', {stall:id, d});
+  try { if (d > 0 && typeof dailyHit45 === 'function') dailyHit45('inspect', 1); } catch(e){}
+  if (CO43.cur) CO43.cur.inspect = d;
+}
+function trySwap44(){
+  const r = SH.role; if (r !== 'chef' && r !== 'front'){ SH.swapAt44 = null; return; }
+  const q = SH.custs.filter(c => c.state === 'queue'), cooking = SH.custs.filter(c => c.state === 'wait');
+  if (r === 'chef' && !q.some(c => SH.clock - c.arriveAt < 1.6)) return;
+  if (r === 'front' && !(q.length && cooking.length >= 2)) return;
+  SH.swap44 = {from:r, bound:null};
+  SH.role = 'boss';
+  banner44('🔄 Role swap!', r === 'chef' ? `${SH.st.mentor}: “Counter is jammed, I need to fix the stock! Take the next order yourself.”` : `${SH.st.mentor}: “Kitchen is swamped! Cook the next order yourself, ok?”`, false);
+  REC.log('swap', {from:r});
+}
+const _bankOrder44 = bankOrder;
+bankOrder = function(c){ const r = _bankOrder44(c); try { if (SH && SH.swap44 && !SH.swap44.bound){ SH.swap44.bound = c; c.swap44 = true; } } catch(e){} return r; };
+const _chooseNext44 = chooseNext;
+chooseNext = function(){
+  try { if (SH && SH.swap44 && SH.swap44.bound && !SH.swap44.done){ SH.role = SH.swap44.from; SH.swap44.done = true; toast(`Thanks! Back to your station as ${ROLES[SH.role].name}.`); try { if (typeof dailyHit45 === 'function') dailyHit45('swap', 1); } catch(e){} } } catch(e){}
+  return _chooseNext44();
+};
+
+const MOMENTS44 = [
+  {id:'wallet', ic:'👛', t:'A customer left their wallet on table 5!', a:['Run after them', 'You leave the counter for a moment: the queue waits a little longer.', {rating:3, cp:2, pat:-0.1, say:'“Thank you so much! Everything was inside!”'}], b:['Give it to the centre manager later', 'Safe, but it takes them longer to get it back.', {rating:1, cp:0}]},
+  {id:'tray', ic:'🧓', t:'Ah Ma at table 3 is struggling with a heavy tray.', a:['Help carry it', 'Costs you a little time at the counter.', {rating:3, cp:2, pat:-0.1, say:'“Aiyo, so kind. Next time I bring my friends.”'}], b:['Keep cooking', 'The queue keeps moving.', {rating:0, cp:0}]},
+  {id:'rice', ic:'🍚', t:'Auntie Mei ran out of rice and asks to borrow some.', a:['Lend her 2 plates’ worth', 'Uses 2 plates of your stock.', {rating:4, cp:3, stock:2, owe:true, say:'“I owe you one! Kopi on me tomorrow.”'}], b:['Sorry, I need it today', 'Your stock stays safe.', {rating:-1, cp:0}]},
+  {id:'chope', ic:'🧻', t:'A tourist asks why there’s a tissue packet on an empty seat.', a:['Explain “chope”', 'Teach them the hawker way.', {rating:2, cp:1, term:'chope', say:'“Ohh, so that’s how you save a seat! So clever.”'}], b:['Shrug and keep working', 'No time for chit-chat.', {rating:0, cp:0}]},
+  {id:'busker', ic:'🎸', t:'A busker starts playing old Xinyao songs by your stall.', a:['Tip him $1', 'Good music keeps the queue happy.', {rating:2, cp:1, cost:100, pat:0.12, say:'The queue starts humming along.'}], b:['Just listen', 'Free music is still music.', {rating:0, cp:0}]},
+  {id:'spill', ic:'🥤', t:'A kid spilled bandung all over the floor by your stall.', a:['Grab the mop', 'A slippery floor is dangerous. Costs a little time.', {rating:3, cp:2, pat:-0.08, say:'“Thank you, boss!” the parents say.'}], b:['Call the cleaner', 'The cleaner is busy, so it takes a while.', {rating:0, cp:0}]}
+];
+function tryMoment44(){
+  if (screen !== 'play' || paused || !cur || !cur.spec || cur.spec.kind !== 'counter' || !$('#dishOv').hidden) return;
+  SH.momentAt44 = null;
+  if (dayNo() < 2 || Math.random() < 0.45) return;
+  const seen = save.mom44 = save.mom44 || {};
+  const pool = MOMENTS44.filter(m => (seen[m.id] || 0) < dayNo()), M = pick(pool.length ? pool : MOMENTS44);
+  seen[M.id] = dayNo(); persist();
+  paused = true;
+  const ov = modal30('mom44Ov', `<p class="label">${M.ic} Centre moment · optional</p><h2>${esc(M.t)}</h2>
+    <div class="ctr-opts">${[M.a, M.b].map((o, i) => `<button type="button" data-m="${i}"><b>${esc(o[0])}</b><small>${esc(o[1])}</small></button>`).join('')}</div>
+    <p class="hint2">The food centre remembers how you treat people. The game is paused.</p>`, 'ch-card');
+  ov.onclick = e => {
+    const b = e.target.closest('[data-m]'); if (!b) return;
+    const o = (+b.dataset.m ? M.b : M.a)[2];
+    ov.hidden = true; paused = false; sfx.tick();
+    const C = ctr(); C.rating = Math.max(0, Math.min(100, C.rating + (o.rating || 0))); C.cp += o.cp || 0;
+    if (o.pat && SH) SH.custs.forEach(c => { if (c.state === 'queue' || c.state === 'wait') c.pat = Math.max(0.15, Math.min(1, c.pat + o.pat)); });
+    if (o.stock){ for (let i = 0; i < o.stock; i++) try { useStock(SH.st.id); } catch(err){} }
+    if (o.owe){ save.owe44 = dayNo() + 1; }
+    if (o.cost) save.wallet = Math.max(0, save.wallet - o.cost);
+    if (o.term) try { discover(o.term); } catch(err){}
+    const sp = save.spirit44 = save.spirit44 || {helps:0, log:[]};
+    if ((o.rating || 0) > 0 && +b.dataset.m === 0){ sp.helps++; sp.log.unshift({id:M.id, day:dayNo()}); sp.log = sp.log.slice(0, 12); try { if (typeof dailyHit45 === 'function') dailyHit45('help', 1); } catch(err){} if (CO43.cur) CO43.cur.helped = (CO43.cur.helped || 0) + 1; }
+    persist(); try { refreshWallet(); } catch(err){}
+    toast(o.say ? o.say : (o.rating > 0 ? `Centre spirit +${o.rating}` : o.rating < 0 ? 'Auntie Mei looks a little disappointed.' : 'Back to work!'));
+    REC.log('moment', {id:M.id, pick:+b.dataset.m});
+  };
+}
+/* a neighbour you helped sends drinks the next day */
+const _mkCust44b = makeCustomers;
+makeCustomers = function(st, beginner, service){
+  const list = _mkCust44b(st, beginner, service);
+  if (save.owe44 === dayNo() && !(typeof LEVEL !== 'undefined' && LEVEL)){ list.forEach(c => { c.pm *= 1.12; }); save.owe44 = 0; persist(); setTimeout(() => { if (SH) banner44('☕ Auntie Mei says thanks', 'She sends kopi for your whole queue. Everyone waits a bit more patiently today.', false); }, 4200); }
+  return list;
+};
+
+/* ---------- specific food feedback ---------- */
+const PRAISE44 = [
+  [/wok|toss|fry/i, ['Wah, got wok hei!', 'So smoky and fragrant!']], [/chop|cut|slice|cube/i, ['Every piece so neat.', 'Cut so evenly, like a pro.']],
+  [/poach|simmer|boil|blanch|dunk|dip|shake/i, ['Texture is just right.', 'So tender!']], [/ladle|pour|gravy|soup|sauce|santan/i, ['The gravy is perfect, not too little.', 'Shiok soup!']],
+  [/grill|fan|coal|turn/i, ['Nice char, still juicy.', 'Smells like proper charcoal.']], [/shave|crank|ice/i, ['The ice is so fluffy!', 'Like snow, so fine.']],
+  [/flip|spin|fold|stretch/i, ['So crispy and flaky!', 'Paper-thin and crispy.']], [/roll|wrap/i, ['Rolled so tight, nothing fell out.']],
+  [/pull|teh|kopi|mix|stir/i, ['Frothy and kao, just how I like.', 'Smooth, nice and frothy.']], [/plate|assemble|top|garnish|scoop|egg/i, ['Looks so pretty!', 'Everything I asked for, nicely done.']],
+  [/pound|sambal|chilli/i, ['The sambal got kick!']], [/press|waffle|pancake/i, ['Golden all over!']]
+];
+const CRIT44 = [
+  [/wok|toss|fry/i, 'Wok hei is there, but the noodles are a bit clumped.'], [/chop|cut|slice|cube/i, 'The pieces are a bit uneven.'],
+  [/poach|simmer|boil/i, 'A bit dry today.'], [/blanch|dunk|dip|shake/i, 'The noodles are a bit soggy.'],
+  [/ladle|pour|gravy|soup|sauce|santan/i, 'Could use more gravy.'], [/grill|fan|coal|turn/i, 'Some sticks charred, some still pale.'],
+  [/shave|crank|ice/i, 'The ice is a bit chunky.'], [/flip|spin|fold|stretch/i, 'Not so crispy today.'], [/roll|wrap/i, 'The roll is a bit loose.'],
+  [/pull|teh|kopi|mix|stir/i, 'Not much froth today.'], [/plate|assemble|top|garnish|scoop/i, 'Something I asked for is missing.'], [/egg|crack/i, 'The egg is overcooked.'],
+  [/pound|sambal|chilli/i, 'The sambal is a bit rough.'], [/press|waffle|pancake/i, 'One side is a bit pale.']
+];
+const SKIP44 = /^(Take the order|Collect payment|Wait time|Buzz for collection|Pack the dabao)$/;
+function feedback44(c, steps, scores, stars){
+  const cook = steps.map((s, i) => ({t:s.title || '', sc:scores[i]})).filter(x => !SKIP44.test(x.t) && typeof x.sc === 'number');
+  const wait = scores[steps.findIndex(s => s.title === 'Wait time')];
+  const best = cook.slice().sort((a, b) => b.sc - a.sc)[0], worst = cook.slice().sort((a, b) => a.sc - b.sc)[0];
+  const praise = best && best.sc >= 88 ? (PRAISE44.find(([re]) => re.test(best.t)) || [0, ['Shiok!']])[1] : null;
+  const crit = worst && worst.sc < 70 ? (CRIT44.find(([re]) => re.test(worst.t)) || [0, 'Something tasted a bit off.'])[1] : null;
+  const p = c.persona, price = money(c.revenue || 0);
+  let line = '';
+  if (praise && crit) line = `${pick(praise)} But… ${crit.charAt(0).toLowerCase() + crit.slice(1)}`;
+  else if (crit) line = crit;
+  else if (praise) line = pick(praise);
+  else line = stars >= 3 ? 'Shiok!' : stars === 2 ? 'Not bad.' : 'Hmm, can be better.';
+  let tail = '';
+  if (p === 'student') tail = stars >= 2 ? pick([`So filling for ${price}!`, 'Can add more rice next time?', 'Student-friendly and shiok.']) : 'For this price, ok lah.';
+  else if (p === 'office') tail = wait >= 90 ? pick(['Fast! Back to the office on time.', 'Quick quick, thanks boss!']) : 'Took a while… my boss will scold.';
+  else if (p === 'elderly') tail = stars >= 2 ? pick(['More chilli, less sweet. You’re learning.', 'Like the old days.']) : 'Last time the old boss do better leh.';
+  else if (p === 'tourist') tail = stars >= 2 ? pick(['Five-star review, for sure!', 'Now I understand why Singaporeans love hawker food!']) : 'Interesting… I think?';
+  else if (p === 'family') tail = stars >= 2 ? pick(['The kids finished everything!', 'Even my picky son ate it all.']) : 'The kids left half…';
+  else if (p === 'foodie') tail = stars >= 3 ? 'This one, I’d queue again.' : crit ? 'I know you can do better.' : 'Solid.';
+  if (c.mem44){ const was = c.mem44.stars; tail = (stars > was ? 'Better than last time! ' : stars < was ? 'Last time was nicer… ' : 'Same standard as last time. ') + tail; }
+  if (c.soldAsk44 && stars >= 2) tail += ` Never mind about the ${c.soldAsk44.toLowerCase()}.`;
+  return (line + ' ' + tail).trim();
+}
+const _dishResult44 = dishResult;
+dishResult = function(q, c, steps, scores, stars, last){
+  try {
+    const avg = scores.reduce((a, b) => a + b, 0)/scores.length;
+    if (c.reg && c.storyLine && !c.heartUp){
+      const rel = relOf(c.st.id, c.reg);
+      if (rel.lastAvg != null && avg >= rel.lastAvg + 8){
+        const cook = steps.map((s, i) => ({t:s.title || '', sc:scores[i]})).filter(x => !SKIP44.test(x.t)).sort((a, b) => b.sc - a.sc)[0];
+        const what = cook ? ((PRAISE44.find(([re]) => re.test(cook.t)) || [0, ['everything is perfect']])[1][0]).replace(/[!.]$/, '').toLowerCase() : 'everything is perfect';
+        c.storyLine = `Same as last time, but today… ${what}! You’re improving, boss.`;
+      }
+    }
+    if (c.reg){ const rel = relOf(c.st.id, c.reg); rel.lastAvg = Math.round(avg); }
+    if (!c.reg && !c.practice && c.cust){ const M = mem44(c.st.id); M[c.cust.name] = {stars, day:dayNo(), n:((M[c.cust.name] || {}).n || 0) + 1}; }
+    persist();
+  } catch(e){}
+  const r = _dishResult44(q, c, steps, scores, stars, last);
+  try {
+    if (!c.storyLine && !ageCfg().kid){
+      const pi = c.persona && typeof PERSONA !== 'undefined' && PERSONA[c.persona] ? PERSONA[c.persona].ic + ' ' : '';
+      $('#dishMsg').innerHTML = `<span class="fb44">${pi}<b>${esc(c.cust.name)}:</b> “${esc(feedback44(c, steps, scores, stars))}”</span>`;
+    }
+  } catch(e){}
+  return r;
+};
+
+/* ---------- HAWKER FLAIR: a golden bonus note at the end of every rhythm step ---------- */
+const FLAIR_PTS44 = 250;
+const _beatCook44 = beatCook;
+beatCook = function(cfg){
+  const sp = _beatCook44(cfg), init0 = sp.init, upd0 = sp.update, press0 = sp.press, score0 = sp.score, draw0 = sp.draw, done0 = sp.done;
+  sp.init = function(s, ctx){
+    init0.call(this, s, ctx);
+    const e8 = s.e8, lastE = s.notes.length ? Math.round(s.notes[s.notes.length - 1].end/e8) : 23;
+    const at = Math.max(25, lastE + 2);
+    if (at <= 26) s.notes.push({t:at*e8, end:at*e8, len:0, res:null, held:false, flair:true});
+  };
+  sp.update = function(s, dt){
+    s.notes.forEach(n => { if (n.flair && !n.res && s.t - n.t > 0.14) n.res = 'skip'; });
+    upd0.call(this, s, dt);
+  };
+  sp.press = function(s){
+    const f = s.notes.find(n => n.flair), was = f && f.res;
+    press0.call(this, s);
+    if (f && !was && f.res){
+      if (f.res === 'perfect' || f.res === 'great'){ s.flair = true; s.fburst = s.t; s.fx.push({t:s.t, txt:'FLAIR!', col:'#c7372c'}); flairSfx44(); }
+      else f.res = 'skip';
+    }
+  };
+  sp.score = function(s){ const all = s.notes; s.notes = all.filter(n => !n.flair); try { return score0.call(this, s); } finally { s.notes = all; } };
+  sp.done = function(s){ return done0.call(this, s); };
+  sp.draw = function(s){
+    draw0.call(this, s);
+    const f = s.notes.find(n => n.flair), e8 = s.e8, spb = e8*2, px = 230/(spb*2), HX = 86, Y = 240;
+    if (f && !f.res){
+      const x = HX + (f.t - s.t)*px;
+      if (x > 30 && x < 370){ g.save(); g.beginPath(); g.rect(44, 220, 312, 40); g.clip(); star44(x, Y, 15, 7, '#f2c53d', C.ink); g.restore(); if (x < 330 && x > 96) txt('FLAIR', x, Y - 26, 9, '#a8741a', {display:true}); }
+    }
+    if (s.fburst != null && s.t - s.fburst < 0.9) flameBurst44(200, 118, (s.t - s.fburst)/0.9);
+  };
+  sp.guide = (sp.guide || []).concat(['Hit the golden FLAIR note at the end for bonus points']);
+  return sp;
+};
+function star44(x, y, r1, r2, fill, stroke){ g.beginPath(); for (let i = 0; i < 10; i++){ const a = -Math.PI/2 + i*Math.PI/5, r = i % 2 ? r2 : r1; g.lineTo(x + Math.cos(a)*r, y + Math.sin(a)*r); } g.closePath(); g.fillStyle = fill; g.fill(); g.strokeStyle = stroke; g.lineWidth = 2; g.stroke(); }
+function flameBurst44(x, y, k){
+  const a = 1 - k, R = 40 + k*70;
+  g.save(); g.globalAlpha = Math.max(0, a);
+  for (let i = 0; i < 14; i++){
+    const an = -Math.PI/2 + (i - 6.5)*0.2, h = R*(0.7 + 0.3*Math.sin(i*2.3)), bx = x + Math.cos(an)*18, by = y + Math.sin(an)*10;
+    g.beginPath(); g.moveTo(bx - 7, by); g.quadraticCurveTo(bx + Math.cos(an)*h*0.5 - 6, by + Math.sin(an)*h*0.5, bx + Math.cos(an)*h, by + Math.sin(an)*h); g.quadraticCurveTo(bx + Math.cos(an)*h*0.5 + 6, by + Math.sin(an)*h*0.5, bx + 7, by); g.closePath();
+    g.fillStyle = i % 3 === 0 ? '#ffe066' : i % 3 === 1 ? '#ff9a1f' : '#f2542d'; g.fill();
+  }
+  g.globalAlpha = Math.max(0, Math.min(1, a*1.6));
+  const ty = y - 70 - k*20, fs = 22 + k*6; g.font = '400 ' + fs + 'px ' + F_DISP; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round'; g.lineWidth = 5; g.strokeStyle = '#fff'; g.strokeText('FLAIR!', x, ty);
+  txt('FLAIR!', x, ty, fs, '#c7372c', {display:true});
+  g.restore();
+}
+function flairSfx44(){ try { if (muted || !grvCtx()) return; const t = actx.currentTime, b = GRV.sfxBus; [0, 4, 7, 12].forEach((d, i) => gTone(b, t + i*0.06, 523.25*Math.pow(2, d/12), 0.18, 'triangle', 0.12)); gNoise(b, t, 0.5, 'bandpass', 1800, 0.25, 0.6, 600); } catch(e){} }
+const _runMinigame44 = runMinigame;
+runMinigame = function(spec, ctx, stepNo, stepCount){
+  const p = _runMinigame44(spec, ctx, stepNo, stepCount);
+  if (!spec || spec.kind !== 'beat') return p;
+  const s = cur && cur.spec === spec ? cur.s : null;
+  return p.then(sc => {
+    if (sc != null && s && s.flair){
+      const sh = typeof SC39 !== 'undefined' && SC39.shift, pts = Math.round(FLAIR_PTS44*(sh ? sh.mult : 1));
+      if (sh) sh.pts += pts;
+      const F = save.flair44 = save.flair44 || {n:0, by:{}}; F.n++; const sid = curStall ? curStall.id : ''; F.by[sid] = (F.by[sid] || 0) + 1; persist();
+      try { if (typeof dailyHit45 === 'function') dailyHit45('flair', 1); } catch(e){}
+      setTimeout(() => toast(`Hawker flair! +${typeof fmtPts39 === 'function' ? fmtPts39(pts) : pts} points`), 200);
+    }
+    return sc;
+  });
+};
+
+(function css44(){
+  const s = document.createElement('style'); s.textContent = `
+.cond44{border-top:.0625rem dashed #cfd8d2;padding-top:.35rem;margin-top:.35rem}
+.pm-tile.sold44{opacity:.55;position:relative;filter:grayscale(.8)}
+.pm-tile .sold-tag{position:absolute;top:.25rem;left:50%;transform:translateX(-50%) rotate(-8deg);background:var(--red);color:#fff;font-family:var(--display);font-size:.7rem;padding:.1rem .4rem;border-radius:.3rem;border:.1rem solid var(--ink);white-space:nowrap}
+.fb44{display:block;line-height:1.4}
+.inc-banner.stack44{flex-direction:column;align-items:flex-start;gap:.15rem;width:min(26rem,calc(100vw - 2rem));box-sizing:border-box}
+`; document.head.appendChild(s);
+})();
+
+/* =================================================================
+   45. PROGRESSION THAT GUIDES YOU
+   - First Service: a new player cooks and serves one plate within the
+     first minute, with a reward and a clear "what's next".
+   - Progressive disclosure: menus appear as they become useful.
+   - Daily goals with a streak, a three-act campaign with story beats,
+     stall signatures that reward how you play, and clear before/after
+     previews for every upgrade.
+   ================================================================= */
+const FIRST45 = {id:'first', ic:'🍗', name:'First Service', kind:'shift', n:1, pat:4, first:true, d:'One customer, one plate of chicken rice.', goal:['Take the order', 'Cook it step by step', 'Serve it']};
+
+/* ---------- first service ---------- */
+function firstService45(){
+  const st = STALLS.find(s => s.id === 'chicken') || STALLS[0];
+  if (!save.built[st.id]){ save.built[st.id] = true; persist(); }
+  ['#fs45Ov', '#nameOv'].forEach(id => { const o = $(id); if (o) o.hidden = true; });
+  curStall = st; LEVEL = {def:FIRST45, k:-1, st, combo:0, maxCombo:0, tips:0, till:0};
+  REC.log('first_service', {});
+  startShift(st, 'lunch');
+}
+const isFirst45 = () => typeof LEVEL !== 'undefined' && LEVEL && LEVEL.def && LEVEL.def.first;
+const _mkCust45 = makeCustomers;
+makeCustomers = function(st, beginner, service){
+  const list = _mkCust45(st, beginner, service);
+  if (isFirst45() && list[0]){
+    const c = list[0], t = {};
+    (st.form || []).forEach(f => { t[f.key] = f.type === 'many' ? [] : f.type === 'qty' ? (f.step || 1) : f.opts[0][0]; });
+    let ok = true; try { if (st.valid && !st.valid(t)) ok = false; } catch(e){ ok = false; }
+    c.t = ok ? t : kidOrder(st, st.makeOrder()); c.t.dine = 'here'; c.persona = null; c.reg = null; c.usualMode = false; c.pm *= 1.5;
+    c.cust = {name:'Mdm Tan', shirt:'#e8743b', hair:'#8a8a8a', skin:'#e8c09a'}; c.initial = 'M';
+    c.sayParts = {greet:'Hello! First day ah?', order:`${saySimple(st, c.t)}.`, dine:'Eat here, thanks.'};
+    c.speech = `${c.sayParts.greet} ${c.sayParts.order} ${c.sayParts.dine}`;
+  }
+  return list;
+};
+const _goalBanner45 = goalBanner;
+goalBanner = function(st, service){
+  if (!isFirst45()) return _goalBanner45(st, service);
+  let el = $('#goalBanner'); if (el) el.remove();
+  el = document.createElement('div'); el.id = 'goalBanner'; el.className = 'goal-banner'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'First service');
+  el.innerHTML = `<h3>🍗 YOUR FIRST SERVICE</h3><p>${esc(st.mentor)}: “One customer, one plate. I’ll show you every step. Don’t worry, nothing can go wrong today.”</p><ul><li>Take the order on the till</li><li>Cook the chicken rice step by step</li><li>Hand it over with a buzzer</li></ul><button type="button" class="buy" data-go>Let’s cook!</button>`;
+  document.body.appendChild(el);
+  el.querySelector('[data-go]').addEventListener('click', () => { el.remove(); sfx.tick(); });
+};
+const _showSummary45a = showSummary;
+showSummary = function(st, results){
+  if (!isFirst45()) return _showSummary45a(st, results);
+  CO43.cur = null; if (typeof SC39 !== 'undefined') SC39.shift = null;
+  const r = results.find(x => !x.walkout), stars = r ? r.stars : 0;
+  save.fs45 = Date.now(); persist();
+  try { discover('dish:' + st.id, true); } catch(e){}
+  REC.log('first_service_end', {stars});
+  const ov = modal30('fs45Ov', `
+    <div class="fs-badge" aria-hidden="true">🥢</div>
+    <p class="label">Badge earned</p><h2>First Service!</h2>
+    <div class="fs-stars" aria-label="${stars} of 3 stars">${[0, 1, 2].map(i => `<span class="${i < stars ? 'on' : ''}">★</span>`).join('')}</div>
+    <p>You just took an order, cooked it and served it, like a real hawker.</p>
+    <ul class="fs-rew"><li><span>💵</span><div><b>+$20.00</b> to spend at the market</div></li><li><span>📖</span><div>First Hawker Book card: <b>${esc(st.dish)}</b></div></li><li><span>🥢</span><div>“First Service” badge</div></li></ul>
+    <p class="fs-next"><b>${esc(st.mentor)}:</b> “Next, a real lunch service. Five customers, and some will want <b>dabao</b> (takeaway). Ready?”</p>
+    <div class="lv-btns"><button type="button" class="big" data-act="stall">Open my stall</button><button type="button" class="buy" data-act="hub">Look around first</button></div>`, 'lv-card fs45');
+  setTimeout(() => earn(2000, ov.querySelector('.fs-rew')), 500);
+  for (let i = 0; i < Math.max(1, stars); i++) setTimeout(() => sfx.star(i), 300 + i*200);
+  ov.onclick = e => { const b = e.target.closest('[data-act]'); if (!b) return; sfx.tick(); ov.hidden = true; LEVEL = null;
+    stage45(true); if (b.dataset.act === 'stall') openStall(st, false); else goHome(); };
+};
+/* new players are offered the first service right after choosing a name */
+$('#nameForm').addEventListener('submit', () => {
+  setTimeout(() => {
+    if (save.fs45 || (save.days || 0) > 0 || (typeof lic39 === 'function' && lic39().shifts)) return;
+    if (!$('#nameOv').hidden || !$('#ageOv').hidden) return;
+    const st = STALLS[0];
+    const ov = modal30('fs45Ov', `<canvas class="fs-face" width="160" height="160" aria-hidden="true"></canvas>
+      <p class="label">${esc(st.mentor)} · ${esc(dname(st))}</p><h2>Ready for your first customer?</h2>
+      <p>It takes about a minute. ${esc(st.mentor)} will guide every step, and nothing can go wrong.</p>
+      <div class="lv-btns"><button type="button" class="big" data-act="go">Let’s cook!</button><button type="button" class="buy" data-act="later">Look around first</button></div>`, 'lv-card fs45');
+    try { withCtx(ov.querySelector('.fs-face'), 120, () => mentorFace(st.look, 'great', 0)); } catch(e){}
+    ov.onclick = e => { const b = e.target.closest('[data-act]'); if (!b) return; sfx.tick(); ov.hidden = true; if (b.dataset.act === 'go') firstService45(); };
+  }, 700);
+});
+
+/* ---------- progressive disclosure ---------- */
+const STAGE_NEWS45 = [null,
+  ['🔓', 'Market, Store, Menu & Levels', 'Buy stock, upgrade your stall, set prices and practise with six levels per stall.'],
+  ['🔓', 'Roles, Decor & your 3D stall', 'Try being the Chef or Counter crew, decorate, walk into your stall in 3D, and see your Chef Licence.'],
+  ['🔓', 'The whole food centre', 'Help the centre with daily issues, vote on upgrades and meet the neighbours.']];
+function progPts45(){ return (typeof lic39 === 'function' ? lic39().shifts : 0) + (save.days || 0)*3 + (save.fs45 ? 1 : 0); }
+function stageOf45(){ if (save.allMenus45) return 3; const p = progPts45(); return p >= 6 ? 3 : p >= 3 ? 2 : p >= 1 ? 1 : 0; }
+function stage45(announce){
+  const s = stageOf45();
+  document.body.classList.remove('pd45-0', 'pd45-1', 'pd45-2', 'pd45-3'); document.body.classList.add('pd45-' + s);
+  const was = save.pd45 == null ? s : save.pd45;
+  if (s > was){ for (let k = was + 1; k <= s; k++) if (STAGE_NEWS45[k]) pop29(...STAGE_NEWS45[k].slice(0, 1), 'NEW TO TRY', ...STAGE_NEWS45[k].slice(1)); }
+  if (save.pd45 !== s){ save.pd45 = s; persist(); }
+  return s;
+}
+const _show45 = show;
+show = function(id){ const r = _show45(id); try { if (id === 'hub' || id === 'stall') stage45(true); } catch(e){} return r; };
+stage45(false);
+
+/* ---------- daily goals and a streak ---------- */
+const DAILY45 = [
+  {id:'dish3', ic:'⭐', t:'Cook 4 dishes to 3 stars', n:4, pay:600},
+  {id:'nowalk', ic:'🚶', t:'Finish a service with nobody walking out', n:1, pay:800},
+  {id:'beat', ic:'🥁', t:'Land 20 taps on the beat', n:20, pay:600},
+  {id:'flair', ic:'🔥', t:'Hit 2 golden flair notes', n:2, pay:700},
+  {id:'practice', ic:'🎯', t:'Finish a practice drill', n:1, pay:500, from:1},
+  {id:'help', ic:'❤️', t:'Help someone at the centre during service', n:1, pay:700, from:3},
+  {id:'regular', ic:'★', t:'Serve 2 regulars', n:2, pay:600},
+  {id:'perfect', ic:'💯', t:'Score 5 perfect steps (97+)', n:5, pay:700},
+  {id:'medal', ic:'🥉', t:'Win a medal in a stall level', n:1, pay:800, from:1},
+  {id:'combo', ic:'🔁', t:'Reach a ×3 combo in a shift', n:3, pay:700, max:true}
+];
+const STREAK_PAY45 = {3:1500, 7:4000, 14:8000, 30:15000};
+const dateKey45 = (d = new Date()) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+function daily45(){
+  const k = dateKey45(), D = save.dg45 = save.dg45 || {streak:0, last:null, best:0};
+  if (D.day !== k){
+    const r = seeded(k.split('-').reduce((a, x) => a*37 + +x, 7)), st = stageOf45(), kid = ageCfg().kid;
+    const pool = DAILY45.filter(g => (g.from || 0) <= st && !(kid && (g.id === 'combo' || g.id === 'perfect'))).slice();
+    const pickN = []; while (pickN.length < 3 && pool.length) pickN.push(pool.splice(Math.floor(r()*pool.length), 1)[0].id);
+    Object.assign(D, {day:k, goals:pickN.map(id => ({id, v:0, done:false})), chest:false});
+    persist();
+  }
+  return D;
+}
+function dailyHit45(ev, k){
+  if (typeof LEVEL !== 'undefined' && LEVEL && LEVEL.def && LEVEL.def.first) return;
+  const D = daily45(); let changed = false;
+  D.goals.forEach(G => {
+    const def = DAILY45.find(x => x.id === G.id); if (!def || G.done || G.id !== ev) return;
+    G.v = def.max ? Math.max(G.v, k) : G.v + (k || 1); changed = true;
+    if (G.v >= def.n){ G.done = true; G.v = def.n; dailyDone45(def, D); }
+  });
+  if (changed){ persist(); renderDaily45(); }
+}
+function dailyDone45(def, D){
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  if (D.last !== D.day){ D.streak = D.last === dateKey45(y) ? D.streak + 1 : 1; D.last = D.day; D.best = Math.max(D.best || 0, D.streak);
+    const sp = STREAK_PAY45[D.streak]; if (sp) setTimeout(() => { earn(sp, $('#dg45') || stageBox); pop29('🔥', `${D.streak}-DAY STREAK`, `+${money(sp)} streak bonus`, 'You came back and cooked again. Hawkers show up every day!'); }, 1600); }
+  setTimeout(() => { earn(def.pay, $('#dg45') || stageBox); pop29(def.ic, 'DAILY GOAL', def.t, `+${money(def.pay)}`); }, 300);
+  if (D.goals.every(g => g.done) && !D.chest){ D.chest = true; setTimeout(() => { earn(1500, $('#dg45') || stageBox); pop29('🎁', 'ALL DAILY GOALS', 'Bonus +$15.00', 'Come back tomorrow for three new goals.'); }, 900); }
+  REC.log('daily', {id:def.id, streak:D.streak});
+}
+function dailyNext45(){
+  if (stageOf45() < 1) return null;
+  const D = daily45(), open = D.goals.filter(g => !g.done); if (!open.length) return null;
+  const G = open.map(g => ({g, def:DAILY45.find(x => x.id === g.id)})).sort((a, b) => b.g.v/b.def.n - a.g.v/a.def.n)[0];
+  const st = homeStall43();
+  const go = G.def.id === 'practice' && co43().last[st.id] && co43().last[st.id].worst ? () => practice43(st, co43().last[st.id].worst.t)
+    : G.def.id === 'medal' ? () => { openStall(st, false); openLevels36(st); }
+    : () => openStall(st, false);
+  return {ic:G.def.ic, t:`Daily goal: ${G.def.t}`, d:`${G.g.v} of ${G.def.n} done · ${money(G.def.pay)} reward${D.streak ? ` · 🔥 ${D.streak}-day streak` : ''}`, btn:'Go', go};
+}
+function renderDaily45(){
+  const host = $('#dg45'); if (!host) return;
+  const D = daily45(), all = D.goals.length, done = D.goals.filter(g => g.done).length;
+  host.innerHTML = `<div class="dg-head"><p class="label">Today’s goals · ${done}/${all}</p><span class="dg-streak" title="Days in a row with a goal done">🔥 ${D.streak || 0}</span></div>
+    <ul>${D.goals.map(g => { const def = DAILY45.find(x => x.id === g.id); if (!def) return ''; const pct = Math.round(g.v/def.n*100);
+      return `<li class="${g.done ? 'done' : ''}"><span class="dg-ic" aria-hidden="true">${g.done ? '✓' : def.ic}</span><div><b>${esc(def.t)}</b><div class="dg-bar"><i style="width:${pct}%"></i></div></div><small>${g.done ? 'Done' : `${g.v}/${def.n}`}<br>${money(def.pay)}</small></li>`; }).join('')}</ul>
+    ${D.chest ? '<p class="dg-chest">🎁 All done! New goals tomorrow.</p>' : `<p class="dg-chest">Finish all three for a <b>$15</b> bonus.</p>`}`;
+}
+
+/* event hooks for the daily goals */
+const _dishResult45 = dishResult;
+dishResult = function(q, c, steps, scores, stars, last){
+  try { if (stars >= 3) dailyHit45('dish3', 1); if (c.reg) dailyHit45('regular', 1); } catch(e){}
+  return _dishResult45(q, c, steps, scores, stars, last);
+};
+const _runMinigame45 = runMinigame;
+runMinigame = function(spec, ctx, stepNo, stepCount){
+  const p = _runMinigame45(spec, ctx, stepNo, stepCount);
+  if (!spec || spec.noScore || spec.kind === 'counter') return p;
+  const s = cur && cur.spec === spec ? cur.s : null;
+  return p.then(sc => {
+    try {
+      if (sc != null){
+        if (sc >= 97) dailyHit45('perfect', 1);
+        if (s && s.__beat && s.__beat.hits) dailyHit45('beat', s.__beat.hits);
+        if (s && spec.kind === 'beat' && s.notes) dailyHit45('beat', s.notes.filter(n => !n.flair && (n.res === 'perfect' || n.res === 'great')).length);
+        if (typeof SC39 !== 'undefined' && SC39.shift) dailyHit45('combo', Math.floor(SC39.shift.maxMult));
+      }
+    } catch(e){}
+    return sc;
+  });
+};
+const _levelResult45 = levelResult36;
+levelResult36 = function(st, R){ try { if (R && R.m > 0) dailyHit45('medal', 1); } catch(e){} return _levelResult45(st, R); };
+
+/* ---------- stall signatures ---------- */
+const SIG45 = {
+  wok:      {ic:'🔥', name:'Wok Hero', need:'Land 6 flair notes here, with 75% of taps on the beat', perk:'3-star dishes earn 10% bigger tips, and your “extra smoky” special draws a crowd.'},
+  speed:    {ic:'⚡', name:'Speed Server', need:'Average 92+ on wait time across 4 services', perk:'Customers are 10% more patient: they know you’re quick.'},
+  precise:  {ic:'🎯', name:'Precision Chef', need:'Average 92+ on plating across 8 dishes', perk:'+2 on every step from your premium presentation.'},
+  community:{ic:'❤️', name:'Community Favourite', need:'Help at the centre 4 times during service here', perk:'+1 reputation and +1 centre rating after every service.'},
+  generous: {ic:'🤲', name:'Generous Hawker', need:'Run 4 services on Value pricing', perk:'Your reputation grows faster: +1 extra after every service.'}
+};
+function sig45(id){ const all = save.sig45 = save.sig45 || {}; return all[id] = all[id] || {shifts:0, flair:0, beatH:0, beatT:0, wait:0, waitN:0, waitS:0, plate:0, plateN:0, helps:0, value:0, got:{}, on:null}; }
+function sigProg45(S){
+  return {
+    wok:Math.min(S.flair/6, S.beatT ? Math.min(1, (S.beatH/S.beatT)/0.75) : 0),
+    speed:S.waitS >= 4 ? Math.min(1, (S.wait/S.waitN)/92) : (S.waitS/4)*Math.min(1, S.waitN ? (S.wait/S.waitN)/92 : 0),
+    precise:S.plateN >= 8 ? Math.min(1, (S.plate/S.plateN)/92) : (S.plateN/8)*Math.min(1, S.plateN ? (S.plate/S.plateN)/92 : 0),
+    community:Math.min(1, S.helps/4),
+    generous:Math.min(1, S.value/4)
+  };
+}
+const sigOn45 = id => { const S = (save.sig45 || {})[id]; return S && S.on; };
+const _showSummary45b = showSummary;
+showSummary = function(st, results){
+  const inLevel = typeof LEVEL !== 'undefined' && !!LEVEL;
+  const sh = typeof SC39 !== 'undefined' ? SC39.shift : null, cap = CO43.cur;
+  const r = _showSummary45b(st, results);
+  if (inLevel) return r;
+  try {
+    const S = sig45(st.id), served = results.filter(x => !x.walkout);
+    S.shifts++;
+    if (sh){ S.beatH += sh.beatHits || 0; S.beatT += sh.beatTaps || 0; }
+    if (cap){ cap.steps.forEach(e => { if (e.flair) S.flair++; if (e.k === 'assemble' || /plate|assemble|garnish|top it/i.test(e.t)){ S.plate += e.sc; S.plateN++; } }); S.helps += cap.helped || 0; }
+    const waits = served.map(x => x.scores && x.scores[x.scores.length - 1]).filter(v => typeof v === 'number');
+    if (waits.length){ S.wait += waits.reduce((a, b) => a + b, 0); S.waitN += waits.length; S.waitS++; }
+    if (typeof priceOf === 'function' && priceOf(st.id) === 'value') S.value++;
+    const P = sigProg45(S);
+    Object.keys(SIG45).forEach(k => { if (P[k] >= 1 && !S.got[k]){ S.got[k] = dayNo(); if (!S.on) S.on = k; const G = SIG45[k]; pop29(G.ic, 'STALL SIGNATURE', `${G.name} · ${dname(st)}`, G.perk); REC.log('signature', {stall:st.id, sig:k}); } });
+    if (S.on === 'community'){ save.rep[st.id] = Math.min(100, repOf(st.id) + 1); const C = ctr(); C.rating = Math.min(100, C.rating + 1); }
+    if (S.on === 'generous') save.rep[st.id] = Math.min(100, repOf(st.id) + 1);
+    if (!results.some(x => x.walkout) && results.length >= Math.min(CUST, 3)) dailyHit45('nowalk', 1);
+    persist();
+  } catch(e){ console.warn('sig', e); }
+  return r;
+};
+const _startShift45 = startShift;
+startShift = function(st, service){
+  const r = _startShift45(st, service);
+  try { if (sigOn45(st.id) === 'wok' && BIZ.cur) BIZ.cur.tipBoost *= 1.1; } catch(e){}
+  return r;
+};
+const _mkCust45b = makeCustomers;
+makeCustomers = function(st, beginner, service){ const list = _mkCust45b(st, beginner, service); if (sigOn45(st.id) === 'speed' && !(typeof LEVEL !== 'undefined' && LEVEL)) list.forEach(c => { c.pm *= 1.1; }); return list; };
+const _seatBonus45 = FX.seatBonus;
+FX.seatBonus = () => _seatBonus45() + (curStall && sigOn45(curStall.id) === 'precise' ? 2 : 0);
+function sigHTML45(st){
+  const S = sig45(st.id), P = sigProg45(S);
+  return `<div class="sig45"><p class="label">Stall signature${S.on ? ` · ${SIG45[S.on].name}` : ''}</p>
+    <p class="hint2">${S.on ? esc(SIG45[S.on].perk) : 'How you play this stall shapes its style. Fill a bar to unlock its signature perk.'}</p>
+    <div class="sig-grid">${Object.entries(SIG45).map(([k, G]) => { const got = !!S.got[k], pct = Math.round(Math.min(1, P[k])*100);
+      return `<button type="button" class="sig-c${got ? ' got' : ''}${S.on === k ? ' on' : ''}" data-sig="${k}" ${got ? '' : 'aria-disabled="true"'} aria-pressed="${S.on === k}"><span class="sg-ic" aria-hidden="true">${G.ic}</span><b>${esc(G.name)}</b><small>${got ? (S.on === k ? 'Active' : 'Tap to use') : esc(G.need)}</small><span class="sg-bar"><i style="width:${pct}%"></i></span></button>`; }).join('')}</div></div>`;
+}
+
+/* ---------- campaign: three acts ---------- */
+const ACTS45 = [
+  {name:'Learn the craft', feel:'“I can run a stall.”', pay:2000, steps:[
+    ['Serve your first customer', () => life29().served >= 1],
+    ['Cook a 3-star dish', () => life29().three >= 1],
+    ['Finish 3 services', () => (lic39().shifts || 0) >= 3],
+    ['Win a level medal', () => medalCount36() >= 1],
+    ['Finish a practice drill', () => Object.keys(co43().prac).length >= 1]],
+    done:m => `${m}: “You can really run a stall now. But I must tell you something… Bahagia Food Centre is in trouble. Half the stalls may close this year. Help me save it?”`},
+  {name:'Save Bahagia', feel:'“This place matters.”', pay:5000, steps:[
+    ['Raise the centre rating to 75', () => ctr().rating >= 75],
+    ['Help people at the centre 5 times', () => ((save.spirit44 || {}).helps || 0) + Object.keys(ctr().helped || {}).length >= 5],
+    ['Run 3 stalls', () => STALLS.filter(s => save.built[s.id]).length >= 3],
+    ['Reach 70 reputation at a stall', () => Object.values(save.rep || {}).some(r => r >= 70)],
+    ['Earn an NEA gold sticker', () => (save.gold44 || 0) >= 1]],
+    done:m => `${m}: “The town council came by today. Bahagia stays open! The neighbours say it’s because of you.”`},
+  {name:'Become a Hawker Legend', feel:'“I understand hawker life.”', pay:10000, steps:[
+    ['Unlock a stall signature', () => Object.values(save.sig45 || {}).some(S => Object.keys(S.got || {}).length)],
+    ['Reach Wok Master class on your licence', () => CLASSES39.indexOf(classOf39(lic39().pts)) >= 3],
+    ['Win 6 gold medals', () => goldCount36() >= 6],
+    ['Hear a mentor’s story to the end', () => Object.values(save.sstory || {}).some(r => (r.q || 0) >= 2)],
+    ['Serve 300 dishes', () => (lic39().dishes || 0) >= 300]],
+    done:m => `${m}: “Hawker Legend. Now the most important job: pass it on. Teach the next one, like I taught you.”`}
+];
+function act45(){
+  const claimed = save.act45 || 0;
+  const i = Math.min(claimed, ACTS45.length - 1), A = ACTS45[i], st = A.steps.map(([t, ok]) => { let v = false; try { v = !!ok(); } catch(e){} return {t, ok:v}; });
+  return {i, A, st, n:st.filter(x => x.ok).length, all:claimed >= ACTS45.length};
+}
+function renderAct45(){
+  const host = $('#act45'); if (!host) return;
+  const R = act45(), pct = Math.round(R.n/R.st.length*100), next = R.st.find(x => !x.ok);
+  if (R.all){ host.innerHTML = `<div class="ac-top"><span class="ac-n">★</span><div><p class="label">Campaign complete</p><b>Hawker Legend</b><small>All three acts done. Keep the recipes alive!</small></div></div>`; return; }
+  host.innerHTML = `<div class="ac-top"><span class="ac-n">${R.i + 1}</span><div><p class="label">Act ${R.i + 1} of 3 · ${R.n}/${R.st.length}</p><b>${esc(R.A.name)}</b><small>${esc(R.A.feel)}</small></div>
+      ${R.n >= R.st.length ? `<button type="button" class="buy" data-act45>Finish act · ${money(R.A.pay)}</button>` : ''}</div>
+    <div class="ac-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${R.st.length}" aria-valuenow="${R.n}"><i style="width:${pct}%"></i></div>
+    <details class="ac-det"><summary>${next ? `Next: ${esc(next.t)}` : 'Every step done!'}</summary><ul>${R.st.map(x => `<li class="${x.ok ? 'ok' : ''}">${x.ok ? '✓' : '○'} ${esc(x.t)}</li>`).join('')}</ul><p class="hint2">Reward: ${money(R.A.pay)}</p></details>`;
+  const b = host.querySelector('[data-act45]'); if (b) b.addEventListener('click', () => finishAct45(R));
+}
+function finishAct45(R){
+  save.act45 = R.i + 1; persist();
+  const st = STALLS[0];
+  const ov = modal30('act45Ov', `<canvas class="fs-face" width="160" height="160" aria-hidden="true"></canvas><p class="label">Act ${R.i + 1} complete</p><h2>${esc(R.A.name)}</h2>
+    <p class="fs-next">${esc(R.A.done(st.mentor))}</p><p><b>Reward: ${money(R.A.pay)}</b></p>
+    ${R.i + 1 < ACTS45.length ? `<p class="hint2">Act ${R.i + 2}: ${esc(ACTS45[R.i + 1].name)} begins.</p>` : '<p class="hint2">You’ve finished the campaign. Thank you for keeping hawker culture alive!</p>'}
+    <div class="lv-btns"><button type="button" class="big" data-x>Continue</button></div>`, 'lv-card fs45');
+  try { withCtx(ov.querySelector('.fs-face'), 120, () => mentorFace(st.look, 'perfect', 0)); } catch(e){}
+  setTimeout(() => earn(R.A.pay, ov.querySelector('h2')), 400); [0, 1, 2].forEach(i => setTimeout(() => sfx.star(i), 300 + i*180));
+  ov.onclick = e => { if (!e.target.closest('[data-x]')) return; ov.hidden = true; sfx.tick(); renderHub(); };
+  REC.log('act_done', {act:R.i + 1});
+}
+
+/* ---------- the hub and the stall show it all ---------- */
+const _renderHub45 = renderHub;
+renderHub = function(){
+  _renderHub45();
+  try {
+    const nb = $('#nbaHub') || $('#hubPrompt');
+    let row = $('#prog45'); if (!row){ row = document.createElement('div'); row.id = 'prog45'; row.className = 'prog45'; row.innerHTML = '<section id="act45" class="act45" aria-label="Campaign"></section><section id="dg45" class="dg45" aria-label="Today’s goals"></section>'; }
+    nb.after(row);
+    renderAct45(); renderDaily45();
+  } catch(e){ console.warn('prog45', e); }
+};
+const _renderTab45 = renderTab;
+renderTab = function(){
+  _renderTab45();
+  if (!curStall) return;
+  const body = $('#tabBody'); if (!body) return;
+  if (curTab === 'shift' && !body.querySelector('.sig45')){
+    const q = body.querySelector('.quote'); const w = document.createElement('div'); w.innerHTML = sigHTML45(curStall);
+    const el = w.firstElementChild; if (q) q.before(el); else body.appendChild(el);
+    el.querySelectorAll('[data-sig]').forEach(b => b.addEventListener('click', () => { const S = sig45(curStall.id), k = b.dataset.sig; if (!S.got[k]){ sfx.bad(); toast(SIG45[k].need); return; } S.on = k; persist(); sfx.good(); renderTab(); }));
+  }
+  if (curTab === 'store') decorateStore45(curStall, body);
+};
+
+/* ---------- upgrade previews: before → after ---------- */
+const UPV45 = {
+  stove:{now:['Small heat zone', 'Wider heat zones', 'Much wider heat zones'], see:'Brighter, wider flame and a louder sizzle', pick:'Easier heat steps vs. the cost'},
+  counter:{now:['+0% takings', '+5% takings', '+12% takings'], see:'A shinier counter with food on show', pick:'More money per plate vs. the cost'},
+  register:{now:['Count the money yourself', 'Shows total & paid', 'Shows change due'], see:'A digital display on the till', pick:'Fewer payment mistakes vs. the cost'},
+  fridge:{now:['24 plates of stock', '40 plates of stock', '64 plates of stock'], see:'Chilled ingredients on show', pick:'Stock up for longer vs. the cost'},
+  tools:{now:['Basic knife', 'Easier chopping', 'Easier chopping & timing'], see:'A sharp cleaver set on the wall', pick:'Easier cutting steps vs. the cost'},
+  staff:{now:['+0% step time', '+20% step time', '+40% step time'], see:'A helper (or two) behind the counter', pick:'More time on every step vs. wages'},
+  seating:{now:['No seats', '+2 per step, +10% patience', '+4 per step, +20% patience', '+6 per step, +30% patience'], see:'Tables and stools for diners', pick:'Happier, more patient customers vs. the cost'},
+  lights:{now:['Bare bulb', 'Brighter stall', '+2% takings'], see:'A warmer glow over the stall', pick:'A cosier stall vs. the cost'}
+};
+const PV45 = {stove:[30,32,1.2], counter:[30,36,1], register:[30,34,1.2], fridge:[30,30,0.5], tools:[26,24,0.8], staff:[30,36,1], seating:[30,42,0.28], lights:[30,22,0.3]};
+function upgradeCanvas45(id, lv){ return miniCanvas(() => { g.fillStyle = '#e6ede4'; g.fillRect(0, 0, 60, 60); const [x, y, k] = PV45[id]; g.translate(x, y); g.scale(k, k); STORE_DRAW[id](lv, 0, 0, 1); }); }
+function decorateStore45(st, body){
+  const rows = body.querySelectorAll('#urows .row-item');
+  STORE.forEach((cat, i) => {
+    const row = rows[i]; if (!row || row.querySelector('.pv45')) return;
+    const lv = LV(cat.id, st.id); if (lv >= cat.levels.length - 1) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'pv45'; b.textContent = 'Preview'; b.setAttribute('aria-label', `Preview ${cat.levels[lv + 1][0]}`);
+    b.addEventListener('click', () => { sfx.tick(); previewUpgrade45(st, cat.id); });
+    const mid = row.children[1]; if (mid) mid.appendChild(b);
+    const cv = row.querySelector('canvas'); if (cv){ cv.style.cursor = 'pointer'; cv.addEventListener('click', () => previewUpgrade45(st, cat.id)); }
+  });
+}
+function previewUpgrade45(st, id){
+  const cat = STORE.find(c => c.id === id); if (!cat) return;
+  const lv = LV(id, st.id), nx = lv + 1, next = cat.levels[nx]; if (!next) return;
+  const U = UPV45[id] || {now:cat.levels.map(l => l[2] || '—'), see:'', pick:''};
+  const w = save.wallet >= next[1];
+  const ov = modal30('upv45Ov', `<p class="label">Upgrade preview · ${esc(cat.name)}</p><h2>${esc(next[0])}</h2>
+    <div class="upv-pair"><figure><span class="upv-cv" data-l="${lv}"></span><figcaption><small>Now</small><b>${esc(cat.levels[lv][0])}</b></figcaption></figure><span class="upv-arrow" aria-hidden="true">→</span><figure class="nx"><span class="upv-cv" data-l="${nx}"></span><figcaption><small>After</small><b>${esc(next[0])}</b></figcaption></figure></div>
+    <ul class="upv-rows"><li><span>In play</span><b>${esc(U.now[lv] || '—')} → <em>${esc(U.now[nx] || next[2])}</em></b></li>
+      <li><span>You’ll see</span><b>${esc(U.see)}</b></li><li><span>The choice</span><b>${esc(U.pick)}</b></li>
+      <li><span>Cost</span><b>${money(next[1])} <small>(you have ${money(save.wallet)})</small></b></li></ul>
+    <div class="lv-btns"><button type="button" class="big" data-buy ${w ? '' : 'disabled'}>${w ? `Buy · ${money(next[1])}` : `Need ${money(next[1] - save.wallet)} more`}</button><button type="button" class="buy" data-x>Not now</button></div>`, 'lv-card upv45');
+  ov.querySelectorAll('.upv-cv').forEach(s => s.replaceWith(upgradeCanvas45(id, +s.dataset.l)));
+  ov.onclick = e => {
+    if (e.target === ov || e.target.closest('[data-x]')){ ov.hidden = true; return; }
+    const b = e.target.closest('[data-buy]'); if (!b) return;
+    if (!spend(next[1], b)) return;
+    (save.lvl[st.id] = save.lvl[st.id] || {})[id] = nx; persist();
+    const pos = STORE_POS[id]; SV.up = {x:pos[0], y:pos[1], k:1};
+    ov.hidden = true; sfx.good(); [0, 1, 2].forEach(i => setTimeout(() => sfx.star(i), 120 + i*140)); toast(`${next[0]} installed!`);
+    if (curTab === 'store') renderTab();
+    REC.log('upgrade', {stall:st.id, cat:id, lv:nx, via:'preview'});
+  };
+}
+
+/* ---------- settings: show every menu straight away ---------- */
+(function settings45(){
+  const anchor = $('#setTips'); if (!anchor) return;
+  anchor.closest('.set-row').insertAdjacentHTML('afterend', `<div class="set-row"><span>Show all menus<small>Skip the gradual unlocks and show everything now</small></span><button class="tog" type="button" id="setAll45" aria-label="Show all menus" aria-pressed="false"></button></div>`);
+  const b = $('#setAll45');
+  const sync = () => b.setAttribute('aria-pressed', String(!!save.allMenus45));
+  b.addEventListener('click', () => { save.allMenus45 = !save.allMenus45; persist(); sync(); stage45(false); sfx.tick(); });
+  const _rs = renderSettings; renderSettings = function(){ _rs(); sync(); };
+})();
+
+(function css45(){
+  const s = document.createElement('style'); s.textContent = `
+body.pd45-0 .tabs [data-tab="market"],body.pd45-0 .tabs [data-tab="store"],body.pd45-0 .tabs [data-tab="menu"],body.pd45-0 .tab-extras,body.pd45-0 #rankCard,body.pd45-0 #prog45,
+body:is(.pd45-0,.pd45-1) .tabs [data-tab="decor"],body:is(.pd45-0,.pd45-1) .s3d-open,body:is(.pd45-0,.pd45-1) .roles,body:is(.pd45-0,.pd45-1) .rk-lic,body:is(.pd45-0,.pd45-1) .rk-jr,body:is(.pd45-0,.pd45-1) .plan,body:is(.pd45-0,.pd45-1) .sig45,body:is(.pd45-0,.pd45-1) .ss-lic,
+body:is(.pd45-0,.pd45-1,.pd45-2) .rk-ctr{display:none!important}
+.prog45{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(17rem,100%),1fr));gap:.75rem;margin:0 0 .75rem}
+.act45,.dg45{background:#fff;border:.1875rem solid var(--ink);border-radius:1rem;box-shadow:0 .25rem 0 var(--ink);padding:.65rem .75rem;color:var(--ink);text-align:left;min-width:0}
+.act45 .ac-top{display:grid;grid-template-columns:2.4rem 1fr auto;gap:.6rem;align-items:center}
+.act45 .ac-n{width:2.4rem;height:2.4rem;border-radius:50%;background:var(--red);color:#fff;border:.125rem solid var(--ink);display:grid;place-items:center;font-family:var(--display);font-size:1.2rem}
+.act45 .label,.dg45 .label{color:var(--green);font-size:max(11px,.68rem)}
+.act45 b{display:block;font-family:var(--display);font-size:1.05rem;line-height:1.15}
+.act45 small{display:block;color:var(--muted);font-size:.84rem;font-family:var(--hand)}
+.ac-bar,.dg-bar,.sg-bar{display:block;height:.55rem;border-radius:1rem;background:#e6ece8;overflow:hidden;margin:.45rem 0 .2rem}
+.ac-bar i,.dg-bar i,.sg-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--yellow),#2f9e5b);border-radius:1rem}
+.ac-det summary{cursor:pointer;font-size:.86rem;font-weight:700;min-height:1.75rem;display:flex;align-items:center}
+.ac-det ul{list-style:none;margin:.3rem 0;padding:0;display:grid;gap:.2rem;font-size:.86rem}
+.ac-det li.ok{color:var(--green);text-decoration:line-through}
+.dg45 .dg-head{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.dg-streak{font-family:var(--display);font-size:.95rem;background:#fff3cc;border:.125rem solid var(--ink);border-radius:2rem;padding:.1rem .55rem}
+.dg45 ul{list-style:none;margin:.35rem 0 0;padding:0;display:grid;gap:.35rem}
+.dg45 li{display:grid;grid-template-columns:1.8rem 1fr auto;gap:.5rem;align-items:center}
+.dg45 .dg-ic{width:1.8rem;height:1.8rem;border-radius:.5rem;background:#eef4ef;display:grid;place-items:center;font-size:.95rem}
+.dg45 li.done .dg-ic{background:#2f9e5b;color:#fff;font-weight:900}
+.dg45 li b{font-size:.86rem;line-height:1.25;display:block}
+.dg45 li .dg-bar{margin:.2rem 0 0;height:.4rem}
+.dg45 li small{font-size:max(11px,.75rem);color:var(--muted);text-align:right;line-height:1.2;font-weight:700}
+.dg45 li.done b{color:var(--green)}
+.dg-chest{margin:.4rem 0 0;font-size:.8rem;color:var(--muted)}
+.sig45{display:grid;gap:.35rem}
+.sig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(9.5rem,1fr));gap:.45rem}
+.sig-c{display:grid;grid-template-columns:1.8rem 1fr;grid-template-rows:auto auto auto;column-gap:.45rem;text-align:left;border:.125rem solid #c9d4cd;border-radius:.8rem;background:#fff;padding:.45rem .55rem;font:inherit;color:var(--ink);cursor:pointer;min-height:2.75rem}
+.sig-c .sg-ic{grid-row:1 / 3;font-size:1.2rem;display:grid;place-items:center;filter:grayscale(1);opacity:.6}
+.sig-c b{font-size:.86rem;line-height:1.2}
+.sig-c small{font-size:max(11px,.75rem);color:var(--muted);line-height:1.25}
+.sig-c .sg-bar{grid-column:1 / -1;height:.35rem;margin:.3rem 0 0}
+.sig-c.got{border-color:var(--ink)}.sig-c.got .sg-ic{filter:none;opacity:1}
+.sig-c.on{background:#fff3cc;border-color:var(--ink);box-shadow:0 .1875rem 0 var(--ink)}
+.fs45{text-align:center}
+.fs45 .fs-badge{font-size:3rem;width:5rem;height:5rem;margin:0 auto;border-radius:50%;background:var(--yellow);border:.1875rem solid var(--ink);display:grid;place-items:center;box-shadow:0 .25rem 0 var(--ink);animation:popIn .5s cubic-bezier(.3,1.5,.6,1)}
+.fs45 .fs-face{width:5rem;height:5rem;margin:0 auto;border-radius:50%;border:.1875rem solid var(--ink);background:#fff6dc}
+.fs-rew{list-style:none;margin:0;padding:0;display:grid;gap:.35rem;text-align:left}
+.fs-rew li{display:grid;grid-template-columns:1.8rem 1fr;gap:.45rem;align-items:center;background:#f4f8f5;border-radius:.7rem;padding:.4rem .55rem;font-size:.9rem}
+.fs-stars{display:flex;justify-content:center;gap:.35rem;font-size:2.4rem;line-height:1;color:#d6dcd8;-webkit-text-stroke:.08rem var(--ink)}
+.fs-stars .on{color:var(--yellow)}
+.fs-next{font-family:var(--hand);font-size:1.08rem;line-height:1.35;margin:0}
+.pv45{display:inline-flex;align-items:center;margin-top:.3rem;font:inherit;font-size:.8rem;font-weight:800;border:.125rem solid var(--ink);border-radius:2rem;background:#fff;padding:.2rem .7rem;min-height:2rem;cursor:pointer;color:var(--ink)}
+.upv-pair{display:grid;grid-template-columns:1fr auto 1fr;gap:.5rem;align-items:center}
+.upv-pair figure{margin:0;display:grid;gap:.3rem;justify-items:center}
+.upv-pair canvas{width:6rem;height:6rem;border-radius:.8rem;border:.1875rem solid #c9d4cd;background:#e6ede4}
+.upv-pair .nx canvas{border-color:var(--ink);box-shadow:0 .25rem 0 var(--yellow)}
+.upv-pair figcaption{display:grid;font-size:.84rem;line-height:1.2}
+.upv-pair figcaption small{color:var(--muted);font-size:max(11px,.72rem);letter-spacing:.1em;text-transform:uppercase}
+.upv-arrow{font-family:var(--display);font-size:1.6rem}
+.upv-rows{list-style:none;margin:0;padding:0;display:grid;gap:.3rem;text-align:left}
+.upv-rows li{display:grid;grid-template-columns:6.5rem 1fr;gap:.5rem;border-bottom:.0625rem dashed #d6dcd8;padding:.3rem 0;font-size:.88rem}
+.upv-rows span{color:var(--muted);font-weight:700}
+.upv-rows em{font-style:normal;color:var(--green)}
+.upv-rows small{color:var(--muted);font-weight:400}
+`; document.head.appendChild(s);
+})();
+
+/* =================================================================
+   46. A FRIENDLIER TILL, AND PLAYING TOGETHER
+   - HawkerPOS: the customer's words become picture chips, the section
+     you need next is highlighted, the order is colour-grouped, and an
+     Undo button takes back the last tap.
+   - Simple orders: fewer extras, for anyone who wants them.
+   - Dish cards: a shareable picture of a great plate.
+   - Rival Rush: a seeded lunch rush you can send to a friend as a code.
+   - Pass & Play: two players take turns serving one shift on one device.
+   ================================================================= */
+
+/* ---------- 1. the till ---------- */
+const CHIPS46 = [
+  [/no cucumber/i, '🥒', 'no cucumber', 1], [/no chilli|not spicy|no spicy/i, '🌶️', 'no chilli', 1], [/more chilli|extra chilli|spicy|chilli padi/i, '🌶️', 'more chilli'],
+  [/no ginger/i, '🫚', 'no ginger', 1], [/no (dark|black) (soy|sauce)/i, '🫙', 'no dark soy', 1], [/no (bean ?sprouts?|taugeh)/i, '🌱', 'no sprouts', 1], [/no (spring )?onion|no cockles?|no lard|no peanuts?/i, '🚫', 'leave something out', 1],
+  [/egg/i, '🥚', 'egg'], [/upsize|large|\bbig\b/i, '⬆️', 'upsize'], [/extra rice|more rice/i, '🍚', 'extra rice'], [/soup/i, '🍲', 'soup'],
+  [/less sweet|less sugar/i, '🍬', 'less sweet'], [/no sugar/i, '🍬', 'no sugar', 1], [/iced|cold/i, '🧊', 'iced'],
+  [/dabao|take ?away|tapao|takeaway/i, '🥡', 'takeaway'], [/eat here|makan sini|dine in/i, '🍽️', 'dine in']
+];
+function chips46(c){
+  if (!c || c.usualMode || !c.sayParts) return [];
+  const st = c.st, said = `${c.sayParts.order} ${c.sayParts.dine}`, out = [], seen = new Set();
+  CHIPS46.forEach(([re, ic, label, no]) => {
+    if (st.codeCard && !/takeaway|dine in/.test(label)) return;          /* drink codes stay a puzzle */
+    if (!re.test(said) || seen.has(label)) return;
+    if (label === 'egg' && /no egg/i.test(said)) return;
+    seen.add(label); out.push({ic, label, no:!!no});
+  });
+  if (!st.codeCard){
+    const have = out.map(x => x.label).join(' ');
+    (said.match(/\b(no|without|less|more|extra|add)\s+([a-z][a-z' -]{1,16}?)(?=[,.!]|\s+(?:and|please|thanks)\b|$)/gi) || []).forEach(m => {
+      const [, w, what] = m.match(/^(\w+)\s+(.*)$/), neg = /^(no|without)$/i.test(w), label = `${neg ? 'no' : w.toLowerCase()} ${what.toLowerCase()}`;
+      if (have.includes(what.toLowerCase()) || out.some(x => x.label === label) || out.length > 6) return;
+      out.push({ic:neg ? '🚫' : w.toLowerCase() === 'less' ? '⬇️' : '➕', label, no:false});
+    });
+  }
+  return out;
+}
+const _takeMount46 = TAKE.mount;
+TAKE.mount = function(el, s, finish){
+  _takeMount46.call(this, el, s, finish);
+  try {
+    const c = s.order, api = s.pos46;
+    /* picture chips under the speech bubble */
+    const ch = chips46(c), bub = el.querySelector('.pc-bubble');
+    if (ch.length && bub) bub.insertAdjacentHTML('beforeend', `<div class="chips46" aria-hidden="true">${ch.map(x => `<span class="${x.no ? 'no' : ''}"><i>${x.ic}</i>${esc(x.label)}</span>`).join('')}</div>`);
+    if (!api) return;
+    /* undo the last tap */
+    const hist = s.hist46 = [];
+    const acts = el.querySelector('.po-actions'), clear = el.querySelector('[data-clear]');
+    const undo = document.createElement('button'); undo.type = 'button'; undo.className = 'pos-btn ghostp undo46'; undo.textContent = '↶ Undo'; undo.disabled = true; undo.setAttribute('aria-label', 'Undo the last tap');
+    if (acts && clear){ clear.before(undo); acts.classList.add('three46'); }
+    const sync = () => {
+      undo.disabled = !hist.length;
+      const secs = [...el.querySelectorAll('.pos-menu section')]; secs.forEach(x => x.classList.remove('need46'));
+      const need = secs.find(x => { const r = x.querySelector('[data-req]'); return r && !r.hidden; });
+      if (need) need.classList.add('need46');
+    };
+    el.addEventListener('click', e => {
+      if (e.target.closest('.undo46')) return;
+      if (e.target.closest('.pm-tile[data-k], .pm-tile[data-q], .qt-minus, [data-clear], [data-bz], [data-bzx]')){ hist.push(JSON.stringify(api.w)); if (hist.length > 30) hist.shift(); setTimeout(sync, 0); }
+    }, true);
+    undo.addEventListener('click', () => { if (!hist.length) return; const pad = el.querySelector('#posPad'); if (pad) pad.hidden = true; api.set(JSON.parse(hist.pop())); posBeep(); sync(); });
+    sync();
+  } catch(e){ console.warn('pos46', e); }
+};
+
+/* ---------- 2. simple orders ---------- */
+const _kidOrder46 = kidOrder;
+kidOrder = function(st, t){
+  const o = _kidOrder46(st, t);
+  if (!save.simple46 || ageCfg().kid) return o;
+  const s = JSON.parse(JSON.stringify(o));
+  (st.form || []).forEach(f => {
+    if (f.type === 'many' && Array.isArray(s[f.key])) s[f.key] = /note/i.test(f.key + f.label) ? [] : s[f.key].slice(0, 1);
+    if (f.type === 'qty' && typeof s[f.key] === 'number') s[f.key] = Math.min(s[f.key], 2*(f.step || 1));
+  });
+  try { if (st.valid && !st.valid(s)) return o; } catch(e){ return o; }
+  return s;
+};
+(function settings46(){
+  const anchor = $('#setTips'); if (!anchor) return;
+  anchor.closest('.set-row').insertAdjacentHTML('afterend', `<div class="set-row"><span>Simple orders<small>Fewer extras and no special notes in orders</small></span><button class="tog" type="button" id="setSimple46" aria-label="Simple orders" aria-pressed="false"></button></div>`);
+  const b = $('#setSimple46'), sync = () => b.setAttribute('aria-pressed', String(!!save.simple46));
+  b.addEventListener('click', () => { save.simple46 = !save.simple46; persist(); sync(); sfx.tick(); });
+  const _rs = renderSettings; renderSettings = function(){ _rs(); sync(); };
+})();
+
+/* ---------- 3. dish cards ---------- */
+const CAPTION46 = {3:['Shiok sia!', 'Confirm plus chop, best one!', 'Wah, steady lah!', 'Power lah, boss!'], 2:['Not bad leh!', 'Can lah, can!', 'Getting there, boss!'], 1:['Still can eat lah 😅', 'Tomorrow better, ok?']};
+function dishCard46(c, stars, avg){
+  const cv = document.createElement('canvas'); cv.width = 1080; cv.height = 1350;
+  const st = c.st, T = typeof tierOf39 === 'function' ? tierOf39(avg) : null, cap = pick(CAPTION46[Math.max(1, Math.min(3, stars))]);
+  withCtx(cv, 400, () => {
+    g.fillStyle = lin(0, 0, 0, 500, [[0, '#fff6dc'], [1, '#f6d2cc']]); g.fillRect(0, 0, 400, 500);
+    g.fillStyle = 'rgba(255,255,255,.55)'; for (let i = 0; i < 14; i++){ g.beginPath(); g.arc((i*97) % 400, 60 + ((i*53) % 380), 6 + (i % 4)*5, 0, Math.PI*2); g.fill(); }
+    g.fillStyle = '#124634'; g.fillRect(0, 0, 400, 70);
+    txt('HAWKER HERO', 200, 26, 22, '#f2c53d', {display:true}); txt('小贩英雄 · BAHAGIA FOOD CENTRE', 200, 50, 9, '#ffffff');
+    txt(dname(st), 200, 92, 17, '#14211b', {display:true});
+    let dn = st.dish; try { dn = st.id === 'kopi' ? kopiCode(c.w) : st.dishName ? st.dishName(c.w) : st.dish; } catch(e){}
+    txt(dn, 200, 112, 12, '#52615a');
+    g.save(); g.translate(200, st.id === 'kachang' ? 252 : 236); g.scale(1.08, 1.08); try { drawFinal(st.id, c.w, 1.2); } catch(e){} g.restore();
+    for (let i = 0; i < 3; i++){ const x = 160 + i*40; g.save(); g.translate(x, 364); g.beginPath(); for (let j = 0; j < 10; j++){ const a = -Math.PI/2 + j*Math.PI/5, r = j % 2 ? 6.5 : 15; g.lineTo(Math.cos(a)*r, Math.sin(a)*r); } g.closePath(); g.fillStyle = i < stars ? '#f2c53d' : '#d6dcd8'; g.fill(); g.strokeStyle = '#14211b'; g.lineWidth = 2; g.stroke(); g.restore(); }
+    if (T){ box(145, 382, 110, 28, 14, T.bg || '#fff', '#14211b', 2); txt(`${T.t} · ${T.name}`, 200, 396, 12, T.col || '#14211b', {display:true}); }
+    g.save(); g.translate(200, 440); g.rotate(-0.03); box(-150, -22, 300, 44, 12, '#ffffff', '#14211b', 2.5); txt(`“${cap}”`, 0, 0, 17, '#c7372c', {font:F_DISP}); g.restore();
+    txt(`Cooked by ${save.player || 'a Hawker Hero'} · Day ${dayNo()}`, 200, 476, 10, '#52615a');
+    txt('makiyakinabe.github.io/hawker-hero', 200, 491, 8, '#7f8a87');
+  });
+  return cv;
+}
+function openDishCard46(c, stars, avg){
+  const cv = dishCard46(c, stars, avg);
+  const ov = modal30('dc46Ov', `<p class="label">Dish card</p><h2>Show it off!</h2><div class="dc-img"></div>
+    <div class="lv-btns"><button type="button" class="big" data-act="share">Share</button><button type="button" class="buy" data-act="save">Save picture</button><button type="button" class="buy" data-act="x">Close</button></div>`, 'lv-card dc46');
+  const img = new Image(); img.alt = `Dish card: ${c.st.dish}, ${stars} stars`; img.src = cv.toDataURL('image/png'); ov.querySelector('.dc-img').appendChild(img);
+  const name = `hawker-hero-${c.st.id}-${Date.now() % 100000}.png`;
+  const download = () => { const a = document.createElement('a'); a.href = img.src; a.download = name; document.body.appendChild(a); a.click(); a.remove(); toast('Dish card saved'); };
+  ov.onclick = e => {
+    const b = e.target.closest('[data-act]'); if (!b) return; sfx.tick();
+    if (b.dataset.act === 'x'){ ov.hidden = true; return; }
+    if (b.dataset.act === 'save') return download();
+    cv.toBlob(async blob => {
+      try {
+        const file = new File([blob], name, {type:'image/png'});
+        if (navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:'Hawker Hero', text:`I cooked ${c.st.dish} at ${dname(c.st)}! 🍜`}); return; }
+      } catch(err){ if (err && err.name === 'AbortError') return; }
+      download();
+    }, 'image/png');
+  };
+  REC.log('dish_card', {stall:c.st.id, stars});
+}
+const _dishResult46 = dishResult;
+dishResult = function(q, c, steps, scores, stars, last){
+  const p = _dishResult46(q, c, steps, scores, stars, last);
+  try {
+    let b = $('#dc46Btn');
+    if (!b){ b = document.createElement('button'); b.type = 'button'; b.id = 'dc46Btn'; b.className = 'buy dc46-btn'; b.textContent = '📸 Dish card'; }
+    const host = $('#dishTier39') || $('#dishStars'); host.after(b);
+    b.hidden = stars < 2;
+    const avg = scores.reduce((a, x) => a + x, 0)/scores.length;
+    b.onclick = () => { sfx.tick(); openDishCard46(c, stars, avg); };
+    if (typeof DUO46 !== 'undefined' && DUO46.on && c.duo46 != null){ DUO46.stars[c.duo46] += stars; DUO46.dishes[c.duo46]++; }
+  } catch(e){}
+  return p;
+};
+
+/* ---------- shared: special practice modes on top of the level system ---------- */
+const MODES46 = {
+  rival:{id:'rival', ic:'⚔️', name:'Rival Rush', kind:'shift', n:5, pat:1, custom46:true, d:'The same five customers and orders for everyone who plays this code.', goal:['Serve all five customers', 'Score as many points as you can', 'Send your code to a friend']},
+  duo:{id:'duo', ic:'👪', name:'Pass & Play', kind:'shift', n:6, pat:1.35, custom46:true, d:'Two players take turns: each customer belongs to one of you.', goal:['Pass the device when your name appears', 'Help each other: the team score counts', 'See who was the MVP']}
+};
+const mode46 = () => typeof LEVEL !== 'undefined' && LEVEL && LEVEL.def && LEVEL.def.custom46 ? LEVEL.def.id : null;
+const _goalBanner46 = goalBanner;
+goalBanner = function(st, service){
+  const m = mode46(); if (!m) return _goalBanner46(st, service);
+  let el = $('#goalBanner'); if (el) el.remove();
+  const L = LEVEL.def;
+  el = document.createElement('div'); el.id = 'goalBanner'; el.className = 'goal-banner'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', L.name);
+  el.innerHTML = `<h3>${L.ic} ${esc(L.name.toUpperCase())}${m === 'rival' && RIVAL46.target ? ` · BEAT ${esc(RIVAL46.target.name)}` : ''}</h3><p>${esc(L.d)}</p><ul>${L.goal.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+    ${m === 'rival' && RIVAL46.target ? `<p><b>Target: ${fmtPts39(RIVAL46.target.pts)} points</b></p>` : ''}${m === 'duo' ? `<p><b>${esc(DUO46.names[0])}</b> serves first, then <b>${esc(DUO46.names[1])}</b>.</p>` : ''}
+    <p class="hint2">Practice mode: no stock used and the day doesn’t move on.</p><button type="button" class="buy" data-go>Let’s go!</button>`;
+  document.body.appendChild(el);
+  el.querySelector('[data-go]').addEventListener('click', () => { el.remove(); sfx.tick(); });
+};
+
+/* ---------- 4. RIVAL RUSH: a seeded rush you can share as a code ---------- */
+const RIVAL46 = {seed:0, target:null};
+const b64e46 = s => btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const b64d46 = s => decodeURIComponent(escape(atob(s.replace(/-/g, '+').replace(/_/g, '/'))));
+function rivalCode46(st, seed, pts){ return 'HH-' + b64e46([STALLS.indexOf(st), seed, pts || 0, (save.player || 'Boss').slice(0, 12)].join('|')); }
+function readCode46(code){
+  try {
+    const m = String(code).trim().match(/HH-([A-Za-z0-9_-]+)/); if (!m) return null;
+    const [i, seed, pts, name] = b64d46(m[1]).split('|'), st = STALLS[+i];
+    if (!st || !(+seed >= 0)) return null;
+    return {st, seed:+seed, pts:+pts || 0, name:name || 'Friend'};
+  } catch(e){ return null; }
+}
+const _mkCust46 = makeCustomers;
+makeCustomers = function(st, beginner, service){
+  const list = _mkCust46(st, beginner, service), m = mode46();
+  if (m === 'rival'){
+    const R = rng(RIVAL46.seed), rnd0 = Math.random; Math.random = R;
+    try {
+      const names = shuffle(CUSTOMERS.slice()).map(x => x.name), pool = ['office', 'student', 'elderly', 'tourist', 'family', 'foodie'];
+      list.forEach((c, i) => {
+        c.t = st.makeOrder(); c.t.dine = R() < 0.5 ? 'here' : 'dabao';
+        c.reg = null; c.usualMode = false; c.mem44 = null; c.cust = {name:names[i % names.length], shirt:pick(SHIRTS), hair:pick(HAIRS), skin:pick(SKINS)}; c.initial = firstName(c.cust.name).charAt(0); c.color = pick(AV_COLORS);
+        c.persona = pool[Math.floor(R()*pool.length)]; c.pm = (PERSONA[c.persona] ? PERSONA[c.persona].pm : 1)*ageCfg().pat;
+        c.sayParts = {greet:`${st.greet}!`, order:`${saySimple(st, c.t)}.`, dine:c.t.dine === 'dabao' ? 'Takeaway, thanks.' : 'Eat here.'};
+        c.speech = `${c.sayParts.greet} ${c.sayParts.order} ${c.sayParts.dine}`;
+      });
+    } finally { Math.random = rnd0; }
+  }
+  if (m === 'duo') list.forEach((c, i) => { c.duo46 = i % 2; });
+  return list;
+};
+function openRival46(st){
+  const ov = modal30('rv46Ov', `<p class="label">⚔️ Rival Rush · ${esc(dname(st))}</p><h2>Challenge a friend</h2>
+    <p>Play a lunch rush with five set customers and orders. Send the code to a friend: they get the <b>exact same rush</b> and try to beat your score.</p>
+    <div class="lv-btns"><button type="button" class="big" data-act="new">Start a new rush</button></div>
+    <label class="rv-in"><span class="label">Got a code from a friend?</span><input type="text" id="rvCode46" placeholder="HH-…" autocomplete="off" spellcheck="false"></label>
+    <div class="lv-btns"><button type="button" class="buy" data-act="code">Play their rush</button><button type="button" class="buy" data-act="x">Close</button></div>
+    <p class="rv-err hint2" hidden>That code doesn’t look right. Paste the whole thing, starting with HH-.</p>`, 'lv-card rv46');
+  ov.onclick = e => {
+    const b = e.target.closest('[data-act]'); if (!b) return; sfx.tick();
+    if (b.dataset.act === 'x'){ ov.hidden = true; return; }
+    if (b.dataset.act === 'new'){ ov.hidden = true; playRival46(st, Math.floor(Math.random()*90000) + 10000, null); return; }
+    const R = readCode46($('#rvCode46').value); if (!R){ ov.querySelector('.rv-err').hidden = false; sfx.bad(); return; }
+    ov.hidden = true; playRival46(R.st, R.seed, R.pts ? {pts:R.pts, name:R.name} : null);
+  };
+}
+function playRival46(st, seed, target){
+  RIVAL46.seed = seed; RIVAL46.target = target; RIVAL46.st = st;
+  if (screen !== 'stall' || curStall !== st) openStall(st, false);
+  curStall = st; LEVEL = {def:MODES46.rival, k:-1, st, combo:0, maxCombo:0, tips:0, till:0};
+  REC.log('rival_start', {stall:st.id, seed, vs:target ? target.pts : 0});
+  startShift(st, 'lunch');
+}
+
+/* ---------- 5. PASS & PLAY: two players, one device ---------- */
+const DUO46 = {on:false, names:['Player 1', 'Player 2'], last:-1, pts:[0, 0], stars:[0, 0], dishes:[0, 0]};
+function openDuo46(st){
+  const ov = modal30('duo46Ov', `<p class="label">👪 Pass &amp; Play · ${esc(dname(st))}</p><h2>Cook together</h2>
+    <p>Six customers. Each one belongs to one player: when a name pops up, pass the device. The team score is what counts!</p>
+    <div class="duo-names"><label><span class="label">Player 1</span><input type="text" id="duoA46" maxlength="12" value="${esc(save.player || 'Player 1')}"></label><label><span class="label">Player 2</span><input type="text" id="duoB46" maxlength="12" placeholder="Friend’s name"></label></div>
+    <div class="lv-btns"><button type="button" class="big" data-act="go">Start</button><button type="button" class="buy" data-act="x">Close</button></div>`, 'lv-card duo46');
+  ov.onclick = e => {
+    const b = e.target.closest('[data-act]'); if (!b) return; sfx.tick(); ov.hidden = true;
+    if (b.dataset.act !== 'go') return;
+    const A = ($('#duoA46').value || '').trim().slice(0, 12) || 'Player 1', B = ($('#duoB46').value || '').trim().slice(0, 12) || 'Player 2';
+    Object.assign(DUO46, {on:true, names:[A, B === A ? B + ' 2' : B], last:-1, pts:[0, 0], stars:[0, 0], dishes:[0, 0]});
+    curStall = st; LEVEL = {def:MODES46.duo, k:-1, st, combo:0, maxCombo:0, tips:0, till:0};
+    REC.log('duo_start', {stall:st.id});
+    startShift(st, 'lunch');
+  };
+}
+function passCard46(p, c){
+  return new Promise(res => {
+    paused = true;
+    const ov = modal30('pass46Ov', `<div class="pass-ic" aria-hidden="true">📱</div><p class="label">Pass the device</p><h2>${esc(DUO46.names[p])}’s turn!</h2>
+      <p>${c && c.cust ? `Your customer: <b>${esc(c.cust.name)}</b>${c.qno ? ` · Q${esc(c.qno)}` : ''}` : ''}</p>
+      <div class="lv-btns"><button type="button" class="big" data-go>I’m ready</button></div>`, `lv-card pass46 p${p}`);
+    ov.onclick = e => { if (!e.target.closest('[data-go]')) return; sfx.tick(); ov.hidden = true; paused = false; res(); };
+    [0, 1].forEach(i => setTimeout(() => tone([880, 1175][i], 0.09, 'triangle', 0.05), i*110));
+  });
+}
+const _runMinigame46 = runMinigame;
+runMinigame = function(spec, ctx, stepNo, stepCount){
+  if (mode46() === 'duo' && ctx && ctx.duo46 != null && spec && !spec.noScore && spec.kind !== 'counter'){
+    const go = () => _runMinigame46(spec, ctx, stepNo, stepCount).then(sc => { if (sc != null) DUO46.pts[ctx.duo46] += Math.round(sc*10*(SC39.shift ? SC39.shift.mult : 1)); return sc; });
+    if (ctx.duo46 !== DUO46.last){ DUO46.last = ctx.duo46; return passCard46(ctx.duo46, ctx).then(go); }
+    return go();
+  }
+  return _runMinigame46(spec, ctx, stepNo, stepCount);
+};
+const _renderTicket46 = renderTicket;
+renderTicket = function(c, fresh){
+  const r = _renderTicket46(c, fresh);
+  try { const n = $('#custName'); if (n && mode46() === 'duo' && c && c.duo46 != null) n.innerHTML = `${esc(c.cust.name)} <span class="duo-tag p${c.duo46}">${esc(DUO46.names[c.duo46])}</span>`; } catch(e){}
+  return r;
+};
+
+/* ---------- results for both modes ---------- */
+const _showSummary46 = showSummary;
+showSummary = function(st, results){
+  const m = mode46(); if (!m) return _showSummary46(st, results);
+  const sh = (typeof SC39 !== 'undefined' && SC39.shift) || {pts:0, maxMult:1}; if (typeof SC39 !== 'undefined') SC39.shift = null; CO43.cur = null;
+  const served = results.filter(r => !r.walkout), stars = served.reduce((a, r) => a + r.stars, 0), walk = results.length - served.length;
+  const G = typeof shiftGrade39 === 'function' ? shiftGrade39(sh, results) : {rating:70}, T = tierOf39(G.rating);
+  let html = '';
+  if (m === 'rival'){
+    const code = rivalCode46(st, RIVAL46.seed, sh.pts), tg = RIVAL46.target, win = tg ? sh.pts > tg.pts : null;
+    const best = save.rv46 = save.rv46 || {}; if (!best[RIVAL46.seed] || sh.pts > best[RIVAL46.seed]) best[RIVAL46.seed] = sh.pts; persist();
+    html = `<div class="lv-medal ${win === false ? '' : 'won'}">${win === null ? '⚔️' : win ? '🏆' : '🤝'}</div>
+      <h2>${win === null ? 'Rush complete!' : win ? `You beat ${esc(tg.name)}!` : `${esc(tg.name)} wins this time`}</h2>
+      <p class="lv-sub">${esc(dname(st))} · Rival Rush #${RIVAL46.seed}</p>
+      <ul class="lv-stats"><li>${tierChip39(G.rating)} <span class="lv-pts">${fmtPts39(sh.pts)} pts</span></li><li>Stars: <b>${stars} / ${results.length*3}</b> · Walk-outs: <b>${walk}</b></li>${tg ? `<li>${esc(tg.name)}: <b>${fmtPts39(tg.pts)} pts</b></li>` : ''}</ul>
+      <label class="rv-in"><span class="label">Your challenge code</span><input type="text" readonly value="${esc(code)}" id="rvOut46"></label>
+      <div class="lv-btns"><button type="button" class="big" data-act="share">Share code</button><button type="button" class="buy" data-act="copy">Copy</button><button type="button" class="buy" data-act="again">Try again</button><button type="button" class="buy" data-act="done">Done</button></div>`;
+  } else {
+    const [A, B] = DUO46.names, mvp = DUO46.pts[0] === DUO46.pts[1] ? -1 : DUO46.pts[0] > DUO46.pts[1] ? 0 : 1;
+    html = `<div class="lv-medal won">👪</div><h2>Team shift done!</h2><p class="lv-sub">${esc(dname(st))} · Pass &amp; Play</p>
+      <div class="duo-board">${[0, 1].map(i => `<div class="duo-p p${i}${mvp === i ? ' mvp' : ''}"><b>${esc(DUO46.names[i])}</b><span>${fmtPts39(DUO46.pts[i])} pts</span><small>${DUO46.stars[i]}★ from ${DUO46.dishes[i]} dish${DUO46.dishes[i] === 1 ? '' : 'es'}</small>${mvp === i ? '<em>MVP</em>' : ''}</div>`).join('')}</div>
+      <ul class="lv-stats"><li>Team: ${tierChip39(G.rating)} <span class="lv-pts">${fmtPts39(sh.pts)} pts</span></li><li>Stars: <b>${stars} / ${results.length*3}</b> · Walk-outs: <b>${walk}</b></li></ul>
+      <p class="hint2">${mvp < 0 ? 'A perfect tie. True teamwork!' : `Great teamwork. ${esc(DUO46.names[mvp])} takes MVP this round!`}</p>
+      <div class="lv-btns"><button type="button" class="big" data-act="again">Play again</button><button type="button" class="buy" data-act="done">Done</button></div>`;
+    DUO46.on = false;
+  }
+  REC.log(m + '_end', {stall:st.id, pts:sh.pts, stars});
+  const ov = modal30('mode46Ov', html, 'lv-card mode46');
+  [0, 1, 2].slice(0, Math.max(1, Math.round(stars/Math.max(1, results.length)))).forEach(i => setTimeout(() => sfx.star(i), 300 + i*200));
+  ov.onclick = e => {
+    const b = e.target.closest('[data-act]'); if (!b) return; sfx.tick();
+    const a = b.dataset.act, code = $('#rvOut46') ? $('#rvOut46').value : '';
+    if (a === 'copy'){ try { navigator.clipboard.writeText(code).then(() => toast('Code copied!'), () => { $('#rvOut46').select(); toast('Select and copy the code'); }); } catch(err){ $('#rvOut46').select(); } return; }
+    if (a === 'share'){ const text = `Beat my Hawker Hero lunch rush at ${dname(st)}! ${fmtPts39(sh.pts)} points. Code: ${code} https://makiyakinabe.github.io/hawker-hero/`;
+      if (navigator.share) navigator.share({title:'Hawker Hero Rival Rush', text}).catch(() => {}); else { try { navigator.clipboard.writeText(text).then(() => toast('Challenge copied!')); } catch(err){} } return; }
+    ov.hidden = true; LEVEL = null;
+    if (a === 'again'){ if (m === 'rival') playRival46(st, RIVAL46.seed, RIVAL46.target); else openDuo46(st); return; }
+    openStall(st, false);
+  };
+};
+
+/* buttons on the stall's Open tab */
+const _renderTab46 = renderTab;
+renderTab = function(){
+  _renderTab46();
+  if (curTab !== 'shift' || !curStall) return;
+  const row = $('#tabBody .tab-extras'); if (!row || row.querySelector('.rv46-open')) return;
+  row.insertAdjacentHTML('beforeend', `<button class="buy rv46-open" type="button"><span>⚔️ Rival Rush</span><small>Challenge a friend</small></button><button class="buy duo46-open" type="button"><span>👪 Pass &amp; Play</span><small>Two players, one device</small></button>`);
+  row.querySelector('.rv46-open').addEventListener('click', () => { sfx.tick(); openRival46(curStall); });
+  row.querySelector('.duo46-open').addEventListener('click', () => { sfx.tick(); openDuo46(curStall); });
+};
+
+(function css46(){
+  const s = document.createElement('style'); s.textContent = `
+.chips46{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
+.chips46 span{display:inline-flex;align-items:center;gap:.25rem;font-size:max(11px,.75rem);font-weight:800;line-height:1;background:#eef6f0;border:.1rem solid #9fc3ad;color:#14211b;border-radius:2rem;padding:.22rem .5rem .22rem .3rem}
+.chips46 span.no{background:#fde9e5;border-color:#e0a397}
+.chips46 i{font-style:normal;font-size:.9rem}
+.chips46 span.no i{position:relative}
+.chips46 span.no i::after{content:'';position:absolute;left:-.1rem;right:-.1rem;top:50%;height:.12rem;background:#c7372c;transform:rotate(-35deg);border-radius:1rem}
+.pos-menu section.need46 .pm-h{color:#f2c53d}
+.pos-menu section.need46 .pm-h [data-req]{animation:need46 1.4s ease-in-out infinite;background:#f2c53d;color:#14211b;border-color:#f2c53d}
+@keyframes need46{50%{transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.pos-menu section.need46 .pm-h [data-req]{animation:none}}
+.po-l{border-left:.22rem solid #2f9e5b;padding-left:.4rem}
+.po-l.m{border-left-color:#f2c53d}
+.po-l.n{border-left-color:#e85a4f}
+.po-l.req{border-left-color:transparent}
+.po-actions.three46{grid-template-columns:auto auto 1fr}
+.undo46[disabled]{opacity:.4}
+.dc46-btn{justify-self:center;margin:.1rem auto 0}
+.dc46 .dc-img img{display:block;width:min(100%,18rem);margin:0 auto;border-radius:.9rem;border:.1875rem solid var(--ink);box-shadow:0 .3rem 0 var(--ink)}
+.rv-in{display:grid;gap:.3rem;text-align:left}
+.rv-in input,.duo-names input{font:inherit;font-size:1rem;padding:.6rem .7rem;border-radius:.7rem;border:.1875rem solid var(--ink);background:#fff;min-height:2.75rem;width:100%;box-sizing:border-box;font-family:var(--mono)}
+.duo-names{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.5rem;text-align:left}
+.duo-names label{display:grid;gap:.3rem}
+.duo-names input{font-family:var(--body)}
+.pass46 .pass-ic{font-size:3rem;animation:popIn .5s cubic-bezier(.3,1.5,.6,1)}
+.pass46.p0 h2{color:#1f6fb3}.pass46.p1 h2{color:#c7372c}
+.duo-tag{display:inline-block;font-size:max(11px,.72rem);font-weight:800;padding:.05rem .45rem;border-radius:2rem;color:#fff;vertical-align:middle}
+.duo-tag.p0{background:#1f6fb3}.duo-tag.p1{background:#c7372c}
+.duo-board{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.duo-p{position:relative;display:grid;gap:.15rem;border:.1875rem solid var(--ink);border-radius:.9rem;padding:.6rem;background:#fff}
+.duo-p.p0{border-top:.5rem solid #1f6fb3}.duo-p.p1{border-top:.5rem solid #c7372c}
+.duo-p b{font-family:var(--display);font-size:1.05rem}
+.duo-p span{font-family:var(--mono);font-weight:700}
+.duo-p small{color:var(--muted);font-size:.8rem}
+.duo-p.mvp{background:#fff3cc}
+.duo-p em{position:absolute;top:-.8rem;right:.5rem;font-style:normal;background:var(--yellow);border:.125rem solid var(--ink);border-radius:2rem;padding:0 .45rem;font-family:var(--display);font-size:.8rem}
+.rv46-open small,.duo46-open small{display:block}
+body:is(.pd45-0,.pd45-1) .rv46-open,body:is(.pd45-0,.pd45-1) .duo46-open{display:none!important}
+`; document.head.appendChild(s);
+})();
+
+/* ---------- How to Play: the new systems ---------- */
+try {
+  HTP.splice(HTP.length - 1, 0, {title:'Get better every shift', art:'day', body:'<ul><li>After each shift your <b>mentor’s debrief</b> shows where the points went, your best step and what slowed the queue. Tap <b>Practise</b> to drill the weakest step: three quick tries, no stock used.</li><li>The <b>Next up</b> card always shows the one thing worth doing now.</li><li>Three <b>daily goals</b> pay cash, and a streak grows each day you play. The <b>campaign</b> has three acts: Learn the craft, Save Bahagia, Become a Hawker Legend.</li><li>Shifts can bring an <b>office wave</b>, a faulty <b>burner</b>, an <b>NEA inspection</b> or a <b>short delivery</b>. Check the Open tab before you start.</li><li>Hit the golden <b>FLAIR</b> note at the end of a rhythm step for bonus points. Play with friends in <b>Rival Rush</b> or <b>Pass &amp; Play</b>.</li></ul>'});
+} catch(e){}
 
 /* =================================================================
    GUIDED FIRST TRIES for the hand-built steps (templates are handled in guideState)
