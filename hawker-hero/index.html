@@ -4062,6 +4062,418 @@ STALLS.push(
    flow:['Jelly & beans','Shave','Santan','Gula melaka'], cook:() => [CD_BASE, CD_SHAVE, CD_SANTAN, CD_GM],
    serve:() => ['spoon'], pack:() => ({container:'cup', extras:['spoon']})}
 );
+
+/* =================================================================
+   47. FIVE MORE STALLS: orh luak (oyster omelette), Chinese rojak,
+   mee rebus, roti john and thosai. Drawings, cooking steps and menus;
+   their rent, market, stories and the rest are set up in stalls47b.
+   ================================================================= */
+/* ---------- small food drawings ---------- */
+function oyster47(x, y, s, rot){ g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s || 1, s || 1); shadow(1, 2, 9, 5);
+  blob(0, 0, 9, 6.5, 0.35, 470 + Math.round(x*7 + y), rad(-2, -2, 1, 10, [[0, '#f2ece2'], [0.55, '#c9bfae'], [1, '#8f8474']]), '#6a6052', 0.9);
+  g.beginPath(); g.ellipse(0, 0, 8, 5.4, 0, 0.2, 2.6); g.strokeStyle = 'rgba(70,60,50,.55)'; g.lineWidth = 1.4; g.stroke();
+  ell(-2.5, -2, 2.6, 1.3, 'rgba(255,255,255,.65)'); g.restore(); }
+function coriander47(x, y, rx, ry, seed){ const r = rng(seed || 471); for (let i = 0; i < 9; i++){ const a = r()*6.28, d = Math.sqrt(r()); g.save(); g.translate(x + Math.cos(a)*rx*d, y + Math.sin(a)*ry*d); g.rotate(r()*6.28);
+  for (let k = 0; k < 3; k++){ g.save(); g.rotate(k*2.1); ell(0, -3.4, 2.6, 3.2, k % 2 ? '#3f9a3a' : '#5ab84a', '#2a6a28', 0.6); g.restore(); } g.restore(); } }
+function pineappleChunk47(x, y, s, rot){ g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s || 1, s || 1); shadow(1, 3, 9, 5);
+  g.beginPath(); g.moveTo(-8, 5); g.lineTo(0, -8); g.lineTo(9, 4); g.closePath(); paint(lin(0, -8, 0, 5, [[0, '#ffe680'], [1, '#f0b82a']]), '#b8861a', 1);
+  line(-3, 1, 3, 1, 'rgba(200,140,20,.6)', 0.8); g.restore(); }
+function cucumberChunk47(x, y, s, rot){ g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s || 1, s || 1); shadow(1, 3, 8, 5);
+  box(-7, -5, 14, 10, 2, '#e6f2c8', '#5a8a2a', 0.9); box(-7, -5, 14, 3, 1.5, '#3f7a22'); speckle(Math.round(x + y), 4, 0, 2, 4, 2, ['#c9dfa0'], 1); g.restore(); }
+function jambu47(x, y, s, rot){ g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s || 1, s || 1); shadow(1, 3, 8, 5);
+  g.beginPath(); g.moveTo(-7, 5); g.quadraticCurveTo(-8, -6, 0, -7); g.quadraticCurveTo(8, -6, 7, 5); g.closePath(); paint(lin(0, -7, 0, 5, [[0, '#f0607a'], [1, '#c8304a']]), '#8a1a2a', 1);
+  ell(0, 2, 5, 2.4, '#fbe6e6'); g.restore(); }
+function taukwa47(x, y, s, rot){ g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s || 1, s || 1); shadow(1, 3, 9, 5);
+  box(-8, -6, 16, 12, 2.5, lin(0, -6, 0, 6, [[0, '#f8eed2'], [1, '#e0c890']]), '#a8884a', 1); box(-8, -6, 16, 3, 2, '#d9a64a'); g.restore(); }
+function greenChilli47(x, y, s, rot){ g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s || 1, s || 1);
+  for (let i = 0; i < 3; i++) { circle(i*5 - 5, i % 2 ? 2 : -1, 2.6, '#6fbf3a', '#2f7a1a', 0.7); circle(i*5 - 5, i % 2 ? 2 : -1, 1, '#f6f2c8'); } g.restore(); }
+function limau47(x, y, s){ g.save(); g.translate(x, y); g.scale(s || 1, s || 1); shadow(1, 2, 7, 4); circle(0, 0, 6.5, rad(-2, -2, 1, 7, [[0, '#c8e870'], [1, '#5a9a1a']]), '#3a6a10', 0.9);
+  circle(0, 0, 4.2, '#f6f0a0'); for (let i = 0; i < 6; i++) line(0, 0, Math.cos(i*1.05)*4, Math.sin(i*1.05)*4, 'rgba(160,170,40,.7)', 0.6); g.restore(); }
+function friedShallot47(x, y, rx, ry, seed){ speckle(seed || 473, 26, x, y, rx, ry, ['#b8682a', '#d9903a', '#8a4818'], 2); }
+function baguetteSlice47(x, y, s, rot, egg){ g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s || 1, s || 1); shadow(2, 4, 24, 8);
+  box(-24, -10, 48, 20, 9, lin(0, -10, 0, 10, [[0, '#e8a64a'], [1, '#b8702a']]), '#7a4a1a', 1.2);
+  box(-21, -8, 42, 15, 7, egg ? lin(0, -8, 0, 7, [[0, '#ffd96a'], [1, '#e8a830']]) : '#f6e2b0', egg ? '#b8862a' : '#d9b87a', 0.8);
+  if (egg){ speckle(Math.round(x*3 + y), 14, 0, -1, 17, 5, ['#7a3a1a', '#9a5020', '#4a8a2a', '#f6f0d0'], 2.2); ell(-8, -5, 7, 1.6, 'rgba(255,255,255,.4)'); }
+  g.restore(); }
+function sauceZigzag47(x0, x1, y, amp, col, w){ g.beginPath(); for (let x = x0, k = 0; x <= x1; x += 7, k++) g.lineTo(x, y + (k % 2 ? amp : -amp)); g.strokeStyle = col; g.lineWidth = w || 3; g.lineCap = 'round'; g.lineJoin = 'round'; g.stroke(); g.lineCap = 'butt'; g.lineJoin = 'miter'; }
+function steelBowl47(x, y, r, fill, extra){ g.save(); g.translate(x, y); shadow(2, 4, r, r*0.9); circle(0, 0, r, rad(-r*0.3, -r*0.3, 2, r*1.1, [[0, '#ffffff'], [0.5, '#d6dcda'], [1, '#9aa5a2']]), '#6f7a77', 1.4); circle(0, 0, r - 4, rad(-r*0.2, -r*0.2, 1, r, [[0, mix(fill, '#ffffff', 0.25)], [1, fill]])); if (extra) extra(); ell(-r*0.3, -r*0.4, r*0.3, r*0.12, 'rgba(255,255,255,.45)'); g.restore(); }
+function bananaLeaf47(w, h, rot){ g.save(); g.rotate(rot || 0); shadow(4, 8, w*0.9, h*0.6);
+  g.beginPath(); g.ellipse(0, 0, w, h, 0, 0, Math.PI*2); paint(lin(0, -h, 0, h, [[0, '#5fae4a'], [0.5, '#3f8f34'], [1, '#2f7a28']]), '#1f5a1a', 2);
+  line(-w + 8, 0, w - 8, 0, 'rgba(200,240,170,.7)', 2); for (let i = -4; i <= 4; i++){ line(i*w/5, 0, i*w/5 + w/7, -h*0.85, 'rgba(200,240,170,.3)', 1); line(i*w/5, 0, i*w/5 + w/7, h*0.85, 'rgba(200,240,170,.3)', 1); } g.restore(); }
+function thosaiRoll47(x, y, len, w, col, rot, crisp){ g.save(); g.translate(x, y); g.rotate(rot || 0); shadow(2, 6, len*0.5, w*0.5);
+  g.beginPath(); g.moveTo(-len/2, -w/2); g.quadraticCurveTo(0, -w/2 - 3, len/2, -w*0.18); g.lineTo(len/2, w*0.18); g.quadraticCurveTo(0, w/2 + 3, -len/2, w/2); g.closePath();
+  paint(lin(0, -w/2, 0, w/2, [[0, mix(col, '#fff4d0', 0.35)], [0.5, col], [1, mix(col, '#7a3a10', 0.4)]]), mix(col, '#5a2a08', 0.6), 1.3);
+  if (crisp) speckle(Math.round(len), 20, 0, 0, len*0.42, w*0.32, ['rgba(140,70,10,.5)', 'rgba(255,240,190,.6)'], 2);
+  line(-len/2 + 6, -w*0.12, len/2 - 6, -w*0.05, 'rgba(255,255,255,.35)', 1.6); g.restore(); }
+function potatoMasala47(x, y, rx, ry, seed){ g.save(); blob(x, y, rx, ry, 0.35, seed || 475, rad(x - 3, y - 3, 1, rx, [[0, '#ffe38a'], [1, '#e8b030']]), '#b8861a', 1); speckle((seed || 475) + 1, 14, x, y, rx*0.75, ry*0.75, ['#c9761a', '#3f8a2a', '#f6f0c0'], 1.8); g.restore(); }
+
+/* ---------- icons ---------- */
+Object.assign(ICON, {
+  oyster(){ oyster47(-5, 2, 1.1, 0.3); oyster47(6, -3, 1.05, -0.4); },
+  coriander(){ coriander47(0, 0, 8, 7, 476); },
+  starch(){ box(-9, -12, 18, 26, 4, lin(-9, 0, 9, 0, [[0, '#f6f2ea'], [0.5, '#ffffff'], [1, '#e2dccb']]), '#a8a08a', 1); box(-6, -2, 12, 9, 2, '#d9cfa8'); },
+  haeko(){ box(-9, -10, 18, 22, 5, lin(-9, 0, 9, 0, [[0, '#2a1408'], [0.5, '#4a2a12'], [1, '#1a0c04']]), '#0a0402', 1); box(-7, -14, 14, 6, 2, '#c7372c'); box(-6, 0, 12, 7, 2, '#f2c53d'); },
+  jambu(){ jambu47(-5, 2, 1.1, -0.3); jambu47(6, -2, 1, 0.4); },
+  bungakantan(){ for (let i = 0; i < 8; i++){ g.save(); g.rotate(i*0.78); ell(0, -7, 2.4, 6, i % 2 ? '#e8406a' : '#f07a9a', '#9a1a3a', 0.6); g.restore(); } circle(0, 0, 3, '#f6c0d0'); },
+  rojaksauce(){ saucerI('#3a1e10'); speckle(477, 8, 0, 0, 7, 6, ['rgba(255,200,150,.5)'], 1.4); },
+  jellyfish(){ saucerI('#e8dcc0'); for (let i = 0; i < 6; i++) line(-7 + i*3, -6, -5 + i*3, 6, '#c9b48a', 1.6); },
+  taukwa(){ taukwa47(-5, 2, 1, -0.2); taukwa47(6, -3, 0.9, 0.3); },
+  greenchilli(){ greenChilli47(0, 0, 1.4, -0.3); },
+  limau(){ limau47(-5, 2, 1.1); limau47(6, -3, 1); },
+  meegravy(){ bowlI('#c9762a', 'dots', '#8a4a18'); },
+  yellownoodle(){ bowlI('#f2d24a', 'strands', '#d9a820'); },
+  baguette(){ box(-18, -6, 36, 12, 6, lin(0, -6, 0, 6, [[0, '#e8a64a'], [1, '#b8702a']]), '#7a4a1a', 1); for (let i = -2; i <= 2; i++) line(i*6 - 2, -4, i*6 + 2, 4, 'rgba(255,240,200,.6)', 1); },
+  eggmix(){ bowlI('#f2c84a', 'dots', '#7a3a1a'); },
+  mayo(){ box(-7, -12, 14, 26, 4, lin(-7, 0, 7, 0, [[0, '#f6f2e0'], [0.5, '#ffffff'], [1, '#e0dac0']]), '#a8a08a', 1); box(-3, -17, 6, 6, 2, '#2f6db0'); box(-5, -1, 10, 8, 2, '#f2c53d'); },
+  onionring(){ for (let i = 0; i < 3; i++) ell(-4 + i*4, -2 + i*2, 7, 5, null, i % 2 ? '#b85a9a' : '#d98ac0', 1.6); },
+  thosaibatter(){ bowlI('#f6efe0', 'dots', '#e2d6b8'); },
+  ghee(){ box(-8, -10, 16, 22, 5, lin(-8, 0, 8, 0, [[0, '#f2c84a'], [0.5, '#ffe58a'], [1, '#d9a820']]), '#8a6a10', 1); box(-6, -14, 12, 5, 2, '#c7372c'); },
+  coconutchutney(){ steelBowl47(0, 0, 13, '#f6f2e0', () => speckle(478, 6, 0, 0, 6, 6, ['#3f8a2a', '#c7372c'], 1.2)); },
+  tomchutney(){ steelBowl47(0, 0, 13, '#d9542a', () => speckle(479, 5, 0, 0, 6, 6, ['#f2a03a'], 1.2)); },
+  sambar(){ steelBowl47(0, 0, 13, '#d98a2a', () => { circle(-3, -2, 2, '#e8c46a'); circle(3, 2, 2, '#f6e8c0'); }); },
+  masala(){ potatoMasala47(0, 0, 12, 9, 480); }
+});
+Object.assign(NAME, {oyster:'Oysters', coriander:'Coriander', starch:'Starch batter', haeko:'Hae ko (prawn paste)', jambu:'Jambu', bungakantan:'Torch ginger', rojaksauce:'Rojak sauce',
+  jellyfish:'Jellyfish', taukwa:'Tau kwa', greenchilli:'Green chilli', limau:'Lime', meegravy:'Mee rebus gravy', yellownoodle:'Yellow noodles', baguette:'Baguette', eggmix:'Egg & meat mix',
+  mayo:'Mayonnaise', onionring:'Onion', thosaibatter:'Thosai batter', ghee:'Ghee', coconutchutney:'Coconut', tomchutney:'Tomato', sambar:'Sambar', masala:'Masala'});
+
+/* ---------- dishes ---------- */
+Object.assign(DISH, {
+  orhluak(has, w){
+    w = w || {}; const N = id => has[id] || 0, big = w.size === 'large', crisp = w.style === 'crispy';
+    plate(92);
+    const R = big ? 70 : 62, r = rng(481);
+    shadow(3, 8, R, R*0.72);
+    /* the starchy, lacy omelette: crisp brown edges, soft translucent middle */
+    blob(0, 0, R, R*0.74, 0.22, 482, rad(-18, -16, 6, R*1.1, [[0, crisp ? '#f6c860' : '#fbe6a0'], [0.6, crisp ? '#d9902a' : '#ecc060'], [1, crisp ? '#a8601a' : '#c9963a']]), crisp ? '#7a3e10' : '#9a7020', 1.4);
+    for (let i = 0; i < 9; i++){ const a = r()*6.28, d = 0.2 + r()*0.5; blob(Math.cos(a)*R*d, Math.sin(a)*R*0.7*d, 12 + r()*10, 8 + r()*6, 0.4, 483 + i, 'rgba(255,250,235,.45)'); }
+    eggScramble(0, 2, R*0.8, R*0.55, 484, crisp);
+    speckle(485, crisp ? 40 : 14, 0, 0, R*0.9, R*0.65, ['rgba(140,70,10,.55)', 'rgba(255,240,190,.6)'], 2.2);
+    const oy = N('oyster'); for (let i = 0; i < oy; i++){ const a = i/oy*6.28 + 0.4, d = i % 2 ? 0.5 : 0.25; oyster47(Math.cos(a)*R*d, Math.sin(a)*R*0.6*d, 1.25, a); }
+    for (let i = 0; i < N('prawn'); i++) prawnHalf(-30 + i*24, 24 - i*6, 0.3 + i*0.5, 0.75);
+    if (N('coriander')) coriander47(-8, -10, R*0.6, R*0.4, 486);
+    if (N('chilli')) saucer(64, 46, '#e04e26', 487, () => speckle(488, 8, 64, 46, 6, 6, ['#f6c26b'], 1.3));
+  },
+  rojak(has, w){
+    w = w || {}; const N = id => has[id] || 0, big = w.size === 'large', tossed = has.tossed == null ? 1 : has.tossed;
+    plate(90);
+    const R = big ? 62 : 54, r = rng(491), n = big ? 34 : 26;
+    shadow(3, 8, R + 4, R*0.74);
+    if (tossed > 0) blob(0, 2, R + 4, R*0.76, 0.25, 492, `rgba(58,30,16,${0.55 + tossed*0.35})`, null);
+    const kinds = ['pine', 'cuc', 'jambu', 'yt', 'tp'];
+    for (let i = 0; i < n; i++){
+      const a = r()*6.28, d = Math.sqrt(r()), x = Math.cos(a)*d*R, y = Math.sin(a)*d*R*0.72 + 2, k = kinds[i % (N('youtiao') ? 5 : 3)], rot = r()*3;
+      if (k === 'pine') pineappleChunk47(x, y, 1.1, rot); else if (k === 'cuc') cucumberChunk47(x, y, 1.05, rot); else if (k === 'jambu') jambu47(x, y, 0.95, rot);
+      else if (k === 'yt') youtiaoStick(x, y, 0.32, rot); else taupokCube(x, y, 0.7, false);
+    }
+    for (let i = 0; i < N('taupok'); i++) taupokCube(-20 + i*20, -18 + i*10, 0.85, false);
+    if (N('jellyfish')) for (let i = 0; i < 8; i++) line(-30 + i*5, 26, -26 + i*5, 40, '#e8d8b0', 2.2);
+    if (tossed > 0){ g.save(); g.globalAlpha = 0.35 + tossed*0.45; speckle(493, 50, 0, 2, R*0.95, R*0.7, ['#3a1e10', '#5a2e14', 'rgba(255,220,170,.6)'], 3); g.restore(); }
+    if (N('peanuts')) speckle(494, 46, 0, 0, R*0.9, R*0.65, ['#e8c896', '#c9a06a', '#fbe6c0'], 2.4);
+    if (N('bungakantan')) for (let i = 0; i < 14; i++){ const a = r()*6.28, d = Math.sqrt(r())*R*0.6; line(Math.cos(a)*d, Math.sin(a)*d*0.7, Math.cos(a)*d + 4, Math.sin(a)*d*0.7 - 3, i % 2 ? '#e8406a' : '#f490b0', 2); }
+  },
+  meerebus(has, w){
+    w = w || {}; const N = id => has[id] || 0, big = w.size === 'large', gv = has.gravy == null ? 1 : has.gravy;
+    shadow(4, 6, 92, 88);
+    circle(0, 0, 92, rad(-28, -28, 4, 96, [[0, '#ffffff'], [1, '#e3e9e6']]), '#b9c3c0', 2);
+    circle(0, 0, 84, null, '#2f8a5a', 3); circle(0, 0, 78, '#f4efe2');
+    noodleMound(0, 4, big ? 60 : 54, big ? 56 : 50, ['#f6d24a', '#e8b82a'], 3.6, big ? 160 : 130, 495);
+    if (gv > 0){ g.save(); g.globalAlpha = 0.3 + gv*0.42; circle(0, 0, 76*Math.sqrt(Math.max(0.2, gv)), rad(-20, -20, 4, 78, [[0, '#e0904a'], [0.6, '#c06a24'], [1, '#8a4414']])); g.restore();
+      speckle(496, Math.round(gv*30), 0, 0, 64, 64, ['rgba(255,190,120,.7)', 'rgba(120,50,10,.5)'], 2.4); g.save(); g.globalAlpha = 0.85; noodleMound(-6, 6, 34, 30, ['#f6d24a', '#e8b82a'], 3.2, 36, 505); g.restore(); for (let i = 0; i < 5; i++) ell(-34 + i*17, -40 + (i % 2)*76, 6, 2.2, 'rgba(255,220,170,.5)'); }
+    if (N('sprouts')) { const r = rng(497); for (let i = 0; i < 16; i++){ const x = 18 + (r() - 0.5)*44, y = 26 + (r() - 0.5)*30; g.save(); g.translate(x, y); g.rotate(r()*3); line(-7, 0, 7, 0, '#f6f2dc', 2.4); circle(7, 0, 1.8, '#e8e0a0'); g.restore(); } }
+    for (let i = 0; i < N('taukwa'); i++) for (let k = 0; k < 3; k++) taukwa47(-44 + k*12, 22 + k*6 - i*16, 0.75, k*0.3);
+    for (let i = 0; i < N('beef'); i++) for (let k = 0; k < 3; k++){ g.save(); g.translate(-10 + k*14, 40 - k*4); g.rotate(k*0.4); blob(0, 0, 11, 6, 0.3, 498 + k, '#7a3a24', '#4a2010', 0.8); g.restore(); }
+    for (let i = 0; i < N('hbegg'); i++) halfEgg(-6 + i*22, -26 + i*6, 1, i*0.5);
+    if (N('shallots')) friedShallot47(0, -4, 46, 40, 499);
+    if (N('greenchilli')) greenChilli47(34, -10, 1.1, 0.4);
+    if (N('limau')) limau47(52, 30, 1.2);
+  },
+  rotijohn(has, w){
+    w = w || {}; const N = id => has[id] || 0, long = w.size === 'long', n = long ? 5 : 4;
+    plate(94, 70);
+    const W = long ? 30 : 34;
+    for (let i = 0; i < n; i++) baguetteSlice47(-((n - 1)*W)/2 + i*W, (i % 2 ? 6 : -6), long ? 0.68 : 0.78, -0.5, true);
+    if (N('onionring')) for (let i = 0; i < 6; i++) ell(-50 + i*20, -2 + (i % 2)*8, 7, 4, null, '#b85a9a', 1.4);
+    if (N('cucumber')) for (let i = 0; i < 4; i++) ell(-36 + i*24, 26, 7, 5, '#e6f2c8', '#3f7a22', 1.6);
+    if (N('cheese')) for (let i = 0; i < 4; i++){ g.save(); g.translate(-42 + i*28, -14); g.rotate(0.3); box(-9, -5, 18, 10, 2, 'rgba(255,214,90,.9)', '#d9a820', 0.8); g.restore(); }
+    if (N('chillisauce')) sauceZigzag47(-74, 74, -2, 8, '#d9262e', 3.4);
+    if (N('mayo')) sauceZigzag47(-70, 70, 6, 6, '#fbf6e0', 3);
+  },
+  thosai(has, w){
+    w = w || {}; const N = id => has[id] || 0, item = w.item || 'plain';
+    bananaLeaf47(104, 72, -0.06);
+    const paper = item === 'paper';
+    thosaiRoll47(-6, paper ? -6 : -2, paper ? 190 : 150, paper ? 40 : 52, item === 'egg' ? '#e8a838' : '#e0a24a', -0.12, true);
+    if (item === 'egg') { g.save(); g.translate(-6, -2); g.rotate(-0.12); eggScramble(0, 0, 50, 10, 501, false); g.restore(); }
+    if (N('masala')) potatoMasala47(-4, -2, 30, 12, 502);
+    if (N('onion')) speckle(503, 16, -10, -4, 56, 10, ['#d98ac0', '#f6dcec'], 2);
+    if (N('ghee')) for (let i = 0; i < 6; i++) ell(-60 + i*22, -8 + (i % 2)*8, 5, 2, 'rgba(255,230,120,.7)');
+    const bowls = [['coconutchutney', -62, 46, '#f6f2e0'], ['tomchutney', -10, 50, '#d9542a'], ['sambar', 44, 46, '#d98a2a']];
+    bowls.forEach(([id, x, y, col]) => { if (N(id)) steelBowl47(x, y, 18, col, () => { if (id === 'sambar'){ circle(-5, -3, 3, '#e8c46a'); circle(4, 3, 3, '#f6e8c0'); circle(5, -5, 2, '#3f8a2a'); } else speckle(504, 6, 0, 0, 9, 9, id === 'coconutchutney' ? ['#3f8a2a', '#c7372c'] : ['#f2a03a'], 1.6); }); });
+  }
+});
+FINAL.orhluak = w => DISH.orhluak({oyster:5 + ((w.add || []).includes('xoyster') ? 3 : 0), coriander:(w.notes || []).includes('nocoriander') ? 0 : 1, chilli:(w.notes || []).includes('nochilli') ? 0 : 1, prawn:(w.add || []).includes('prawn') ? 2 : 0}, w);
+FINAL.rojak = w => DISH.rojak({youtiao:1 + ((w.add || []).includes('youtiao') ? 1 : 0), taupok:(w.add || []).includes('taupok') ? 1 : 0, jellyfish:(w.add || []).includes('jellyfish') ? 1 : 0, peanuts:(w.notes || []).includes('nopeanut') ? 0 : 1, bungakantan:1, tossed:1}, w);
+FINAL.meerebus = w => DISH.meerebus({hbegg:1 + ((w.add || []).includes('xegg') ? 1 : 0), taukwa:(w.add || []).includes('taukwa') ? 1 : 0, beef:(w.add || []).includes('beef') ? 1 : 0, sprouts:(w.notes || []).includes('nosprouts') ? 0 : 1, shallots:1, greenchilli:(w.notes || []).includes('nochilli') ? 0 : 1, limau:1, gravy:1}, w);
+FINAL.rotijohn = w => DISH.rotijohn({chillisauce:(w.notes || []).includes('nochilli') ? 0 : 1, mayo:(w.notes || []).includes('nomayo') ? 0 : 1, cheese:(w.add || []).includes('cheese') ? 1 : 0, onionring:1, cucumber:1}, w);
+FINAL.thosai = w => DISH.thosai({masala:w.item === 'masala' ? 1 : 0, ghee:(w.add || []).includes('ghee') ? 1 : 0, onion:(w.add || []).includes('onion') ? 1 : 0, coconutchutney:(w.notes || []).includes('nochutney') ? 0 : 1, tomchutney:(w.notes || []).includes('nochutney') ? 0 : 1, sambar:(w.notes || []).includes('nosambar') ? 0 : 1}, w);
+
+/* ---------- scenes ---------- */
+function pourCup47(on, col, x, y){ g.save(); g.translate(on ? x : x + 90, on ? y : y - 10); g.rotate(on ? 2.2 : 0.2); g.scale(1.5, 1.5); box(-9, -12, 18, 24, 4, lin(-9, 0, 9, 0, [[0, '#e6ecea'], [0.5, '#ffffff'], [1, '#cfd6d4']]), '#7f8b88', 1.2); box(-7, -4, 14, 12, 3, col); g.restore(); }
+function pourStream47(x0, y0, x1, y1, col, w){ g.beginPath(); g.moveTo(x0, y0); g.quadraticCurveTo(x0 - 6, (y0 + y1)/2, x1, y1); g.strokeStyle = col; g.lineWidth = w || 5; g.lineCap = 'round'; g.stroke(); g.lineCap = 'butt'; }
+const fillLvl47 = s => s.r < s.targets.length ? s.fill : (s.lastFill || 0), fillOn47 = s => (s.pressed || s.hold) && s.r < s.targets.length;
+Object.assign(S, {
+  olBatter(s){
+    kitchenBg(); flames(200, 260, 236, true, s.t); griddle(40, 96, 320, 130);
+    const lvl = fillLvl47(s), on = fillOn47(s);
+    if (lvl > 0) blob(200, 162, 30 + lvl*110, 14 + lvl*38, 0.2, 511, 'rgba(250,246,236,.82)', 'rgba(200,190,170,.8)', 1.2);
+    if (lvl > 0.2) { const r = rng(512); for (let i = 0; i < Math.round(lvl*10); i++) circle(200 + (r() - 0.5)*lvl*180, 162 + (r() - 0.5)*lvl*50, 2, 'rgba(255,255,255,.9)'); }
+    pourCup47(on, '#f6f2ea', 206, 72);
+    if (on) pourStream47(196, 92, 200, 150, 'rgba(250,246,236,.95)', 5);
+    txt('Sweet potato starch + water', 200, 52, 12, C.ink, {display:true});
+  },
+  olEgg(s){
+    kitchenBg(); flames(200, 260, 236, true, s.t); griddle(30, 108, 340, 104);
+    blob(200, 162, 140, 40, 0.2, 513, 'rgba(244,226,180,.9)', 'rgba(170,130,60,.8)', 1.2);
+    const dx = 40 + s.zc*320; ell(dx, 160, s.zh*320 + 20, 22, 'rgba(242,197,61,.25)', 'rgba(207,169,106,.8)', 2);
+    for (let k = 0; k < s.round; k++){ const lx = k === s.round - 1 && s.lastX != null ? 40 + s.lastX*320 : 120 + k*90; eggScramble(lx, 160, 30, 14, 514 + k, false); }
+    const ex = 40 + s.pos*320; ell(ex, 62, 14, 18, '#fbf3e4', '#cdb895', 2); ell(ex - 4, 56, 4, 6, 'rgba(255,255,255,.7)');
+  },
+  olCrisp(s){
+    kitchenBg(); flames(190, 220, 236, s.heat, s.t); griddle(40, 100, 280, 124);
+    const k = clamp((s.v - 120)/100, 0, 1);
+    blob(180, 162, 118, 42, 0.2, 515, lin(0, 120, 0, 204, [[0, mix('#fbe6a0', '#e8a03a', k)], [1, mix('#e8c060', '#8a4a14', k)]]), mix('#c9963a', '#5a2a08', k), 1.4);
+    eggScramble(180, 162, 90, 26, 516, k > 0.5);
+    speckle(517, Math.round(10 + k*40), 180, 162, 100, 32, ['rgba(120,60,10,.6)'], 2);
+    s.fx.forEach(b => circle(b.x, b.y, b.r, 'rgba(255,255,255,.85)', 'rgba(200,170,100,.8)', 0.8));
+    txt(s.order.w.style === 'crispy' ? 'Extra crispy: higher heat' : 'Soft & gooey: gentle heat', 180, 60, 12, C.ink, {display:true});
+  },
+  olCrispTick(s, dt){ if (Math.random() < clamp((s.v - 140)/80, 0, 1)*dt*20) s.fx.push({x:rand(80, 280), y:rand(140, 190), r:rand(1.5, 3.5), l:0.5}); s.fx.forEach(b => { b.l -= dt; b.y -= dt*20; }); s.fx = s.fx.filter(b => b.l > 0); },
+  rjSauce(s){
+    g.save(); g.translate(270, 150);
+    circle(0, 0, 78, rad(-20, -20, 4, 80, [[0, '#ffffff'], [1, '#d6dcda']]), '#8e9895', 2.5); circle(0, 0, 66, '#efe8da');
+    const added = s.seq.slice(0, s.i), has = id => added.includes(id);
+    if (has('haeko')) blob(0, 4, 46, 40, 0.25, 521, '#3a1e10');
+    if (has('sugar')) speckle(522, 30, 0, 4, 38, 34, ['rgba(255,255,255,.8)'], 1.6);
+    if (has('lime')) for (let i = 0; i < 6; i++) circle(-20 + i*8, -10 + (i % 2)*10, 2.4, 'rgba(220,240,120,.9)');
+    if (has('chilli')) speckle(523, 18, 0, 4, 36, 30, ['#e8402e', '#a81810'], 2);
+    g.restore();
+    if (s.goodT > 0) txt('Stir it in!', 270, 64, 16, C.good, {display:true});
+  },
+  rjToss(s, p){
+    kitchenBg();
+    g.save(); g.translate(200, 150); g.rotate(s.ang*0.25); g.scale(1.15, 1.15);
+    circle(0, 0, 90, rad(-24, -24, 4, 94, [[0, '#ffffff'], [1, '#d6dcda']]), '#8e9895', 2.5);
+    DISH.rojak({youtiao:1 + ((s.order.w.add || []).includes('youtiao') ? 1 : 0), tossed:p}, s.order.w);
+    g.restore();
+    txt(p > 0.9 ? 'Every piece coated!' : 'Toss until it’s all dark and glossy', 200, 30, 13, C.ink, {display:true});
+  },
+  mrGravy(s){
+    kitchenBg();
+    const lvl = fillLvl47(s), on = fillOn47(s);
+    box(26, 120, 118, 104, 10, lin(26, 0, 144, 0, [[0, '#b9c2bf'], [0.4, '#eef2f1'], [1, '#a9b3b0']]), C.steelDark, 3);
+    ell(85, 122, 56, 10, '#c06a24', C.steelDark, 2); speckle(531, 12, 85, 122, 48, 6, ['rgba(255,190,120,.8)'], 2); steamLines(85, 112, s.t, 3, 24, 0.5);
+    g.save(); g.translate(240, 160); g.scale(0.8, 0.8); DISH.meerebus({gravy:lvl}, s.order.w); g.restore();
+    g.save(); g.translate(on ? 196 : 120, on ? 74 : 92); g.rotate(on ? 0.8 : -0.4); ell(0, 8, 20, 13, lin(-20, 0, 20, 0, [[0, '#aeb7b4'], [0.5, '#f7f9f8'], [1, '#9aa5a2']]), '#5f6b68', 2); ell(0, 5, 15, 7, '#c06a24'); line(-14, -2, -56, -38, C.ink, 5); g.restore();
+    if (on) pourStream47(214, 90, 232, 140, '#c06a24', 7);
+    txt('Thick sweet potato gravy', 85, 104, 10, C.ink, {display:true});
+  },
+  rjnMix(s, p){
+    kitchenBg();
+    g.save(); g.translate(200, 150);
+    circle(0, 0, 84, rad(-24, -24, 4, 88, [[0, '#ffffff'], [1, '#d6dcda']]), '#8e9895', 2.5); circle(0, 0, 72, mix('#f6e8c0', '#f2c84a', p));
+    const r = rng(541); for (let i = 0; i < 30; i++){ const a = r()*6.28 + s.ang*(0.3 + r()*0.4), d = Math.sqrt(r())*62; circle(Math.cos(a)*d, Math.sin(a)*d, 2.4 + r()*2, i % 3 === 0 ? '#7a3a1a' : i % 3 === 1 ? '#d98ac0' : '#9a5020'); }
+    if (p < 0.5) for (let k = 0; k < 2; k++) circle(-20 + k*40, -10, 12*(1 - p*2), '#ffcf4a', '#e08a10', 1);
+    g.restore();
+    g.save(); g.translate(200 + Math.cos(s.ang)*50, 150 + Math.sin(s.ang)*40); g.rotate(s.ang); line(0, 0, 0, -60, '#9aa5a2', 4); for (let i = -2; i <= 2; i++) line(i*3, 0, i*5, 18, '#9aa5a2', 1.6); g.restore();
+    txt(p > 0.9 ? 'Nicely mixed!' : 'Beat the eggs with minced meat & onion', 200, 34, 13, C.ink, {display:true});
+  },
+  rjnPour(s){
+    kitchenBg(); flames(200, 260, 236, true, s.t); griddle(30, 100, 340, 124);
+    const lvl = fillLvl47(s), on = fillOn47(s);
+    if (lvl > 0){ box(200 - 20 - lvl*130, 150 - 6 - lvl*14, 40 + lvl*260, 12 + lvl*28, 10, 'rgba(242,200,74,.92)', '#b8862a', 1.2); speckle(551, Math.round(lvl*30), 200, 156, 20 + lvl*120, 4 + lvl*12, ['#7a3a1a', '#d98ac0'], 2); }
+    pourCup47(on, '#f2c84a', 206, 70);
+    if (on) pourStream47(196, 90, 200, 146, 'rgba(242,200,74,.95)', 6);
+    txt('Spread it as long as the bread', 200, 52, 12, C.ink, {display:true});
+  },
+  rjnPress(s){
+    kitchenBg(); flames(200, 260, 236, true, s.t); griddle(30, 108, 340, 104);
+    box(52, 148, 296, 26, 10, 'rgba(242,200,74,.92)', '#b8862a', 1.2); speckle(561, 30, 200, 160, 140, 8, ['#7a3a1a', '#d98ac0'], 2);
+    const dx = 40 + s.zc*320; ell(dx, 160, s.zh*320 + 20, 22, 'rgba(242,197,61,.25)', 'rgba(207,169,106,.8)', 2);
+    for (let k = 0; k < s.round; k++){ const lx = k === s.round - 1 && s.lastX != null ? 40 + s.lastX*320 : 120 + k*120; box(lx - 40, 146, 80, 22, 10, lin(0, 146, 0, 168, [[0, '#e8a64a'], [1, '#b8702a']]), '#7a4a1a', 1.2); }
+    const bx = 40 + s.pos*320, lift = typeof liftOf === 'function' ? liftOf(s) : 0; g.save(); g.translate(bx, 70 - lift*0.2); box(-40, -12, 80, 24, 11, lin(0, -12, 0, 12, [[0, '#f2b45a'], [1, '#c07a30']]), '#7a4a1a', 1.5); for (let i = -2; i <= 2; i++) line(i*12 - 3, -8, i*12 + 3, 8, 'rgba(255,240,200,.6)', 1.4); g.restore();
+    txt('Press the bread down, cut side first', 200, 34, 12, C.ink, {display:true});
+  },
+  thSpread(s, p){
+    kitchenBg(); flames(200, 280, 238, true, s.t);
+    g.save(); g.translate(200, 150);
+    circle(0, 0, 110, rad(-30, -30, 6, 116, [[0, '#4a5250'], [1, '#1f2423']]), '#0f1211', 3);
+    const R = 20 + p*80;
+    g.beginPath(); for (let a = 0; a < s.ang && a < 40; a += 0.15){ const rr = 8 + a/Math.max(1, s.ang)*R; g.lineTo(Math.cos(a)*rr, Math.sin(a)*rr); }
+    g.strokeStyle = 'rgba(246,239,224,.95)'; g.lineWidth = 14; g.lineCap = 'round'; g.lineJoin = 'round'; g.stroke(); g.lineCap = 'butt'; g.lineJoin = 'miter';
+    circle(0, 0, Math.max(8, R*0.9), 'rgba(246,239,224,.55)');
+    g.restore();
+    g.save(); g.translate(200 + Math.cos(s.ang)*R, 150 + Math.sin(s.ang)*R); ell(0, 0, 16, 9, lin(-16, 0, 16, 0, [[0, '#aeb7b4'], [0.5, '#f7f9f8'], [1, '#9aa5a2']]), '#5f6b68', 1.6); line(0, -4, 0, -46, '#5f6b68', 4); g.restore();
+    txt(p > 0.9 ? 'Thin and even!' : 'Spread the batter outwards in circles', 200, 30, 13, C.ink, {display:true});
+  },
+  thGhee(s){
+    kitchenBg(); flames(200, 280, 238, true, s.t);
+    const lvl = fillLvl47(s), on = fillOn47(s);
+    g.save(); g.translate(200, 150); circle(0, 0, 110, rad(-30, -30, 6, 116, [[0, '#4a5250'], [1, '#1f2423']]), '#0f1211', 3); circle(0, 0, 98, lin(0, -98, 0, 98, [[0, '#f2d48a'], [1, '#e0a24a']]), '#b8762a', 1.5);
+    speckle(571, 30, 0, 0, 86, 86, ['rgba(160,90,20,.4)'], 2); if (lvl > 0) for (let i = 0; i < Math.round(lvl*24); i++){ const a = i*0.9, d = 20 + (i*13) % 70; ell(Math.cos(a)*d, Math.sin(a)*d, 5, 2.2, 'rgba(255,230,120,.8)'); }
+    g.restore();
+    g.save(); g.translate(on ? 230 : 320, on ? 70 : 60); g.rotate(on ? 2.2 : 0.3); g.scale(1.5, 1.5); ICON.ghee(); g.restore();
+    if (on) pourStream47(214, 92, 220, 140, 'rgba(255,220,100,.95)', 3);
+    txt('Ghee round the edge for crispness', 200, 30, 12, C.ink, {display:true});
+  },
+  thCrisp(s){
+    kitchenBg(); flames(190, 260, 238, s.heat, s.t);
+    const k = clamp((s.v - 150)/90, 0, 1);
+    g.save(); g.translate(180, 150); circle(0, 0, 110, rad(-30, -30, 6, 116, [[0, '#4a5250'], [1, '#1f2423']]), '#0f1211', 3);
+    circle(0, 0, 98, lin(0, -98, 0, 98, [[0, mix('#f6efe0', '#f2c060', k)], [1, mix('#e8dcc0', '#a8601a', k)]]), mix('#c9b48a', '#6a3a10', k), 1.5);
+    speckle(581, Math.round(10 + k*60), 0, 0, 88, 88, ['rgba(140,70,10,.5)', 'rgba(255,240,190,.6)'], 2.2);
+    g.restore();
+    s.fx.forEach(b => circle(b.x, b.y, b.r, 'rgba(255,255,255,.85)', 'rgba(200,170,100,.8)', 0.8));
+    txt('Golden and crisp, never burnt', 180, 30, 12, C.ink, {display:true});
+  }
+});
+S.thCrispTick = S.olCrispTick;
+
+/* ---------- steps ---------- */
+const OL_BATTER = fill({title:'Pour the starch batter', btn:'Hold to pour', unit:'Batter', time:11, base:0.22, accel:0.3, hint:'Hold to pour. Let go at the line.',
+  targets:c => [{label:'Batter', color:'#efe6d2', target:c.w.size === 'large' ? rand(0.7, 0.84) : rand(0.52, 0.68)}], scene:S.olBatter});
+const OL_EGG = timing({title:'Crack in the eggs', scene:S.olEgg, rounds:2, speed:0.85, btn:'Crack!', hint:'Tap when the egg is over the green patch.'});
+const olCrisp47 = hi => holdZone({title:hi ? 'Fry it extra crispy' : 'Fry it soft', hint:hi ? 'Hold for fire. Keep the heat high, in the green.' : 'Hold for fire. Keep the heat gentle, in the green.', time:12,
+  btn:'Hold for fire', mode:'hold', min:100, max:240, start:120, zone:hi ? [196, 214] : [158, 176], up:26, down:16, fmt:v => Math.round(v) + '°C',
+  msgs:[hi ? 'Crisping up!' : 'Soft and gooey', 'More fire', 'Too hot, it’ll burn!'], scene:S.olCrisp, tick:S.olCrispTick});
+const OL_CRISP_HI = olCrisp47(true), OL_CRISP_LO = olCrisp47(false);
+const OL_PLATE = assemble({title:'Oysters and garnish', time:30, dish:s => DISH.orhluak(s.n, s.order.w),
+  spots:{oyster:[0, 0, 28], prawn:[-24, 24, 18], coriander:[-8, -10, 22], chilli:[64, 46, 16]},
+  card:s => { const R = s.req; return ['THE ORDER', ...Object.keys(R).filter(k => R[k] > 0).map(k => ({t:(R[k] > 1 ? R[k] + ' × ' : '') + (NAME[k] || k), ok:s.n[k] === R[k]}))]; },
+  hint:'Oysters go on last, just warmed through. Then coriander and chilli.', btn:'Done',
+  tray:c => [{id:'oyster', max:8}, {id:'coriander'}, {id:'chilli'}, ...(ul(c, 'prawn') ? [{id:'prawn', max:2}] : [])],
+  req:c => { const t = c.t, a = t.add || [], n = t.notes || []; return {oyster:5 + (a.includes('xoyster') ? 3 : 0), coriander:n.includes('nocoriander') ? 0 : 1, chilli:n.includes('nochilli') ? 0 : 1, prawn:a.includes('prawn') ? 2 : 0}; }});
+
+const RJ_CUT = chop({title:'Cut the fruit', hint:'Pineapple, cucumber and jambu. Swipe down each line.',
+  food(){ for (let i = 0; i < 6; i++){ pineappleChunk47(112 + i*36, 130, 1.8, 0.2*i); cucumberChunk47(116 + i*34, 166, 1.6, -0.2*i); jambu47(110 + i*36, 196, 1.4, 0.1*i); } }});
+const RJ_SAUCE = sequence({title:'Mix the rojak sauce', par:8, time:18, hint:'Tap the sauce ingredients in recipe order.',
+  seq:c => ['haeko', 'sugar', 'lime', ...((c.w.notes || []).includes('lessspicy') ? [] : ['chilli'])], tray:() => ['lime', 'chilli', 'haeko', 'sugar'], scene:S.rjSauce});
+const RJ_TOSS = circular({title:'Toss it all together', turns:4, par:4, ring:96, time:12, hint:'Toss round and round until every piece is coated. 4 turns.', scene:S.rjToss});
+const RJ_TOP = assemble({title:'Peanuts and torch ginger', time:28, dish:s => DISH.rojak(Object.assign({youtiao:1}, s.n), s.order.w),
+  spots:{peanuts:[0, 0, 30], bungakantan:[-26, -20, 20], taupok:[24, -18, 18], youtiao:[-30, 22, 18], jellyfish:[26, 28, 18]},
+  hint:'Crushed peanuts and torch ginger on top. Only add what they ordered.', btn:'Done',
+  tray:c => [{id:'peanuts'}, {id:'bungakantan'}, {id:'taupok'}, {id:'youtiao', max:2}, ...(ul(c, 'jellyfish') ? [{id:'jellyfish'}] : [])],
+  req:c => { const a = c.t.add || [], n = c.t.notes || []; return {peanuts:n.includes('nopeanut') ? 0 : 1, bungakantan:1, taupok:a.includes('taupok') ? 1 : 0, youtiao:a.includes('youtiao') ? 1 : 0, jellyfish:a.includes('jellyfish') ? 1 : 0}; }});
+
+const MR_GRAVY = fill({title:'Ladle the gravy', btn:'Hold to ladle', unit:'Gravy', time:11, base:0.22, accel:0.3, hint:'Mee rebus gravy is thick. Let go at the line.',
+  targets:c => [{label:'Gravy', color:'#c06a24', target:c.w.size === 'large' ? rand(0.72, 0.86) : rand(0.56, 0.72)}], scene:S.mrGravy});
+const MR_TOP = assemble({title:'Mee rebus toppings', time:32, dish:s => DISH.meerebus(Object.assign({gravy:1}, s.n), s.order.w), cx:224,
+  spots:{hbegg:[-6, -26, 20], taukwa:[-40, 22, 18], beef:[0, 38, 18], sprouts:[18, 26, 20], shallots:[0, -4, 22], greenchilli:[34, -10, 14], limau:[52, 30, 14]},
+  card:s => { const R = s.req; return ['THE ORDER', ...Object.keys(R).filter(k => R[k] > 0).map(k => ({t:(R[k] > 1 ? R[k] + ' × ' : '') + (NAME[k] || k), ok:s.n[k] === R[k]}))]; },
+  hint:'Egg, tau kwa, sprouts, fried shallots, green chilli, then a lime.', btn:'Done',
+  tray:c => [{id:'hbegg', max:2}, {id:'taukwa'}, {id:'sprouts'}, {id:'shallots'}, {id:'greenchilli'}, {id:'limau'}, ...(ul(c, 'beef') ? [{id:'beef'}] : [])],
+  req:c => { const a = c.t.add || [], n = c.t.notes || []; return {hbegg:1 + (a.includes('xegg') ? 1 : 0), taukwa:a.includes('taukwa') ? 1 : 0, beef:a.includes('beef') ? 1 : 0, sprouts:n.includes('nosprouts') ? 0 : 1, shallots:1, greenchilli:n.includes('nochilli') ? 0 : 1, limau:1}; }});
+
+const RJN_MIX = circular({title:'Beat the egg mix', turns:3, par:3.5, ring:84, time:11, hint:'Beat the eggs, minced meat and onion. 3 turns.', scene:S.rjnMix});
+const RJN_POUR = fill({title:'Pour on the griddle', btn:'Hold to pour', unit:'Egg mix', time:11, base:0.22, accel:0.3, hint:'Spread it as long as the bread. Let go at the line.',
+  targets:c => [{label:'Egg mix', color:'#f2c84a', target:c.w.size === 'long' ? rand(0.74, 0.86) : rand(0.55, 0.7)}], scene:S.rjnPour});
+const RJN_PRESS = timing({title:'Press the bread down', scene:S.rjnPress, rounds:2, speed:0.8, btn:'Press!', hint:'Tap when the bread is over the green patch.'});
+const RJN_TOP = assemble({title:'Sauces and toppings', time:28, dish:s => DISH.rotijohn(s.n, s.order.w),
+  spots:{chillisauce:[-40, -4, 22], mayo:[40, 6, 22], cheese:[0, -16, 20], onionring:[-50, 4, 16], cucumber:[24, 26, 18]},
+  hint:'Chilli sauce and mayo in zigzags, onion and cucumber on the side.', btn:'Done',
+  tray:c => [{id:'chillisauce'}, {id:'mayo'}, {id:'onionring'}, {id:'cucumber'}, {id:'cheese'}],
+  req:c => { const a = c.t.add || [], n = c.t.notes || []; return {chillisauce:n.includes('nochilli') ? 0 : 1, mayo:n.includes('nomayo') ? 0 : 1, cheese:a.includes('cheese') ? 1 : 0, onionring:1, cucumber:1}; }});
+
+const TH_SPREAD = circular({title:'Spread the batter', turns:4, par:4.5, ring:96, time:12, hint:'Ladle in the middle, then spread outwards in circles. 4 turns.', scene:S.thSpread});
+const TH_GHEE = fill({title:'Drizzle the ghee', btn:'Hold to drizzle', unit:'Ghee', time:10, base:0.24, accel:0.3, hint:'Just a little, round the edge. Let go at the line.',
+  targets:c => [{label:'Ghee', color:'#f2c84a', target:(c.w.add || []).includes('ghee') ? rand(0.66, 0.8) : rand(0.32, 0.46)}], scene:S.thGhee});
+const thCrisp47 = paper => holdZone({title:paper ? 'Crisp the paper thosai' : 'Crisp the thosai', hint:'Hold for fire. Golden, not burnt: stay in the green.', time:12,
+  btn:'Hold for fire', mode:'hold', min:130, max:260, start:150, zone:paper ? [214, 230] : [192, 210], up:26, down:16, fmt:v => Math.round(v) + '°C',
+  msgs:['Golden!', 'More fire', 'It’s burning!'], scene:S.thCrisp, tick:S.thCrispTick});
+const TH_CRISP = thCrisp47(false), TH_CRISP_PAPER = thCrisp47(true);
+const TH_PLATE = assemble({title:'Fold and serve', time:30, dish:s => DISH.thosai(s.n, s.order.w), scale:0.92,
+  spots:{masala:[-4, -2, 26], onion:[-40, -6, 18], coconutchutney:[-62, 46, 18], tomchutney:[-10, 50, 18], sambar:[44, 46, 18]},
+  card:s => { const R = s.req; return ['THE ORDER', ...Object.keys(R).filter(k => R[k] > 0).map(k => ({t:NAME[k] || k, ok:s.n[k] === R[k]}))]; },
+  hint:'Masala inside if ordered, then the chutneys and sambar on the side.', btn:'Done',
+  tray:c => [{id:'masala'}, {id:'onion'}, {id:'coconutchutney'}, {id:'tomchutney'}, {id:'sambar'}],
+  req:c => { const t = c.t, a = t.add || [], n = t.notes || []; return {masala:t.item === 'masala' ? 1 : 0, onion:a.includes('onion') ? 1 : 0, coconutchutney:n.includes('nochutney') ? 0 : 1, tomchutney:n.includes('nochutney') ? 0 : 1, sambar:n.includes('nosambar') ? 0 : 1}; }});
+if (!ICON.onion) ICON.onion = ICON.onionring;
+if (!NAME.onion) NAME.onion = 'Onion';
+
+/* ---------- the stalls ---------- */
+STALLS.push(
+  {id:'orhluak', unit:'#01-06', name:'Ah Hock Orh Luak', sub:'蚝煎 · OYSTER OMELETTE', sb:'#1f5f8a', sf:'#fff3d6', greet:'Uncle',
+   mentor:'Uncle Hock', since:'frying orh luak since 1979', look:{bg:'#dbe8f2', skin:'#d9a57a', shirt:'#ffffff', hair:'grey', headband:true},
+   quote:'The starch makes it chewy, the egg makes it crispy. And the oysters? Only at the very end, or they shrink.',
+   dish:'Orh luak', base:0,
+   unlocks:[{id:'prawn', name:'Add prawns', cost:1600, icon:'prawn'}, {id:'xoyster', name:'Fat oysters', cost:1800, icon:'oyster'}],
+   form:[{key:'size', label:'Size', type:'one', opts:[['reg','Regular',500],['large','Large',700]]},
+         {key:'style', label:'Style', type:'one', opts:[['soft','Soft & gooey'],['crispy','Extra crispy']]},
+         {key:'add', label:'Add-ons', type:'many', opts:[['xoyster','More oysters',250,'xoyster'],['xegg','Extra egg',80],['prawn','Prawns',200,'prawn']]},
+         {key:'notes', label:'Notes', type:'many', opts:[['nochilli','No chilli'],['nocoriander','No coriander']]}],
+   makeOrder(){ return {size:pick(['reg','reg','large']), style:pick(['soft','soft','crispy']), add:pickSome(['xegg'], 0.25), notes:pickSome(['nochilli','nocoriander'], 0.2)}; },
+   say(t){ const p = [t.size === 'large' ? 'One big orh luak' : 'One orh luak', t.style === 'crispy' ? 'extra crispy' : 'soft one']; const A = {xoyster:'more oyster', xegg:'add egg', prawn:'add prawn'}; t.add.forEach(a => p.push(A[a])); const N = {nochilli:'no chilli', nocoriander:'no coriander'}; t.notes.forEach(n => p.push(N[n])); return p.join(', '); },
+   dishName:w => (w.style === 'crispy' ? 'Crispy' : 'Soft') + ' orh luak',
+   flow:['Batter','Egg','Fry','Oysters'], cook:w => [OL_BATTER, OL_EGG, w.style === 'crispy' ? OL_CRISP_HI : OL_CRISP_LO, OL_PLATE],
+   serve:() => ['spoon','fork'], pack:() => ({container:'box', extras:['spoon','fork']})},
+
+  {id:'rojak', unit:'#01-10', name:'Auntie Bee Rojak', sub:'罗惹 · CHINESE ROJAK', sb:'#7a3a8a', sf:'#fff3d6', greet:'Auntie',
+   mentor:'Auntie Bee', since:'tossing rojak since 1986', look:{bg:'#efe0f2', skin:'#e8bb92', shirt:'#7a3a8a', hair:'bun'},
+   quote:'Rojak means “mixture”. Sweet, sour, spicy, crunchy, all in one bite. Like Singapore lah.',
+   dish:'Rojak', base:0,
+   unlocks:[{id:'jellyfish', name:'Jellyfish', cost:1500, icon:'jellyfish'}],
+   form:[{key:'size', label:'Size', type:'one', opts:[['small','Small',400],['large','Large',600]]},
+         {key:'add', label:'Add-ons', type:'many', opts:[['youtiao','More you tiao',80],['taupok','More tau pok',80],['jellyfish','Jellyfish',150,'jellyfish']]},
+         {key:'notes', label:'Notes', type:'many', opts:[['lessspicy','Less spicy'],['nopeanut','No peanuts']]}],
+   makeOrder(){ return {size:pick(['small','small','large']), add:pickSome(['youtiao','taupok'], 0.25), notes:pickSome(['lessspicy','nopeanut'], 0.2)}; },
+   say(t){ const p = [t.size === 'large' ? 'One big rojak' : 'One small rojak']; const A = {youtiao:'more you tiao', taupok:'more tau pok', jellyfish:'add jellyfish'}; t.add.forEach(a => p.push(A[a])); const N = {lessspicy:'less spicy', nopeanut:'no peanuts'}; t.notes.forEach(n => p.push(N[n])); return p.join(', '); },
+   dishName:w => (w.size === 'large' ? 'Large' : 'Small') + ' rojak',
+   flow:['Cut','Sauce','Toss','Top'], cook:() => [RJ_CUT, RJ_SAUCE, RJ_TOSS, RJ_TOP],
+   serve:() => ['toothpick','fork'], pack:() => ({container:'box', extras:['toothpick']})},
+
+  {id:'meerebus', unit:'#01-16', name:'Pak Salleh Mee Rebus', sub:'MEE REBUS · 马来卤面', sb:'#8a4a14', sf:'#f2c53d', greet:'Pakcik',
+   mentor:'Pak Salleh', since:'stirring the gravy since 1984', look:{bg:'#f2e4cf', skin:'#b97f56', shirt:'#2f7d4f', hair:'songkok'},
+   quote:'The gravy is sweet potato, dried prawns and spices, cooked low and slow. Stir from the bottom, always.',
+   dish:'Mee rebus', base:0,
+   unlocks:[{id:'beef', name:'Beef slices', cost:1800, icon:'beef'}],
+   form:[{key:'size', label:'Size', type:'one', opts:[['reg','Regular',400],['large','Large',550]]},
+         {key:'add', label:'Add-ons', type:'many', opts:[['xegg','Extra egg',80],['taukwa','Tau kwa',80],['beef','Beef slices',200,'beef']]},
+         {key:'notes', label:'Notes', type:'many', opts:[['nochilli','No green chilli'],['nosprouts','No bean sprouts']]}],
+   makeOrder(){ return {size:pick(['reg','reg','large']), add:pickSome(['xegg','taukwa'], 0.25), notes:pickSome(['nochilli','nosprouts'], 0.2)}; },
+   say(t){ const p = [t.size === 'large' ? 'Mee rebus, besar' : 'One mee rebus']; const A = {xegg:'tambah telur', taukwa:'add tau kwa', beef:'add beef'}; t.add.forEach(a => p.push(A[a])); const N = {nochilli:'no green chilli', nosprouts:'no taugeh'}; t.notes.forEach(n => p.push(N[n])); return p.join(', '); },
+   dishName:w => (w.size === 'large' ? 'Large' : 'Regular') + ' mee rebus',
+   flow:['Blanch','Gravy','Toppings'], cook:() => [BLANCH, MR_GRAVY, MR_TOP],
+   serve:() => ['spoon','fork'], pack:() => ({container:'bowl', extras:['spoon','fork']})},
+
+  {id:'rotijohn', unit:'#01-22', name:'Abang Johan Roti John', sub:'ROTI JOHN', sb:'#c2410c', sf:'#ffffff', greet:'Abang',
+   mentor:'Abang Johan', since:'pressing roti john since 1992', look:{bg:'#fde6d2', skin:'#c98d62', shirt:'#c2410c', hair:'short'},
+   quote:'They say an ang mo called John asked for a sandwich, and the stall man invented this. Egg on the bread, bread on the egg!',
+   dish:'Roti john', base:0,
+   unlocks:[{id:'sardine', name:'Sardine filling', cost:1400, icon:'fish'}],
+   form:[{key:'fill', label:'Filling', type:'one', opts:[['mutton','Mutton',500],['chicken','Chicken',450],['sardine','Sardine',450,'sardine']]},
+         {key:'size', label:'Size', type:'one', opts:[['reg','Regular'],['long','Extra long',300]]},
+         {key:'add', label:'Add-ons', type:'many', opts:[['cheese','Cheese',100],['xegg','Extra egg',60]]},
+         {key:'notes', label:'Notes', type:'many', opts:[['nochilli','No chilli sauce'],['nomayo','No mayo']]}],
+   makeOrder(){ return {fill:pick(['mutton','chicken','chicken']), size:pick(['reg','reg','long']), add:pickSome(['cheese','xegg'], 0.25), notes:pickSome(['nochilli','nomayo'], 0.2)}; },
+   say(t){ const p = [{mutton:'Roti john, mutton', chicken:'Roti john, chicken', sardine:'Roti john, sardine'}[t.fill]]; if (t.size === 'long') p.push('extra long'); const A = {cheese:'add cheese', xegg:'extra egg'}; t.add.forEach(a => p.push(A[a])); const N = {nochilli:'no chilli sauce', nomayo:'no mayo'}; t.notes.forEach(n => p.push(N[n])); return p.join(', '); },
+   dishName:w => 'Roti john · ' + ({mutton:'mutton', chicken:'chicken', sardine:'sardine'}[w.fill] || ''),
+   flow:['Mix','Pour','Press','Sauces'], cook:() => [RJN_MIX, RJN_POUR, RJN_PRESS, RJN_TOP],
+   serve:() => ['fork'], pack:() => ({container:'wrap', extras:[]})},
+
+  {id:'thosai', unit:'#01-35', name:'Raju Thosai Corner', sub:'தோசை · THOSAI', sb:'#a8641a', sf:'#fff3d6', greet:'Anna',
+   mentor:'Uncle Raju', since:'spreading thosai since 1980', look:{bg:'#f6e6cc', skin:'#8a5a3a', shirt:'#ffffff', hair:'grey', moustache:true},
+   quote:'The batter rests overnight, so it sours a little. Spread it thin and fast, like you are drawing a circle on a mirror.',
+   dish:'Thosai', base:0,
+   unlocks:[{id:'paper', name:'Paper thosai', cost:1500, icon:'thosaibatter'}, {id:'egg', name:'Egg thosai', cost:1200, icon:'egg'}],
+   form:[{key:'item', label:'Thosai', type:'one', opts:[['plain','Plain',200],['masala','Masala',350],['egg','Egg',300,'egg'],['paper','Paper thosai',300,'paper']]},
+         {key:'add', label:'Add-ons', type:'many', opts:[['ghee','Ghee',50],['onion','Onion',50]]},
+         {key:'notes', label:'Notes', type:'many', opts:[['nosambar','No sambar'],['nochutney','No chutney']]}],
+   makeOrder(){ return {item:pick(['plain','plain','masala']), add:pickSome(['ghee','onion'], 0.25), notes:pickSome(['nosambar','nochutney'], 0.15)}; },
+   say(t){ const p = [{plain:'One plain thosai', masala:'One masala thosai', egg:'One egg thosai', paper:'One paper thosai'}[t.item]]; const A = {ghee:'with ghee', onion:'add onion'}; t.add.forEach(a => p.push(A[a])); const N = {nosambar:'no sambar', nochutney:'no chutney'}; t.notes.forEach(n => p.push(N[n])); return p.join(', '); },
+   dishName:w => ({plain:'Plain', masala:'Masala', egg:'Egg', paper:'Paper'}[w.item] || '') + ' thosai',
+   flow:['Spread','Ghee','Crisp','Serve'], cook:w => [TH_SPREAD, TH_GHEE, w.item === 'paper' ? TH_CRISP_PAPER : TH_CRISP, TH_PLATE],
+   serve:() => [], pack:() => ({container:'wrap', extras:[]})}
+);
 /* ---------- menu items you can buy: filter the live menu by what's unlocked ---------- */
 function unlocked(st, id){ return !!(save.menu && save.menu[st.id] && save.menu[st.id].includes(id)); }
 function formOf(st){
@@ -4271,6 +4683,15 @@ Object.assign(MARKET, {
   carrotcake:[['cake','Steamed radish cake','radish',300],['eggs','Eggs','egg',200],['sauce','Sweet sauce & lard','kecap',150],['garnish','Chai poh & spring onion','chaipoh',150]],
   bkt:[['ribs','Pork ribs','ribs',650],['spice','Garlic & white pepper','pepper',200],['sides','You tiao, tau pok & salted veg','youtiao',250],['rice','Rice','rice',150]],
   chendol:[['jelly','Pandan jelly & red bean','chendol',250],['ice','Ice blocks','ice',100],['santan','Fresh coconut milk','santan',250],['gm','Gula melaka','gulamelaka',200]]
+});
+/* 47. rent and market for the five new stalls (needed before saved stock is checked) */
+Object.assign(BUILD_COST, {orhluak:3400, rojak:2600, meerebus:3000, rotijohn:3200, thosai:2800});
+Object.assign(MARKET, {
+  orhluak:[['oysters','Fresh oysters','oyster',550],['starch','Sweet potato starch','starch',150],['eggs','Eggs & lard','egg',200],['garnish','Coriander & chilli','coriander',120]],
+  rojak:[['fruit','Pineapple, cucumber & jambu','pineapple',300],['sauce','Hae ko & sugar','haeko',250],['fried','You tiao & tau pok','youtiao',200],['nuts','Peanuts & torch ginger','peanuts',150]],
+  meerebus:[['noodles','Yellow noodles','yellownoodle',200],['gravy','Sweet potato & dried prawns','meegravy',350],['eggs','Eggs & tau kwa','taukwa',200],['garnish','Sprouts, shallots, lime & chilli','limau',150]],
+  rotijohn:[['bread','Baguettes','baguette',250],['meat','Minced mutton & chicken','minced',450],['eggs','Eggs & onions','egg',200],['sauce','Chilli sauce & mayo','mayo',150]],
+  thosai:[['batter','Rice & urad dal batter','thosaibatter',200],['ghee','Ghee','ghee',180],['potato','Potato masala','masala',200],['sides','Chutneys & sambar','sambar',220]]
 });
 function stockOf(id){ const s = save.stock[id] = save.stock[id] || {}; MARKET[id].forEach(([k]) => { if (typeof s[k] !== 'number') s[k] = 0; }); return s; }
 function servingsLeft(id){ const s = stockOf(id); return Math.min(...MARKET[id].map(([k]) => s[k])); }
@@ -11064,6 +11485,106 @@ drawStallView = function(sv){
 Object.values(PASSIVE).forEach(p => { p[2] = Math.max(3, Math.round(p[2] / 2)); });
 
 /* =================================================================
+   47b. THE FIVE NEW STALLS: rent, market, what's behind the counter,
+   menu pictures, facts, and each mentor's two story chapters.
+   ================================================================= */
+const NEW47 = ['orhluak', 'rojak', 'meerebus', 'rotijohn', 'thosai'];
+Object.assign(EQUIP, {
+  orhluak(t){ griddleBack47(t, '#2a2f2e'); for (let i = 0; i < 6; i++) oyster47(96 + (i % 3)*16, 150 + Math.floor(i/3)*12, 1.1, i);
+    g.save(); g.translate(170, 150); g.scale(0.8, 0.8); ICON.starch(); g.restore(); },
+  rojak(t){ box(214, 120, 92, 48, 8, lin(214, 0, 306, 0, [[0, '#7a3a8a'], [0.5, '#a868b8'], [1, '#5a2a6a']]), C.ink, 1.5);
+    for (let i = 0; i < 5; i++){ pineappleChunk47(228 + i*16, 132, 1.1, i); cucumberChunk47(230 + i*16, 150, 1, -i); }
+    g.save(); g.translate(110, 150); circle(0, 0, 24, rad(-6, -6, 2, 26, [[0, '#ffffff'], [1, '#d6dcda']]), '#8e9895', 1.5); blob(0, 0, 16, 14, 0.3, 601, '#3a1e10'); g.restore();
+    youtiaoStick(170, 150, 0.6, -0.3); },
+  meerebus(t){ box(214, 112, 90, 58, 8, lin(214, 0, 304, 0, [[0, '#b9c2bf'], [0.45, '#eef2f1'], [1, '#a9b3b0']]), C.steelDark, 2); ell(259, 112, 45, 9, '#c06a24', '#9aa5a2', 1); steamLines(259, 106, t, 3, 24, 0.55);
+    g.save(); g.translate(110, 152); circle(0, 0, 22, '#f6f6f2', '#b9c3c0', 1.5); noodleMound(0, 0, 18, 16, ['#f6d24a', '#e8b82a'], 2.4, 40, 602); g.restore();
+    for (let i = 0; i < 4; i++) limau47(156 + i*10, 160 - (i % 2)*6, 1); },
+  rotijohn(t){ griddleBack47(t, '#2a2f2e'); for (let i = 0; i < 3; i++) baguetteSlice47(250 + (i - 1)*28, 132, 0.6, -0.4, i === 1);
+    for (let i = 0; i < 3; i++){ g.save(); g.translate(96 + i*22, 140 - i*4); g.rotate(-0.2); box(-16, -6, 32, 12, 6, lin(0, -6, 0, 6, [[0, '#e8a64a'], [1, '#b8702a']]), '#7a4a1a', 1); g.restore(); }
+    g.save(); g.translate(178, 150); g.scale(0.7, 0.7); ICON.mayo(); g.restore(); },
+  thosai(t){ g.save(); g.translate(259, 138); ell(0, 0, 50, 14, rad(-10, -4, 4, 52, [[0, '#4a5250'], [1, '#1f2423']]), '#0f1211', 2); ell(0, -2, 38, 9, '#f2d48a'); g.restore(); flames(259, 80, 156, true, t);
+    for (let i = 0; i < 3; i++) steelBowl47(98 + i*30, 150, 12, ['#f6f2e0', '#d9542a', '#d98a2a'][i]);
+    g.save(); g.translate(190, 150); g.scale(0.8, 0.8); ICON.thosaibatter(); g.restore(); }
+});
+function griddleBack47(t, col){ box(206, 120, 104, 40, 6, lin(206, 0, 310, 0, [[0, col], [0.5, '#4a5250'], [1, col]]), C.ink, 2); for (let i = 0; i < 3; i++) circle(230 + i*26, 112 - ((t*30 + i*20) % 36), 5 + i, 'rgba(160,170,165,.35)'); }
+
+Object.assign(PASSIVE, {orhluak:[OL_CRISP_LO, 'Crisping on the griddle', 9], rojak:[RJ_SAUCE, 'Sauce mellowing', 5], meerebus:[MR_GRAVY, 'Gravy thickening', 10], rotijohn:[RJN_POUR, 'Egg setting on the bread', 8], thosai:[TH_CRISP, 'Crisping on the tawa', 8]});
+try { NEW47.forEach(id => { PASS_BASE[id] = PASSIVE[id][2]; }); } catch(e){}
+Object.assign(PACK_COL, {orhluak:'#f2c860', rojak:'#5a2e14', meerebus:'#c06a24', rotijohn:'#e8a64a', thosai:'#e0a24a'});
+Object.assign(FACTS, {
+  orhluak:'Orh luak is Hokkien for oyster omelette. Sweet potato starch makes it chewy, and the oysters go in at the very end so they stay plump.',
+  rojak:'“Rojak” is Malay for “mixture”. Singaporeans also use it to describe anything that’s a mix of many things, even the way we speak!',
+  meerebus:'Mee rebus means “boiled noodles”. The thick gravy is made with sweet potato, which gives it its sweetness and body.',
+  rotijohn:'A popular story says roti john was invented in the 1970s when a stall owner made an omelette sandwich for an English customer, “John”.',
+  thosai:'Thosai batter is made from rice and urad dal, left to ferment overnight. That gives it the gentle sour taste.'
+});
+try { NEW47.forEach(k => LD_TIPS.push('<b>Did you know?</b> ' + esc(FACTS[k]))); } catch(e){}
+Object.assign(OPT_PIC, {
+  'orhluak.size:reg':['final', {size:'reg', style:'soft'}, 0.27], 'orhluak.size:large':['final', {size:'large', style:'soft'}, 0.3],
+  'orhluak.style:soft':['final', {style:'soft'}, 0.27], 'orhluak.style:crispy':['final', {style:'crispy'}, 0.27],
+  'orhluak.add:xoyster':['oyster', '+'], 'orhluak.add:xegg':['egg', '+'], 'orhluak.add:prawn':['prawn'],
+  'orhluak.notes:nochilli':['chilli', 'x'], 'orhluak.notes:nocoriander':['coriander', 'x'],
+  'rojak.size:small':['final', {size:'small'}, 0.27], 'rojak.size:large':['final', {size:'large'}, 0.3],
+  'rojak.add:youtiao':['youtiao', '+'], 'rojak.add:taupok':['taupok', '+'], 'rojak.add:jellyfish':['jellyfish'],
+  'rojak.notes:lessspicy':['chilli', 'x'], 'rojak.notes:nopeanut':['peanuts', 'x'],
+  'meerebus.size:reg':['final', {size:'reg'}, 0.27], 'meerebus.size:large':['final', {size:'large'}, 0.3],
+  'meerebus.add:xegg':['hbegg', '+'], 'meerebus.add:taukwa':['taukwa'], 'meerebus.add:beef':['beef'],
+  'meerebus.notes:nochilli':['greenchilli', 'x'], 'meerebus.notes:nosprouts':['sprouts', 'x'],
+  'rotijohn.fill:mutton':['minced', null, 1.2], 'rotijohn.fill:chicken':['chicken', null, 1.1], 'rotijohn.fill:sardine':['fish', null, 1.1],
+  'rotijohn.size:reg':['final', {size:'reg'}, 0.26], 'rotijohn.size:long':['final', {size:'long'}, 0.26],
+  'rotijohn.add:cheese':['cheese'], 'rotijohn.add:xegg':['egg', '+'], 'rotijohn.notes:nochilli':['chillisauce', 'x'], 'rotijohn.notes:nomayo':['mayo', 'x'],
+  'thosai.item:plain':['final', {item:'plain'}, 0.24], 'thosai.item:masala':['final', {item:'masala'}, 0.24], 'thosai.item:egg':['final', {item:'egg'}, 0.24], 'thosai.item:paper':['final', {item:'paper'}, 0.24],
+  'thosai.add:ghee':['ghee'], 'thosai.add:onion':['onionring'], 'thosai.notes:nosambar':['sambar', 'x'], 'thosai.notes:nochutney':['coconutchutney', 'x']
+});
+
+/* ---------- the new mentors' stories ---------- */
+Object.assign(STALL_STORY, {
+  orhluak:{title:'The Last Oyster', cast:{mei:['Mei Ling', {bg:'#e2eef6', skin:'#efc9a4', shirt:'#1f5f8a', hair:'bob'}]}, parts:[
+    [['m','My father fried orh luak on a charcoal pan along the Singapore River. The coolies ate it after night shift, with chilli so hot it woke them up.'],['m','He told me: starch first, egg second, oysters last. Never the other way.']],
+    [['','The supplier calls. A storm has closed the oyster farms for two weeks.'],['m','No oysters, no orh luak. What am I going to sell? Starch omelette?'],['m','Maybe it’s a sign. My back is not so young any more.']],
+    [['mei','Pa, I found a supplier in Johor. Small farm, but fresh every morning. I’ll drive there at five.'],['m','You hate waking up early.'],['mei','I hate the idea of this stall closing more.']],
+    [['','Mei Ling’s car pulls up every morning now with a cooler box of oysters. She stays to fry the lunch rush.'],['m','Her edges are crispier than mine. Don’t tell her I said that.'],['m','{you}, starch first, egg second, oysters last. Like my father said. Some rules don’t change.']]]},
+  rojak:{title:'A Little of Everything', cast:{kai:['Kai', {bg:'#efe0f2', skin:'#e8bb92', shirt:'#2f6db0', hair:'short'}]}, parts:[
+    [['m','People ask: why put fruit with prawn paste? Because life is like that: sweet and sour and pungent, all together.'],['m','My hae ko comes from Penang. Black like tar, smells like the sea. Good one is very hard to find.']],
+    [['','A food delivery app offers to list the stall, but the photos make the rojak look like a pile of mud.'],['m','Rojak always looks ugly in photos! It’s supposed to look messy.'],['m','But young people only buy what looks nice on the phone. Aiyo.']],
+    [['kai','Auntie, I’m a photography student. Can I try? We just need the right light, and the torch ginger on top.'],['m','You want to style my rojak? Like a wedding photo?'],['kai','Exactly like a wedding photo.']],
+    [['','Kai’s photo shows the rojak glistening, bright pink flowers on top, peanuts like gold dust. Orders triple.'],['m','Same rojak, same taste. Only the picture changed. Funny world.'],['m','{you}, toss until every piece is dark and shiny. If you can still see the pineapple’s yellow, keep going.']]]},
+  meerebus:{title:'Low and Slow', cast:{aisyah:['Aisyah', {bg:'#f2e4cf', skin:'#b97f56', shirt:'#c2410c', hair:'tudung', cloth:'#c2410c'}]}, parts:[
+    [['m','My wife’s mother taught me this gravy in 1984. Sweet potato, dried prawns, taucheo, a little curry powder. Two hours of stirring.'],['m','If you stop stirring, it burns at the bottom, and the whole pot is wasted.']],
+    [['','Pak Salleh’s wife, Mak Rokiah, falls ill and can no longer help at the stall. He has to stir and serve alone.'],['m','Two hands, one pot, thirty customers. Some days I close early.'],['m','The regulars wait patiently. But I can see them looking at their watches.']],
+    [['aisyah','Atok, I can stir while you serve. Teach me properly, every step.'],['m','You’re studying to be an engineer! Why you want to stir gravy?'],['aisyah','An engineer can still stir. And somebody has to remember Nenek’s recipe.']],
+    [['','Aisyah writes the recipe down in a notebook, with the exact time and temperature for every step. Mak Rokiah checks every page.'],['m','Engineer recipe. Very precise. Nenek says it’s correct, so it’s correct.'],['m','{you}, stir from the bottom, low fire, never rush. Good gravy is patience you can taste.']]]},
+  rotijohn:{title:'John’s Sandwich', cast:{john:['Mr John', {bg:'#e6ecf6', skin:'#f2d4bc', shirt:'#2f6db0', hair:'grey', glasses:true}]}, parts:[
+    [['m','You know the story? An Englishman called John asked for a hamburger. The uncle didn’t have one, so he fried egg and meat onto a baguette.'],['m','“Here, roti for John!” And the name stuck. That uncle taught my father.']],
+    [['','A burger chain opens across the road with big posters and a two-for-one deal.'],['m','Burgers! Ironic, right? Roti john was made because there were no burgers.'],['m','My lunch crowd is half what it was.']],
+    [['john','Excuse me. My name is John. My grandfather was stationed here in the 1970s. He always talked about a sandwich named after him.'],['m','Wah. You’re telling me your grandfather is THE John?'],['john','He said so, anyway. Every family has its stories.']],
+    [['','Mr John’s photo with Abang Johan, both holding roti john, goes up on the stall wall. Tourists queue to take the same photo.'],['m','Who knows if it’s true. But it’s a good story, and good stories bring good customers.'],['m','{you}, egg on the griddle first, then press the bread down hard. Cut side touches the egg, always.']]]},
+  thosai:{title:'The Batter Rests', cast:{priya:['Priya', {bg:'#f6e6cc', skin:'#8a5a3a', shirt:'#d9468f', hair:'bun'}]}, parts:[
+    [['m','I came to Race Course Road from Madurai when I was nineteen. My uncle had a stall, and I washed his tawa for two years before I touched the batter.'],['m','The batter must rest overnight. It sours a little. Thosai made from fresh batter tastes of nothing.']],
+    [['','A heatwave hits. The batter ferments too fast overnight and turns too sour to use.'],['m','Thirty years, never happened. Now the whole bucket is wasted.'],['m','Maybe the weather is changing faster than I can.']],
+    [['priya','Appa, my school did a science fair on fermentation. If we keep the batter cooler, it slows down. We just need a fridge with the right setting.'],['m','Fridge? My uncle would laugh at me.'],['priya','Your uncle didn’t have thirty-five degree nights.']],
+    [['','Priya labels the fridge: “Batter. Do not touch. 8°C.” Every morning she tastes it before school.'],['m','She says it’s science. I say it’s my uncle’s recipe with a fridge. We are both right.'],['m','{you}, spread it fast from the middle, in circles. Thin like paper, even like a mirror.']]]}
+});
+Object.assign(STALL_STORY2, {
+  orhluak:{title:'Night Market', parts:[
+    [['','Mei Ling starts a weekend night-market stall with her father’s recipe, and young people queue for an hour.'],['m','She calls it “artisanal orh luak”. Twelve dollars! My father sold it for fifty cents.']],
+    [['m','But she uses the same charcoal pan he used. She found it in the storeroom and cleaned it for a week.'],['m','{you}, a recipe is not only the ingredients. It’s the pan, the fire and the person who remembers.']]]},
+  rojak:{title:'Penang Hae Ko', parts:[
+    [['','Auntie Bee’s hae ko supplier in Penang is retiring, and his children don’t want the business.'],['m','Forty years I bought from him. Every jar the same.']],
+    [['m','So Kai and I took the train up north. The old man taught us his recipe in his kitchen. Three days, my hands smelt of prawns.'],['m','{you}, now we make our own hae ko. Not the same as his. But close, and it’s ours.']]]},
+  meerebus:{title:'Nenek’s Notebook', parts:[
+    [['','Mak Rokiah comes back to the stall for the first time in months, in a wheelchair, and asks for a bowl.'],['m','My hands were shaking more than when I first cooked for her parents.']],
+    [['m','She ate everything. Then she said: “Too much salt.” And she smiled.'],['m','{you}, the best review I ever had. From the only critic who matters.']]]},
+  rotijohn:{title:'The Long One', parts:[
+    [['','A school asks Abang Johan to make the longest roti john in Singapore for their Racial Harmony Day: ten metres.'],['m','Ten metres! My griddle is one metre. We will need ten griddles and fifty eggs.']],
+    [['m','Every class made one metre. Malay, Chinese, Indian, Eurasian kids, all pressing bread together. Then we joined it into one.'],['m','{you}, roti john was always a mixed-up sandwich. That day it made sense.']]]},
+  thosai:{title:'Paper Thosai', parts:[
+    [['','A food blogger challenges Uncle Raju: can he make a paper thosai longer than the table?'],['m','Paper thosai is a show-off thosai. Very thin, very long, very crispy. Easy to break.']],
+    [['m','I made one, one metre twenty. It hung off both sides of the table. The children clapped.'],['m','{you}, the trick is not the length. It’s spreading thin and fast before the tawa gets too hot. Practise every day.']]]}
+});
+NEW47.forEach(id => { [STALL_STORY[id], STALL_STORY2[id]].forEach(S => { if (S && S.cast) Object.entries(S.cast).forEach(([k, v]) => { CAST['x_' + id + '_' + k] = v; }); }); });
+
+/* =================================================================
    PLAYTEST REVIEW (v29): role + today's goals, the full cost of running a
    stall, customer personalities and questions, a Hawker Book of discoveries
    and achievements, surprise rush events, six career stages, pace and text
@@ -14377,7 +14898,7 @@ const ACT39 = {
 const _withPassive39 = withPassive;
 withPassive = function(st, cook){
   const out = _withPassive39(st, cook), cfg = st && BEAT_ACT39[st.id];
-  if (cfg && out.length && !out.some(x => x && x.kind === 'beat')) out.splice(Math.min(1, out.length), 0, beatCook(cfg));
+  if (cfg && out.length && !out.some(x => x && x.kind === 'beat')) out.splice(Math.min(cfg.at || 1, out.length), 0, beatCook(cfg));
   return out;
 };
 /* =================================================================
@@ -16384,6 +16905,1031 @@ body:is(.pd45-0,.pd45-1) .rv46-open,body:is(.pd45-0,.pd45-1) .duo46-open{display
 try {
   HTP.splice(HTP.length - 1, 0, {title:'Get better every shift', art:'day', body:'<ul><li>After each shift your <b>mentor’s debrief</b> shows where the points went, your best step and what slowed the queue. Tap <b>Practise</b> to drill the weakest step: three quick tries, no stock used.</li><li>The <b>Next up</b> card always shows the one thing worth doing now.</li><li>Three <b>daily goals</b> pay cash, and a streak grows each day you play. The <b>campaign</b> has three acts: Learn the craft, Save Bahagia, Become a Hawker Legend.</li><li>Shifts can bring an <b>office wave</b>, a faulty <b>burner</b>, an <b>NEA inspection</b> or a <b>short delivery</b>. Check the Open tab before you start.</li><li>Hit the golden <b>FLAIR</b> note at the end of a rhythm step for bonus points. Play with friends in <b>Rival Rush</b> or <b>Pass &amp; Play</b>.</li></ul>'});
 } catch(e){}
+
+/* =================================================================
+   47c. THE FIVE NEW STALLS in the later systems: rhythm moves, plate
+   rims, rhythm-prep foods, customer questions, words and the trail.
+   ================================================================= */
+Object.assign(BEAT_ACT39, {
+  orhluak: {at:3, act:'flip',  title:'Flip the omelette',   btn:'Flip',  bpm:110, line:'Flip the omelette on the beat for crispy edges.'},
+  rojak:   {at:2, act:'toss',  title:'Toss the rojak',      btn:'Toss',  bpm:114, line:'Toss the fruit in the sauce on every beat.'},
+  meerebus:{at:2, act:'dip',   title:'Stir the gravy',      btn:'Stir',  bpm:96,  line:'Stir from the bottom on the beat so it never burns.'},
+  rotijohn:{at:2, act:'press', title:'Press the roti',      btn:'Press', bpm:98, holds:true, line:'Hold the bread down for the whole note, then lift.'},
+  thosai:  {at:3, act:'roll',  title:'Fold the thosai',     btn:'Fold',  bpm:102, line:'Fold the crispy thosai on the beat.'}
+});
+Object.assign(RIM40, {orhluak:'#2f7ab8', rojak:'#a85ac0', meerebus:'#2f8a5a', rotijohn:'#e8743b', thosai:'#c98a2a'});
+Object.assign(ROD36, {orhluak:['Spring onion','#3f9f3a','#e8f6d8','rings'], rojak:['Pineapple','#d9a422','#fbe38a','plain'], meerebus:['Green chilli','#3f8a2a','#dff0c8','seeds'], rotijohn:['Onion','#a8508a','#f6dcec','rings'], thosai:['Tomato','#c7372c','#f2836a','seeds']});
+Object.assign(TERMS, {
+  orhluak:['ORH LUAK','Hokkien for oyster omelette: eggs and sweet potato starch fried crisp, with plump oysters added at the end.'],
+  haeko:['HAE KO','Thick, black prawn paste from Penang. It gives Chinese rojak its deep, savoury sweetness.'],
+  rojakword:['ROJAK','Malay for “mixture”. Singaporeans also call anything mixed-up “very rojak”, like Singlish itself!'],
+  taugeh:['TAUGEH','Bean sprouts. “No taugeh” is a very common request at noodle stalls.'],
+  tawa:['TAWA','The flat iron griddle used to cook thosai and prata.']
+});
+Object.assign(QA, {
+  orhluak:[{q:'Why is it chewy and crispy at the same time?', o:[['Sweet potato starch makes it chewy, egg fried in lard makes it crispy.',1],['It’s cooked twice.',0],['There’s bread inside.',0]], r:'The starch batter goes in first for chewiness, then egg for crispness. Oysters go in last so they stay plump.', learn:'orhluak'}],
+  rojak:[{q:'Why is the sauce black?', o:[['It’s made with hae ko, a dark prawn paste.',1],['It’s burnt.',0],['It’s chocolate.',0]], r:'The sauce is hae ko (prawn paste), sugar, lime and chilli, tossed with fruit, you tiao and tau pok.', learn:'haeko'}],
+  meerebus:[{q:'What makes the gravy so thick?', o:[['Mashed sweet potato!',1],['Corn flour only.',0],['Peanut butter.',0]], r:'Mee rebus gravy is thickened with sweet potato, cooked with dried prawns and spices.'}],
+  rotijohn:[{q:'Who is John?', o:[['The story says an English customer who wanted a sandwich!',1],['The stall owner’s cat.',0],['A famous footballer.',0]], r:'A popular story says roti john was first made for an Englishman named John who asked for a hamburger.'}],
+  thosai:[{q:'Why is it a little sour?', o:[['The batter is left to ferment overnight.',1],['Lemon juice.',0],['It went bad.',0]], r:'Rice and urad dal batter ferments overnight, giving thosai its light, tangy taste.', learn:'tawa'}]
+});
+Object.assign(TRAIL, {
+  orhluak:'Old Airport Road Food Centre and Chomp Chomp are famous for orh luak.',
+  rojak:'Toa Payoh Lorong 7 and Balestier both have well-loved rojak stalls.',
+  meerebus:'Geylang Serai Market and Haig Road Market Food Centre are known for mee rebus.',
+  rotijohn:'Taman Jurong and Bedok are known for their roti john stalls.',
+  thosai:'Little India, around Race Course Road and Tekka Centre, is the place for thosai.'
+});
+
+/* =================================================================
+   48. QUICK WINS
+   - Save backup: copy your progress as a code (or a file) and load it
+     on another device or browser.
+   - Relaxed mode: no step timers and very patient customers.
+   - Customer voices: Animal Crossing-style babble, a different voice
+     for every customer type.
+   ================================================================= */
+
+/* ---------- 1. save backup code ---------- */
+const SAVE_TAG48 = 'HHSAVE1';
+async function saveCode48(){
+  persist();
+  const json = JSON.stringify(save);
+  try {
+    if (typeof CompressionStream === 'function'){
+      const buf = await new Response(new Blob([json]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();
+      let bin = ''; const u = new Uint8Array(buf); for (let i = 0; i < u.length; i += 0x8000) bin += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000));
+      return `${SAVE_TAG48}Z:${btoa(bin)}`;
+    }
+  } catch(e){}
+  return `${SAVE_TAG48}:${btoa(unescape(encodeURIComponent(json)))}`;
+}
+async function readCode48(code){
+  code = String(code || '').trim().replace(/\s+/g, '');
+  const m = code.match(/^HHSAVE1(Z?):(.+)$/); if (!m) throw new Error('format');
+  let json;
+  if (m[1]){
+    const bin = atob(m[2]), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    json = await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+  } else json = decodeURIComponent(escape(atob(m[2])));
+  const obj = JSON.parse(json);
+  if (!obj || typeof obj !== 'object' || !obj.built) throw new Error('content');
+  return obj;
+}
+function summary48(o){
+  const n = Object.values(o.built || {}).filter(Boolean).length, cash = typeof o.wallet === 'number' ? money(o.wallet) : '?';
+  return `${esc(o.player || 'Unnamed hawker')} · Day ${(o.days || 0) + 1} · ${n} stall${n === 1 ? '' : 's'} · ${cash}`;
+}
+async function openBackup48(){
+  const code = await saveCode48();
+  const ov = modal30('bk48Ov', `<p class="label">Back up your progress</p><h2>Your save code</h2>
+    <p>Copy this code and keep it somewhere safe, like your notes app or an email to yourself. Paste it on another phone or computer to carry on there.</p>
+    <p class="hint2">${summary48(save)}</p>
+    <textarea id="bkCode48" class="bk-code" readonly rows="4" aria-label="Your save code">${esc(code)}</textarea>
+    <div class="lv-btns"><button type="button" class="big" data-act="copy">Copy code</button><button type="button" class="buy" data-act="file">Save as a file</button></div>
+    <hr class="bk-hr">
+    <p class="label">Load a save</p>
+    <textarea id="bkIn48" class="bk-code" rows="3" placeholder="Paste a save code here (starts with HHSAVE1)" aria-label="Paste a save code"></textarea>
+    <div class="lv-btns"><button type="button" class="buy" data-act="load">Load this code</button><label class="buy bk-file">Open a save file<input type="file" accept=".txt,text/plain" id="bkFile48" hidden></label><button type="button" class="buy" data-act="x">Close</button></div>
+    <div class="bk-confirm" hidden></div>
+    <p class="bk-err hint2" hidden></p>`, 'lv-card bk48');
+  const err = t => { const e = ov.querySelector('.bk-err'); e.textContent = t; e.hidden = !t; if (t) sfx.bad(); };
+  const confirmLoad = async txt => {
+    let o; try { o = await readCode48(txt); } catch(e){ err('That doesn’t look like a Hawker Hero save code. Copy the whole thing, starting with HHSAVE1.'); return; }
+    err('');
+    const box = ov.querySelector('.bk-confirm'); box.hidden = false;
+    box.innerHTML = `<p><b>Replace your current progress?</b></p><p class="hint2">Current: ${summary48(save)}<br>New: ${summary48(o)}</p>
+      <div class="lv-btns"><button type="button" class="big" data-act="yes">Yes, load it</button><button type="button" class="buy" data-act="no">Cancel</button></div>`;
+    box.querySelector('[data-act=yes]').onclick = () => { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch(e){ err('Your browser blocked saving. Try turning off private browsing.'); return; } REC.log('save_load', {}); location.reload(); };
+    box.querySelector('[data-act=no]').onclick = () => { box.hidden = true; };
+  };
+  ov.querySelector('#bkFile48').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (!f) return; f.text().then(confirmLoad); });
+  ov.onclick = e => {
+    const b = e.target.closest('[data-act]'); if (!b || b.closest('.bk-confirm')) return; sfx.tick();
+    const a = b.dataset.act, ta = $('#bkCode48');
+    if (a === 'x'){ ov.hidden = true; return; }
+    if (a === 'copy'){ try { navigator.clipboard.writeText(ta.value).then(() => toast('Save code copied!'), () => { ta.select(); toast('Select the code and copy it'); }); } catch(e2){ ta.select(); } REC.log('save_copy', {}); return; }
+    if (a === 'file'){ const url = URL.createObjectURL(new Blob([ta.value], {type:'text/plain'})); const l = document.createElement('a'); l.href = url; l.download = `hawker-hero-save-${dateKey45()}.txt`; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000); toast('Save file downloaded'); return; }
+    if (a === 'load') confirmLoad($('#bkIn48').value);
+  };
+}
+
+/* ---------- 2. relaxed mode ---------- */
+const RELAX_SKIP48 = {beat:1, holdZone:1};
+const _runMinigame48 = runMinigame;
+runMinigame = function(spec, ctx, stepNo, stepCount){
+  if (save.relax48 && spec && !spec.noScore && spec.kind !== 'counter' && !RELAX_SKIP48[spec.kind] && spec.time){
+    const r = Object.create(spec); r.time = spec.time*8;
+    if (/^(circular|sequence|chop|swipeSeq)$/.test(spec.kind) && spec.score){
+      const lim = spec.time*0.45;
+      r.score = function(s){ const t = s.t; s.t = Math.min(t, lim); try { return spec.score.call(this, s); } finally { s.t = t; } };
+    }
+    return _runMinigame48(r, ctx, stepNo, stepCount);
+  }
+  return _runMinigame48(spec, ctx, stepNo, stepCount);
+};
+const _mkCust48 = makeCustomers;
+makeCustomers = function(st, beginner, service){ const list = _mkCust48(st, beginner, service); if (save.relax48) list.forEach(c => { c.pm *= 2.6; }); return list; };
+const syncRelax48 = () => document.body.classList.toggle('relax48', !!save.relax48);
+syncRelax48();
+
+/* ---------- 3. customer voices ---------- */
+const VOICE48 = {
+  elderly:{base:150, spread:30, rate:0.15, type:'triangle', wob:6}, office:{base:230, spread:60, rate:0.075, type:'square', wob:0},
+  student:{base:300, spread:80, rate:0.07, type:'triangle', wob:0}, tourist:{base:260, spread:70, rate:0.1, type:'sine', wob:3},
+  family:{base:270, spread:60, rate:0.09, type:'triangle', wob:2}, foodie:{base:210, spread:50, rate:0.1, type:'sawtooth', wob:0},
+  _:{base:240, spread:60, rate:0.09, type:'triangle', wob:2}
+};
+function hash48(s){ let h = 7; for (let i = 0; i < s.length; i++) h = (h*31 + s.charCodeAt(i)) >>> 0; return h; }
+function babble48(c, text, mood){
+  if (save.voices48 === false || muted || !text) return;
+  try {
+    if (!grvCtx()) return;
+    const V = VOICE48[c && c.persona] || VOICE48._, h = hash48((c && c.cust && c.cust.name) || 'x'), pitch = V.base*(0.85 + (h % 30)/100);
+    const words = String(text).replace(/[^A-Za-zÀ-ɏ஀-௿一-鿿 ]/g, ' ').split(/\s+/).filter(Boolean);
+    const syl = Math.min(14, Math.max(3, Math.round(words.reduce((a, w) => a + Math.max(1, Math.round(w.length/3)), 0)*0.7)));
+    const t0 = actx.currentTime + 0.05, bus = GRV.sfxBus, R = rng(h + syl);
+    for (let i = 0; i < syl; i++){
+      const t = t0 + i*V.rate*(0.85 + R()*0.3), up = mood === 'happy' ? i/syl*0.35 : mood === 'sad' ? -i/syl*0.3 : (i === syl - 1 && /\?\s*$/.test(text) ? 0.3 : 0);
+      const f = pitch*(1 + up)*(1 + (R() - 0.5)*V.spread/V.base);
+      gTone(bus, t, f, V.rate*0.8, V.type, 0.045, f*(1 + (V.wob ? (R() - 0.5)*0.08 : 0.02)));
+    }
+  } catch(e){}
+}
+const _takeMount48 = TAKE.mount;
+TAKE.mount = function(el, s, finish){ _takeMount48.call(this, el, s, finish); try { const c = s.order; if (c && c.speech) setTimeout(() => babble48(c, c.speech), 250); } catch(e){} };
+const _dishResult48 = dishResult;
+dishResult = function(q, c, steps, scores, stars, last){
+  const p = _dishResult48(q, c, steps, scores, stars, last);
+  try { if (c && c.cust) setTimeout(() => babble48(c, ($('#dishMsg') || {}).textContent || 'thank you boss', stars >= 3 ? 'happy' : stars <= 1 ? 'sad' : ''), 700); } catch(e){}
+  return p;
+};
+
+/* ---------- settings ---------- */
+(function settings48(){
+  const anchor = $('#setTips'); if (!anchor) return;
+  anchor.closest('.set-row').insertAdjacentHTML('afterend', `
+    <div class="set-row"><span>Relaxed mode<small>No step timers and very patient customers. Great for learning</small></span><button class="tog" type="button" id="setRelax48" aria-label="Relaxed mode" aria-pressed="false"></button></div>
+    <div class="set-row"><span>Customer voices<small>Each customer babbles in their own voice</small></span><button class="tog" type="button" id="setVoices48" aria-label="Customer voices" aria-pressed="true"></button></div>`);
+  const save0 = $('#setSave'); if (save0) save0.closest('.set-row').insertAdjacentHTML('beforebegin', `<div class="set-row"><span>Back up progress<small>Copy a save code to move to another phone or computer</small></span><button class="buy" type="button" id="setBackup48">Open</button></div>`);
+  const r = $('#setRelax48'), v = $('#setVoices48');
+  const sync = () => { r.setAttribute('aria-pressed', String(!!save.relax48)); v.setAttribute('aria-pressed', String(save.voices48 !== false)); syncRelax48(); };
+  r.addEventListener('click', () => { save.relax48 = !save.relax48; persist(); sync(); sfx.tick(); if (save.relax48) toast('Relaxed mode on: take your time!'); });
+  v.addEventListener('click', () => { save.voices48 = save.voices48 === false; persist(); sync(); sfx.tick(); if (save.voices48 !== false) babble48({persona:'family', cust:{name:'Test'}}, 'Hello boss, one plate please!', 'happy'); });
+  const b = $('#setBackup48'); if (b) b.addEventListener('click', () => { sfx.tick(); openBackup48(); });
+  const _rs = renderSettings; renderSettings = function(){ _rs(); sync(); };
+})();
+
+(function css48(){
+  const s = document.createElement('style'); s.textContent = `
+body.relax48 .timer{visibility:hidden}
+.bk48 .bk-code{width:100%;box-sizing:border-box;font-family:var(--mono);font-size:max(11px,.75rem);line-height:1.35;border:.1875rem solid var(--ink);border-radius:.7rem;padding:.5rem .6rem;background:#fff;color:var(--ink);resize:vertical;word-break:break-all}
+.bk48 .bk-hr{border:0;border-top:.125rem dashed #cfd8d2;margin:.4rem 0}
+.bk48 .bk-file{display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.bk48 .bk-confirm{background:#fff3cc;border:.125rem solid var(--ink);border-radius:.8rem;padding:.6rem .7rem;text-align:left}
+.bk48 .bk-confirm p{margin:.15rem 0}
+`; document.head.appendChild(s);
+})();
+
+/* =================================================================
+   49. FESTIVAL EVENTS: Chinese New Year, Hari Raya Puasa, Deepavali,
+   Mid-Autumn, National Day and Christmas. Each one brings a festive
+   crowd, a limited-time festival treat with its own cooking step, and
+   a decoration you can only win during that festival. Festivals run on
+   the real calendar, and on every 7th day in the game.
+   ================================================================= */
+if (!FEST.includes('christmas')) FEST.push('christmas');
+Object.assign(EVENTS, {christmas:{name:'Christmas', icon:'🎄', note:'Office parties and families on holiday: lots of dine-in and big, happy tips.', pat:1.1, tip:1.5, dine:'here'}});
+Object.assign(TERMS, {
+  christmas:['CHRISTMAS','Orchard Road lights up from November. Many families have a Christmas lunch at a hawker centre, with log cake for dessert.'],
+  yusheng:['YU SHENG','A raw fish salad tossed high at Chinese New Year. Everyone says “lo hei!” and the higher you toss, the better your luck.'],
+  ketupat:['KETUPAT','Rice cooked inside a woven palm-leaf pouch, eaten with rendang at Hari Raya.'],
+  murukku:['MURUKKU','A crunchy, spiral-shaped Deepavali snack made from rice and urad dal flour.']
+});
+/* real-world dates: [start, end] as month*100 + day; moving festivals are listed by year */
+const FEST_DATES49 = {
+  cny:{2027:[[1,27],[2,20]], 2028:[[1,16],[2,9]], 2029:[[2,3],[2,27]]},
+  raya:{2027:[[3,1],[3,24]], 2028:[[2,18],[3,12]], 2029:[[2,6],[2,28]]},
+  deepavali:{2026:[[10,26],[11,15]], 2027:[[10,15],[11,5]], 2028:[[11,1],[11,21]]},
+  midautumn:{2026:[[9,18],[9,30]], 2027:[[9,8],[9,20]], 2028:[[9,26],[10,8]]},
+  national:{all:[[7,25],[8,16]]},
+  christmas:{all:[[12,10],[12,31]]}
+};
+function festReal49(d){
+  d = d || new Date(); const y = d.getFullYear(), v = (d.getMonth() + 1)*100 + d.getDate();
+  for (const k of Object.keys(FEST_DATES49)){ const r = FEST_DATES49[k][y] || FEST_DATES49[k].all; if (r && v >= r[0][0]*100 + r[0][1] && v <= r[1][0]*100 + r[1][1]) return k; }
+  return null;
+}
+function festNext49(){
+  const d = new Date(); for (let i = 1; i < 400; i++){ const x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i), k = festReal49(x); if (k) return {k, days:i, date:x}; }
+  return null;
+}
+const _forecast49 = forecast;
+forecast = function(service){
+  const f = _forecast49(service), k = !save.festOff49 && festReal49();
+  if (k && dayNo() > 1){ f.lunch = k; f.dinner = k; f.ev = service ? k : null; f.fest = k; }
+  return f;
+};
+const festNow49 = svc => { try { return forecast(svc || curService() || 'lunch').fest || null; } catch(e){ return null; } };
+
+/* ---------- each festival: its treat, crowd and decoration ---------- */
+function plateBase49(){ kitchenBg(); g.save(); g.translate(200, 150); circle(0, 0, 92, rad(-26, -26, 4, 96, [[0, '#ffffff'], [1, '#dfe5e2']]), '#a9b3b0', 2.5); circle(0, 0, 78, null, '#e3e8e6', 2); }
+const FD49 = {
+  cny:{name:'Chinese New Year', ic:'🧧', greet:'Gong xi fa cai!', treat:'Yu sheng', price:300, shirts:['#c7372c', '#d9262e', '#f2c53d'], crowd:['family', 'family', 'elderly', 'office'],
+    decor:{id:'fcny', name:'Spring couplets', slot:'wall'},
+    step:() => circular({title:'Lo hei! Toss the yu sheng', turns:3, par:3.5, ring:90, time:11, hint:'Toss high for good luck! 3 turns. Lo hei!', scene(s, p){
+      plateBase49(); const r = rng(901), cols = ['#f2836a', '#f6c060', '#6fbf4a', '#ffffff', '#d9468f', '#f2c53d'];
+      for (let i = 0; i < 60; i++){ const a = r()*6.28 + s.ang*0.3*(p < 1 ? 1 : 0), d = p < 0.15 ? 30 + (i % 6)*8 : Math.sqrt(r())*70, lift = Math.sin(s.t*8 + i)*p*6; line(Math.cos(a)*d, Math.sin(a)*d - lift, Math.cos(a)*d + 8, Math.sin(a)*d - lift + 2, cols[i % 6], 3); }
+      g.restore(); txt(p > 0.9 ? 'Huat ah! Good luck all year!' : 'Lo hei! Toss it high!', 200, 34, 14, C.red, {display:true}); }})},
+  raya:{name:'Hari Raya Puasa', ic:'🌙', greet:'Selamat Hari Raya!', treat:'Ketupat', price:250, shirts:['#0f766e', '#2f7d4f', '#7a3a8a', '#f2c53d'], crowd:['family', 'family', 'elderly', 'student'],
+    decor:{id:'fraya', name:'Ketupat garland', slot:'hang'},
+    step:() => chop({title:'Cut the ketupat', hint:'Slice the rice cakes for the rendang. Swipe down each line.', food(){
+      for (let i = 0; i < 4; i++){ g.save(); g.translate(130 + i*48, 160); g.rotate(0.78); box(-20, -20, 40, 40, 4, lin(-20, -20, 20, 20, [[0, '#d9c46a'], [1, '#a8902a']]), '#6a5a10', 1.5); for (let k = -2; k <= 2; k++){ line(k*8, -20, k*8, 20, 'rgba(90,80,20,.6)', 1.2); line(-20, k*8, 20, k*8, 'rgba(90,80,20,.6)', 1.2); } g.restore(); } }})},
+  deepavali:{name:'Deepavali', ic:'🪔', greet:'Happy Deepavali!', treat:'Murukku', price:200, shirts:['#e8743b', '#d9468f', '#f2c53d', '#7a3a8a'], crowd:['family', 'family', 'elderly', 'foodie'],
+    decor:{id:'fdeepa', name:'Kolam rangoli', slot:'floor'},
+    step:() => circular({title:'Pipe the murukku', turns:3, par:3.5, ring:70, time:11, hint:'Pipe the dough round and round into a spiral. 3 turns.', scene(s, p){
+      kitchenBg(); g.save(); g.translate(200, 150); circle(0, 0, 96, rad(-30, -30, 6, 100, [[0, '#5a4a3a'], [1, '#2a2018']]), '#1a120a', 3);
+      g.beginPath(); for (let a = 0; a < s.ang; a += 0.12){ const rr = 6 + a*4.2; g.lineTo(Math.cos(a)*rr, Math.sin(a)*rr); } g.strokeStyle = '#e8b04a'; g.lineWidth = 7; g.lineCap = 'round'; g.lineJoin = 'round'; g.stroke(); g.strokeStyle = 'rgba(255,240,190,.5)'; g.lineWidth = 2; g.stroke(); g.lineCap = 'butt'; g.lineJoin = 'miter';
+      g.restore(); txt(p > 0.9 ? 'A perfect spiral!' : 'Round and round, from the middle out', 200, 34, 13, C.ink, {display:true}); }})},
+  midautumn:{name:'Mid-Autumn', ic:'🥮', greet:'Happy Mid-Autumn!', treat:'Mooncake', price:300, shirts:['#c7372c', '#f2c53d', '#1f4fa3'], crowd:['family', 'family', 'elderly', 'tourist'],
+    decor:{id:'fmoon', name:'Rabbit lantern', slot:'hang'},
+    step:() => timing({title:'Press the mooncake mould', rounds:2, speed:0.8, btn:'Press!', hint:'Tap when the mould is over the green patch.', scene(s){
+      kitchenBg(); box(40, 120, 320, 100, 12, '#c99a62', '#8a6236', 3);
+      for (let k = 0; k < s.round; k++){ const x = 100 + k*140; circle(x, 170, 30, rad(x - 8, 160, 2, 32, [[0, '#e8b05a'], [1, '#a8642a']]), '#6a3a10', 2); for (let i = 0; i < 8; i++){ const a = i*0.785; circle(x + Math.cos(a)*22, 170 + Math.sin(a)*22, 5, null, '#8a4a18', 1.4); } txt('福', x, 172, 16, '#8a4a18', {display:true}); }
+      const mx = 40 + s.pos*320; g.save(); g.translate(mx, 70); box(-34, -18, 68, 36, 8, lin(0, -18, 0, 18, [[0, '#c9925a'], [1, '#8a5a2a']]), '#5a3a1a', 2); box(-6, -44, 12, 28, 4, '#8a5a2a', '#5a3a1a', 1.5); g.restore(); }})},
+  national:{name:'National Day', ic:'🇸🇬', greet:'Happy National Day!', treat:'Flag cupcake', price:200, shirts:['#c7372c', '#ffffff', '#c7372c'], crowd:['family', 'student', 'student', 'office'],
+    decor:{id:'fnat', name:'Singapore flag', slot:'wall'},
+    step:() => assemble({title:'Decorate the cupcake', time:24, btn:'Done', hint:'Red on top, white below, then the moon and five stars.', cx:200, cy:110, scale:1,
+      dish:s => { circle(0, 6, 62, '#e8b06a', '#8a5a2a', 2); g.save(); g.beginPath(); g.arc(0, 0, 56, 0, Math.PI*2); g.clip(); if (s.n.redice) { g.fillStyle = '#d9262e'; g.fillRect(-60, -60, 120, 60); } if (s.n.whiteice){ g.fillStyle = '#fbfaf6'; g.fillRect(-60, 0, 120, 60); } g.restore(); if (s.n.moon){ circle(-26, -26, 12, '#ffffff'); circle(-21, -26, 11, s.n.redice ? '#d9262e' : '#e8b06a'); } if (s.n.stars) for (let i = 0; i < 5; i++){ const a = -Math.PI/2 + i*1.257; circle(-6 + Math.cos(a)*9, -26 + Math.sin(a)*9, 2.4, '#ffffff'); } },
+      spots:{redice:[0, -26, 30], whiteice:[0, 26, 30], moon:[-26, -26, 14], stars:[-6, -26, 14]},
+      tray:() => [{id:'redice'}, {id:'whiteice'}, {id:'moon'}, {id:'stars'}], req:() => ({redice:1, whiteice:1, moon:1, stars:1})})},
+  christmas:{name:'Christmas', ic:'🎄', greet:'Merry Christmas!', treat:'Log cake slice', price:250, shirts:['#c7372c', '#2f7d4f', '#ffffff'], crowd:['family', 'office', 'tourist', 'tourist'],
+    decor:{id:'fxmas', name:'Christmas tree', slot:'floor'},
+    step:() => fill({title:'Pour the chocolate ganache', btn:'Hold to pour', unit:'Ganache', time:10, base:0.24, accel:0.3, hint:'Cover the log cake. Let go at the line.',
+      targets:() => [{label:'Ganache', color:'#4a2410', target:rand(0.6, 0.78)}], scene(s){
+        kitchenBg(); const lvl = s.r < s.targets.length ? s.fill : (s.lastFill || 0), on = (s.pressed || s.hold) && s.r < s.targets.length;
+        box(60, 170, 240, 20, 8, '#ffffff', '#a9b3b0', 2); box(90, 130, 180, 46, 22, '#c9925a', '#8a5a2a', 2); ell(270, 153, 20, 23, '#f6e2b0', '#8a5a2a', 2); for (let i = 0; i < 3; i++) ell(270, 153, 14 - i*4, 17 - i*5, null, '#c9925a', 1.4);
+        if (lvl > 0){ g.save(); g.beginPath(); g.rect(88, 128, 184, 48); g.clip(); box(88, 128, 184*Math.min(1, lvl*1.3), 48, 22, '#4a2410'); for (let i = 0; i < 8; i++) line(96 + i*22, 134, 106 + i*22, 170, 'rgba(255,255,255,.18)', 2); g.restore(); }
+        g.save(); g.translate(on ? 180 : 300, on ? 80 : 70); g.rotate(on ? 2.2 : 0.3); g.scale(1.4, 1.4); box(-9, -12, 18, 24, 4, '#e6ecea', '#7f8b88', 1.2); box(-7, -4, 14, 12, 3, '#4a2410'); g.restore();
+        if (on){ g.beginPath(); g.moveTo(172, 98); g.quadraticCurveTo(168, 114, 170 + lvl*60, 130); g.strokeStyle = '#4a2410'; g.lineWidth = 6; g.lineCap = 'round'; g.stroke(); g.lineCap = 'butt'; }
+        txt('Bûche de Noël: a log-shaped cake', 180, 48, 12, C.ink, {display:true}); }})}
+};
+Object.assign(ICON, {
+  redice(){ circle(0, 0, 14, '#d9262e', '#8a1010', 1.2); }, whiteice(){ circle(0, 0, 14, '#fbfaf6', '#a9b3b0', 1.2); },
+  moon(){ circle(0, 0, 13, '#ffffff', '#a9b3b0', 1); circle(5, 0, 12, '#d9262e'); },
+  stars(){ for (let i = 0; i < 5; i++){ const a = -Math.PI/2 + i*1.257; circle(Math.cos(a)*8, Math.sin(a)*8, 3, '#ffffff', '#a9b3b0', 0.8); } }
+});
+Object.assign(NAME, {redice:'Red icing', whiteice:'White icing', moon:'Crescent moon', stars:'Five stars'});
+const FSTEP49 = {}; Object.keys(FD49).forEach(k => { FSTEP49[k] = FD49[k].step(); FSTEP49[k].fest49 = k; });
+
+/* festival decorations: won, never bought */
+Object.assign(DECOR_DRAW, {
+  fcny(x, y){ for (let i = -1; i <= 1; i += 2){ box(x + i*12 - 5, y - 24, 10, 44, 1, '#c7372c', '#7a1010', 1); for (let k = 0; k < 4; k++) box(x + i*12 - 3, y - 20 + k*10, 6, 6, 1, '#f2c53d'); } g.save(); g.translate(x, y - 30); g.rotate(0.785); box(-7, -7, 14, 14, 1, '#c7372c', '#7a1010', 1); g.restore(); txt('福', x, y - 30, 9, '#f2c53d', {display:true}); },
+  fraya(x, y, t){ g.save(); g.translate(x, y - 26); line(-16, 0, 16, 0, '#8a6236', 2); for (let i = 0; i < 3; i++){ g.save(); g.translate(-12 + i*12, 10 + Math.sin((t || 0)*2 + i)*1.5); g.rotate(0.785); box(-6, -6, 12, 12, 2, '#d9c46a', '#6a5a10', 1); line(-6, 0, 6, 0, 'rgba(90,80,20,.6)', 1); line(0, -6, 0, 6, 'rgba(90,80,20,.6)', 1); g.restore(); line(-12 + i*12, 0, -12 + i*12, 4, '#8a6236', 1); } g.restore(); },
+  fdeepa(x, y){ g.save(); g.translate(x, y + 2); const cols = ['#e8743b', '#d9468f', '#f2c53d', '#2f7d4f', '#1f4fa3']; for (let r = 4; r >= 1; r--){ g.beginPath(); for (let i = 0; i < 16; i++){ const a = i/16*6.28, rr = r*5 + (i % 2 ? 2 : 0); g.lineTo(Math.cos(a)*rr*1.4, Math.sin(a)*rr*0.6); } g.closePath(); g.fillStyle = cols[r % 5]; g.fill(); } circle(0, 0, 2.5, '#ffffff'); g.restore(); },
+  fmoon(x, y, t){ g.save(); g.translate(x, y - 24); g.rotate(Math.sin((t || 0)*1.4)*0.08); line(0, -6, 0, 6, C.ink, 1); ell(0, 18, 14, 11, rad(-3, 14, 2, 15, [[0, '#ffffff'], [1, '#f2d6dc']]), '#c7372c', 1.2); ell(-6, 6, 3, 8, '#ffffff', '#c7372c', 1); ell(2, 6, 3, 8, '#ffffff', '#c7372c', 1); circle(-6, 18, 1.5, '#c7372c'); circle(10, 22, 3, '#f2c53d'); g.restore(); },
+  fnat(x, y){ box(x - 16, y - 20, 32, 22, 1, '#ffffff', '#5a5a5a', 1); box(x - 16, y - 20, 32, 11, 1, '#d9262e'); circle(x - 10, y - 15, 3.6, '#ffffff'); circle(x - 8.6, y - 15, 3.3, '#d9262e'); for (let i = 0; i < 5; i++){ const a = -Math.PI/2 + i*1.257; circle(x - 5 + Math.cos(a)*2.6, y - 15 + Math.sin(a)*2.6, 0.8, '#ffffff'); } line(x - 16, y - 20, x - 16, y + 18, '#5a5a5a', 1.5); },
+  fxmas(x, y, t){ g.save(); g.translate(x, y + 4); box(-4, -6, 8, 8, 1, '#8a5a2a'); for (let k = 0; k < 3; k++){ g.beginPath(); g.moveTo(-18 + k*4, -6 - k*12); g.lineTo(0, -24 - k*12); g.lineTo(18 - k*4, -6 - k*12); g.closePath(); g.fillStyle = k % 2 ? '#3f9f3a' : '#2f7d4f'; g.fill(); } const tw = Math.sin((t || 0)*4) > 0; ['#c7372c', '#f2c53d', '#1f4fa3', '#ffffff'].forEach((c, i) => circle(-8 + (i % 2)*16 - (i > 1 ? 3 : 0), -12 - i*7, 2, tw && i % 2 ? '#ffffff' : c)); circle(0, -50, 3, '#f2c53d'); g.restore(); }
+});
+Object.values(FD49).forEach(F => { if (!DECOR.find(d => d.id === F.decor.id)) DECOR.push({id:F.decor.id, name:F.decor.name, slot:F.decor.slot, cost:0, fest49:true}); });
+const FEST_NEED49 = 5;
+function fest49State(){ const S = save.fest49 = save.fest49 || {served:{}, won:{}}; S.served = S.served || {}; S.won = S.won || {}; return S; }
+
+/* ---------- the festive crowd and the treat ---------- */
+const _mkCust49 = makeCustomers;
+makeCustomers = function(st, beginner, service){
+  const list = _mkCust49(st, beginner, service), k = festNow49(service);
+  if (!k || (typeof LEVEL !== 'undefined' && LEVEL)) return list;
+  const F = FD49[k], R = rng(dayNo()*53 + (service === 'dinner' ? 7 : 1));
+  list.forEach((c, i) => {
+    if (!c.reg && !c.usualMode){ c.persona = F.crowd[Math.floor(R()*F.crowd.length)]; if (c.cust) c.cust.shirt = F.shirts[i % F.shirts.length]; }
+    if (c.sayParts){ c.sayParts.greet = `${F.greet} ${c.sayParts.greet}`;
+      if (R() < 0.5 && !c.usualMode){ c.t.fest49 = k; c.sayParts.order = `${c.sayParts.order.replace(/\.\s*$/, '')}. And one ${F.treat.toLowerCase()}!`; }
+      c.speech = `${c.sayParts.greet} ${c.sayParts.order} ${c.sayParts.dine}`; }
+  });
+  return list;
+};
+const _runMinigame49 = runMinigame;
+runMinigame = function(spec, ctx, stepNo, stepCount){
+  const p = _runMinigame49(spec, ctx, stepNo, stepCount);
+  if (spec === TAKE && ctx && ctx.t && ctx.t.fest49) return p.then(sc => { try { if (ctx.w) ctx.w.fest49 = ctx.t.fest49; } catch(e){} return sc; });
+  return p;
+};
+STALLS.forEach(st => {
+  const cook0 = st.cook;
+  st.cook = function(w){ const L = cook0.call(this, w); if (w && w.fest49 && FSTEP49[w.fest49]) return L.concat([FSTEP49[w.fest49]]); return L; };
+});
+const _dishResult49 = dishResult;
+dishResult = function(q, c, steps, scores, stars, last){
+  const p = _dishResult49(q, c, steps, scores, stars, last);
+  try {
+    const k = c.w && c.w.fest49;
+    if (k && FD49[k] && !(typeof LEVEL !== 'undefined' && LEVEL)){
+      const F = FD49[k], S = fest49State(), yr = new Date().getFullYear() + ':' + k;
+      earn(F.price, $('#dishStars')); try { const tm = {cny:'yusheng', raya:'ketupat', deepavali:'murukku', christmas:'christmas'}[k]; if (tm) discover(tm); } catch(e2){}
+      S.served[yr] = (S.served[yr] || 0) + 1;
+      if (!S.won[k] && S.served[yr] >= FEST_NEED49){ S.won[k] = yr; setTimeout(() => pop29(F.ic, 'FESTIVAL PRIZE', F.decor.name, 'Find it in the Decor tab. Only won during ' + F.name + '!'), 1200); REC.log('fest_win', {k}); }
+      persist();
+      const host = $('#dishTier39') || $('#dishStars'); if (host && !$('#fest49Tag')) host.insertAdjacentHTML('afterend', `<p id="fest49Tag" class="fest49-tag">${F.ic} ${esc(F.treat)} served · +${money(F.price)} · ${Math.min(S.served[yr], FEST_NEED49)}/${FEST_NEED49} for the ${esc(F.decor.name)}</p>`);
+      else if ($('#fest49Tag')) $('#fest49Tag').innerHTML = `${F.ic} ${esc(F.treat)} served · +${money(F.price)} · ${Math.min(S.served[yr], FEST_NEED49)}/${FEST_NEED49} for the ${esc(F.decor.name)}`;
+    } else if ($('#fest49Tag')) $('#fest49Tag').remove();
+  } catch(e){ console.warn('fest49', e); }
+  return p;
+};
+
+/* ---------- decor: festival pieces are won, not bought ---------- */
+const _renderTab49 = renderTab;
+renderTab = function(){
+  if (curStall && curTab === 'decor'){ const S = fest49State(), own = ownedSet(curStall.id); Object.keys(S.won).forEach(k => { const id = FD49[k] && FD49[k].decor.id; if (id && !own.includes(id)) own.push(id); }); }
+  _renderTab49();
+  if (!curStall || curTab !== 'decor') return;
+  const S = fest49State();
+  document.querySelectorAll("#slotPick .row-item").forEach(row => {
+    const nm = row.querySelector('.nm'), F = Object.values(FD49).find(F => nm && nm.textContent === F.decor.name); if (!F) return;
+    const k = Object.keys(FD49).find(x => FD49[x] === F); if (S.won[k]) return;
+    const b = row.querySelector('button.buy'); if (b){ b.disabled = true; b.textContent = 'Festival prize'; }
+    const sub = row.querySelector('.sub2'); if (sub) sub.textContent = `Serve ${FEST_NEED49} ${F.treat.toLowerCase()}s during ${F.name}`;
+  });
+};
+
+/* ---------- the hub card ---------- */
+function festCard49(){
+  const k = festNow49(), S = fest49State();
+  if (k){
+    const F = FD49[k], yr = new Date().getFullYear() + ':' + k, n = Math.min(S.served[yr] || 0, FEST_NEED49), real = festReal49() === k;
+    return `<div class="fest49 on f-${k}"><span class="fs-ic" aria-hidden="true">${F.ic}</span><div><p class="label">${real ? 'Festival season' : 'Festival day'} · ${esc(F.name)}</p><b>${esc(F.greet)}</b>
+      <small>Customers may ask for <b>${esc(F.treat.toLowerCase())}</b> (+${money(F.price)} each). ${S.won[k] ? `You’ve won the ${esc(F.decor.name)}!` : `Serve ${FEST_NEED49} to win the <b>${esc(F.decor.name)}</b>.`}</small>
+      ${S.won[k] ? '' : `<span class="fs-bar"><i style="width:${n/FEST_NEED49*100}%"></i></span>`}</div></div>`;
+  }
+  const nx = festNext49(), inGame = 7 - (dayNo() % 7);
+  const won = Object.keys(S.won).length;
+  return `<div class="fest49"><span class="fs-ic" aria-hidden="true">🎉</span><div><p class="label">Festivals · ${won}/${Object.keys(FD49).length} prizes won</p>
+    <b>Next festival day in ${inGame === 7 ? 7 : inGame} day${inGame === 1 ? '' : 's'}</b>
+    <small>${nx ? `${FD49[nx.k].ic} ${esc(FD49[nx.k].name)} season starts in ${nx.days} real day${nx.days === 1 ? '' : 's'}.` : ''} Each festival brings a special treat and a prize.</small></div></div>`;
+}
+const _renderHub49 = renderHub;
+renderHub = function(){
+  _renderHub49();
+  try { let el = $('#fest49Hub'); if (!el){ el = document.createElement('div'); el.id = 'fest49Hub'; } const row = $('#prog45') || $('#nbaHub') || $('#hubPrompt'); row.after(el); el.innerHTML = festCard49(); } catch(e){ console.warn(e); }
+};
+
+(function css49(){
+  const s = document.createElement('style'); s.textContent = `
+.fest49{display:grid;grid-template-columns:2.6rem 1fr;gap:.65rem;align-items:center;background:#fff;border:.1875rem solid var(--ink);border-radius:1rem;box-shadow:0 .25rem 0 var(--ink);padding:.6rem .75rem;color:var(--ink);text-align:left;margin:0 0 .75rem}
+.fest49 .fs-ic{width:2.6rem;height:2.6rem;border-radius:.8rem;background:#fff3cc;border:.125rem solid var(--ink);display:grid;place-items:center;font-size:1.35rem}
+.fest49 .label{color:var(--green);font-size:max(11px,.68rem)}
+.fest49 b{font-family:var(--display);font-size:1.02rem}
+.fest49 small{display:block;color:var(--muted);font-size:.84rem;line-height:1.35;margin-top:.1rem}
+.fest49 small b{font-family:inherit;font-size:inherit;color:var(--ink)}
+.fest49 .fs-bar{display:block;height:.5rem;border-radius:1rem;background:#e6ece8;overflow:hidden;margin-top:.35rem}
+.fest49 .fs-bar i{display:block;height:100%;background:linear-gradient(90deg,#f2c53d,#c7372c)}
+.fest49.on{background:linear-gradient(135deg,#fff 60%,#fff3cc)}
+.fest49.f-cny,.fest49.f-christmas{border-color:#7a1010}
+.fest49-tag{margin:.2rem auto 0;font-size:.86rem;font-weight:800;color:var(--red);text-align:center}
+body.pd45-0 #fest49Hub{display:none}
+`; document.head.appendChild(s);
+})();
+
+/* =================================================================
+   50. WALK THE WHOLE FOOD CENTRE IN 3D
+   Stroll through Bahagia Food Centre: every stall along the walls
+   (yours open and lit, empty units shuttered), the neighbours' stalls,
+   rows of marble tables, fans and lights. Say hello to neighbours, clear
+   trays left on tables, and watch the hall improve as the centre's
+   rating rises: plants, lanterns, a mural, then a stage with a busker.
+   Uses the same small software 3D renderer as the 3D stall.
+   ================================================================= */
+const C50 = {open:false, mode:'walk', me:{x:0, z:6.2, yaw:Math.PI}, tgt:null, keys:{}, held:null, stat:null, statKey:'', t0:0, raf:0, bb:{}, card:null, look:0};
+const HALL50 = {x0:-10, x1:10, z0:-8, z1:8, h:4.6};
+function c50(){ const S = save.c50 = save.c50 || {}; if (S.day !== dayNo()){ Object.assign(S, {day:dayNo(), cleared:[], hello:{}}); } S.cleared = S.cleared || []; S.hello = S.hello || {}; return S; }
+
+/* where each stall sits: along the back wall, then the left and right walls */
+function slots50(){
+  const out = [];
+  for (let i = 0; i < 10; i++) out.push({x:-9 + i*2, z:-7.3, r:0});
+  for (let i = 0; i < 7; i++) out.push({x:-9.3, z:-5 + i*1.9, r:Math.PI/2});
+  for (let i = 0; i < 7; i++) out.push({x:9.3, z:-5 + i*1.9, r:-Math.PI/2});
+  return out;
+}
+const TABLES50 = (() => { const t = []; for (const x of [-6, -3, 0, 3, 6]) for (const z of [-3.6, -0.6, 2.4]) t.push({x, z}); return t; })();
+function trays50(){ const r = ctr().rating, n = Math.max(1, Math.min(8, Math.round((100 - r)/12) + 1)), R = seeded(dayNo()*97 + 5), out = []; while (out.length < n){ const k = Math.floor(R()*TABLES50.length); if (!out.includes(k)) out.push(k); } return out.filter(k => !c50().cleared.includes(k)); }
+
+/* ---------- building the hall (static faces are cached) ---------- */
+function signDecal50(name, sub, col, fg){ return decal37(180, 40, (c, W, H) => { c.fillStyle = col; c.fillRect(0, 0, W, H); c.fillStyle = fg || '#ffffff'; c.textAlign = 'center'; let fs = 15; c.font = `700 ${fs}px ${F_DISP}`; while (c.measureText(name).width > W - 10 && fs > 8){ fs--; c.font = `700 ${fs}px ${F_DISP}`; } c.fillText(name, W/2, 20); c.globalAlpha = 0.8; c.font = `700 8px ${F_BODY}`; c.fillText(String(sub || '').slice(0, 34), W/2, 33); c.globalAlpha = 1; }); }
+function stallBox50(sl, st, i){
+  const built = st && save.built[st.id];
+  MB.T = {x:sl.x, y:0, z:sl.z, r:sl.r}; MB.item = st ? 'st:' + st.id : null;
+  const col = st ? (save.paint[st.id] || st.sb || '#c7372c') : '#6a7470';
+  mbBox(0, 0, -0.3, 1.8, 2.5, 0.2, '#e8ece8', {front:'#f4f6f2'});            /* back wall of the unit */
+  mbBox(-0.88, 0, 0.15, 0.06, 2.5, 0.9, '#8a9a94'); mbBox(0.88, 0, 0.15, 0.06, 2.5, 0.9, '#8a9a94');
+  mbBox(0, 2.3, 0.55, 1.8, 0.45, 0.1, col, {front:col, frontDecal:signDecal50(st ? dname(st) : 'TO LET', st ? (st.unit + ' · ' + st.dish) : 'Unit available', col)});
+  if (built){
+    mbBox(0, 0, 0.45, 1.7, 0.9, 0.3, '#dfe8e8', {top:'#f2f4f4', front:'#c6d0d0', frontDecal:decal37(170, 90, (c, W, H) => { c.fillStyle = col; c.fillRect(0, 6, W, 14); c.fillStyle = '#ffffff'; c.font = `700 10px ${F_DISP}`; c.textAlign = 'center'; c.fillText((st.dish || '').toUpperCase(), W/2, 17); })});
+    for (let k = 0; k < 3; k++) mbBox(-0.55 + k*0.55, 2.12, 0.62, 0.5, 0.12, 0.25, k % 2 ? '#ffffff' : col);
+    MB.T = {x:sl.x, y:0, z:sl.z, r:sl.r}; MB.item = 'st:' + st.id;
+    mbSphere(0, 2.05, 0, 0.06, '#fff6c8', 6, 3, {glow:'rgba(255,240,170,.8)'});
+  } else {
+    mbBox(0, 0, 0.5, 1.72, 2.25, 0.05, '#9aa4a0', {front:'#8a948f', frontDecal:decal37(172, 225, (c, W, H) => { c.strokeStyle = 'rgba(40,60,50,.35)'; for (let y = 6; y < H; y += 9){ c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); } if (st){ c.fillStyle = '#f2c53d'; c.fillRect(W/2 - 46, H/2 - 14, 92, 28); c.fillStyle = '#14211b'; c.font = `700 12px ${F_DISP}`; c.textAlign = 'center'; c.fillText('FOR RENT', W/2, H/2 + 4); } })});
+  }
+}
+function neighbour50(x, z, r, N, col){
+  MB.T = {x, y:0, z, r}; MB.item = 'nb:' + N.id;
+  mbBox(0, 0, -0.3, 1.8, 2.5, 0.2, '#efe8da'); mbBox(-0.88, 0, 0.15, 0.06, 2.5, 0.9, '#8a9a94'); mbBox(0.88, 0, 0.15, 0.06, 2.5, 0.9, '#8a9a94');
+  mbBox(0, 2.3, 0.55, 1.8, 0.45, 0.1, col, {front:col, frontDecal:signDecal50(N.n, N.d, col)});
+  mbBox(0, 0, 0.45, 1.7, 0.9, 0.3, '#c99a62', {top:'#e2c08a', front:'#b98a56'});
+}
+function buildStatic50(){
+  MB.faces = []; MB.item = null; MB.T = {x:0, y:0, z:0, r:0};
+  const R = ctr().rating, H = HALL50;
+  /* terrazzo floor */
+  for (let x = H.x0; x < H.x1; x += 2) for (let z = H.z0; z < H.z1; z += 2) mbFace([[x, 0, z + 2], [x + 2, 0, z + 2], [x + 2, 0, z], [x, 0, z]], ((x + z)/2) % 2 ? '#c9c2b4' : '#d6d0c4', [0, 1, 0], {edge:false});
+  /* walls and the big name board */
+  mbBox(0, 0, H.z0, 20.4, H.h, 0.2, '#e6ece8', {front:'#eef2ee'});
+  mbBox(0, 3.0, H.z0 + 0.15, 9, 0.9, 0.1, '#124634', {front:'#124634', frontDecal:decal37(450, 45, (c, W, Hh) => { c.fillStyle = '#f2c53d'; c.font = `700 26px ${F_DISP}`; c.textAlign = 'center'; c.fillText('BAHAGIA FOOD CENTRE', W/2, 30); c.fillStyle = 'rgba(255,255,255,.8)'; c.font = `700 9px ${F_BODY}`; c.fillText('BLK 88 · 小贩中心 · PUSAT MAKANAN · உணவு அங்காடி', W/2, 42); })});
+  mbBox(H.x0, 0, 0, 0.2, H.h, 16.4, '#e6ece8'); mbBox(H.x1, 0, 0, 0.2, H.h, 16.4, '#e6ece8');
+  /* stalls */
+  const sl = slots50(); STALLS.forEach((st, i) => { if (sl[i]) stallBox50(sl[i], st, i); });
+  for (let i = STALLS.length; i < sl.length; i++) stallBox50(sl[i], null, i);
+  /* the neighbours along the front, by the entrance */
+  const ncol = ['#8a5a2a', '#c2410c', '#2f7d4f'];
+  NEIGH.forEach((N, i) => neighbour50(-7 + i*2.2, H.z1 - 0.7, Math.PI, N, ncol[i % 3]));
+  MB.item = null; MB.T = {x:0, y:0, z:0, r:0};
+  /* pillars */
+  for (const x of [-4.5, 4.5]) for (const z of [-4.8, 1, 5.6]) mbBox(x, 0, z, 0.45, H.h, 0.45, '#efe6d6', {front:'#e6dccb'});
+  /* tables and stools */
+  TABLES50.forEach((t, k) => {
+    MB.item = 'tb:' + k; MB.T = {x:t.x, y:0, z:t.z, r:0};
+    mbCyl(0, 0, 0, 0.06, 0.72, '#5a6466', 6); mbCyl(0, 0.72, 0, 0.55, 0.05, '#f4f4f0', 14, {top:'#f6f6f2'});
+    for (let a = 0; a < 4; a++) mbCyl(Math.cos(a*1.571 + 0.785)*0.85, 0, Math.sin(a*1.571 + 0.785)*0.85, 0.16, 0.45, '#5a6466', 8, {r2:0.14, top:R >= 70 ? '#c7372c' : '#3fa07a'});
+  });
+  MB.item = null; MB.T = {x:0, y:0, z:0, r:0};
+  /* the centre gets nicer as the rating goes up */
+  if (R >= 50) for (const [x, z] of [[-8.2, -5.6], [8.2, -5.6], [-8.2, 6.6], [8.2, 6.6], [-4.5, 3.3], [4.5, 3.3]]){ mbCyl(x, 0, z, 0.28, 0.4, '#c9774a', 8, {r2:0.32}); mbSphere(x, 0.75, z, 0.42, '#4f9d3a', 8, 5); mbSphere(x + 0.15, 1.05, z - 0.1, 0.28, '#67b84a', 8, 4); }
+  if (R >= 80) mbBox(9.88, 1.0, 0, 0.04, 1.6, 9, '#ffffff', {side:'#ffffff', alpha:1}), mbQuad([[9.86, 1.0, 4.5], [9.86, 1.0, -4.5], [9.86, 2.6, -4.5], [9.86, 2.6, 4.5]], '#ffffff', {flat:true, decal:decal37(450, 80, (c, W, Hh) => {
+    const sky = c.createLinearGradient(0, 0, 0, Hh); sky.addColorStop(0, '#8fd0f0'); sky.addColorStop(1, '#f6e6c0'); c.fillStyle = sky; c.fillRect(0, 0, W, Hh);
+    const cols = ['#e86a5a', '#f2c53d', '#5aa86a', '#4a9ad8', '#d9468f']; for (let i = 0; i < 9; i++){ c.fillStyle = cols[i % 5]; c.fillRect(10 + i*48, 30 - (i % 3)*6, 40, 50); c.fillStyle = '#ffffff'; for (let k = 0; k < 3; k++) c.fillRect(16 + i*48 + k*11, 40 - (i % 3)*6, 7, 9); }
+    c.fillStyle = '#124634'; c.font = `700 12px ${F_DISP}`; c.textAlign = 'center'; c.fillText('Our kampung, our food centre', W/2, 16); })});
+  if (R >= 90){ mbBox(0, 0, 6.6, 3, 0.3, 1.4, '#8a5a2a', {top:'#a8743e'}); }
+  /* lights and fans on the ceiling */
+  for (const x of [-6, -2, 2, 6]) for (const z of [-4, 0, 4]){ const on = R >= 40 || ((x*3 + z) % 4 !== 0); mbBox(x, H.h - 0.25, z, 1.4, 0.06, 0.12, on ? '#ffffff' : '#9aa4a0', {glow:on ? 'rgba(230,250,255,.9)' : null}); }
+  return MB.faces.slice();
+}
+function buildDynamic50(t){
+  MB.faces = []; MB.item = null;
+  const R = ctr().rating;
+  /* ceiling fans */
+  for (const x of [-4, 0, 4]) for (const z of [-2, 2.6]){ MB.T = {x, y:0, z, r:t*(R >= 80 ? 6 : 3.5) + x}; mbCyl(0, HALL50.h - 0.6, 0, 0.03, 0.6, '#5a6466', 4); for (let b = 0; b < 3; b++){ const a = b*2.094; mbQuad([[Math.cos(a - 0.15)*0.15, HALL50.h - 0.62, Math.sin(a - 0.15)*0.15], [Math.cos(a - 0.08)*0.9, HALL50.h - 0.62, Math.sin(a - 0.08)*0.9], [Math.cos(a + 0.08)*0.9, HALL50.h - 0.62, Math.sin(a + 0.08)*0.9], [Math.cos(a + 0.15)*0.15, HALL50.h - 0.62, Math.sin(a + 0.15)*0.15]], '#7a6a5a', {edge:false}); } }
+  /* lanterns and bunting when the rating is good, festival colours on festival days */
+  const fk = typeof festNow49 === 'function' ? festNow49() : null, fcol = {cny:['#d9262e', '#f2c53d'], raya:['#2f7d4f', '#f2c53d'], deepavali:['#e8743b', '#d9468f'], national:['#d9262e', '#ffffff'], midautumn:['#d9262e', '#f2b33d'], christmas:['#2f7d4f', '#d9262e']}[fk];
+  if (R >= 65 || fcol) for (const z of [-2.2, 1.6, 4.8]) for (let i = 0; i < 11; i++){ const x = -8 + i*1.6, y = HALL50.h - 0.8 - Math.sin(i/10*Math.PI)*0.5; MB.T = {x, y:0, z, r:0}; const c = (fcol || ['#d9262e', '#f2b33d'])[i % 2];
+    if (fk === 'cny' || fk === 'midautumn' || !fcol) mbSphere(0, y + Math.sin(t*1.5 + i)*0.03, 0, 0.16, c, 8, 4, {sy:1.2, glow:'rgba(255,170,90,.6)'}); else mbQuad([[-0.18, y + 0.1, 0], [0.18, y + 0.1, 0], [0, y - 0.25, 0]], c, {flat:true, edge:false}); }
+  /* trays waiting to be cleared */
+  trays50().forEach(k => { const tb = TABLES50[k]; MB.item = 'tb:' + k; MB.T = {x:tb.x + 0.12, y:0, z:tb.z - 0.05, r:k}; mbBox(0, 0.77, 0, 0.5, 0.03, 0.36, '#2f6fb3'); mbCyl(-0.1, 0.8, 0, 0.12, 0.05, '#ffffff', 8); mbCyl(0.14, 0.8, 0.06, 0.06, 0.12, '#f6efe0', 6); });
+  /* diners: more of them when the centre is doing well */
+  const n = Math.round(3 + R/12), RR = rng(dayNo()*13 + 3);
+  const cols = ['#2f6fb3', '#e8743b', '#d9468f', '#2f9e5b', '#7a3a8a', '#f2b33d', '#c7372c', '#0f766e'], skins = ['#e8c8a0', '#c8875a', '#f0c8a0', '#a8724a'], hairs = ['#1a1410', '#3a2a1a', '#8a918e'];
+  for (let i = 0; i < n; i++){
+    const k = Math.floor(RR()*TABLES50.length), tb = TABLES50[k], a = Math.floor(RR()*4)*1.571 + 0.785;
+    if (i < n*0.7){ MB.item = null; MB.T = {x:tb.x + Math.cos(a)*0.85, y:-0.35, z:tb.z + Math.sin(a)*0.85, r:Math.atan2(-Math.cos(a), -Math.sin(a))}; person37(cols[i % 8], null, skins[i % 4], hairs[i % 3], false); }
+    else { const ph = t*0.25 + i, x = Math.sin(ph)*7, z = -5 + (i % 3)*0.8 + Math.cos(ph*0.7)*0.4; MB.T = {x, y:Math.abs(Math.sin(t*6 + i))*0.03, z, r:Math.cos(ph) > 0 ? Math.PI/2 : -Math.PI/2}; person37(cols[i % 8], null, skins[i % 4], hairs[i % 3], false); }
+  }
+  /* hawkers in your open stalls */
+  const sl = slots50(); STALLS.forEach((st, i) => { if (!save.built[st.id] || !sl[i]) return; const s = sl[i]; MB.item = 'st:' + st.id; MB.T = {x:s.x + Math.sin(s.r)*0.05, y:0, z:s.z + Math.cos(s.r)*0.05, r:s.r + Math.sin(t + i)*0.2}; person37('#ffffff', '#124634', '#e0b48a', '#2a1a10', true); });
+  /* the busker on the stage */
+  if (R >= 90){ MB.item = null; MB.T = {x:0, y:0.3 + Math.abs(Math.sin(t*4))*0.03, z:6.6, r:Math.PI}; person37('#2f6fb3', null, '#c8875a', '#1a1410', false); }
+  /* you, seen from above */
+  if (C50.mode === 'top'){ MB.item = null; MB.T = {x:C50.me.x, y:0, z:C50.me.z, r:C50.me.yaw}; person37('#ffffff', '#124634', '#e0b48a', '#2a1a10', true); }
+  return MB.faces;
+}
+
+/* ---------- camera, rendering and the loop ---------- */
+function cam50(){
+  const m = C50.me;
+  if (C50.mode === 'top') return camBasis37([m.x + 0.01, 13, m.z + 7], [m.x, 0, m.z - 0.5], 0.95);
+  const e = [m.x, 1.6, m.z];
+  return camBasis37(e, [m.x + Math.sin(m.yaw)*3, 1.6 + C50.look, m.z + Math.cos(m.yaw)*3], 1.0);
+}
+function render50(){
+  const cv = $('#c50Cv'); if (!cv) return;
+  const dpr = Math.min(2, window.devicePixelRatio || 1), Wc = cv.clientWidth, Hc = cv.clientHeight;
+  if (cv.width !== Math.round(Wc*dpr) || cv.height !== Math.round(Hc*dpr)){ cv.width = Math.round(Wc*dpr); cv.height = Math.round(Hc*dpr); }
+  const c = cv.getContext('2d'), W = cv.width, H = cv.height, t = (performance.now() - C50.t0)/1000;
+  const key = [ctr().rating, dayNo(), Object.keys(save.built).filter(k => save.built[k]).length, c50().cleared.length].join('|');
+  if (!C50.stat || C50.statKey !== key){ C50.stat = buildStatic50(); C50.statKey = key; }
+  const faces = C50.stat.concat(buildDynamic50(t)), Cm = cam50(); C50.C = Cm;
+  const F = Math.min(W, H*1.25)*Cm.fovK, cx = W/2, cy = H*0.5; C50.F = F; C50.cx = cx; C50.cy = cy; C50.dpr = dpr;
+  const near = 0.08, far = 26, out = [];
+  for (const fc of faces){
+    if (!fc.ds){ const toEye = V3.sub(Cm.eye, fc.P[0]); if (V3.dot(fc.n, toEye) <= 0) continue; }
+    let cam = fc.P.map(p => { const d = V3.sub(p, Cm.eye); return [V3.dot(d, Cm.r), V3.dot(d, Cm.u), V3.dot(d, Cm.f)]; });
+    if (cam.every(p => p[2] < near) || cam.every(p => p[2] > far)) continue;
+    if (cam.some(p => p[2] < near)){ const res = []; for (let i = 0; i < cam.length; i++){ const a = cam[i], b = cam[(i + 1) % cam.length]; if (a[2] >= near) res.push(a); if ((a[2] >= near) !== (b[2] >= near)){ const k = (near - a[2])/(b[2] - a[2]); res.push([a[0] + (b[0] - a[0])*k, a[1] + (b[1] - a[1])*k, near]); } } cam = res; if (cam.length < 3) continue; }
+    const S = cam.map(p => [cx + p[0]/p[2]*F, cy - p[1]/p[2]*F]);
+    if (S.every(p => p[0] < -50) || S.every(p => p[0] > W + 50) || S.every(p => p[1] < -50) || S.every(p => p[1] > H + 50)) continue;
+    let z = 0; cam.forEach(p => { z += p[2]; }); z = z/cam.length - fc.lift;
+    out.push({fc, S, z, clipped:cam.length !== fc.P.length});
+  }
+  out.sort((a, b) => b.z - a.z);
+  c.setTransform(1, 0, 0, 1, 0, 0);
+  const sky = c.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, '#5a6660'); sky.addColorStop(0.5, '#a8b2ac'); sky.addColorStop(1, '#c9c2b4'); c.fillStyle = sky; c.fillRect(0, 0, W, H);
+  c.lineJoin = 'round';
+  const bb = {};
+  for (const o of out){
+    const {fc, S} = o;
+    c.beginPath(); c.moveTo(S[0][0], S[0][1]); for (let i = 1; i < S.length; i++) c.lineTo(S[i][0], S[i][1]); c.closePath();
+    c.globalAlpha = fc.alpha; c.fillStyle = fc.col; c.fill();
+    if (fc.glow){ c.shadowColor = fc.glow; c.shadowBlur = 10*dpr; c.fill(); c.shadowBlur = 0; }
+    if (fc.edge){ c.strokeStyle = 'rgba(14,26,20,.25)'; c.lineWidth = dpr*0.7; c.stroke(); }
+    c.globalAlpha = 1;
+    if (fc.decal && !o.clipped && S.length >= 3 && o.z < 14) fc.decal(c, S);
+    if (fc.item){ const b = bb[fc.item] || (bb[fc.item] = {x0:1e9, y0:1e9, x1:-1e9, y1:-1e9, z:o.z}); S.forEach(([x, y]) => { if (x < b.x0) b.x0 = x; if (y < b.y0) b.y0 = y; if (x > b.x1) b.x1 = x; if (y > b.y1) b.y1 = y; }); b.z = Math.min(b.z, o.z); }
+  }
+  C50.bb = bb;
+}
+function step50(dt){
+  const m = C50.me, K = C50.keys, h = C50.held;
+  let fwd = (K.ArrowUp || K.w || h === 'up' ? 1 : 0) - (K.ArrowDown || K.s || h === 'down' ? 1 : 0), turn = (K.ArrowLeft || K.a || h === 'left' ? 1 : 0) - (K.ArrowRight || K.d || h === 'right' ? 1 : 0);
+  if (C50.mode === 'top'){ const s = 4*dt; m.x += (turn ? -turn : 0)*s; m.z -= fwd*s; if (fwd || turn){ m.yaw = Math.atan2(-turn, -fwd); C50.tgt = null; } }
+  else { m.yaw += turn*1.8*dt; if (fwd){ m.x += Math.sin(m.yaw)*fwd*3*dt; m.z += Math.cos(m.yaw)*fwd*3*dt; C50.tgt = null; } }
+  if (C50.tgt){ const dx = C50.tgt[0] - m.x, dz = C50.tgt[1] - m.z, d = Math.hypot(dx, dz); if (d < 0.08) C50.tgt = null; else { const sp = Math.min(d, 3*dt); m.x += dx/d*sp; m.z += dz/d*sp; const want = Math.atan2(dx, dz); let dy = want - m.yaw; while (dy > Math.PI) dy -= 2*Math.PI; while (dy < -Math.PI) dy += 2*Math.PI; m.yaw += dy*Math.min(1, dt*6); } }
+  m.x = clamp(m.x, HALL50.x0 + 1.4, HALL50.x1 - 1.4); m.z = clamp(m.z, HALL50.z0 + 1.4, HALL50.z1 - 1.6);
+}
+function loop50(){
+  if (!C50.open) return;
+  step50(1/30); render50();
+  C50.raf = setTimeout(() => requestAnimationFrame(loop50), 30);
+}
+
+/* ---------- tapping things ---------- */
+function pick50(px, py){ const k = C50.dpr, x = px*k, y = py*k; let best = null; for (const key in C50.bb){ const b = C50.bb[key]; if (x >= b.x0 && x <= b.x1 && y >= b.y0 && y <= b.y1 && (!best || b.z < best.z)) best = {key, z:b.z}; } return best && best.key; }
+function ray50(px, py){ const C = C50.C, k = C50.dpr; const x = (px*k - C50.cx)/C50.F, y = -(py*k - C50.cy)/C50.F; return {o:C.eye, d:V3.norm(V3.add(V3.add(C.f, V3.mul(C.r, x)), V3.mul(C.u, y)))}; }
+function tap50(px, py){
+  const key = pick50(px, py);
+  if (key && key.startsWith('tb:')){ const k = +key.slice(3); if (trays50().includes(k)) return clearTray50(k); }
+  if (key && key.startsWith('st:')) return stallCard50(STALLS.find(s => s.id === key.slice(3)));
+  if (key && key.startsWith('nb:')) return neighbourCard50(NEIGH.find(n => n.id === key.slice(3)));
+  const R = ray50(px, py), p = hitPlane37(R, 1, 0); if (p){ C50.tgt = [p[0], p[2]]; card50(null); }
+}
+function clearTray50(k){
+  const tb = TABLES50[k], d = Math.hypot(tb.x - C50.me.x, tb.z - C50.me.z);
+  if (d > 3.2 && C50.mode === 'walk'){ C50.tgt = [tb.x, tb.z + 1.1]; toast('Walk over to that table first'); return; }
+  const S = c50(); S.cleared.push(k); const C = ctr();
+  if (S.cleared.length % 2 === 0) C.rating = Math.min(100, C.rating + 1); C.cp += 1;
+  persist(); sfx.good(); tone(660, 0.08, 'triangle', 0.05);
+  toast(trays50().length ? `Tray cleared! ${trays50().length} left.` : 'All the trays are cleared. The centre looks great!');
+  try { if (typeof dailyHit45 === 'function' && !trays50().length) dailyHit45('help', 1); } catch(e){}
+  REC.log('c50_tray', {k}); hud50();
+}
+function card50(html){ const el = $('#c50Card'); if (!el) return; if (!html){ el.hidden = true; return; } el.innerHTML = html + '<button type="button" class="c50-cx" aria-label="Close">✕</button>'; el.hidden = false; el.querySelector('.c50-cx').onclick = () => { el.hidden = true; }; }
+function stallCard50(st){
+  if (!st) return; sfx.tick();
+  if (save.built[st.id]){
+    card50(`<p class="label">${esc(st.unit)} · Your stall</p><b>${esc(dname(st))}</b><small>${esc(st.mentor)} · ${esc(st.dish)} · reputation ${repOf(st.id)}</small><div class="c50-acts"><button type="button" class="buy" data-go>Go to the stall</button></div>`);
+    $('#c50Card [data-go]').onclick = () => { close50(); openStall(st, false); };
+  } else card50(`<p class="label">${esc(st.unit)} · For rent</p><b>${esc(st.name)}</b><small>${esc(st.mentor)} sells ${esc(st.dish.toLowerCase())} here. Rent it from the home screen for ${money(BUILD_COST[st.id] || 0)}.</small>`);
+}
+const HELLO50 = {mei:['Eh, {you}! Busy day? Kopi on me later ah.', 'You look tired. Drink more water!'], teo:['Satay smoke today very nice, can smell from here or not?', '{you}, your queue is longer than mine. Not fair lah!'], siti:['Try my kueh lapis, fresh this morning.', 'Saya bangga dengan you. The centre is getting nicer!']};
+function neighbourCard50(N){
+  if (!N) return; const S = c50(), first = !S.hello[N.id], line = pick(HELLO50[N.id] || ['Hello!']).replace('{you}', save.player || 'Boss');
+  if (first){ S.hello[N.id] = 1; ctr().cp += 1; persist(); }
+  sfx.tick(); try { if (typeof babble48 === 'function') babble48({persona:'elderly', cust:{name:N.n}}, line, 'happy'); } catch(e){}
+  card50(`<p class="label">Neighbour</p><b>${esc(N.n)}</b><small>“${esc(line)}”</small>${first ? '<small class="c50-plus">+1 community point for saying hello</small>' : ''}`);
+}
+
+/* ---------- the overlay ---------- */
+function hud50(){
+  const R = ctr().rating, left = trays50().length, el = $('#c50Hud'); if (!el) return;
+  const next = R < 50 ? 'Plants arrive at 50' : R < 65 ? 'Lanterns at 65' : R < 80 ? 'A mural at 80' : R < 90 ? 'A stage and busker at 90' : 'Everything unlocked!';
+  el.innerHTML = `<span>⭐ Centre rating <b>${R}</b></span><span>🧺 Trays left <b>${left}</b></span><span class="c50-next">${next}</span>`;
+}
+function open50(){
+  C50.open = true; C50.t0 = performance.now(); C50.mode = 'walk'; C50.me = {x:0, z:6.2, yaw:Math.PI}; C50.tgt = null; C50.stat = null; C50.look = -0.15;
+  let ov = $('#c50Ov');
+  if (!ov){
+    ov = document.createElement('div'); ov.id = 'c50Ov'; ov.className = 's3d-ov c50-ov';
+    ov.innerHTML = `<div class="s3d-top"><button type="button" class="buy s3d-x" aria-label="Leave the food centre">✕</button><div class="s3d-ttl"><b>Bahagia Food Centre</b><small id="c50Sub">Walk around · tap a tray to clear it · tap a neighbour to say hello</small></div></div>
+      <div class="s3d-stage c50-stage"><canvas id="c50Cv" aria-label="Bahagia Food Centre in 3D. Use the arrows or tap the floor to walk. Tap trays, stalls and neighbours."></canvas>
+        <div class="c50-hud" id="c50Hud"></div>
+        <div class="c50-card" id="c50Card" hidden></div>
+        <div class="c50-pad" role="group" aria-label="Walk"><button type="button" data-mv="up" aria-label="Walk forward">▲</button><button type="button" data-mv="left" aria-label="Turn left">◀</button><button type="button" data-mv="down" aria-label="Walk back">▼</button><button type="button" data-mv="right" aria-label="Turn right">▶</button></div>
+        <div class="s3d-cams c50-cams" role="group" aria-label="Camera"><button type="button" data-v="walk">Walk</button><button type="button" data-v="top">From above</button></div></div>`;
+    document.body.appendChild(ov);
+    ov.querySelector('.s3d-x').addEventListener('click', close50);
+    ov.querySelectorAll('[data-v]').forEach(b => b.addEventListener('click', () => { C50.mode = b.dataset.v; sfx.tick(); syncCam50(); }));
+    ov.querySelectorAll('[data-mv]').forEach(b => {
+      const on = e => { e.preventDefault(); C50.held = b.dataset.mv; C50.tgt = null; }, off = () => { C50.held = null; };
+      b.addEventListener('pointerdown', on); b.addEventListener('pointerup', off); b.addEventListener('pointerleave', off); b.addEventListener('pointercancel', off);
+    });
+    const cv = $('#c50Cv'); let st = null, moved = false;
+    cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); st = {x:e.clientX, y:e.clientY, yaw:C50.me.yaw, look:C50.look}; moved = false; });
+    cv.addEventListener('pointermove', e => { if (!st) return; const dx = e.clientX - st.x, dy = e.clientY - st.y; if (Math.hypot(dx, dy) > 8) moved = true; if (!moved) return;
+      if (C50.mode === 'walk'){ C50.me.yaw = st.yaw - dx*0.006; C50.look = clamp(st.look - dy*0.004, -0.9, 0.6); } });
+    cv.addEventListener('pointerup', e => { if (st && !moved){ const r = cv.getBoundingClientRect(); tap50(e.clientX - r.left, e.clientY - r.top); } st = null; });
+    document.addEventListener('keydown', e => { if (!C50.open) return; if (e.key === 'Escape') return close50(); if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'].includes(e.key)){ C50.keys[e.key] = true; e.preventDefault(); } });
+    document.addEventListener('keyup', e => { delete C50.keys[e.key]; });
+  }
+  ov.hidden = false; syncCam50(); hud50(); card50(null);
+  clearTimeout(C50.raf); requestAnimationFrame(loop50);
+  REC.log('c50_open', {rating:ctr().rating});
+  if (!save.seen50){ save.seen50 = 1; persist(); setTimeout(() => toast('Use the arrows or tap the floor to walk. Drag to look around.'), 600); }
+}
+function syncCam50(){ document.querySelectorAll('#c50Ov [data-v]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === C50.mode))); }
+function close50(){ C50.open = false; C50.keys = {}; C50.held = null; clearTimeout(C50.raf); const ov = $('#c50Ov'); if (ov) ov.hidden = true; if (screen === 'hub') renderHub(); }
+
+/* the way in: a button on the home screen and in the Centre overlay */
+const _renderHub50 = renderHub;
+renderHub = function(){
+  _renderHub50();
+  try {
+    let b = $('#walk50'); if (!b){ b = document.createElement('button'); b.type = 'button'; b.id = 'walk50'; b.className = 'walk50'; b.addEventListener('click', () => { sfx.tick(); open50(); }); }
+    b.innerHTML = `<span aria-hidden="true">🏛️</span><span><b>Walk around the food centre</b><small>3D · ${trays50().length} trays to clear · rating ${ctr().rating}</small></span>`;
+    const after = $('#fest49Hub') || $('#prog45') || $('#hubPrompt'); after.after(b);
+  } catch(e){ console.warn(e); }
+};
+const _openCentre50 = openCentre;
+openCentre = function(){
+  const r = _openCentre50.apply(this, arguments);
+  try { const card = document.querySelector('#ctrOv .ov-card, #centreOv .ov-card'); if (card && !card.querySelector('.walk50')){ const b = document.createElement('button'); b.type = 'button'; b.className = 'walk50'; b.innerHTML = '<span aria-hidden="true">🏛️</span><span><b>Walk around in 3D</b><small>Clear trays and say hello</small></span>'; b.addEventListener('click', () => { card.closest('[id$="Ov"]').hidden = true; open50(); }); card.insertBefore(b, card.children[2] || null); } } catch(e){}
+  return r;
+};
+
+(function css50(){
+  const s = document.createElement('style'); s.textContent = `
+.walk50{display:grid;grid-template-columns:2.6rem 1fr;gap:.65rem;align-items:center;width:100%;text-align:left;background:linear-gradient(135deg,#124634,#1d6a50);color:#fff;border:.1875rem solid var(--ink);border-radius:1rem;box-shadow:0 .25rem 0 var(--ink);padding:.6rem .75rem;margin:0 0 .75rem;font:inherit;cursor:pointer;min-height:3.2rem}
+.walk50 > span:first-child{width:2.6rem;height:2.6rem;border-radius:.8rem;background:#f2c53d;border:.125rem solid var(--ink);display:grid;place-items:center;font-size:1.3rem}
+.walk50 b{display:block;font-family:var(--display);font-size:1.02rem}
+.walk50 small{display:block;opacity:.85;font-size:.84rem}
+body:is(.pd45-0,.pd45-1) #walk50{display:none}
+#c50Sub{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.25}
+.c50-stage{position:relative}
+.s3d-ov.c50-ov{display:flex;flex-direction:column}
+.c50-ov .s3d-stage{flex:1;min-height:0;margin:0 max(.75rem,env(safe-area-inset-right)) max(.75rem,env(safe-area-inset-bottom)) max(.75rem,env(safe-area-inset-left))}
+.c50-hud{position:absolute;top:.5rem;left:.5rem;right:.5rem;display:flex;flex-wrap:wrap;gap:.35rem;pointer-events:none}
+.c50-hud span{background:rgba(255,255,255,.92);border:.125rem solid var(--ink);border-radius:2rem;padding:.2rem .6rem;font-size:max(11px,.8rem);font-weight:700;color:var(--ink)}
+.c50-hud .c50-next{background:#fff3cc}
+.c50-card{position:absolute;left:50%;bottom:4.6rem;transform:translateX(-50%);width:min(22rem,calc(100% - 2rem));background:#fff;border:.1875rem solid var(--ink);border-radius:1rem;box-shadow:0 .25rem 0 var(--ink);padding:.65rem 2.4rem .65rem .8rem;color:var(--ink);box-sizing:border-box}
+.c50-card .label{color:var(--green);font-size:max(11px,.68rem)}
+.c50-card b{display:block;font-family:var(--display);font-size:1.05rem}
+.c50-card small{display:block;color:var(--muted);font-size:.86rem;line-height:1.35;margin-top:.15rem}
+.c50-card .c50-plus{color:var(--green);font-weight:800}
+.c50-card .c50-acts{margin-top:.45rem}
+.c50-card .c50-cx{position:absolute;top:.35rem;right:.35rem;width:2rem;height:2rem;border-radius:50%;border:.125rem solid var(--ink);background:#fff;font:inherit;cursor:pointer}
+.c50-pad{position:absolute;right:.75rem;bottom:.75rem;display:grid;grid-template-columns:repeat(3,2.75rem);grid-template-rows:repeat(2,2.75rem);gap:.25rem}
+.c50-pad button{border:.1875rem solid var(--ink);border-radius:.7rem;background:rgba(255,255,255,.94);font-size:1.05rem;color:var(--ink);cursor:pointer;touch-action:none;user-select:none}
+.c50-pad [data-mv=up]{grid-column:2;grid-row:1}.c50-pad [data-mv=left]{grid-column:1;grid-row:2}.c50-pad [data-mv=down]{grid-column:2;grid-row:2}.c50-pad [data-mv=right]{grid-column:3;grid-row:2}
+.c50-ov .c50-cams{left:.75rem;right:auto;bottom:.75rem;justify-content:flex-start;flex-direction:row}
+@media (max-width:26rem){.c50-card{bottom:7.2rem}}
+`; document.head.appendChild(s);
+})();
+
+/* =================================================================
+   51. APPRENTICES and the RECIPE LAB
+   - Hire an apprentice for a stall and train them through your own
+     practice drills. While you cook at another stall, they run this one:
+     their skill decides how many plates they sell and how well.
+   - The recipe lab: invent a stall special (heat, sweetness and a
+     signature twist), test it on six kinds of customers, and if they
+     like it, put it on the menu. Customers then order it, with its own
+     finishing step.
+   ================================================================= */
+const AP_NAMES51 = [['Wei Jie', {bg:'#e2eef6', skin:'#efc9a4', shirt:'#2f6db0', hair:'short'}], ['Nurul', {bg:'#f2e4cf', skin:'#c98d62', shirt:'#2f7d4f', hair:'tudung', cloth:'#d9468f'}],
+  ['Arjun', {bg:'#f6e6cc', skin:'#8a5a3a', shirt:'#c2410c', hair:'short'}], ['Mei Xin', {bg:'#f6e1ea', skin:'#ecc29c', shirt:'#7a3a8a', hair:'bob'}],
+  ['Haziq', {bg:'#dff0e2', skin:'#b97f56', shirt:'#1f5f8a', hair:'short'}], ['Priya', {bg:'#fde6d2', skin:'#8a5a3a', shirt:'#d9468f', hair:'bun'}],
+  ['Jun Hao', {bg:'#e3eedb', skin:'#e8bb92', shirt:'#3f7d3a', hair:'short', glasses:true}], ['Aisha', {bg:'#efe0f2', skin:'#b97f56', shirt:'#0f766e', hair:'tudung', cloth:'#0f766e'}]];
+const AP_HIRE51 = 3000, AP_WAGE51 = 200;
+function ap51(id){ const A = save.ap51 = save.ap51 || {}; return id ? A[id] : A; }
+const stageOK51 = () => (typeof stageOf45 === 'function' ? stageOf45() : 3) >= 2;
+function avgPrice51(st){ let s = 0; for (let i = 0; i < 6; i++){ try { s += formPrice(st, st.makeOrder(), false); } catch(e){ s += 450; } } return s/6; }
+function hire51(st, btn){
+  if (!spend(AP_HIRE51, btn)) return;
+  const used = Object.values(ap51()).map(a => a.n), pool = AP_NAMES51.filter(([n]) => !used.includes(n)), [n, look] = pick(pool.length ? pool : AP_NAMES51);
+  ap51()[st.id] = {n, look, skill:25, runs:0, earned:0, last:null}; persist();
+  sfx.good(); toast(`${n} joins ${dname(st)} as your apprentice!`); REC.log('ap_hire', {stall:st.id});
+  renderTab();
+}
+function autoRun51(except){
+  const out = [];
+  STALLS.forEach(st => {
+    const A = ap51(st.id); if (!A || !save.built[st.id] || st.id === except) return;
+    const left = servingsLeft(st.id); if (left <= 0){ out.push({st, A, plates:0, profit:-AP_WAGE51, note:'ran out of stock'}); save.wallet = Math.max(0, save.wallet - AP_WAGE51); return; }
+    const plates = Math.min(left, Math.max(1, Math.round(1 + A.skill/22 + Math.random())));
+    for (let i = 0; i < plates; i++) useStock(st.id);
+    const rev = Math.round(plates*avgPrice51(st)*(0.6 + A.skill/250)), profit = rev - AP_WAGE51;
+    save.wallet += profit; A.earned += profit; A.runs++; A.skill = Math.min(95, A.skill + 1); A.last = {day:dayNo(), plates, profit};
+    if (A.skill >= 60) save.rep[st.id] = Math.min(100, repOf(st.id) + 1);
+    out.push({st, A, plates, profit});
+  });
+  if (out.length){ persist(); try { refreshWallet(); } catch(e){} REC.log('ap_run', {n:out.length}); }
+  return out;
+}
+const _showSummary51 = showSummary;
+showSummary = function(st, results){
+  const inLevel = typeof LEVEL !== 'undefined' && !!LEVEL;
+  const r = _showSummary51(st, results);
+  if (inLevel) return r;
+  try {
+    const rep = autoRun51(st.id); if (!rep.length) return r;
+    const wrap = $('#summary .summary-wrap'); if (!wrap) return r;
+    let el = $('#ap51Rep'); if (!el){ el = document.createElement('section'); el.id = 'ap51Rep'; el.className = 'ap51-rep'; wrap.querySelector('.rc-btns').before(el); }
+    el.innerHTML = `<p class="label">Meanwhile, at your other stalls</p><ul>${rep.map(x => `<li><b>${esc(x.A.n)}</b> ran ${esc(dname(x.st))}: ${x.plates ? `${x.plates} plate${x.plates === 1 ? '' : 's'}, ` : ''}<span class="${x.profit >= 0 ? 'up' : 'dn'}">${x.profit >= 0 ? '+' : '−'}${money(Math.abs(x.profit))}</span>${x.note ? ` (${x.note})` : ''} · skill ${x.A.skill}</li>`).join('')}</ul>`;
+  } catch(e){ console.warn('ap51', e); }
+  return r;
+};
+const _finishPractice51 = finishPractice43;
+finishPractice43 = function(st, title, scores, before){
+  const r = _finishPractice51(st, title, scores, before);
+  try {
+    const A = ap51(st.id); if (!A) return r;
+    const best = Math.max(...scores), was = A.skill; A.skill = Math.min(95, A.skill + Math.max(2, Math.round((best - A.skill)*0.3))); persist();
+    const card = document.querySelector('#prac43Ov .ov-card'); if (card && !card.querySelector('.ap51-learn')) card.querySelector('.lv-btns').insertAdjacentHTML('beforebegin', `<p class="ap51-learn">👀 ${esc(A.n)} watched you: skill ${was} → <b>${A.skill}</b></p>`);
+  } catch(e){}
+  return r;
+};
+function apCard51(st){
+  const A = ap51(st.id);
+  if (!A) return `<div class="ap51"><p class="label">Apprentice</p><div class="ap-row"><span class="ap-face ap-empty" aria-hidden="true">👤</span><div><b>Hire an apprentice</b><small>They run ${esc(dname(st))} while you cook at another stall, and learn by watching your practice drills.</small></div></div><button type="button" class="buy" data-hire51>Hire · ${money(AP_HIRE51)}</button></div>`;
+  const C = co43(), weak = C.last[st.id] && C.last[st.id].worst;
+  return `<div class="ap51"><p class="label">Apprentice</p><div class="ap-row"><canvas class="ap-face" width="96" height="96" aria-hidden="true"></canvas><div><b>${esc(A.n)}</b><small>Skill ${A.skill}/95 · ${A.runs} service${A.runs === 1 ? '' : 's'} run · earned ${money(Math.max(0, A.earned))}</small><span class="ap-bar"><i style="width:${A.skill/95*100}%"></i></span></div></div>
+    <small class="ap-note">${A.last ? `Last time: ${A.last.plates} plates, ${A.last.profit >= 0 ? '+' : '−'}${money(Math.abs(A.last.profit))}.` : `Runs this stall when you finish a shift elsewhere. Wage ${money(AP_WAGE51)} a service.`}</small>
+    <button type="button" class="buy" data-train51>🎯 Train together${weak ? `: ${esc(weak.t)}` : ''}</button></div>`;
+}
+
+/* ---------- the recipe lab ---------- */
+const TWISTS51 = [
+  ['saltedegg', 'Salted egg', '#f2b33d', {student:2, foodie:1, office:1, elderly:-1, tourist:1, family:0}],
+  ['sambal', 'Sambal', '#c7372c', {student:1, office:2, foodie:1, elderly:0, tourist:-1, family:-1}],
+  ['truffle', 'Truffle', '#5a4a3a', {foodie:2, tourist:1, office:0, student:-1, elderly:-2, family:0}],
+  ['lemongrass', 'Lemongrass', '#9ad86a', {foodie:1, tourist:2, family:1, elderly:0, office:0, student:0}],
+  ['gulamelaka', 'Gula melaka', '#7a3e12', {family:2, tourist:1, elderly:1, student:0, office:-1, foodie:0}],
+  ['ginger', 'Ginger', '#e8c46a', {elderly:2, family:1, foodie:0, tourist:0, office:0, student:-1}],
+  ['garlic', 'Garlic crisp', '#d9a64a', {office:1, student:1, elderly:1, foodie:1, family:0, tourist:0}],
+  ['chillicrab', 'Chilli crab', '#e8532e', {tourist:2, foodie:1, student:1, family:0, office:0, elderly:-1}]
+];
+const HEAT51 = ['Mild', 'Classic', 'Spicy'], SWEET51 = ['Less sweet', 'Classic', 'Sweeter'];
+const LIKE51 = {elderly:{heat:[1, 1, -1], sweet:[1, 1, -1]}, office:{heat:[-1, 0, 1], sweet:[0, 0, -1]}, student:{heat:[-1, 0, 1], sweet:[0, 0, 1]}, tourist:{heat:[1, 0, -1], sweet:[0, 0, 1]}, family:{heat:[1, 0, -1], sweet:[0, 0, 1]}, foodie:{heat:[-1, 0, 1], sweet:[0, 1, 0]}};
+function lab51(id){ const L = save.lab51 = save.lab51 || {}; return id ? L[id] : L; }
+const specialName51 = (st, R) => `${TWISTS51.find(t => t[0] === R.tw)[1]} ${st.dish}`;
+function taste51(st, R){
+  const tw = TWISTS51.find(t => t[0] === R.tw), seed = hash48 ? hash48(st.id + R.tw + R.heat + R.sweet) : 7, rr = rng(seed);
+  return Object.keys(LIKE51).map(p => {
+    const L = LIKE51[p], v = 3 + L.heat[R.heat] + L.sweet[R.sweet] + (tw[3][p] || 0) + (rr() < 0.3 ? (rr() < 0.5 ? -1 : 1) : 0), s = clamp(Math.round(v), 1, 5);
+    const say = s >= 5 ? pick(['Wah, must put on the menu!', 'I’d queue for this!', 'Shiok sia!']) : s === 4 ? pick(['Nice twist!', 'I like it, quite special.']) : s === 3 ? pick(['Not bad, but I prefer the usual.', 'Okay lah.']) : s === 2 ? pick(['Hmm, a bit strange.', R.heat === 2 ? 'Too spicy for me!' : R.sweet === 2 ? 'Too sweet!' : 'Not my taste.']) : pick(['Aiyo, cannot.', 'Please bring back the classic!']);
+    return {p, s, say};
+  });
+}
+function openLab51(st){
+  const cur0 = lab51(st.id), R = cur0 ? {tw:cur0.tw, heat:cur0.heat, sweet:cur0.sweet} : {tw:TWISTS51[0][0], heat:1, sweet:1};
+  const ov = modal30('lab51Ov', '', 'lv-card lab51');
+  const draw = res => {
+    ov.querySelector('.ov-card').innerHTML = `<p class="label">🧪 Recipe lab · ${esc(dname(st))}</p><h2>${esc(specialName51(st, R))}</h2>
+      ${cur0 ? `<p class="hint2">On your menu now: <b>${esc(cur0.name)}</b> (rated ${cur0.score.toFixed(1)}★).</p>` : '<p class="hint2">Invent a special, test it on six customers, and put it on the menu if they like it.</p>'}
+      <div class="lab-pick"><p class="label">Signature twist</p><div class="chips">${TWISTS51.map(t => `<button type="button" class="chip" data-tw="${t[0]}" aria-pressed="${R.tw === t[0]}"><i style="background:${t[2]}"></i>${esc(t[1])}</button>`).join('')}</div>
+      <p class="label">Heat</p><div class="chips">${HEAT51.map((h, i) => `<button type="button" class="chip" data-heat="${i}" aria-pressed="${R.heat === i}">${['🌶️', '🌶️🌶️', '🌶️🌶️🌶️'][i]} ${h}</button>`).join('')}</div>
+      <p class="label">Sweetness</p><div class="chips">${SWEET51.map((h, i) => `<button type="button" class="chip" data-sweet="${i}" aria-pressed="${R.sweet === i}">${h}</button>`).join('')}</div></div>
+      ${res ? `<div class="lab-res"><p class="label">Taste test · average ${res.avg.toFixed(1)}★</p><ul>${res.list.map((x, i) => `<li style="animation-delay:${i*0.12}s"><span>${PERSONA[x.p] ? PERSONA[x.p].ic : '🙂'} <b>${esc(PERSONA[x.p] ? PERSONA[x.p].name || x.p : x.p)}</b></span><span class="lab-st">${'★'.repeat(x.s)}<em>${'★'.repeat(5 - x.s)}</em></span><small>“${esc(x.say)}”</small></li>`).join('')}</ul>
+        <p class="hint2">${res.avg >= 3.5 ? 'They like it! Put it on the menu as a special: +$1.00 a plate.' : 'Not quite. Try a different twist, heat or sweetness. Think about who eats at your stall.'}</p></div>` : ''}
+      <div class="lv-btns">${res && res.avg >= 3.5 ? '<button type="button" class="big" data-act="add">Add to the menu</button>' : ''}<button type="button" class="${res ? 'buy' : 'big'}" data-act="test">${res ? 'Test again' : 'Taste test'}</button>${cur0 ? '<button type="button" class="buy" data-act="remove">Take off the menu</button>' : ''}<button type="button" class="buy" data-act="x">Close</button></div>`;
+  };
+  let last = null;
+  ov.onclick = e => {
+    const t = e.target.closest('[data-tw],[data-heat],[data-sweet],[data-act]'); if (!t) return; sfx.tick();
+    if (t.dataset.tw){ R.tw = t.dataset.tw; last = null; return draw(); }
+    if (t.dataset.heat){ R.heat = +t.dataset.heat; last = null; return draw(); }
+    if (t.dataset.sweet){ R.sweet = +t.dataset.sweet; last = null; return draw(); }
+    const a = t.dataset.act;
+    if (a === 'x'){ ov.hidden = true; return; }
+    if (a === 'test'){ const list = taste51(st, R); last = {list, avg:list.reduce((s, x) => s + x.s, 0)/list.length}; draw(last); [0, 1, 2].forEach(i => setTimeout(() => sfx.star(i), 200 + i*160)); REC.log('lab_test', {stall:st.id, avg:last.avg}); return; }
+    if (a === 'add' && last){ lab51()[st.id] = Object.assign({name:specialName51(st, R), score:last.avg, sold:0}, R); persist(); sfx.good(); toast(`${specialName51(st, R)} is on the menu!`); ov.hidden = true; REC.log('lab_add', {stall:st.id}); renderTab(); return; }
+    if (a === 'remove'){ delete lab51()[st.id]; persist(); ov.hidden = true; toast('Back to the classic menu.'); renderTab(); }
+  };
+  draw();
+}
+/* customers order the special, and it gets its own finishing step */
+function labStep51(st, R){
+  const tw = TWISTS51.find(t => t[0] === R.tw);
+  return fill({title:`Add the ${tw[1].toLowerCase()}`, btn:'Hold to add', unit:tw[1], time:10, base:0.24, accel:0.3, hint:`Your special: ${R.heat === 2 ? 'go generous' : R.heat === 0 ? 'go easy' : 'a normal amount'}. Let go at the line.`,
+    targets:() => [{label:tw[1], color:tw[2], target:[0.36, 0.55, 0.74][R.heat] + rand(-0.05, 0.05)}],
+    scene(s){
+      kitchenBg(); const lvl = s.r < s.targets.length ? s.fill : (s.lastFill || 0), on = (s.pressed || s.hold) && s.r < s.targets.length;
+      g.save(); g.translate(200, 166); g.scale(0.72, 0.72); try { drawFinal(st.id, s.order.w, 1); } catch(e){} g.restore();
+      if (lvl > 0) speckle(951, Math.round(lvl*40), 200, 166, 50, 40, [tw[2], mix(tw[2], '#ffffff', 0.4)], 2.6);
+      g.save(); g.translate(on ? 216 : 310, on ? 66 : 60); g.rotate(on ? 2.3 : 0.3); g.scale(1.4, 1.4); box(-8, -12, 16, 26, 4, lin(-8, 0, 8, 0, [[0, mix(tw[2], '#000000', 0.3)], [0.5, tw[2]], [1, mix(tw[2], '#000000', 0.4)]]), '#14211b', 1); box(-4, -17, 8, 6, 2, '#ffffff'); g.restore();
+      if (on){ g.beginPath(); g.moveTo(206, 86); g.quadraticCurveTo(200, 110, 200, 140); g.strokeStyle = tw[2]; g.lineWidth = 4; g.lineCap = 'round'; g.stroke(); g.lineCap = 'butt'; }
+      txt(R.name || 'Your special', 200, 34, 13, C.ink, {display:true});
+    }});
+}
+const LABSTEP51 = {};
+const _mkCust51 = makeCustomers;
+makeCustomers = function(st, beginner, service){
+  const list = _mkCust51(st, beginner, service), R = lab51(st.id);
+  if (!R || (typeof LEVEL !== 'undefined' && LEVEL)) return list;
+  list.forEach(c => {
+    if (c.usualMode || !c.sayParts) return;
+    const like = (LIKE51[c.persona] ? LIKE51[c.persona].heat[R.heat] + LIKE51[c.persona].sweet[R.sweet] : 0) + ((TWISTS51.find(t => t[0] === R.tw) || [0, 0, 0, {}])[3][c.persona] || 0);
+    if (Math.random() < 0.22 + Math.max(0, like)*0.12 + (R.score - 3.5)*0.1){ c.t.lab51 = 1; c.sayParts.order = `${c.sayParts.order.replace(/\.\s*$/, '')}. Make it the ${R.name.toLowerCase()}!`; c.speech = `${c.sayParts.greet} ${c.sayParts.order} ${c.sayParts.dine}`; }
+  });
+  return list;
+};
+const _runMinigame51 = runMinigame;
+runMinigame = function(spec, ctx, stepNo, stepCount){
+  const p = _runMinigame51(spec, ctx, stepNo, stepCount);
+  if (spec === TAKE && ctx && ctx.t && ctx.t.lab51) return p.then(sc => { try { if (ctx.w) ctx.w.lab51 = 1; } catch(e){} return sc; });
+  return p;
+};
+STALLS.forEach(st => {
+  const cook0 = st.cook;
+  st.cook = function(w){ const L = cook0.call(this, w), R = lab51(st.id); if (!(w && w.lab51 && R)) return L; const key = st.id + R.tw + R.heat; if (!LABSTEP51[key]) LABSTEP51[key] = labStep51(st, R); return L.concat([LABSTEP51[key]]); };
+});
+const _dishResult51 = dishResult;
+dishResult = function(q, c, steps, scores, stars, last){
+  const p = _dishResult51(q, c, steps, scores, stars, last);
+  try { const R = c.w && c.w.lab51 && lab51(c.st.id); if (R && !(typeof LEVEL !== 'undefined' && LEVEL)){ earn(100, $('#dishStars')); R.sold = (R.sold || 0) + 1; persist(); const h = $('#dishTier39') || $('#dishStars'); if (h && !$('#lab51Tag')) h.insertAdjacentHTML('afterend', `<p id="lab51Tag" class="fest49-tag">🧪 ${esc(R.name)} · +$1.00 · sold ${R.sold}</p>`); } else if ($('#lab51Tag')) $('#lab51Tag').remove(); } catch(e){}
+  return p;
+};
+
+/* ---------- on the stall's Open tab ---------- */
+const _renderTab51 = renderTab;
+renderTab = function(){
+  _renderTab51();
+  if (!curStall || curTab !== 'shift' || !stageOK51()) return;
+  const body = $('#tabBody'); if (!body || body.querySelector('.ap51')) return;
+  const st = curStall, w = document.createElement('div'); w.className = 'ap51-wrap';
+  const R = lab51(st.id);
+  w.innerHTML = apCard51(st) + `<div class="lab51-card"><p class="label">🧪 Recipe lab</p><div class="ap-row"><span class="ap-face ap-empty" aria-hidden="true">🧪</span><div><b>${R ? esc(R.name) : 'Invent a stall special'}</b><small>${R ? `On the menu · ${R.score.toFixed(1)}★ in testing · sold ${R.sold || 0}` : 'Pick a twist, heat and sweetness, then test it on customers.'}</small></div></div><button type="button" class="buy" data-lab51>${R ? 'Tweak the recipe' : 'Open the lab'}</button></div>`;
+  const anchor = body.querySelector('.sig45') || body.querySelector('.quote'); if (anchor) anchor.before(w); else body.appendChild(w);
+  const A = ap51(st.id), cv = w.querySelector('canvas.ap-face'); if (A && cv) try { withCtx(cv, 120, () => mentorFace(A.look, 'great', 0)); } catch(e){}
+  const hb = w.querySelector('[data-hire51]'); if (hb) hb.addEventListener('click', () => hire51(st, hb));
+  const tb = w.querySelector('[data-train51]'); if (tb) tb.addEventListener('click', () => {
+    sfx.tick(); const C = co43(), weak = C.last[st.id] && C.last[st.id].worst;
+    let title = weak && !POS_STEPS43.includes(weak.t) ? weak.t : null;
+    if (!title){ const c = practiceOrder43(st), L = withPassive(st, st.cook(c.w)).filter(x => x && !x.passive && x.kind !== 'beat'); title = L.length ? pick(L).title : null; }
+    if (title) practice43(st, title); });
+  w.querySelector('[data-lab51]').addEventListener('click', () => { sfx.tick(); openLab51(st); });
+};
+
+(function css51(){
+  const s = document.createElement('style'); s.textContent = `
+.ap51-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(15rem,100%),1fr));gap:.6rem}
+.ap51,.lab51-card{display:grid;gap:.4rem;background:#fff;border:.125rem solid #c9d4cd;border-radius:.9rem;padding:.6rem .7rem;color:var(--ink);min-width:0}
+.ap51 .label,.lab51-card .label{color:var(--green);font-size:max(11px,.68rem);margin:0}
+.ap-row{display:grid;grid-template-columns:3rem 1fr;gap:.55rem;align-items:center}
+.ap-face{width:3rem;height:3rem;border-radius:50%;border:.125rem solid var(--ink);background:#fff6dc;display:grid;place-items:center;font-size:1.3rem}
+.ap-face.ap-empty{background:#eef4ef}
+.ap-row b{display:block;font-family:var(--display);font-size:1rem;line-height:1.2}
+.ap-row small,.ap-note{display:block;color:var(--muted);font-size:.84rem;line-height:1.3}
+.ap-bar{display:block;height:.45rem;border-radius:1rem;background:#e6ece8;overflow:hidden;margin-top:.3rem}
+.ap-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--yellow),#2f9e5b)}
+.ap51 .buy,.lab51-card .buy{white-space:normal;line-height:1.2}
+.ap51-rep{width:min(25rem,100%);background:var(--paper);border:.1875rem solid var(--ink);border-radius:1rem;padding:.7rem .85rem;color:var(--ink);text-align:left}
+.ap51-rep .label{color:var(--green)}
+.ap51-rep ul{list-style:none;margin:.3rem 0 0;padding:0;display:grid;gap:.3rem;font-size:.9rem}
+.ap51-rep .up{color:var(--green);font-weight:800}.ap51-rep .dn{color:var(--red);font-weight:800}
+.ap51-learn{margin:0;font-size:.92rem;color:var(--green)}
+@media (min-width:56rem){.summary-wrap.has-db43 .ap51-rep{grid-column:1}}
+.lab51 .lab-pick{display:grid;gap:.35rem;text-align:left}
+.lab51 .lab-pick .label{margin:.3rem 0 0}
+.lab51 .chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.lab51 .chip i{display:inline-block;width:.7rem;height:.7rem;border-radius:50%;margin-right:.3rem;border:.1rem solid var(--ink);vertical-align:-.05rem}
+.lab-res ul{list-style:none;margin:.3rem 0;padding:0;display:grid;gap:.3rem;text-align:left}
+.lab-res li{display:grid;grid-template-columns:1fr auto;gap:.1rem .5rem;background:#f4f8f5;border-radius:.7rem;padding:.4rem .6rem;animation:db43in .4s both}
+.lab-res li small{grid-column:1 / -1;color:var(--muted);font-size:.84rem}
+.lab-st{color:#e0a010;letter-spacing:.05em}.lab-st em{font-style:normal;color:#d6dcd8}
+body:is(.pd45-0,.pd45-1) .ap51-wrap{display:none}
+`; document.head.appendChild(s);
+})();
+
+/* =================================================================
+   53. LANGUAGES: English, 中文 (Chinese), Bahasa Melayu and தமிழ் (Tamil).
+   Menus, buttons, settings, the cooking controls and the main labels are
+   translated. Customers keep speaking Singlish, and recipe and story text
+   stays in English for now.
+   ================================================================= */
+const LANGS53 = [['en', 'English'], ['zh', '中文'], ['ms', 'Melayu'], ['ta', 'தமிழ்']];
+/* each entry: English → [中文, Melayu, தமிழ்] */
+const D53 = {
+  'Open':['营业', 'Buka', 'திற'], 'Market':['市场', 'Pasar', 'சந்தை'], 'Store':['升级', 'Naik taraf', 'மேம்பாடு'], 'Menu':['菜单', 'Menu', 'மெனு'], 'Decor':['装饰', 'Hiasan', 'அலங்காரம்'],
+  'Open for lunch':['午餐开店', 'Buka untuk makan tengah hari', 'மதிய உணவுக்குத் திற'], 'Open for dinner':['晚餐开店', 'Buka untuk makan malam', 'இரவு உணவுக்குத் திற'],
+  'Step inside to wash up & prep':['进去洗碗备料', 'Masuk untuk cuci dan sedia bahan', 'உள்ளே சென்று கழுவித் தயார் செய்'], 'Close up':['收档', 'Tutup kedai', 'கடையை மூடு'],
+  'Morning prep':['早上备料', 'Persiapan pagi', 'காலைத் தயாரிப்பு'], 'Lunch':['午餐', 'Tengah hari', 'மதியம்'], 'Dinner':['晚餐', 'Makan malam', 'இரவு'],
+  'Settings':['设置', 'Tetapan', 'அமைப்புகள்'], 'How to play':['玩法', 'Cara bermain', 'விளையாடும் முறை'], 'Next up':['下一步', 'Seterusnya', 'அடுத்தது'], 'Also':['还有', 'Juga', 'மேலும்'],
+  'Go':['出发', 'Pergi', 'செல்'], 'Done':['完成', 'Siap', 'முடிந்தது'], 'Close':['关闭', 'Tutup', 'மூடு'], 'Start':['开始', 'Mula', 'தொடங்கு'], 'Back':['返回', 'Kembali', 'பின்செல்'],
+  'Levels':['关卡', 'Tahap', 'நிலைகள்'], '3D stall':['3D摊位', 'Gerai 3D', '3D கடை'], 'Walk in · arrange · upgrade':['走进去 · 布置 · 升级', 'Masuk · susun · naik taraf', 'உள்ளே செல் · அமை · மேம்படுத்து'],
+  'Rival Rush':['对手挑战', 'Cabaran Lawan', 'போட்டிச் சவால்'], 'Challenge a friend':['挑战朋友', 'Cabar kawan', 'நண்பருக்குச் சவால்'], 'Pass & Play':['轮流玩', 'Main Bergilir', 'மாறி மாறி விளையாடு'], 'Two players, one device':['两人一机', 'Dua pemain, satu peranti', 'இருவர், ஒரே சாதனம்'],
+  'Hawker Book':['小贩手册', 'Buku Penjaja', 'உணவுக்கடைப் புத்தகம்'], 'Chef Licence':['厨师执照', 'Lesen Chef', 'சமையல் உரிமம்'], 'My Journey':['我的旅程', 'Perjalanan Saya', 'என் பயணம்'],
+  'Today’s forecast':['今日预报', 'Ramalan hari ini', 'இன்றைய முன்னறிவிப்பு'], 'Enough stock for a service':['库存够一轮营业', 'Stok cukup untuk satu sesi', 'ஒரு சேவைக்குப் போதுமான பொருட்கள்'],
+  'Garnish prepped':['配料已备好', 'Hiasan sudah disediakan', 'அலங்காரப் பொருட்கள் தயார்'], 'Plates washed':['盘子已洗好', 'Pinggan sudah dicuci', 'தட்டுகள் கழுவப்பட்டன'], 'Price checked':['价格已确认', 'Harga sudah disemak', 'விலை சரிபார்க்கப்பட்டது'],
+  'Walk around the food centre':['逛逛小贩中心', 'Jalan-jalan di pusat makanan', 'உணவு அங்காடியைச் சுற்றிப் பார்'], 'Walk around in 3D':['3D逛一逛', 'Jalan-jalan dalam 3D', '3D-இல் சுற்றிப் பார்'],
+  'Learn the craft':['学好手艺', 'Belajar kemahiran', 'கலையைக் கற்றுக்கொள்'], 'Save Bahagia':['拯救巴哈吉亚', 'Selamatkan Bahagia', 'பஹாகியாவைக் காப்பாற்று'], 'Become a Hawker Legend':['成为小贩传奇', 'Jadi Legenda Penjaja', 'உணவுக்கடை ஜாம்பவான் ஆகு'],
+  'Apprentice':['学徒', 'Perantis', 'பயிற்சியாளர்'], 'Hire an apprentice':['请一个学徒', 'Upah perantis', 'பயிற்சியாளரை நியமி'], 'Recipe lab':['食谱实验室', 'Makmal resipi', 'சமையல் ஆய்வகம்'],
+  'Invent a stall special':['研发招牌菜', 'Cipta hidangan istimewa', 'சிறப்பு உணவை உருவாக்கு'], 'Open the lab':['进入实验室', 'Buka makmal', 'ஆய்வகத்தைத் திற'], 'Tweak the recipe':['调整食谱', 'Ubah resipi', 'செய்முறையை மாற்று'],
+  'Stall signature':['摊位特色', 'Ciri khas gerai', 'கடையின் தனிச்சிறப்பு'], 'For rent':['出租', 'Untuk disewa', 'வாடகைக்கு'], 'Empty unit':['空摊位', 'Unit kosong', 'காலியான கடை'],
+  'Sound effects':['音效', 'Kesan bunyi', 'ஒலி விளைவுகள்'], 'Autosave progress':['自动保存进度', 'Simpan automatik', 'தானியங்கிச் சேமிப்பு'], 'Saves to this device as you play':['边玩边保存到这台设备', 'Disimpan ke peranti ini semasa bermain', 'விளையாடும்போது இந்தச் சாதனத்தில் சேமிக்கும்'],
+  'Tutorial tips':['教学提示', 'Petua tutorial', 'பயிற்சிக் குறிப்புகள்'], 'Step-by-step help the first time and when stuck':['第一次和卡住时的逐步帮助', 'Bantuan langkah demi langkah kali pertama dan bila tersekat', 'முதல் முறையும் சிக்கும்போதும் படிப்படியான உதவி'],
+  'Relaxed mode':['轻松模式', 'Mod santai', 'நிதான முறை'], 'No step timers and very patient customers. Great for learning':['没有计时，顾客也很有耐心。适合学习', 'Tiada pemasa dan pelanggan sangat sabar. Sesuai untuk belajar', 'நேர வரம்பு இல்லை, பொறுமையான வாடிக்கையாளர்கள். கற்க ஏற்றது'],
+  'Customer voices':['顾客声音', 'Suara pelanggan', 'வாடிக்கையாளர் குரல்கள்'], 'Each customer babbles in their own voice':['每位顾客都有自己的声音', 'Setiap pelanggan ada suara sendiri', 'ஒவ்வொரு வாடிக்கையாளருக்கும் தனிக் குரல்'],
+  'Show all menus':['显示所有菜单', 'Tunjuk semua menu', 'எல்லா மெனுக்களையும் காட்டு'], 'Skip the gradual unlocks and show everything now':['跳过逐步解锁，马上显示全部', 'Langkau buka kunci berperingkat, tunjuk semua sekarang', 'படிப்படியான திறப்பைத் தவிர்த்து இப்போதே எல்லாம் காட்டு'],
+  'Simple orders':['简单订单', 'Pesanan mudah', 'எளிய ஆர்டர்கள்'], 'Fewer extras and no special notes in orders':['订单附加项更少，没有特别要求', 'Kurang tambahan, tiada nota khas', 'குறைவான கூடுதல்கள், சிறப்புக் குறிப்புகள் இல்லை'],
+  'Who’s playing':['谁在玩', 'Siapa bermain', 'யார் விளையாடுகிறார்'], 'Change':['更改', 'Tukar', 'மாற்று'], 'Music':['音乐', 'Muzik', 'இசை'], 'A kitchen tune while you cook':['煮饭时的厨房音乐', 'Lagu dapur semasa memasak', 'சமைக்கும்போது சமையலறை இசை'],
+  'On':['开', 'Hidup', 'இயக்கம்'], 'Off':['关', 'Tutup', 'அணை'], 'Auto':['自动', 'Auto', 'தானியங்கி'], 'Read steps aloud':['朗读步骤', 'Baca langkah dengan kuat', 'படிகளை உரக்கப் படி'], '3D effects':['3D效果', 'Kesan 3D', '3D விளைவுகள்'],
+  'Intro film':['开场影片', 'Filem pengenalan', 'அறிமுகப் படம்'], 'Watch the opening again':['再看一次开场', 'Tonton pembukaan semula', 'தொடக்கத்தை மீண்டும் பார்'], 'Watch':['观看', 'Tonton', 'பார்'],
+  'Replay tutorials':['重看教学', 'Ulang tutorial', 'பயிற்சிகளை மீண்டும் காட்டு'], 'Show first-time guides again':['再次显示新手指南', 'Tunjuk panduan kali pertama semula', 'முதல்முறை வழிகாட்டிகளை மீண்டும் காட்டு'], 'Replay':['重播', 'Ulang', 'மீண்டும்'],
+  'Back up progress':['备份进度', 'Sandarkan kemajuan', 'முன்னேற்றத்தைக் காப்புப் பிரதி எடு'], 'Copy a save code to move to another phone or computer':['复制存档码，换手机或电脑继续玩', 'Salin kod simpanan untuk pindah ke telefon atau komputer lain', 'வேறு கைபேசி அல்லது கணினிக்கு மாற சேமிப்புக் குறியீட்டை நகலெடு'],
+  'Save now':['立即保存', 'Simpan sekarang', 'இப்போது சேமி'], 'Save':['保存', 'Simpan', 'சேமி'], 'Language':['语言', 'Bahasa', 'மொழி'], 'Bigger text':['大字体', 'Teks lebih besar', 'பெரிய எழுத்து'],
+  'Colour-blind friendly':['色盲友好', 'Mesra buta warna', 'நிறக்குருடு நட்பு'], 'Calm motion':['减少动画', 'Gerakan tenang', 'அமைதியான அசைவு'], 'App icon':['应用图标', 'Ikon aplikasi', 'செயலிச் சின்னம்'], 'How to play this step':['这一步怎么做', 'Cara buat langkah ini', 'இந்தப் படியை எப்படிச் செய்வது'],
+  'Press and hold':['按住', 'Tekan dan tahan', 'அழுத்திப் பிடி'], 'Tap on time':['准时点击', 'Ketik tepat pada masa', 'சரியான நேரத்தில் தட்டு'], 'Drag in circles':['画圈拖动', 'Seret dalam bulatan', 'வட்டமாக இழு'], 'Swipe down':['向下划', 'Leret ke bawah', 'கீழே இழு'],
+  'Tap in order':['按顺序点击', 'Ketik ikut urutan', 'வரிசையாகத் தட்டு'], 'Tap or drag':['点击或拖动', 'Ketik atau seret', 'தட்டு அல்லது இழு'], 'Tap fast':['快速点击', 'Ketik pantas', 'வேகமாகத் தட்டு'], 'Swipe':['划动', 'Leret', 'இழு'],
+  'Let’s go!':['出发！', 'Jom!', 'போகலாம்!'], 'Let’s cook!':['开煮！', 'Jom masak!', 'சமைக்கலாம்!'], 'Next customer':['下一位顾客', 'Pelanggan seterusnya', 'அடுத்த வாடிக்கையாளர்'], 'See shift results':['查看本轮结果', 'Lihat keputusan syif', 'ஷிப்ட் முடிவுகளைப் பார்'],
+  'Back to the stall':['回到摊位', 'Kembali ke gerai', 'கடைக்குத் திரும்பு'], 'Back to stall':['回到摊位', 'Kembali ke gerai', 'கடைக்குத் திரும்பு'], 'Play again':['再玩一次', 'Main lagi', 'மீண்டும் விளையாடு'], 'Pause':['暂停', 'Jeda', 'இடைநிறுத்து'], 'Resume':['继续', 'Sambung', 'தொடர்'],
+  'Drag onto the plate':['拖到盘子上', 'Seret ke pinggan', 'தட்டின் மேல் இழு'], 'THE ORDER':['订单', 'PESANAN', 'ஆர்டர்'], 'RECIPE':['食谱', 'RESIPI', 'செய்முறை'],
+  'Hold to pour':['按住倒', 'Tahan untuk tuang', 'ஊற்ற அழுத்திப் பிடி'], 'Hold for fire':['按住加火', 'Tahan untuk api', 'தீக்கு அழுத்திப் பிடி'], 'Hold to ladle':['按住舀汤', 'Tahan untuk senduk', 'அகப்பையால் ஊற்ற அழுத்து'], 'Hold to dip':['按住烫', 'Tahan untuk celup', 'நனைக்க அழுத்திப் பிடி'],
+  'More fire':['加大火', 'Tambah api', 'இன்னும் தீ'], 'Take the order':['接单', 'Ambil pesanan', 'ஆர்டரை எடு'], 'Collect payment':['收钱', 'Terima bayaran', 'பணம் வசூலி'], 'Pack the dabao':['打包', 'Bungkus dabao', 'பார்சல் கட்டு'], 'Buzz for collection':['叫号取餐', 'Panggil untuk ambil', 'எடுக்க அழை'], 'Wait time':['等待时间', 'Masa menunggu', 'காத்திருப்பு நேரம்'],
+  'Legendary':['传奇', 'Legenda', 'ஜாம்பவான்'], 'Superb':['极佳', 'Hebat', 'அருமை'], 'Great':['很好', 'Bagus', 'சிறப்பு'], 'Good':['好', 'Baik', 'நன்று'], 'Okay':['还行', 'Okey', 'பரவாயில்லை'], 'Keep going':['继续加油', 'Teruskan', 'தொடர்ந்து முயல்'],
+  'Boss':['老板', 'Bos', 'முதலாளி'], 'Chef':['厨师', 'Chef', 'சமையல்காரர்'], 'Counter crew':['柜台员', 'Kru kaunter', 'கவுண்டர் பணியாளர்'], 'Kitchen helper':['厨房助手', 'Pembantu dapur', 'சமையலறை உதவியாளர்'], 'Cleaner':['清洁工', 'Pembersih', 'துப்புரவாளர்'],
+  'Walk':['走路', 'Jalan', 'நட'], 'From above':['俯视', 'Dari atas', 'மேலிருந்து'], 'Overview':['全景', 'Gambaran', 'மேலோட்டம்'], 'Arrange':['布置', 'Susun', 'அமை'], 'Upgrade':['升级', 'Naik taraf', 'மேம்படுத்து'],
+  'Hawker’s view':['小贩视角', 'Pandangan penjaja', 'கடைக்காரர் பார்வை'], 'Customer’s view':['顾客视角', 'Pandangan pelanggan', 'வாடிக்கையாளர் பார்வை'],
+  'Mentor debrief':['师傅点评', 'Ulasan mentor', 'ஆசானின் கருத்து'], 'Here’s what went well':['做得好的地方', 'Apa yang berjalan baik', 'நன்றாக நடந்தவை'], 'Here’s how to improve':['可以进步的地方', 'Cara untuk bertambah baik', 'மேம்படுத்த வழிகள்'],
+  'Today’s goals':['今日目标', 'Matlamat hari ini', 'இன்றைய இலக்குகள்'], 'Finish all three for a':['三个都完成可得', 'Siapkan ketiga-tiganya untuk', 'மூன்றையும் முடித்தால்'], 'bonus':['奖励', 'bonus', 'போனஸ்'],
+  'Daily goal':['每日目标', 'Matlamat harian', 'தினசரி இலக்கு'], 'Practise again':['再练一次', 'Berlatih lagi', 'மீண்டும் பயிற்சி'], 'Nailed it!':['做到了！', 'Berjaya!', 'சாதித்துவிட்டாய்!'], 'Getting there!':['快成功了！', 'Hampir berjaya!', 'நெருங்கிவிட்டாய்!'],
+  'Your stall':['你的摊位', 'Gerai anda', 'உன் கடை'], 'Neighbour':['邻居', 'Jiran', 'அண்டை வீட்டார்'], 'Go to the stall':['去摊位', 'Pergi ke gerai', 'கடைக்குச் செல்'],
+  'Mid-Autumn':['中秋节', 'Pertengahan Musim Luruh', 'நடு இலையுதிர்'], 'Chinese New Year':['农历新年', 'Tahun Baru Cina', 'சீனப் புத்தாண்டு'], 'Hari Raya Puasa':['开斋节', 'Hari Raya Puasa', 'ஹரி ராயா புவாசா'], 'Deepavali':['屠妖节', 'Deepavali', 'தீபாவளி'], 'National Day':['国庆日', 'Hari Kebangsaan', 'தேசிய தினம்'], 'Christmas':['圣诞节', 'Krismas', 'கிறிஸ்துமஸ்'],
+  'Your name':['你的名字', 'Nama anda', 'உன் பெயர்'], 'What should customers call you?':['顾客该怎么称呼你？', 'Pelanggan patut panggil anda apa?', 'வாடிக்கையாளர்கள் உன்னை எப்படி அழைக்க வேண்டும்?'],
+  'Copy code':['复制代码', 'Salin kod', 'குறியீட்டை நகலெடு'], 'Save as a file':['存成文件', 'Simpan sebagai fail', 'கோப்பாகச் சேமி'], 'Load this code':['载入这个代码', 'Muat kod ini', 'இந்தக் குறியீட்டை ஏற்று'], 'Open a save file':['打开存档文件', 'Buka fail simpanan', 'சேமிப்புக் கோப்பைத் திற'],
+  'Hire':['聘请', 'Upah', 'நியமி'], 'Train together':['一起练习', 'Berlatih bersama', 'சேர்ந்து பயிற்சி'], 'Taste test':['试吃', 'Ujian rasa', 'சுவைச் சோதனை'], 'Add to the menu':['加入菜单', 'Tambah ke menu', 'மெனுவில் சேர்'], 'Test again':['再试一次', 'Uji lagi', 'மீண்டும் சோதி'],
+  'Signature twist':['招牌变化', 'Kelainan istimewa', 'தனித்துவச் சுவை'], 'Heat':['辣度', 'Kepedasan', 'காரம்'], 'Sweetness':['甜度', 'Kemanisan', 'இனிப்பு'], 'Mild':['微辣', 'Sederhana', 'மிதமான'], 'Classic':['经典', 'Klasik', 'வழக்கமான'], 'Spicy':['辣', 'Pedas', 'காரமான'], 'Less sweet':['少甜', 'Kurang manis', 'குறைந்த இனிப்பு'], 'Sweeter':['甜一点', 'Lebih manis', 'அதிக இனிப்பு'],
+  'Buy':['购买', 'Beli', 'வாங்கு'], 'Place':['摆放', 'Letak', 'வை'], 'Owned':['已拥有', 'Dimiliki', 'உள்ளது'], 'Placed':['已摆放', 'Diletak', 'வைக்கப்பட்டது'], 'Rename':['改名', 'Tukar nama', 'பெயர் மாற்று'], 'Preview':['预览', 'Pratonton', 'முன்னோட்டம்'], 'Not now':['以后再说', 'Bukan sekarang', 'இப்போது வேண்டாம்'],
+  'Stock':['库存', 'Stok', 'இருப்பு'], 'Sales target':['营业目标', 'Sasaran jualan', 'விற்பனை இலக்கு'], 'Market budget':['买菜预算', 'Bajet pasar', 'சந்தை வரவு செலவு'], 'Payment':['付款', 'Bayaran', 'கட்டணம்'], 'Points':['分数', 'Mata', 'புள்ளிகள்'], 'Tier':['等级', 'Peringkat', 'நிலை'],
+  'Shifts':['营业次数', 'Syif', 'ஷிப்டுகள்'], 'Records':['记录', 'Rekod', 'பதிவுகள்'], 'Winnings':['收入', 'Pendapatan', 'வருமானம்'], 'Class':['等级', 'Kelas', 'வகுப்பு'], 'Name':['名字', 'Nama', 'பெயர்'], 'Role':['角色', 'Peranan', 'பங்கு'], 'Specialty':['专长', 'Kepakaran', 'சிறப்பு'],
+  'Your role today':['今天的角色', 'Peranan anda hari ini', 'இன்றைய உன் பங்கு'], 'Your regulars':['你的熟客', 'Pelanggan tetap anda', 'உன் வழக்கமான வாடிக்கையாளர்கள்'], 'What people say':['大家怎么说', 'Kata orang', 'மக்கள் சொல்வது'], 'Today’s plan':['今日计划', 'Rancangan hari ini', 'இன்றைய திட்டம்'], 'Today\'s plan':['今日计划', 'Rancangan hari ini', 'இன்றைய திட்டம்'],
+  'Signboard':['招牌', 'Papan tanda', 'பெயர்ப் பலகை'], 'Menu board':['菜单板', 'Papan menu', 'மெனுப் பலகை'], 'Restock & prep':['补货备料', 'Tambah stok & sedia', 'பொருட்கள் நிரப்பி தயார் செய்'], 'Learn to cook and serve with your mentor':['跟师傅学煮和卖', 'Belajar masak dan hidang bersama mentor', 'ஆசானுடன் சமைக்கவும் பரிமாறவும் கற்றுக்கொள்'],
+  'Centre':['中心', 'Pusat', 'அங்காடி'], 'Licence':['执照', 'Lesen', 'உரிமம்'], 'Stall':['摊位', 'Gerai', 'கடை'], 'Mentor':['师傅', 'Mentor', 'ஆசான்']
+};
+const P53 = [
+  [/^Day (\d+)$/, ['第$1天', 'Hari $1', 'நாள் $1']], [/^DAY (\d+)$/, ['第$1天', 'HARI $1', 'நாள் $1']],
+  [/^Build (\$[\d.,]+)$/, ['租下 $1', 'Bina $1', 'கட்டு $1']], [/^Buy (\$[\d.,]+)$/, ['购买 $1', 'Beli $1', 'வாங்கு $1']], [/^Hire · (\$[\d.,]+)$/, ['聘请 · $1', 'Upah · $1', 'நியமி · $1']],
+  [/^Today’s goals · (\d+\/\d+)$/, ['今日目标 · $1', 'Matlamat hari ini · $1', 'இன்றைய இலக்குகள் · $1']], [/^Opening checklist · (\d+\/\d+)$/, ['开店清单 · $1', 'Senarai semak buka · $1', 'திறப்புச் சரிபார்ப்பு · $1']],
+  [/^Act (\d) of 3 · (\d+\/\d+)$/, ['第$1幕（共3幕）· $2', 'Babak $1 daripada 3 · $2', 'அங்கம் $1 / 3 · $2']], [/^Mentor debrief · (.+)$/, ['师傅点评 · $1', 'Ulasan mentor · $1', 'ஆசானின் கருத்து · $1']],
+  [/^Practise “(.+)”$/, ['练习“$1”', 'Latih “$1”', '“$1” பயிற்சி']], [/^Daily goal: (.+)$/, ['每日目标：$1', 'Matlamat harian: $1', 'தினசரி இலக்கு: $1']],
+  [/^Cuts (\d) \/ 5$/, ['切了 $1 / 5', 'Potong $1 / 5', 'வெட்டு $1 / 5']], [/^(\d) \/ (\d) turns$/, ['$1 / $2 圈', '$1 / $2 pusingan', '$1 / $2 சுற்று']],
+  [/^Next festival day in (\d+) days?$/, ['$1天后过节', 'Hari perayaan dalam $1 hari', '$1 நாளில் பண்டிகை நாள்']], [/^Step (\d+) of (\d+)$/, ['第$1步，共$2步', 'Langkah $1 daripada $2', 'படி $1 / $2']]
+];
+const LI53 = {zh:0, ms:1, ta:2};
+let lang53 = save.lang53 || 'en';
+function tr53(s){
+  if (lang53 === 'en' || s == null) return s;
+  const str = String(s); if (!/[A-Za-z]/.test(str)) return str;
+  const m = str.match(/^(\s*[^\p{L}\p{N}“"'(]*)([\s\S]*?)([\s.!?:…]*)$/u); if (!m) return str;
+  const [, pre, core, post] = m, i = LI53[lang53];
+  const hit = D53[core]; if (hit) return pre + hit[i] + post;
+  for (const [re, out] of P53){ if (re.test(core)) return pre + core.replace(re, out[i]) + post; }
+  return str;
+}
+const ORIG53 = new WeakMap(), ATTR53 = ['aria-label', 'placeholder', 'title'];
+function pass53(root){
+  root = root || document.body;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n;
+  while ((n = w.nextNode())){
+    const p = n.parentElement; if (!p || p.closest('script,style,textarea,[data-notr]')) continue;
+    const cur0 = n.nodeValue; let o = ORIG53.get(n);
+    if (!o || (cur0 !== o.tr && cur0 !== o.en)){ o = {en:cur0}; ORIG53.set(n, o); }
+    const want = lang53 === 'en' ? o.en : tr53(o.en);
+    o.tr = want; if (want !== cur0) n.nodeValue = want;
+  }
+  root.querySelectorAll && root.querySelectorAll('[aria-label],[placeholder],[title]').forEach(el => {
+    ATTR53.forEach(a => { if (!el.hasAttribute(a)) return; const k = '__en_' + a, v = el.getAttribute(a); if (el[k] == null || (v !== el[k + 't'] && v !== el[k])) el[k] = v; const want = lang53 === 'en' ? el[k] : tr53(el[k]); el[k + 't'] = want; if (want !== v) el.setAttribute(a, want); });
+  });
+}
+let raf53 = 0;
+const mo53 = new MutationObserver(() => { if (raf53) return; raf53 = requestAnimationFrame(() => { raf53 = 0; if (lang53 !== 'en' || document.body.dataset.lang53 !== 'en') pass53(document.body); document.body.dataset.lang53 = lang53; }); });
+mo53.observe(document.body, {subtree:true, childList:true, characterData:true});
+const _txt53 = txt;
+txt = function(s, ...a){ return _txt53(lang53 === 'en' ? s : tr53(s), ...a); };
+function setLang53(l){
+  lang53 = l; save.lang53 = l; persist();
+  document.documentElement.lang = {en:'en-SG', zh:'zh-Hans-SG', ms:'ms-SG', ta:'ta-SG'}[l];
+  if (l === 'ta' && !document.getElementById('font53')){ const k = document.createElement('link'); k.id = 'font53'; k.rel = 'stylesheet'; k.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@500;700&display=swap'; document.head.appendChild(k); }
+  document.body.dataset.lang53 = l; pass53(document.body); syncLang53();
+  REC.log('lang', {l});
+}
+function langChips53(){ return `<div class="lang53" role="group" aria-label="Language">${LANGS53.map(([k, n]) => `<button type="button" data-lang53="${k}" aria-pressed="${lang53 === k}" data-notr>${n}</button>`).join('')}</div>`; }
+function syncLang53(){ document.querySelectorAll('[data-lang53]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang53 === lang53))); }
+document.addEventListener('click', e => { const b = e.target.closest('[data-lang53]'); if (!b) return; sfx.tick(); setLang53(b.dataset.lang53); });
+(function place53(){
+  const first = document.querySelector('#setOv .set-row'); if (first) first.insertAdjacentHTML('beforebegin', `<div class="set-row set-lang53"><span>Language<small>Menus and controls. Customers still speak Singlish!</small></span>${langChips53()}</div>`);
+  const nf = $('#nameForm'); if (nf) nf.insertAdjacentHTML('afterbegin', `<div class="name-lang53">${langChips53()}</div>`);
+})();
+if (lang53 !== 'en') setTimeout(() => setLang53(lang53), 0);
+
+(function css53(){
+  const s = document.createElement('style'); s.textContent = `
+.lang53{display:flex;flex-wrap:wrap;gap:.3rem;justify-content:flex-end}
+.lang53 button{font:inherit;font-size:max(12px,.82rem);font-weight:700;border:.125rem solid var(--ink);border-radius:2rem;background:#fff;padding:.25rem .65rem;min-height:2.3rem;cursor:pointer;color:var(--ink)}
+.lang53 button[aria-pressed="true"]{background:var(--yellow);box-shadow:0 .15rem 0 var(--ink)}
+.set-lang53{flex-wrap:wrap;gap:.4rem}
+.name-lang53 .lang53{justify-content:center;margin-bottom:.5rem}
+html[lang^="ta"]{--body:'Nunito','Noto Sans Tamil',system-ui,sans-serif;--display:'Fredoka','Noto Sans Tamil',system-ui,sans-serif}
+html[lang^="ta"] body{word-break:normal;overflow-wrap:anywhere}
+`; document.head.appendChild(s);
+})();
 
 /* =================================================================
    GUIDED FIRST TRIES for the hand-built steps (templates are handled in guideState)
