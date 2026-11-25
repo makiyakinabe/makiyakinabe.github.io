@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>shade,where?</title>
+<style>
+/* VOICE playful, night-sky everyday tool for walking in Singapore heat; calm and trustworthy
+   IDEA a sundial at night: every card casts a hard shadow pointing away from the chosen sun
+   PICTURE the live 3D map of real Singapore with lit facades; animated sun-path and shadow infographics
+   COLOUR deep navy ground, violet fields, lilac for shade, coral-pink for sun, teal for linkway roofs, yellow only for the sun
+   TYPE DM Sans (self-hosted, variable) at heavy weights for display, regular for reading
+   LAYOUT sticky bar with section tabs; one section on screen at a time; map + trip panel; phones stack map then panel */
+@font-face{font-family:"DM Sans";src:url(fonts/dmsans.woff) format("woff");font-weight:100 1000;font-display:swap}
+:root{color-scheme:dark;--sx:4px;--sy:-3px;
+--bg:#0b0b2b;--ink:#eeeaff;--muted:#aaa6d8;--sun:#ffd23f;--shade:#c4b5fd;--deep:#1c1a5e;--violet:#7048e8;--heat:#ff6f91;--roof:#38e1d1;
+--panel:#14134a;--panel2:#1a1858;--rule:#2a2870;--line:#3f3ba8;--hard:#04041a}
+:root[data-theme=light],:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:80px;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip}
+a{color:inherit}
+h1,h2,h3,.wm{font-family:"DM Sans",system-ui,sans-serif;letter-spacing:-.025em;line-height:1.06;margin:0}
+h1{font-size:clamp(28px,3.6vw,44px);font-weight:850;text-wrap:balance}
+h2{font-size:clamp(24px,2.8vw,34px);font-weight:800;text-wrap:balance;max-width:26ch}
+h3{font-size:17px;font-weight:750;letter-spacing:-.01em}
+p{margin:0}
+.in{max-width:1280px;margin:0 auto;padding-inline:max(4vw,16px)}
+.hard{box-shadow:var(--sx) var(--sy) 0 var(--hard);transition:box-shadow .4s}
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;background:#0b0b2bd9;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--rule)}
+.bar .in{display:flex;align-items:center;gap:14px;min-height:64px;flex-wrap:wrap;padding-block:8px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;margin-right:auto}
+.brand svg{flex:none}
+.brand .um{transform-origin:24px 40px;animation:sway 6s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.wm{font-size:21px;font-weight:900;letter-spacing:-.04em;white-space:nowrap}
+.wm i{font-style:normal;color:var(--shade)}.wm b{color:var(--sun);font-weight:900}
+.tabs{display:flex;gap:4px;padding:4px;border-radius:14px;background:var(--panel);border:1px solid var(--rule);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{flex:none;text-decoration:none;font-weight:650;font-size:15px;padding:9px 14px;border-radius:10px;color:var(--muted);white-space:nowrap;transition:background .25s,color .25s}
+.tabs a:hover{color:#fff}
+.tabs a[aria-current=page]{background:var(--violet);color:#fff}
+.badge{display:flex;align-items:center;gap:7px;text-decoration:none;font-size:14px;font-weight:650;color:var(--roof);padding:8px 12px;border-radius:999px;border:1px solid #38e1d155;white-space:nowrap}
+.badge:hover{background:#38e1d11a}
+/* views */
+.view{display:none;padding-block:clamp(20px,3vw,40px) clamp(32px,5vw,72px)}
+.view.on{display:block;animation:rise .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.lede{font-size:17px;color:#d8d2ff;max-width:62ch;margin-top:10px}
+.muted{color:var(--muted);font-size:15px}
+.sechead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 28px;margin-bottom:22px}
+/* plan */
+.planhead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;margin-bottom:20px}
+.dial{display:grid;grid-template-columns:92px minmax(0,220px);gap:14px;align-items:center;background:var(--panel);border:1px solid var(--rule);border-radius:18px;padding:10px 16px 10px 10px}
+.dial svg{width:92px;height:92px;display:block}
+.dial b{display:block;font-size:14px;font-weight:750;color:var(--shade);margin-bottom:2px}
+.dial p{font-size:14px;color:#d8d2ff;line-height:1.4}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 392px;gap:22px;align-items:start}
+.stage{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);height:clamp(520px,calc(100vh - 210px),860px);background:#06081f}
+#map{position:absolute;inset:0}
+.maplibregl-map{overflow:hidden;-webkit-tap-highlight-color:transparent}
+.maplibregl-canvas{position:absolute;left:0;top:0}
+.maplibregl-canvas-container.maplibregl-interactive{cursor:grab}
+.maplibregl-canvas-container.maplibregl-interactive:active{cursor:grabbing}
+.maplibregl-marker{position:absolute;top:0;left:0;will-change:transform}
+.mapui{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;gap:12px;z-index:2}
+.mapui button{width:44px;height:44px;padding:0;border-radius:12px;font-size:18px;background:#14134ae6}
+.hint{position:absolute;top:12px;left:70px;right:12px;display:flex;justify-content:center;pointer-events:none;z-index:2}
+.hint span{background:var(--violet);color:#fff;padding:8px 14px;border-radius:999px;font-weight:650;font-size:14px;max-width:100%;animation:rise .35s}
+.hint span:empty{display:none}
+.attr{position:absolute;right:0;bottom:0;z-index:2;background:#0b0b2bcc;font-size:12px;padding:3px 8px;border-top-left-radius:8px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--muted);margin-top:12px}
+.legend span{display:flex;align-items:center;gap:7px}
+.sw{width:22px;height:10px;border-radius:3px;flex:none}
+.panel{display:grid;gap:14px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:18px;padding:16px}
+.card>.lab{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.trip{display:grid;gap:8px;position:relative}
+.field{position:relative;display:flex;align-items:center;gap:10px}
+.field>b{width:28px;height:28px;flex:none;border-radius:50% 50% 50% 4px;color:#fff;display:grid;place-items:center;font-weight:850;font-size:13px;background:var(--heat)}
+.field>b.b{background:var(--violet)}
+.field input{flex:1;font:16px "DM Sans",system-ui,sans-serif;min-height:46px;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:#0e0d35;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.field input:focus-visible{outline:none;border-color:var(--shade);box-shadow:0 0 0 3px #c4b5fd40}
+.results{list-style:none;margin:0;padding:6px;position:absolute;left:38px;right:0;top:100%;z-index:5;background:var(--panel2);border-radius:12px;border:1px solid var(--line);box-shadow:0 18px 40px #0008;max-height:320px;overflow:auto;animation:rise .2s}
+.results:empty{display:none}
+.results li{padding:8px 10px;border-radius:8px;cursor:pointer;line-height:1.3}
+.results li[aria-selected=true],.results li:hover{background:#2e2b7a}
+.results small{display:block;color:var(--muted);font-size:13px}
+.tripnote{font-size:13px;color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.clockrow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#tOut{font-weight:850;font-size:clamp(30px,3vw,38px);line-height:1;letter-spacing:-.04em;white-space:nowrap;font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:40px;background:transparent;margin:4px 0 0}
+input[type=range]::-webkit-slider-runnable-track{height:10px;border-radius:5px;background:linear-gradient(90deg,#3b1fa3,#c4b5fd 22%,#ff6f91 50%,#c4b5fd 78%,#3b1fa3)}
+input[type=range]::-moz-range-track{height:10px;border-radius:5px;background:linear-gradient(90deg,#3b1fa3,#c4b5fd 22%,#ff6f91 50%,#c4b5fd 78%,#3b1fa3)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;margin-top:-8px;border-radius:50%;background:#ffd23f;border:3px solid #0b0b2b;box-shadow:0 0 0 4px #ffd23f40;cursor:grab;transition:box-shadow .2s}
+input[type=range]::-webkit-slider-thumb:hover{box-shadow:0 0 0 8px #ffd23f33}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#ffd23f;border:3px solid #0b0b2b;cursor:grab}
+input[type=range]:focus-visible{outline:2px solid var(--shade);outline-offset:4px;border-radius:8px}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+button{font:650 15px "DM Sans",system-ui,sans-serif;min-height:44px;padding:8px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer;transition:transform .15s,background .2s,border-color .2s}
+button:hover{border-color:var(--shade);transform:translateY(-1px)}
+button:active{transform:translateY(1px)}
+button:focus-visible{outline:2px solid var(--shade);outline-offset:2px}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+button[aria-pressed=true]{background:var(--violet);color:#fff;border-color:#c4b5fd}
+.seg button{flex:1 1 auto}
+.ico{width:44px;padding:0;display:grid;place-items:center;flex:none}
+.rtabs{display:flex;gap:4px;padding:4px;border-radius:12px;background:#0e0d35;margin-bottom:14px}
+.rtabs button{flex:1;min-height:38px;border:0;background:transparent;color:var(--muted);font-size:14px}
+.rtabs button[aria-selected=true]{background:var(--violet);color:#fff}
+.rtabs button:hover{transform:none;color:#fff}
+#headline{font-weight:800;font-size:20px;line-height:1.2;letter-spacing:-.02em;margin-bottom:12px;text-wrap:balance;color:var(--shade)}
+.cmp{width:100%;border-collapse:collapse;font-size:15px}
+.cmp th{text-align:right;font-size:13px;color:var(--muted);font-weight:650;padding:4px 0 6px 8px}
+.cmp th:first-child,.cmp td:first-child{text-align:left;padding-left:0}
+.cmp td{text-align:right;padding:7px 0 7px 8px;border-top:1px solid var(--rule);white-space:nowrap;font-variant-numeric:tabular-nums}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}
+.strip{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:4px 0 10px;background:#ffffff14;transform-origin:left}.strip.new{animation:grow .7s cubic-bezier(.2,.8,.2,1)}
+.stem{transform-box:fill-box;transform-origin:50% 100%}.play .stem{animation:stemup .8s cubic-bezier(.2,.8,.2,1) both}@keyframes stemup{from{transform:scaleY(0)}to{transform:none}}
+.fade{opacity:1}.play .fade{animation:fadein .6s ease both}@keyframes fadein{from{opacity:0}to{opacity:1}}
+.saved{margin-top:10px;font-size:15px;color:#d8d2ff}
+@keyframes grow{from{transform:scaleX(0)}to{transform:none}}
+.strip i{display:block;height:100%}
+.k0{background:#ff6f91}.k1{background:#8f86ff}.k2{background:#38e1d1}
+.sl{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 10px}
+.fig{position:relative;height:240px}
+.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+#chart text{font-size:12px;fill:var(--muted)}
+#chart .grid{stroke:#ffffff1f}
+#chart .la{fill:none;stroke:#ff6f91;stroke-width:2.5;stroke-dasharray:6 5}
+#chart .lb{fill:none;stroke:#c4b5fd;stroke-width:3.5}
+#chart .ab{fill:#c4b5fd;opacity:.14}
+#chartTitle{font-weight:800;font-size:18px;letter-spacing:-.02em;color:var(--shade);margin-bottom:6px}
+.keys{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);margin-top:8px}
+.keys span{display:flex;align-items:center;gap:7px}
+.go{width:100%;min-height:54px;background:linear-gradient(90deg,#7048e8,#9b5cf6);border-color:#c4b5fd;color:#fff;font-weight:800;font-size:17px;border-radius:14px;position:relative;overflow:hidden}
+.go::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,#ffffff33 50%,transparent 70%);transform:translateX(-100%);animation:sheen 3.5s ease-in-out infinite 1s}
+@keyframes sheen{0%,60%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.go:disabled::after{display:none}
+details.opts summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--muted);list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:28px}
+details.opts summary::after{content:"+";font-size:20px;color:var(--shade);transition:transform .25s}
+details.opts[open] summary::after{transform:rotate(45deg)}
+details.opts summary::-webkit-details-marker{display:none}
+details.opts .seg{margin-top:12px}
+.nav{position:absolute;left:12px;right:12px;bottom:30px;z-index:3;max-width:560px;margin:0 auto;background:#1c1a5ef2;color:#fff;border-radius:18px;border:1px solid var(--line);padding:14px;display:grid;gap:12px;box-shadow:0 20px 50px #000a;animation:rise .35s}
+.nav[hidden]{display:none}
+.navtop{display:grid;grid-template-columns:46px minmax(0,1fr);gap:12px;align-items:center}
+.arrow{width:46px;height:46px;border-radius:12px;background:var(--violet);color:#fff;display:grid;place-items:center;flex:none}
+#navTitle{font-weight:800;font-size:17px;line-height:1.25;letter-spacing:-.02em;text-wrap:balance}
+#navMeta{font-size:14px;color:#d6d6fb;margin-top:4px}
+.navbtns{display:flex;gap:10px;flex-wrap:wrap}
+.navbtns button{flex:1 1 0;padding:8px 10px;white-space:nowrap}
+.dir{list-style:none;margin:0;padding:2px 8px 8px 2px;display:grid;gap:8px;max-height:380px;overflow:auto}
+.dir[hidden]{display:none}
+.dir button{width:100%;display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;text-align:left;padding:8px 10px;border-radius:12px;font-weight:400}
+.dir .arrow{width:34px;height:34px;border-radius:9px}
+.dir b{display:block;font-weight:700;line-height:1.3}
+.dir small{display:block;color:var(--muted);font-size:13px}
+.dir button[aria-current=true]{background:var(--violet);color:#fff}
+.dir button[aria-current=true] small{color:#e6deff}
+/* infographics */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.stat{background:var(--panel);border:1px solid var(--rule);border-radius:18px;padding:18px}
+.stat b{display:block;font-size:clamp(30px,3.4vw,44px);font-weight:900;letter-spacing:-.04em;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.stat span{display:block;color:var(--muted);font-size:14px;margin-top:8px;line-height:1.4}
+.stat small{display:block;color:#8c88c4;font-size:12px;margin-top:8px}
+.ig{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.ig .card{padding:20px}
+.ig h3{font-size:19px;margin-bottom:4px}
+.ig .muted{font-size:14px}
+.ig .wide{grid-column:1/-1}
+.cap{font-size:12px;color:#8c88c4;margin-top:10px}
+.igfig{position:relative;margin-top:14px}
+.igfig svg{display:block;width:100%;height:auto;overflow:visible;margin:0 auto}#shelterFig svg{max-width:720px}#sunFig svg{max-width:380px}#shadowFig svg{max-width:440px}
+.igfig text{font-family:"DM Sans",system-ui,sans-serif}
+.bars{display:grid;gap:14px;margin-top:16px}
+.bar2 .t{display:flex;justify-content:space-between;gap:12px;font-size:14px;margin-bottom:6px}
+.bar2 .t b{font-size:20px;font-weight:850;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bar2 .tr{height:14px;border-radius:7px;background:#ffffff12;overflow:hidden}
+.bar2 .tr i{display:block;height:100%;border-radius:7px;background:linear-gradient(90deg,#7048e8,#c4b5fd);transform-origin:left}
+.play .bar2 .tr i{animation:grow 1.1s cubic-bezier(.2,.8,.2,1) both}
+.play .bar2:nth-child(2) .tr i{animation-delay:.15s}.play .bar2:nth-child(3) .tr i{animation-delay:.3s}
+.wbgt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}
+.wbgt div{border-radius:14px;padding:12px;border:1px solid var(--rule)}
+.wbgt b{display:block;font-size:15px;font-weight:800}
+.wbgt span{display:block;font-size:13px;color:#d8d2ff;margin-top:4px;line-height:1.4}
+.wbgt em{display:block;font-style:normal;font-weight:800;font-size:18px;margin-top:4px;white-space:nowrap}
+.src{margin-top:24px;font-size:13px;color:var(--muted)}
+.src ol{padding-left:20px;margin:8px 0 0;display:grid;gap:4px}
+.src a{color:var(--shade)}
+.draw{stroke-dasharray:var(--len);stroke-dashoffset:0}
+.play .draw{animation:dash 1.6s cubic-bezier(.4,.1,.2,1) both}
+@keyframes dash{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
+.pop{transform-box:fill-box;transform-origin:center}
+.play .pop{animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{transform:scale(0)}to{transform:none}}
+/* how */
+.steps3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.steps3 svg{width:100%;height:auto;display:block;border-radius:14px;background:#0e0d35;margin-bottom:14px}
+.steps3 p,.four p{color:var(--muted);font-size:15px}
+.steps3 h3,.four h3{margin-bottom:6px}
+.four{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:16px}
+.num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--violet);color:#fff;font-weight:800;font-size:14px;margin-bottom:10px}
+.sunmove{offset-path:path("M30 112 Q150 -20 270 112");animation:arc 6s ease-in-out infinite alternate}
+@keyframes arc{from{offset-distance:8%}to{offset-distance:92%}}
+.shadowsweep{transform-origin:110px 100px;animation:sweep 6s ease-in-out infinite alternate}
+@keyframes sweep{from{transform:skewX(-35deg)}to{transform:skewX(25deg)}}
+.routedraw{stroke-dasharray:420;animation:rd 4s ease-in-out infinite}
+@keyframes rd{0%{stroke-dashoffset:420}60%,100%{stroke-dashoffset:0}}
+/* data */
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(10em,1fr));gap:14px}
+.figs div{background:var(--panel);border:1px solid var(--rule);border-radius:16px;padding:14px}
+.figs b{display:block;font-size:clamp(22px,2.4vw,30px);font-weight:900;letter-spacing:-.04em;white-space:nowrap;color:var(--shade);font-variant-numeric:tabular-nums}
+.figs span{color:var(--muted);font-size:14px}
+.subtabs{display:flex;gap:4px;padding:4px;border-radius:12px;background:var(--panel);border:1px solid var(--rule);margin:22px 0 18px;width:max-content;max-width:100%;overflow-x:auto}
+.subtabs button{border:0;background:transparent;color:var(--muted);min-height:40px;white-space:nowrap}
+.subtabs button[aria-selected=true]{background:var(--violet);color:#fff}
+.subtabs button:hover{transform:none;color:#fff}
+.pane{animation:rise .4s}
+.pane[hidden]{display:none}
+.tbl{overflow-x:auto}
+table.data{width:100%;border-collapse:collapse;font-size:15px}
+.data th{text-align:left;font-size:13px;color:var(--muted);padding:8px 12px 8px 0;border-bottom:1px solid var(--line);font-weight:650}
+.data td{padding:12px 12px 12px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.data td:first-child{font-weight:700}
+.ok{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--roof);white-space:nowrap}
+.limits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 28px;padding:0;list-style:none}
+.limits li{padding-left:20px;position:relative;color:var(--muted)}
+.limits li::before{content:"";position:absolute;left:0;top:.5em;width:10px;height:10px;border-radius:50% 50% 50% 2px;background:var(--heat)}
+.limits b{color:var(--ink)}
+.fine{margin-top:18px;font-size:13px;color:#8c88c4}
+/* privacy */
+.promise{display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px;align-items:center;background:linear-gradient(120deg,#3b1fa3,#1c1a5e);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,3vw,32px)}
+.promise svg{width:clamp(80px,10vw,120px);height:auto}
+.promise h2{color:#fff;max-width:20ch}
+.promise p{color:#e2dcff;margin-top:10px;max-width:60ch}
+.lockbody{animation:breathe 3s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.75}}
+.pgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.pgrid h3{margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.pgrid p{color:var(--muted);font-size:15px}
+.pgrid ul{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:15px;display:grid;gap:4px}
+.never{color:var(--heat)}.yes{color:var(--roof)}
+.clear{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:16px}
+#cleared{color:var(--roof);font-weight:700}
+footer{border-top:1px solid var(--rule);padding-block:24px;color:var(--muted)}
+footer .in{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center}
+footer p{margin-right:auto}
+footer a{font-weight:650;padding:10px 0;color:var(--ink)}
+.toast{position:absolute;top:62px;left:50%;transform:translateX(-50%);z-index:4;display:flex;gap:10px;align-items:center;background:#fff;color:#0b0b2b;border-radius:14px;padding:6px 6px 6px 14px;font-weight:650;font-size:14px;box-shadow:0 12px 30px #0008;animation:rise .3s;width:max-content;max-width:calc(100% - 80px)}.toast[hidden]{display:none}.toast button{min-height:36px;background:#7048e8;color:#fff;border-color:#7048e8;padding:4px 14px;flex:none}.toast button[hidden]{display:none}#map.arming .maplibregl-canvas-container.maplibregl-interactive{cursor:crosshair}
+
+/* why: stats */
+.stat{position:relative;overflow:hidden;transition:transform .25s,border-color .25s}
+.stat:hover{transform:translateY(-3px);border-color:var(--line)}
+.stat::after{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,#ff6f9140,transparent 70%);transition:transform .4s}
+.stat:hover::after{transform:scale(1.6)}
+.stat span{font-size:15px;color:#d8d2ff;font-weight:600}
+/* story */
+.story{margin-top:16px;background:var(--panel);border:1px solid var(--rule);border-radius:22px;padding:clamp(14px,2vw,22px);box-shadow:var(--sx) var(--sy) 0 var(--hard)}
+.chap{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.chap::-webkit-scrollbar{display:none}
+.chap button{flex:1 0 auto;display:flex;align-items:center;gap:8px;justify-content:center;border:1px solid transparent;background:#0e0d35;color:var(--muted);font-size:14px;white-space:nowrap;min-height:44px}
+.chap button i{font-style:normal;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#2a2870;color:#fff;font-size:12px;font-weight:800;transition:background .25s}
+.chap button[aria-selected=true]{background:var(--violet);color:#fff;border-color:#c4b5fd}
+.chap button[aria-selected=true] i{background:#ffd23f;color:#0b0b2b}
+.chap button:hover{transform:none;color:#fff}
+.chwrap{position:relative;margin-top:18px;min-height:380px}
+.ch[hidden]{display:none}
+.ch.fromR{animation:fromR .45s cubic-bezier(.2,.8,.2,1)}
+.ch.fromL{animation:fromL .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes fromR{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes fromL{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+.chhead{margin-bottom:12px}
+.chhead h3{font-size:clamp(19px,2vw,24px);font-weight:800;letter-spacing:-.02em}
+.chhead p{color:var(--muted);font-size:15px;margin-top:4px;max-width:62ch}
+.storynav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;border-top:1px solid var(--rule);padding-top:14px}
+.storynav #chPrev{width:44px;padding:0}
+.dots{display:flex;gap:6px}
+.dots i{width:8px;height:8px;border-radius:4px;background:#3f3ba8;transition:width .3s,background .3s}
+.dots i.on{width:24px;background:#ffd23f}
+#chNext{background:var(--violet);color:#fff;border-color:#c4b5fd}
+/* tooltip */
+#yrsFig{position:relative}
+#yrsFig svg{max-width:none}
+.tip{position:absolute;z-index:3;pointer-events:none;transform:translate(-50%,calc(-100% - 14px));background:#fff;color:#0b0b2b;border-radius:10px;padding:6px 10px;font-size:13px;font-weight:600;white-space:nowrap;box-shadow:0 8px 24px #0008;animation:rise .2s}
+.tip b{font-weight:850;font-size:15px}
+.tip::after{content:"";position:absolute;left:calc(50% + var(--ax,0px));bottom:-6px;margin-left:-6px;border:6px solid transparent;border-bottom:0;border-top-color:#fff}
+.yd{cursor:pointer;outline:none}
+.yd circle.dot{transition:r .2s}
+.yd:hover circle.dot,.yd:focus-visible circle.dot,.yd.sel circle.dot{stroke:#fff;stroke-width:3.5}
+.yd:focus-visible circle.dot{stroke:#ffd23f}
+/* sim */
+.sim{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.simfig{background:#0e0d35;border-radius:16px;padding:12px;display:flex;flex-direction:column;align-items:center}
+.simfig>div{width:100%;max-width:320px}
+.simfig svg{display:block;width:100%;height:auto}
+.simlab{font-size:13px;color:var(--muted);margin-top:6px;font-weight:600}
+.simctl{display:grid;gap:12px;margin-top:14px}
+.simtime{display:flex;gap:12px;align-items:center}
+.simtime input{flex:1}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pills span{background:#0e0d35;border:1px solid var(--rule);border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pills span:first-child{color:#ffd23f}
+/* shade switch */
+.flip{display:inline-flex;padding:4px;border-radius:999px;background:#0e0d35;border:1px solid var(--rule);gap:4px}
+.flip button{border:0;border-radius:999px;background:transparent;color:var(--muted);padding:8px 18px}
+.flip button:hover{transform:none;color:#fff}
+#inSun[aria-pressed=true]{background:#ff6f91;color:#fff}
+#inShade[aria-pressed=true]{background:#38e1d1;color:#0b0b2b}
+.scene{margin-top:14px;border-radius:16px;overflow:hidden;background:#0e0d35}
+.scene svg{display:block;width:100%;max-width:820px;height:auto;margin:0 auto}
+.scene .tree,.scene .roof{transition:transform .8s cubic-bezier(.3,1.4,.5,1),opacity .5s}
+.scene.sun .tree{transform:translateY(160px);opacity:0}
+.scene.sun .roof{transform:translateY(-120px);opacity:0}
+.scene .rays{transition:opacity .5s}
+.scene.shade .rays{opacity:.05}
+.scene .glow{transition:opacity .6s}
+.scene.shade .glow{opacity:0}
+.scene .gshadow{transition:opacity .6s .3s}
+.scene.sun .gshadow{opacity:0}
+.scene .wave{animation:shimmer 1.6s ease-in-out infinite}
+.scene .wave:nth-of-type(2){animation-delay:.4s}.scene .wave:nth-of-type(3){animation-delay:.8s}
+@keyframes shimmer{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(-6px);opacity:.25}}
+.scene.shade .wave{opacity:0;animation:none}
+.scene .sunb{transform-box:fill-box;transform-origin:center;animation:spin 18s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scene .face{transition:opacity .4s}
+.scene.sun .cool,.scene.shade .hot{opacity:0}
+.gains{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.gains div{background:#0e0d35;border:1px solid var(--rule);border-radius:16px;padding:14px;transition:border-color .4s,background .4s}
+.gains b{display:block;font-size:clamp(24px,3vw,34px);font-weight:900;letter-spacing:-.03em;line-height:1.05;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted);transition:color .4s}
+.gains span{display:block;color:var(--muted);font-size:14px;margin-top:6px}
+.on-shade .gains div{border-color:#38e1d1;background:#38e1d112}
+.on-shade .gains b{color:#38e1d1}
+/* gauge */
+.gauge{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px;align-items:center}
+#gaugeFig svg{display:block;width:100%;max-width:440px;height:auto;margin:0 auto;touch-action:none;cursor:grab}
+#gaugeFig .needle{transition:transform .35s cubic-bezier(.3,1.5,.5,1);transform-origin:200px 200px}
+.dragging #gaugeFig .needle{transition:none}
+.gread b{display:block;font-size:clamp(36px,5vw,56px);font-weight:900;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.gread em{display:inline-block;font-style:normal;font-weight:800;font-size:16px;padding:4px 12px;border-radius:999px;margin-top:10px;transition:background .3s,color .3s}
+.gread p{margin-top:10px;font-size:16px;color:#d8d2ff;max-width:28ch}
+/* donut */
+.donut{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:24px;align-items:center}
+.donut svg{display:block;width:100%;height:auto}
+.donut .seg2{cursor:pointer;transition:stroke-width .25s,opacity .25s}
+.donut.hl .seg2{opacity:.3}.donut.hl .seg2.sel{opacity:1;stroke-width:38}
+.dleg{display:grid;gap:8px}
+.dleg button{display:grid;grid-template-columns:14px minmax(0,1fr) auto;gap:12px;align-items:center;text-align:left;background:#0e0d35;font-weight:600;padding:10px 14px}
+.dleg button i{width:14px;height:14px;border-radius:4px}
+.dleg button span{white-space:normal}
+.dleg button b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.dleg button[aria-pressed=true]{border-color:#fff;background:#2e2b7a}
+details.src{margin-top:20px}
+details.src summary{cursor:pointer;font-weight:700;color:var(--muted);width:max-content;padding:6px 0}
+details.src summary:hover{color:#fff}
+@media(max-width:820px){.sim{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.gauge,.donut{grid-template-columns:minmax(0,1fr)}.donut>div:first-child{max-width:240px;margin:0 auto;width:100%}.gread{text-align:center}.gread p{margin-inline:auto}}
+@media(max-width:600px){.sim{grid-template-columns:minmax(0,1fr)}.simfig>div{max-width:240px}#why .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#why .stat{padding:14px}#why .stat b{font-size:26px}#why .stat span{font-size:14px}.gains{grid-template-columns:minmax(0,1fr)}.gains div{display:flex;align-items:baseline;gap:12px}.gains span{margin-top:0}.chap button{font-size:13px;padding:8px 10px}.storynav #chNext{font-size:14px}.chwrap{min-height:0}}
+
+@media(max-width:430px){#chNext .nm{display:none}}
+
+/* how: stepper */
+.hsteps{display:flex;align-items:center;gap:0;margin-bottom:16px}
+.hsteps>button{flex:none;display:flex;align-items:center;gap:10px;background:transparent;border:0;padding:6px 8px;color:var(--muted);min-height:52px}
+.hsteps>button:hover{transform:none;color:#fff}
+.hn{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:var(--panel);border:2px solid var(--line);transition:background .3s,border-color .3s,transform .3s}
+.hn svg{width:22px;height:22px}
+.hsteps>button b{font-weight:750;font-size:15px;white-space:nowrap}
+.hsteps>button[aria-selected=true]{color:#fff}
+.hsteps>button[aria-selected=true] .hn{background:var(--violet);border-color:#ffd23f;color:#ffd23f;transform:scale(1.08)}
+.hsteps>button.done .hn{border-color:#c4b5fd;color:#c4b5fd}
+.hline{flex:1;height:3px;border-radius:2px;background:var(--rule);min-width:20px;overflow:hidden}
+.hline i{display:block;height:100%;background:linear-gradient(90deg,#c4b5fd,#ffd23f);transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.hline.on i{transform:none}
+.hwrap{background:var(--panel);border:1px solid var(--rule);border-radius:22px;padding:clamp(14px,2vw,22px);box-shadow:var(--sx) var(--sy) 0 var(--hard)}
+.hs[hidden]{display:none}
+.hs{animation:rise .45s cubic-bezier(.2,.8,.2,1)}
+.hfig{border-radius:16px;overflow:hidden;background:#0e0d35;touch-action:pan-y}
+.hfig svg{display:block;width:100%;height:auto}
+.hctl{display:grid;gap:10px;margin-top:14px}
+.hctl.two{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.hctl label{display:grid;gap:2px;font-size:14px;font-weight:700;color:var(--muted)}
+.hs .pills{margin-top:12px}
+#rayState.sun{background:#ff6f91;color:#0b0b2b;border-color:#ff6f91}
+#rayState.shade{background:#38e1d1;color:#0b0b2b;border-color:#38e1d1}
+#rayState.night{background:#2a2870}
+g.rays2{transform-box:fill-box;transform-origin:center;animation:spin 30s linear infinite}
+circle.halo{transform-box:fill-box;transform-origin:center;animation:pulse 3.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.12);opacity:.6}}
+.hfig .walker{cursor:grab}
+.hate{font-size:15px!important;color:#eeeaff!important}
+.marks{display:flex;flex-wrap:wrap;gap:8px}
+.marks button{flex:1 1 auto;font-size:14px;min-height:38px;padding:6px 10px}
+.ways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.ways>div{background:#0e0d35;border:1px solid var(--rule);border-radius:14px;padding:12px;transition:border-color .3s,background .3s,transform .3s;position:relative}
+.ways>div.win{border-color:#ffd23f;background:#2e2b7a;transform:translateY(-3px)}
+.ways>div.win::before{content:"Picked";position:absolute;top:-10px;right:10px;background:#ffd23f;color:#0b0b2b;font-size:11px;font-weight:850;padding:2px 8px;border-radius:999px}
+.ways b{display:flex;align-items:center;gap:8px;font-size:15px}
+.ways b i{width:12px;height:12px;border-radius:50%;flex:none}
+.ways span{display:block;font-size:13px;color:var(--muted);margin-top:4px}
+.ways .cost{height:8px;border-radius:4px;background:#ffffff12;margin-top:10px;overflow:hidden}
+.ways .cost i{display:block;height:100%;border-radius:4px;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+.ways em{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
+.h2s{margin-top:36px;font-size:clamp(20px,2.2vw,26px);display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;max-width:none}
+.h2s span{font-size:14px;font-weight:600;color:var(--muted);letter-spacing:0}
+/* flip cards */
+.flips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:16px}
+.flipc{display:flex;padding:0;border:0;background:transparent;perspective:900px;min-height:0;text-align:left;font-weight:400;border-radius:18px}
+.flipc:hover{transform:none}
+.fi{flex:1;display:grid;transition:transform .6s cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+.flipc[aria-pressed=true] .fi{transform:rotateY(180deg)}
+.ff,.fb{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--panel);border:1px solid var(--rule);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.flipc:hover .ff{border-color:var(--line)}
+.ff svg{width:100%;height:auto;border-radius:12px;background:linear-gradient(#2a1f7a,#14134a)}
+.ff b,.fb b{font-size:17px;font-weight:800;color:#fff}
+.ff b::after{content:" ↻";color:var(--shade);font-weight:600}
+.fb{transform:rotateY(180deg);justify-content:center;color:#d8d2ff;font-size:15px;line-height:1.5;background:linear-gradient(140deg,#3b1fa3,#1c1a5e)}
+.fb b{display:block;margin-bottom:6px}
+.flips .walk{animation:walk 5s linear infinite}
+.flips .w2{animation-duration:6s}
+@keyframes walk{from{transform:translateX(-10px)}to{transform:translateX(210px)}}
+.flips .car{animation:car 2.6s linear infinite}.flips .c2{animation-duration:3.4s;animation-direction:reverse}
+@keyframes car{from{transform:translateX(-30px)}to{transform:translateX(210px)}}
+.flips .rain{animation:rain .9s linear infinite}
+@keyframes rain{from{transform:translateY(-20px)}to{transform:translateY(30px)}}
+.flips .noon{animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+.flips .tiny{transform-box:fill-box;transform-origin:center;animation:breathe2 3s ease-in-out infinite}
+@keyframes breathe2{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.7)}}
+.flips .beam{animation:breathe 3s ease-in-out infinite}
+@media(max-width:1020px){.flips{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.hsteps>button b{display:none}.hsteps>button[aria-selected=true] b{display:inline}.ways{grid-template-columns:minmax(0,1fr)}.hctl.two{grid-template-columns:minmax(0,1fr);gap:8px}}
+@media(max-width:480px){.flips{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.ff b,.fb b{font-size:15px}.fb{font-size:13px;padding:10px}.ff{padding:8px}}
+
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media(max-width:1020px){.grid{grid-template-columns:minmax(0,1fr)}.stage{height:clamp(420px,62vh,640px)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.four{grid-template-columns:repeat(2,minmax(0,1fr))}.pgrid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:720px){.planhead{grid-template-columns:minmax(0,1fr)}.ig{grid-template-columns:minmax(0,1fr)}.steps3{grid-template-columns:minmax(0,1fr)}.limits{grid-template-columns:minmax(0,1fr)}.promise{grid-template-columns:minmax(0,1fr)}.bar .in{gap:8px}.tabs{order:3;width:100%}.badge span{display:none}.tabs{justify-content:space-between}.tabs a{padding:8px 10px;font-size:14px}.tabs .lg{display:none}}
+@media(max-width:600px){.stats,.four{grid-template-columns:minmax(0,1fr)}.wbgt{grid-template-columns:minmax(0,1fr)}
+table.data{font-size:14px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--rule)}.stack td{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:10px;border:0;padding:3px 0}.stack td::before{content:attr(data-l);font-weight:650;color:var(--muted);font-size:13px}
+.navbtns button{flex:1 1 calc(50% - 5px)}.nav{left:8px;right:8px;bottom:26px;padding:12px}#navTitle{font-size:15px}.card{padding:14px}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+<script src="lib/maplibre-gl.js"></script>
+<script src="fonts/glyphs.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="mark" viewBox="0 0 48 48"><circle cx="37.5" cy="10" r="7.5" fill="#ffd23f" stroke="#0b0b2b" stroke-width="2"/><ellipse cx="22" cy="44.6" rx="14" ry="2.6" fill="#04041a" opacity=".55"/><g class="um"><path d="M4.5 25.5a19.5 19.5 0 0 1 39 0c-2.3-2.3-4.3-3.2-6.5-3.2s-4.2.9-6.5 3.2c-2.3-2.3-4.3-3.2-6.5-3.2s-4.2.9-6.5 3.2c-2.3-2.3-4.3-3.2-6.5-3.2s-4.2.9-6.5 3.2z" fill="#c4b5fd" stroke="#0b0b2b" stroke-width="2" stroke-linejoin="round"/><path d="M12 24.5c1-6 4-11 9-14" fill="none" stroke="#7048e8" stroke-width="2.4" stroke-linecap="round"/><path d="M27.5 9.2a16.5 16.5 0 0 1 11.8 11.3" fill="none" stroke="#ffd23f" stroke-width="2.4" stroke-linecap="round"/><path d="M24 6V3.5" stroke="#c4b5fd" stroke-width="2.6" stroke-linecap="round"/><path d="M24 24v12.5a5 5 0 0 1-10 0" fill="none" stroke="#c4b5fd" stroke-width="3.2" stroke-linecap="round"/></g></symbol></svg>
+
+<header class="bar">
+<div class="in">
+<a class="brand" href="#plan" aria-label="shade,where? home"><svg width="38" height="38" viewBox="0 0 48 48" aria-hidden="true"><use href="#mark"/></svg><span class="wm">shade<i>,</i>where<b>?</b></span></a>
+<nav class="tabs" aria-label="Sections"><a href="#plan">Plan<span class="lg"> a walk</span></a><a href="#why">Why<span class="lg"> shade</span></a><a href="#how">How<span class="lg"> it works</span></a><a href="#accuracy">Accuracy</a><a href="#privacy">Privacy</a></nav>
+<a class="badge" href="#privacy" title="Your trips stay on this device"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><rect x="4" y="10" width="16" height="11" rx="3" fill="currentColor"/></svg><span>Stays on your device</span></a>
+</div>
+</header>
+
+<main>
+<!-- ============ PLAN ============ -->
+<section class="view" id="plan" aria-labelledby="planTitle">
+<div class="in">
+<div class="planhead">
+<div><h1 id="planTitle">The shady way, anywhere in Singapore</h1>
+<p class="lede">Pick where you start and end. We cast real shadows from 159,000 buildings for the minute you leave and find the walk that keeps you out of the sun.</p></div>
+<div class="dial" aria-live="polite"><svg id="dial" viewBox="-60 -60 120 120" role="img" aria-label="Sundial showing where shadows fall in Singapore now"></svg><div><b id="dialT">Singapore now</b><p id="dialP">Working out the sun…</p></div></div>
+</div>
+<div class="grid">
+<div>
+<div class="stage hard">
+<div id="map" role="application" aria-label="3D map of Singapore with shadows and walking routes"></div>
+<div class="mapui"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">−</button><button type="button" id="tilt" aria-label="Switch between 3D and flat view">2D</button><button type="button" id="home" aria-label="Back to my trip" title="Back to my trip"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/><path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></div><div class="toast" id="toast" role="status" hidden><span id="toastMsg"></span><button type="button" id="toastBtn">Undo</button></div>
+<div class="hint"><span id="hint"></span></div>
+<div class="nav" id="nav" hidden aria-live="polite"><div class="navtop"><div class="arrow" id="navArrow"></div><div><p id="navTitle"></p><p id="navMeta"></p></div></div><div class="navbtns"><button type="button" id="prev">Back</button><button type="button" id="walk">Play walk</button><button type="button" id="next">Next</button><button type="button" id="end">End</button></div></div>
+<div class="attr">© OpenStreetMap contributors · LTA · OneMap</div>
+</div>
+<div class="legend">
+<span><i class="sw" style="background:#c4b5fd"></i>Shade route (dashed under buildings)</span>
+<span><i class="sw" style="background:repeating-linear-gradient(90deg,#ff6f91 0 7px,transparent 7px 11px)"></i>Shortest route</span>
+<span><i class="sw" style="background:#000;opacity:.65;outline:1px solid #3f3ba8"></i>Shadow now</span>
+<span><i class="sw" style="background:#38e1d1"></i>Linkway roof</span>
+</div>
+</div>
+
+<aside class="panel" aria-label="Trip controls">
+<div class="card hard">
+<div class="lab">Your trip</div>
+<div class="trip">
+<div class="field"><b>A</b><input id="qa" type="search" autocomplete="off" placeholder="From: address, postcode, MRT…" aria-label="Start" aria-controls="ra"><ul class="results" id="ra" role="listbox"></ul></div>
+<div class="field"><b class="b">B</b><input id="qb" type="search" autocomplete="off" placeholder="To: address, postcode, MRT…" aria-label="End" aria-controls="rb"><ul class="results" id="rb" role="listbox"></ul></div>
+<div class="row" id="mode"><button type="button" data-m="a" style="flex:1" aria-pressed="false">Set A on map</button><button type="button" data-m="b" style="flex:1" aria-pressed="false">Set B on map</button><button type="button" id="swap" class="ico" aria-label="Swap start and end" title="Swap A and B"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v14m0 0-3-3m3 3 3-3M17 20V6m0 0-3 3m3-3 3 3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+</div>
+</div>
+
+<div class="card hard">
+<div class="lab"><span>Leaving at</span><button id="play" type="button" style="min-height:36px;padding:4px 12px;font-size:14px">Play the day</button></div>
+<output id="tOut" for="t">3:00 pm</output>
+<input type="range" id="t" min="420" max="1170" step="15" value="900" aria-label="Departure time">
+<p class="muted" id="sunTxt" style="font-size:14px"></p>
+<div class="seg" id="days" style="margin-top:10px"></div>
+</div>
+
+<div class="card hard" aria-live="polite">
+<div class="rtabs" role="tablist"><button type="button" role="tab" id="tabSum" aria-selected="true" aria-controls="paneSum">Summary</button><button type="button" role="tab" id="tabBest" aria-selected="false" aria-controls="paneBest">Best time to leave</button></div>
+<div id="paneSum" role="tabpanel" aria-labelledby="tabSum">
+<p id="headline">Loading the map…</p>
+<table class="cmp"><thead><tr><th>Route</th><th>Walk</th><th>In sun</th><th>Shaded</th></tr></thead><tbody id="cmp"></tbody></table>
+<div id="strips" style="margin-top:12px"></div>
+</div>
+<div id="paneBest" role="tabpanel" aria-labelledby="tabBest" hidden>
+<p id="chartTitle">Best time to leave</p>
+<p class="muted" id="chartSub" style="font-size:13px">Pick a start and end to see how the sun changes this walk through the day.</p>
+<div class="fig" style="margin-top:8px"><svg id="chart" role="img" aria-label="Minutes in the sun by departure time"></svg></div>
+<div class="keys"><span><i class="sw" style="background:#c4b5fd"></i>Shade route</span><span><i class="sw" style="background:repeating-linear-gradient(90deg,#ff6f91 0 7px,transparent 7px 11px)"></i>Shortest route</span></div>
+</div>
+</div>
+
+<button type="button" class="go" id="start" disabled>Start walk</button>
+<ol class="dir" id="dir" hidden aria-label="Directions"></ol>
+
+<div class="card">
+<details class="opts"><summary>Route options</summary>
+<p class="muted" style="font-size:14px;margin-top:8px">How hard should we work to avoid the sun?</p>
+<div class="seg" id="prio"></div>
+<p class="tripnote" style="margin-top:12px">Walks up to 6 km. Search covers 126,000 addresses, postcodes, stations and places.</p>
+</details>
+</div>
+</aside>
+</div>
+</div>
+</section>
+
+<!-- ============ WHY SHADE ============ -->
+<section class="view" id="why" aria-labelledby="whyTitle">
+<div class="in">
+<div class="sechead"><div><h2 id="whyTitle">Singapore is heating up. Shade helps, fast.</h2>
+<p class="lede">Real numbers from the Met Service, researchers and LTA. Tap, drag and play.</p></div></div>
+
+<div class="stats" id="whyStats">
+<div class="stat"><b data-count="28.4" data-dec="1" data-suf="°C">28.4°C</b><span>Hottest year on record</span><small>2016, 2019 and 2024 · [1]</small></div>
+<div class="stat"><b data-count="0.24" data-dec="2" data-pre="+" data-suf="°C">+0.24°C</b><span>Warmer every decade</span><small>1984 to 2022 · [4]</small></div>
+<div class="stat"><b data-count="29" data-dec="0" data-suf=" days">29 days</b><span>Of high heat stress in 2025</span><small>Up from 21 in 2024 · [2]</small></div>
+<div class="stat"><b data-count="7" data-dec="0" data-suf="°C">7°C</b><span>Orchard Road vs Lim Chu Kang, at most</span><small>Cooling Singapore · [3]</small></div>
+</div>
+
+<div class="story" id="story">
+<div class="chap" role="tablist" aria-label="Explore the heat">
+<button type="button" role="tab" id="cht0" aria-controls="ch0" aria-selected="true"><i>1</i>Hotter years</button>
+<button type="button" role="tab" id="cht1" aria-controls="ch1" aria-selected="false" tabindex="-1"><i>2</i>Sun &amp; shadow</button>
+<button type="button" role="tab" id="cht2" aria-controls="ch2" aria-selected="false" tabindex="-1"><i>3</i>Shade works</button>
+<button type="button" role="tab" id="cht3" aria-controls="ch3" aria-selected="false" tabindex="-1"><i>4</i>Heat alerts</button>
+<button type="button" role="tab" id="cht4" aria-controls="ch4" aria-selected="false" tabindex="-1"><i>5</i>Covered paths</button>
+</div>
+
+<div class="chwrap" id="chwrap">
+<!-- 1 -->
+<article class="ch on" id="ch0" role="tabpanel" aria-labelledby="cht0">
+<div class="chhead"><h3>The hottest years are the recent ones</h3><p>Every dot is a year ranked among Singapore's warmest. Hover or tap one.</p></div>
+<div class="igfig" id="yrsFig"><div class="tip" id="yrsTip" hidden></div></div>
+<p class="cap">Annual mean at Changi. The ten years to 2024 averaged 28.11°C, the warmest decade yet. [1] [2] [5]</p>
+</article>
+<!-- 2 -->
+<article class="ch" id="ch1" role="tabpanel" aria-labelledby="cht1" hidden>
+<div class="chhead"><h3>Where the sun is, where the shadow falls</h3><p>Drag the time. Watch a 12-storey block's shadow swing and shrink.</p></div>
+<div class="sim">
+<div class="simfig"><div id="domeFig"></div><p class="simlab">Sky from below</p></div>
+<div class="simfig"><div id="planFig"></div><p class="simlab">Block from above</p></div>
+</div>
+<div class="simctl">
+<div class="seg" id="simDays"></div>
+<div class="simtime"><button type="button" id="simPlay" class="ico" aria-label="Play the day"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path id="simPlayIco" d="M7 4l13 8-13 8z" fill="currentColor"/></svg></button>
+<input type="range" id="simT" min="420" max="1140" step="5" value="900" aria-label="Time of day"></div>
+<div class="pills"><span id="simClock">3:00 pm</span><span id="simEl">Sun 52° up</span><span id="simLen">Shadow 29 m</span></div>
+</div>
+<p class="cap">Same solar maths as the route planner, checked against four sun calculators. Block 37 m tall.</p>
+</article>
+<!-- 3 -->
+<article class="ch" id="ch2" role="tabpanel" aria-labelledby="cht2" hidden>
+<div class="chhead"><h3>Step into the shade</h3><p>Flip the switch to see what street shade did in a real one-north study.</p></div>
+<div class="flip" role="group" aria-label="Where you stand"><button type="button" id="inSun" aria-pressed="true">In the sun</button><button type="button" id="inShade" aria-pressed="false">In the shade</button></div>
+<div class="scene sun" id="scene"></div>
+<div class="gains" aria-live="polite">
+<div><b data-v="3.1" data-dec="1" data-suf="°C">0.0°C</b><span>cooler, feels like</span></div>
+<div><b data-v="0.8" data-dec="1" data-suf="°C">0.0°C</b><span>cooler air</span></div>
+<div><b data-v="92" data-dec="0" data-pre="up to " data-suf="%">0%</b><span>less extreme heat stress</span></div>
+</div>
+<p class="cap">Averages from 20 sunny and shaded pairs, August 2023; the 92% is the best case with trees and shelters together. Xu, Bardhan et al. [6]</p>
+</article>
+<!-- 4 -->
+<article class="ch" id="ch3" role="tabpanel" aria-labelledby="cht3" hidden>
+<div class="chhead"><h3>Read a heat alert</h3><p>Singapore's alerts use WBGT, which mixes heat, humidity, wind and sun. Drag the dial.</p></div>
+<div class="gauge">
+<div id="gaugeFig"></div>
+<div class="gread" aria-live="polite"><b id="gVal">32.0°C</b><em id="gBand">Moderate</em><p id="gTip">Cut outdoor time. Rest in the shade.</p></div>
+</div>
+<div class="row" style="margin-top:6px"><input type="range" id="gT" min="28" max="36" step=".1" value="32" aria-label="WBGT reading" style="flex:1;min-width:180px"><button type="button" id="gRec">Show the record</button></div>
+<p class="cap">Bands: low under 31°C, moderate 31 to 33°C, high 33°C and up [7]. Record: 35.0°C at Palawan Green, Sentosa, 31 Oct 2025 [2].</p>
+</article>
+<!-- 5 -->
+<article class="ch" id="ch4" role="tabpanel" aria-labelledby="cht4" hidden>
+<div class="chhead"><h3>How much of the walk is covered?</h3><p>LTA has built 186 km of linkways since 2013 [8]. Here are our 7,065 km of mapped footpaths. Tap a slice.</p></div>
+<div class="donut"><div id="shelterFig"></div><div class="dleg" id="shelterLeg"></div></div>
+<p class="cap">Counted from OpenStreetMap and LTA outlines. Open paths can still sit in a building's shadow, which is what the planner works out hour by hour.</p>
+</article>
+</div>
+
+<div class="storynav"><button type="button" id="chPrev" aria-label="Previous chapter">←</button><div class="dots" id="chDots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><button type="button" id="chNext">Next: Sun &amp; shadow →</button></div>
+</div>
+
+<details class="src"><summary>Sources (8)</summary><ol>
+<li><a href="https://www.nea.gov.sg/media/news/news/index/2024-is-singapore-s-warmest-year-on-record">NEA: 2024 is Singapore's warmest year on record (March 2025)</a></li>
+<li><a href="https://www.nea.gov.sg/media/news/news/index/spore-records-wettest-ever-march-and-hottest-ever-june-and-november-in-2025">NEA: 2025 Annual Climate Assessment (March 2026)</a> and <a href="https://www.eco-business.com/news/singapores-2025-marked-by-climate-extremes-as-heat-stress-days-rose">Eco-Business coverage of it</a></li>
+<li><a href="https://research.smu.edu.sg/news/tackling-urban-heat-smarter-design">SMU: Tackling urban heat with smarter design (Cooling Singapore)</a></li>
+<li><a href="https://nccs.gov.sg/singapores-climate-action/impact-of-climate-change-in-singapore">NCCS: Impact of climate change in Singapore</a></li>
+<li><a href="https://www.nea.gov.sg/media/news/news/index/2023-is-singapore-s-fourth-warmest-year-on-record">NEA: 2023 is Singapore's fourth warmest year on record (March 2024)</a></li>
+<li><a href="https://voiddeck.science.edu.sg/articles/environment/street-shade/">Science Centre Singapore: Which street shade actually keeps you cool? (Xu, Bardhan et al.)</a></li>
+<li><a href="https://www.mse.gov.sg/latest-news/press-release-heat-stress-advisory/">MSE and NEA: Heat Stress Advisory (July 2023)</a></li>
+<li><a href="https://www.mot.gov.sg/news-resources/newsroom/written-reply-to-parliamentary-question-on-progress-of-extending-covered-linkways-to-800-metre-radius-of-mrt-stations/">MOT: Progress of covered linkways (April 2025)</a></li>
+</ol></details>
+</div>
+</section>
+
+<!-- ============ HOW ============ -->
+<section class="view" id="how" aria-labelledby="howTitle">
+<div class="in">
+<div class="sechead"><div><h2 id="howTitle">From sun angle to a cooler walk</h2><p class="lede">Three steps, worked out fresh for every trip, right in your browser. Try each one.</p></div></div>
+
+<div class="hsteps" role="tablist" aria-label="Steps">
+<button type="button" role="tab" id="hst0" aria-controls="hs0" aria-selected="true"><span class="hn"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><b>Find the sun</b></button>
+<i class="hline"><i></i></i>
+<button type="button" role="tab" id="hst1" aria-controls="hs1" aria-selected="false" tabindex="-1"><span class="hn"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="8" height="15" rx="1" fill="currentColor"/><path d="M12 18l9 3H6z" fill="currentColor" opacity=".45"/></svg></span><b>Cast the shadows</b></button>
+<i class="hline"><i></i></i>
+<button type="button" role="tab" id="hst2" aria-controls="hs2" aria-selected="false" tabindex="-1"><span class="hn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V12h8V4h8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="20" r="2.6" fill="currentColor"/><circle cx="20" cy="4" r="2.6" fill="currentColor"/></svg></span><b>Weigh the walk</b></button>
+</div>
+
+<div class="hwrap">
+<!-- step 1 -->
+<article class="hs" id="hs0" role="tabpanel" aria-labelledby="hst0">
+<div class="chhead"><h3>Where is the sun right now?</h3><p>Slide through the day. Solar formulas give the sun's height and direction over Singapore for any minute.</p></div>
+<div class="hfig" id="skyFig"></div>
+<div class="hctl"><div class="seg" id="skyDays"></div><div class="simtime"><button type="button" class="ico" id="skyPlay" aria-label="Play the day"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path id="skyPlayIco" d="M7 4l13 8-13 8z" fill="currentColor"/></svg></button><input type="range" id="skyT" min="400" max="1170" step="5" value="900" aria-label="Time of day"></div></div>
+<div class="pills"><span id="skyClock">3:00 pm</span><span id="skyEl">Sun 50° up</span><span id="skyMe">Your shadow 1.3 m</span></div>
+</article>
+<!-- step 2 -->
+<article class="hs" id="hs1" role="tabpanel" aria-labelledby="hst1" hidden>
+<div class="chhead"><h3>Is this spot in shade?</h3><p>Drag the walker, then the time. From every 4 m of path we fire a ray at the sun. If a block, tree or roof is in the way, that spot is shaded.</p></div>
+<div class="hfig" id="rayFig"></div>
+<div class="hctl two"><label>Walker<input type="range" id="rayX" min="2" max="118" step="1" value="38"></label><label>Time<input type="range" id="rayT" min="420" max="1140" step="5" value="900"></label></div>
+<div class="pills"><span id="rayState">In shade</span><span id="rayClock">3:00 pm</span><span id="raySum">52 of 120 m sunny</span></div>
+</article>
+<!-- step 3 -->
+<article class="hs" id="hs2" role="tabpanel" aria-labelledby="hst2" hidden>
+<div class="chhead"><h3>Which way wins?</h3><p>Sunny metres count as longer than shady ones. Slide how much you hate the sun and watch the pick change. An example trip:</p></div>
+<div class="hfig" id="wayFig"></div>
+<div class="hctl"><label class="hate">How much do you hate the sun?<input type="range" id="wayW" min="0" max="8" step=".25" value="0" list="wayMarks"></label>
+<div class="marks"><button type="button" data-w="0">Don't care</button><button type="button" data-w="1">Gentle</button><button type="button" data-w="3">Balanced</button><button type="button" data-w="8">Avoid all sun</button></div></div>
+<div class="ways" id="ways" aria-live="polite"></div>
+<p class="cap">Each step costs its length × (1 + your setting × the sunny share). Gentle, Balanced and Avoid all sun are the planner's Route options.</p>
+</article>
+</div>
+
+<h2 class="h2s">Built for how Singapore walks <span>Tap a card</span></h2>
+<div class="flips" id="flips">
+<button type="button" class="flipc" aria-pressed="false"><span class="fi"><span class="ff"><svg viewBox="0 0 200 130" aria-hidden="true"><rect y="112" width="200" height="18" fill="#2e2b7a"/><g class="beam" fill="#ffd23f" opacity=".25"><polygon points="200,0 150,112 175,112"/><polygon points="200,0 10,112 30,112"/></g><rect x="45" y="14" width="110" height="74" fill="#3b38a0" stroke="#c4b5fd" stroke-width="2"/><g fill="#ffd98a"><rect x="55" y="22" width="12" height="8"/><rect x="77" y="22" width="12" height="8" opacity=".3"/><rect x="99" y="22" width="12" height="8"/><rect x="121" y="22" width="12" height="8"/><rect x="55" y="40" width="12" height="8" opacity=".3"/><rect x="77" y="40" width="12" height="8"/><rect x="99" y="40" width="12" height="8"/><rect x="121" y="40" width="12" height="8" opacity=".3"/><rect x="55" y="58" width="12" height="8"/><rect x="77" y="58" width="12" height="8"/><rect x="99" y="58" width="12" height="8" opacity=".3"/><rect x="121" y="58" width="12" height="8"/></g><rect x="45" y="88" width="110" height="24" fill="#0e0d35"/><g fill="#7c74d8"><rect x="50" y="88" width="6" height="24"/><rect x="97" y="88" width="6" height="24"/><rect x="144" y="88" width="6" height="24"/></g><g class="walk"><circle cx="0" cy="96" r="4" fill="#ffd9c2"/><rect x="-4" y="100" width="8" height="12" rx="3" fill="#c4b5fd"/></g></svg><b>Void decks</b></span><span class="fb"><b>Void decks</b>A path under an HDB block counts as sheltered, so the planner happily cuts through void decks.</span></span></button>
+<button type="button" class="flipc" aria-pressed="false"><span class="fi"><span class="ff"><svg viewBox="0 0 200 130" aria-hidden="true"><rect y="112" width="200" height="18" fill="#2e2b7a"/><g class="rain" stroke="#8fb8ff" stroke-width="2" stroke-linecap="round"><line x1="30" y1="0" x2="26" y2="10"/><line x1="70" y1="10" x2="66" y2="20"/><line x1="110" y1="2" x2="106" y2="12"/><line x1="150" y1="12" x2="146" y2="22"/><line x1="185" y1="4" x2="181" y2="14"/><line x1="50" y1="26" x2="46" y2="36"/><line x1="130" y1="30" x2="126" y2="40"/></g><path d="M14 58h172l-10-12H24z" fill="#38e1d1"/><rect x="14" y="58" width="172" height="5" fill="#2aa79b"/><g fill="#2aa79b"><rect x="24" y="63" width="5" height="49"/><rect x="98" y="63" width="5" height="49"/><rect x="171" y="63" width="5" height="49"/></g><g class="walk"><circle cx="0" cy="96" r="4" fill="#ffd9c2"/><rect x="-4" y="100" width="8" height="12" rx="3" fill="#c4b5fd"/></g></svg><b>Covered linkways</b></span><span class="fb"><b>Covered linkways</b>LTA's 7,222 linkway outlines stand as 3D roofs and count as full shade at any hour, rain or shine.</span></span></button>
+<button type="button" class="flipc" aria-pressed="false"><span class="fi"><span class="ff"><svg viewBox="0 0 200 130" aria-hidden="true"><rect y="100" width="200" height="30" fill="#24225f"/><g stroke="#ffd23f" stroke-width="2" stroke-dasharray="10 10" opacity=".6"><line x1="0" y1="115" x2="200" y2="115"/></g><g class="car"><rect x="0" y="103" width="28" height="9" rx="3" fill="#ff6f91"/><circle cx="6" cy="112" r="2.5" fill="#0b0b2b"/><circle cx="22" cy="112" r="2.5" fill="#0b0b2b"/></g><g class="car c2"><rect x="0" y="118" width="24" height="8" rx="3" fill="#38e1d1"/></g><rect x="20" y="40" width="14" height="60" fill="#4a46b8"/><rect x="166" y="40" width="14" height="60" fill="#4a46b8"/><rect x="20" y="58" width="160" height="8" fill="#7c74d8"/><path d="M16 40h168l-8-10H24z" fill="#38e1d1"/><g fill="#2aa79b"><rect x="40" y="40" width="3" height="18"/><rect x="99" y="40" width="3" height="18"/><rect x="157" y="40" width="3" height="18"/></g><g class="walk w2"><circle cx="0" cy="46" r="4" fill="#ffd9c2"/><rect x="-4" y="50" width="8" height="8" rx="3" fill="#c4b5fd"/></g></svg><b>Overhead bridges</b></span><span class="fb"><b>Overhead bridges</b>3,161 footbridge sections stand in 3D. The 847 with a roof count as shade on the way across.</span></span></button>
+<button type="button" class="flipc" aria-pressed="false"><span class="fi"><span class="ff"><svg viewBox="0 0 200 130" aria-hidden="true"><defs><radialGradient id="fsun"><stop offset="0" stop-color="#fffbe6"/><stop offset=".5" stop-color="#ffd23f"/><stop offset="1" stop-color="#ff9f1c"/></radialGradient><radialGradient id="fhalo"><stop offset="0" stop-color="#ffd23f" stop-opacity=".55"/><stop offset="1" stop-color="#ffd23f" stop-opacity="0"/></radialGradient></defs><rect y="112" width="200" height="18" fill="#2e2b7a"/><g class="noon"><circle cx="100" cy="24" r="28" fill="url(#fhalo)"/><circle cx="100" cy="24" r="13" fill="url(#fsun)"/></g><ellipse class="tiny" cx="100" cy="113" rx="16" ry="3" fill="#000" opacity=".55"/><rect x="96" y="70" width="8" height="42" rx="3" fill="#6b5a86"/><circle cx="100" cy="62" r="22" fill="#1d8a78"/><circle cx="88" cy="68" r="13" fill="#2fbf8f"/><circle cx="112" cy="54" r="13" fill="#5fe0ad"/><text x="160" y="40" font-size="15" font-weight="800" fill="#ffd23f" font-family="DM Sans,system-ui">1 pm</text></svg><b>The 1 pm problem</b></span><span class="fb"><b>The 1 pm problem</b>Singapore's sun peaks near 1 pm, not noon, and almost overhead. Shadows shrink to a puddle, so only roofs really help.</span></span></button>
+</div>
+</div>
+</section>
+
+<!-- ============ ACCURACY ============ -->
+<section class="view" id="accuracy" aria-labelledby="accTitle">
+<div class="in">
+<div class="sechead"><div><h2 id="accTitle">Checked against official maps</h2><p class="lede">Built from open government and community data, then compared with OneMap, HDB's records, published heights and independent sun calculators.</p></div></div>
+<div class="figs">
+<div><b>159,206</b><span>building footprints</span></div><div><b>20,079</b><span>mapped trees</span></div>
+<div><b>12,022</b><span>HDB blocks with official storey counts</span></div>
+<div><b>8,801</b><span>building parts: towers, podiums, sky bridges</span></div>
+<div><b>7,222</b><span>LTA covered linkway outlines</span></div>
+<div><b>219</b><span>MRT and LRT platforms from OneMap</span></div>
+</div>
+<div class="subtabs" role="tablist" id="accTabs"><button type="button" role="tab" aria-selected="true" data-p="pChecks">Accuracy checks</button><button type="button" role="tab" aria-selected="false" data-p="pSources">Data sources</button><button type="button" role="tab" aria-selected="false" data-p="pLimits">Known limits</button></div>
+<div class="pane" id="pChecks"><div class="tbl"><table class="data stack">
+<thead><tr><th>Check</th><th>Compared with</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>Sun position</td><td>solarwatch, Alpenglow, time.now and sunrisesunset.io</td><td><span class="ok">✓ Exact match</span> Solar noon 12:50 pm on 15 Nov, 12:48 pm in Eunos on 10 Nov, 1:05 pm on 15 Jun; 21.6° high from 253° in Yishun at 5:17 pm on 4 Nov</td></tr>
+<tr><td>Addresses and malls</td><td>OneMap search</td><td><span class="ok">✓ Within 55 m</span> 10 samples, median about 30 m (ION Orchard 6 m, Blk 405 Ang Mo Kio Ave 10 4 m)</td></tr>
+<tr><td>MRT stations</td><td>OneMap search</td><td><span class="ok">✓ Fixed</span> Interchanges were up to 230 m off; all 219 platforms now use OneMap positions</td></tr>
+<tr><td>HDB block heights</td><td>HDB Property Information</td><td><span class="ok">✓ Fixed</span> 12,022 of 13,392 blocks matched; median difference 1.4 m where floors were mapped; 1,758 guesses replaced</td></tr>
+<tr><td>Skyscrapers</td><td>Published heights of Singapore's tallest buildings</td><td><span class="ok">✓ Fixed</span> 37 towers matched by name: 29 within 15%, median difference 3 m; 5 corrected, including Guoco Tower</td></tr>
+<tr><td>Covered linkways</td><td>LTA outlines against OpenStreetMap covered paths</td><td><span class="ok">✓ Aligned</span> Average offset under 0.3 m</td></tr>
+</tbody></table></div></div>
+<div class="pane" id="pSources" hidden><div class="tbl"><table class="data stack">
+<thead><tr><th>Layer</th><th>Source</th><th>Used for</th></tr></thead>
+<tbody>
+<tr><td>Buildings, parts and colours</td><td>OpenStreetMap, Singapore extract from BBBike, 24 Nov 2026</td><td>3D blocks, roof colours, shadow height map</td></tr>
+<tr><td>HDB block heights</td><td>HDB Property Information, data.gov.sg</td><td>Real heights for 12,022 HDB blocks</td></tr>
+<tr><td>Tall towers</td><td>Wikipedia's list of tallest buildings in Singapore</td><td>Checking and correcting skyscraper heights</td></tr>
+<tr><td>Footpaths, bridges and roads</td><td>OpenStreetMap, with covered and tunnel tags</td><td>The network the router searches</td></tr>
+<tr><td>Covered linkways</td><td>LTA DataMall, Covered Linkway, September 2026</td><td>3D roofs and fully shaded paths</td></tr>
+<tr><td>MRT and LRT stations</td><td>OneMap, Singapore Land Authority</td><td>Station search and labels</td></tr>
+<tr><td>Addresses, names and trees</td><td>OpenStreetMap</td><td>Search, labels and canopy shade</td></tr>
+</tbody></table></div></div>
+<div class="pane" id="pLimits" hidden><ul class="limits">
+<li><b>Trees are undercounted.</b> OpenStreetMap maps about 20,000 trees here; NParks manages millions. Tree-lined roads may look sunnier than they are.</li>
+<li><b>Low-rise heights are estimates.</b> HDB blocks and major towers use official or published figures; most other low buildings use an estimate by type.</li>
+<li><b>Roofs are flat, windows illustrative.</b> Facade windows show building type, not real window positions.</li>
+<li><b>Weather isn't included.</b> Clouds and rain change the picture; live NEA heat readings are on the roadmap.</li>
+</ul></div>
+<p class="fine">Contains information from Covered Linkway accessed in November 2026 from LTA DataMall, and HDB Property Information from data.gov.sg, made available under the Singapore Open Data Licence version 1.0. Station positions from OneMap © Singapore Land Authority. Map data © OpenStreetMap contributors, Open Database License. Tower heights from Wikipedia (CC BY-SA). Fonts: DM Sans and Noto Sans (SIL Open Font License).</p>
+</div>
+</section>
+
+<!-- ============ PRIVACY ============ -->
+<section class="view" id="privacy" aria-labelledby="privTitle">
+<div class="in">
+<div class="promise">
+<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="#0b0b2b55"/><path d="M38 54V42a22 22 0 0 1 44 0v12" fill="none" stroke="#c4b5fd" stroke-width="9" stroke-linecap="round"/><rect class="lockbody" x="28" y="52" width="64" height="48" rx="12" fill="#38e1d1"/><circle cx="60" cy="72" r="7" fill="#0b0b2b"/><rect x="57" y="74" width="6" height="14" rx="3" fill="#0b0b2b"/></svg>
+<div><h2 id="privTitle">Your trips stay on your device</h2>
+<p>Everything shade,where? does with your trip happens inside your browser. Your searches, start and end points and times are never sent anywhere, and there are no accounts, cookies, ads or tracking.</p></div>
+</div>
+<div class="pgrid">
+<div class="card"><h3><span class="yes">✓</span> What stays here</h3><ul>
+<li>What you type in search: the full address list downloads once and is searched on your device.</li>
+<li>Your start, end, time and route: worked out in your browser.</li>
+<li>Your last trip and route option, saved in this browser only, so the page remembers them.</li>
+</ul></div>
+<div class="card"><h3><span class="never">✕</span> What we never do</h3><ul>
+<li>No sign-in, no cookies, no analytics, no ads.</li>
+<li>No location tracking: the page never asks for GPS.</li>
+<li>No third parties: fonts, map library and all map data load from this same site.</li>
+</ul></div>
+<div class="card"><h3>What the site itself sees</h3><p>Like any website, the host sends the page and its files. Map data comes in 2 km squares for the area you look at, so the host can tell which squares were loaded, but never your searches, your exact points or your route.</p></div>
+</div>
+<div class="card clear" style="margin-top:16px"><div style="flex:1;min-width:220px"><h3>Clear what's saved</h3><p class="muted">Removes your last trip and route option from this browser.</p><p class="saved" id="savedNow"></p></div><button type="button" id="clearData">Clear my saved trip</button><span id="cleared" aria-live="polite"></span></div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="in">
+<a class="brand" href="#plan" style="margin-right:0"><svg width="30" height="30" viewBox="0 0 48 48" aria-hidden="true"><use href="#mark"/></svg><span class="wm" style="font-size:17px">shade<i>,</i>where<b>?</b></span></a>
+<span style="margin-right:auto"></span>
+<a href="https://makiyakinabe.github.io">Portfolio</a>
+<a href="https://www.instagram.com/eggsperimenting">Instagram @eggsperimenting</a>
+</div>
+</footer>
+
+<script>
+window.addEventListener('error',e=>{const h=document.getElementById('hint');if(h)h.textContent='Map error: '+(e.message||'unknown')});
+{
+const $=s=>document.querySelector(s);
+const LON0=103.6,LAT0=1.235,KX=111288.6,KY=110574.3,TILE=2000,SPEED=78,MAXD=6000,R_=Math.PI/180;
+const toLL=(x,y)=>[LON0+x/KX,LAT0+y/KY],toXY=(lon,lat)=>[(lon-LON0)*KX,(lat-LAT0)*KY];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=m=>{const h=Math.floor(m/60),mm=Math.round(m%60);return(h%12||12)+':'+String(mm).padStart(2,'0')+(h<12?' am':' pm')};
+const hr=m=>(Math.floor(m/60)%12||12)+(m<720?' am':' pm');
+const f1=x=>(Math.round(x*10)/10).toFixed(1);
+const dist=d=>d<1000?Math.round(d/10)*10+' m':(d/1000).toFixed(1)+' km';
+const dirName=a=>['north','north-east','east','south-east','south','south-west','west','north-west'][Math.round(((a%360)+360)%360/45)%8];
+const sg=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Singapore',year:'numeric',month:'numeric',day:'numeric',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(new Date()).reduce((o,p)=>(o[p.type]=+p.value||p.value,o),{});
+const nowMin=(sg.hour%24)*60+sg.minute,todayDoy=Math.round((Date.UTC(sg.year,sg.month-1,sg.day)-Date.UTC(sg.year,0,0))/864e5);
+const DAYS=[{id:'today',n:'Today, '+new Date(Date.UTC(sg.year,sg.month-1,sg.day)).toLocaleDateString('en-SG',{day:'numeric',month:'short',timeZone:'UTC'}),d:todayDoy},{id:'jun',n:'21 Jun',d:172},{id:'dec',n:'21 Dec',d:355}];
+const PRIO=[{n:'Gentle',w:1},{n:'Balanced',w:3},{n:'Avoid all sun',w:8}];
+const S={a:{x:37827,y:13134,l:'Hawker Centre @ Our Tampines Hub'},b:{x:38409,y:13084,l:'Tampines MRT Station'},t:nowMin>=420&&nowMin<=1170?Math.round(nowMin/15)*15:900,day:'today',w:3,mode:null};
+try{const s=JSON.parse(localStorage.getItem('shade-where')||'{}');for(const k of ['a','b'])if(s[k]&&Number.isFinite(s[k].x)&&Number.isFinite(s[k].y))S[k]={x:s[k].x,y:s[k].y,l:String(s[k].l||'Dropped pin')};if([1,3,8].includes(s.w))S.w=s.w}catch(e){}
+let NOSAVE=false;const save=()=>{if(NOSAVE)return;try{localStorage.setItem('shade-where',JSON.stringify({a:S.a,b:S.b,w:S.w}))}catch(e){}};
+const doy=()=>DAYS.find(d=>d.id===S.day).d;
+
+function sunPos(dy,min){const g=2*Math.PI/365*(dy-1+(min/60-12)/24);
+const eq=229.18*(.000075+.001868*Math.cos(g)-.032077*Math.sin(g)-.014615*Math.cos(2*g)-.040849*Math.sin(2*g));
+const de=.006918-.399912*Math.cos(g)+.070257*Math.sin(g)-.006758*Math.cos(2*g)+.000907*Math.sin(2*g)-.002697*Math.cos(3*g)+.00148*Math.sin(3*g);
+const ha=((min+eq+4*103.82-480)/4-180)*R_,la=1.35*R_;
+const el=Math.asin(Math.sin(la)*Math.sin(de)+Math.cos(la)*Math.cos(de)*Math.cos(ha));
+const az=Math.atan2(Math.sin(ha),Math.cos(ha)*Math.sin(la)-Math.tan(de)*Math.cos(la))+Math.PI;
+const e=el/R_;return{el:e,az:az/R_,up:e>3,ux:Math.sin(az),uy:Math.cos(az),tn:Math.tan(Math.max(el,.01))}}
+
+function pageShadow(s){const L=s.up?Math.max(2,Math.min(5,4/Math.max(.35,s.tn))):2,a=s.up?s.az*R_:Math.PI;
+document.documentElement.style.setProperty('--sx',(-Math.sin(a)*L).toFixed(1)+'px');document.documentElement.style.setProperty('--sy',(Math.cos(a)*L).toFixed(1)+'px')}
+function drawDial(){const s=sunPos(todayDoy,nowMin),svg=$('#dial');let g='<circle r="54" fill="#ffffff14" stroke="#ffffff55" stroke-width="1.5"/>';
+for(let h=7;h<=19;h++){const p=sunPos(todayDoy,h*60);if(p.el<0)continue;const r=50,a=p.az*R_;g+=`<line x1="${(-Math.sin(a)*r*.86).toFixed(1)}" y1="${(Math.cos(a)*r*.86).toFixed(1)}" x2="${(-Math.sin(a)*r).toFixed(1)}" y2="${(Math.cos(a)*r).toFixed(1)}" stroke="#ffffff99" stroke-width="${h%3?1.2:2.4}"/>`}
+g+='<text x="0" y="-41" text-anchor="middle" font-size="9" fill="#ffffffaa" font-family="DM Sans,system-ui" font-weight="700">N</text>';
+if(s.up){const L=Math.min(46,9/s.tn+6),a=s.az*R_;g+=`<line x1="0" y1="0" x2="${(-Math.sin(a)*L).toFixed(1)}" y2="${(Math.cos(a)*L).toFixed(1)}" stroke="#a9abff" stroke-width="7" stroke-linecap="round"/><circle cx="${(Math.sin(a)*46).toFixed(1)}" cy="${(-Math.cos(a)*46).toFixed(1)}" r="7" fill="#ffd23f" stroke="#15142b" stroke-width="2"/>`}
+g+='<circle r="5" fill="#ffd23f" stroke="#0b0b2b" stroke-width="2"/>';svg.innerHTML=g;
+$('#dialT').textContent='Singapore, '+fmt(nowMin);
+$('#dialP').textContent=s.up?`Sun ${Math.round(s.el)}° high in the ${dirName(s.az)}. Shadows fall ${dirName(s.az+180)}${s.el>70?', short and tight underfoot':''}.`:'The sun is down. Every walk is a shady walk right now.'}
+
+let AVAIL=new Set();const CACHE=new Map();
+function keysIn(x0,y0,x1,y1){const out=[];for(let i=Math.floor(x0/TILE);i<=Math.floor(x1/TILE);i++)for(let j=Math.floor(y0/TILE);j<=Math.floor(y1/TILE);j++){const k=i+'_'+j;if(AVAIL.has(k))out.push(k)}return out}
+function parse(j){
+const dec=(a,s)=>{const c=new Float64Array(a.length-s);for(let i=s;i<a.length;i++)c[i-s]=a[i]/10;return c};
+const B=j.b.map(a=>({h:a[0],e:a[1]&1,r:a[1]&2?1:0,hide:a[1]&4,pitch:a[1]&16,base:a[2],k:a[3],wc:a[4],rc:a[5],lab:a[6],c:dec(a,7)}));
+const NM=j.nm||[''],P=j.p.map(a=>{const c=dec(a,6);let L=0;for(let i=2;i<c.length;i+=2)L+=Math.hypot(c[i]-c[i-2],c[i+1]-c[i-1]);return{u:a[0],v:a[1],f:a[2],k:a[3],nm:NM[a[4]]||'',ty:a[5],c,len:L}});
+const T=new Float64Array(j.t.length);for(let i=0;i<j.t.length;i++)T[i]=j.t[i]/10;
+return{B,P,T,Rd:j.r.map(a=>dec(a,0)),C:j.c.map(a=>dec(a,0)),F:j.f.map(a=>({cov:a[0],c:dec(a,1)})),N:j.n.map(a=>({n:a[0],k:a[1],c:dec(a,2)})),L:j.L.map(a=>({n:a[0],r:a[1],x:a[2]/10,y:a[3]/10}))}}
+function tile(k){if(!CACHE.has(k))CACHE.set(k,fetch('t/'+k+'.json').then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(parse).catch(e=>{CACHE.delete(k);throw e}));return CACHE.get(k)}
+const ring=c=>{const r=[];for(let i=0;i<c.length;i+=2)r.push(toLL(c[i],c[i+1]));r.push(r[0]);return r};
+const line=c=>{const r=[];for(let i=0;i<c.length;i+=2)r.push(toLL(c[i],c[i+1]));return r};
+const F=(g,p)=>({type:'Feature',properties:p||{},geometry:g}),FC=f=>({type:'FeatureCollection',features:f});
+
+const dark=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches};
+const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const mix=(a,b,f)=>{const x=hex(a),y=hex(b);return'#'+x.map((v,i)=>Math.round(v+(y[i]-v)*f).toString(16).padStart(2,'0')).join('')};
+const WALL=['#3d3a7a','#3f3c88','#4a3d7e','#2f3f86','#383658','#4a3a8c','#5a3f7c','#2f2e57','#38e1d1'];
+const PAL=()=>({sea:'#06081f',land:'#16163f',park:'#173a45',wood:'#143b3a',water:'#0e2559',road:'#2c2a70',path:'#24225e',shadow:'#000000',so:.5,roof:'#38e1d1',tree:'#2fbf8f',shade:'#c4b5fd',heat:'#ff6f91',casing:'#0b0b2b',deck:'#4b4a90',txt:'#d9d4ff',halo:'#0b0b2b',stn:'#c4b5fd'});
+const wallOf=b=>b.wc?mix(b.wc,'#1c1a5e',.5):(WALL[b.k]||WALL[0]);
+const roofOf=b=>b.rc?mix(b.rc,'#1c1a5e',.45):b.pitch?'#7a4f8f':mix(b.wc||WALL[b.k]||WALL[0],'#a99cff',.28);
+let map=null,ready=false,SUN=sunPos(doy(),S.t),VIEW=[],markers={};
+function oct(x,y,r){const c=[];for(let i=0;i<8;i++)c.push(toLL(x+r*Math.cos(i*Math.PI/4),y+r*Math.sin(i*Math.PI/4)));c.push(c[0]);return c}
+function deck(c,w){const out=[];for(let i=0;i+3<c.length;i+=2){const x1=c[i],y1=c[i+1],x2=c[i+2],y2=c[i+3],L=Math.hypot(x2-x1,y2-y1)||1,nx=-(y2-y1)/L*w,ny=(x2-x1)/L*w;out.push([toLL(x1+nx,y1+ny),toLL(x2+nx,y2+ny),toLL(x2-nx,y2-ny),toLL(x1-nx,y1-ny),toLL(x1+nx,y1+ny)])}return out}
+function geo(t){if(t.geo)return t.geo;const ex=[],pt=[],P=PAL();
+for(const b of t.B){if(b.hide)continue;const rg=[ring(b.c)];let base=b.base,h=Math.max(b.h,base+2);if(b.k===8&&!base){base=Math.max(2.4,h*.7)}
+const cap=b.pitch?1.4:.7;if(h-cap>base+1){ex.push(F({type:'Polygon',coordinates:rg},!b.wc&&h-cap-base>5?{b:base,h:h-cap,c:wallOf(b),p:'w'+(b.k>7?0:b.k)}:{b:base,h:h-cap,c:wallOf(b)}));ex.push(F({type:'Polygon',coordinates:rg},{b:h-cap,h,c:roofOf(b)}))}else ex.push(F({type:'Polygon',coordinates:rg},{b:base,h,c:b.k===8?P.roof:wallOf(b)}));
+if(b.lab){let sx=0,sy=0;const n=b.c.length/2;for(let i=0;i<b.c.length;i+=2){sx+=b.c[i];sy+=b.c[i+1]}pt.push(F({type:'Point',coordinates:toLL(sx/n,sy/n)},{t:b.lab,r:3}))}}
+const roofs=t.C.map(c=>F({type:'Polygon',coordinates:[ring(c)]},{b:2.4,h:2.85,c:P.roof}));
+for(const f of t.F){for(const q of deck(f.c,1.3))roofs.push(F({type:'Polygon',coordinates:[q]},{b:5.2,h:5.8,c:P.deck}));if(f.cov)for(const q of deck(f.c,1.6))roofs.push(F({type:'Polygon',coordinates:[q]},{b:7.8,h:8.1,c:P.roof}))}
+const trees=[];for(let i=0;i<t.T.length;i+=2){const x=t.T[i],y=t.T[i+1],s=Math.abs(Math.sin(x*12.9898+y*78.233)*43758.5453)%1,r=2.8+1.4*s,b=2.4+s,h=7+4*s;
+trees.push(F({type:'Polygon',coordinates:[oct(x,y,.45)]},{b:0,h:b+.6,c:'#6b5a86'}),F({type:'Polygon',coordinates:[oct(x,y,r)]},{b,h,c:mix('#2fbf8f','#1d8a78',s)}),F({type:'Polygon',coordinates:[oct(x,y,r*.62)]},{b:h,h:h+1.6,c:mix('#5fe0ad','#3fbf98',s)}))}
+for(const l of t.L)pt.push(F({type:'Point',coordinates:toLL(l.x,l.y)},{t:l.n,r:l.r}));
+t.geo={ex,roofs,trees,pt,
+paths:t.P.map(p=>F({type:'LineString',coordinates:line(p.c)},{f:p.f,k:p.k})),
+roads:t.Rd.map(c=>F({type:'LineString',coordinates:line(c)})),
+names:t.N.map(n=>F({type:'LineString',coordinates:line(n.c)},{t:n.n,k:n.k}))};return t.geo}
+function initMap(){
+if(!window.maplibregl){$('#hint').textContent='The map library could not load. Reload to try again.';return}
+const p=PAL(),src=()=>({type:'geojson',data:FC([])});
+const G=window.SW_GLYPHS||{},b64=s=>{const t=atob(s),u=new Uint8Array(t.length);for(let i=0;i<t.length;i++)u[i]=t.charCodeAt(i);return u.buffer};
+try{maplibregl.addProtocol('swglyph',async p=>{const u=decodeURIComponent(p.url),bold=u.includes('Bold'),r=u.split('/').pop();return{data:r==='0-255'&&G.r?b64(bold?G.b:G.r):new Uint8Array([10,0]).buffer}})}catch(e){}
+const center=toLL((S.a.x+S.b.x)/2,(S.a.y+S.b.y)/2);
+map=new maplibregl.Map({container:'map',attributionControl:false,antialias:true,fadeDuration:300,center,zoom:16.3,pitch:58,bearing:-20,maxPitch:72,minZoom:10.5,maxBounds:[[103.55,1.18],[104.1,1.52]],
+style:{version:8,glyphs:'swglyph://{fontstack}/{range}',sources:{land:src(),park:src(),wood:src(),water:src(),roads:src(),paths:src(),heat:src(),shadow:src(),ex:src(),roofs:src(),trees:src(),rs:src(),rb:src(),conn:src(),pt:src(),names:src(),pins:src(),me:src()},
+light:{anchor:'map',position:[1.2,SUN.az,90-Math.max(5,SUN.el)],intensity:.35,color:'#fff6df'},
+layers:[{id:'bg',type:'background',paint:{'background-color':p.sea}},
+{id:'land',type:'fill',source:'land',paint:{'fill-color':p.land}},
+{id:'park',type:'fill',source:'park',paint:{'fill-color':p.park}},
+{id:'wood',type:'fill',source:'wood',paint:{'fill-color':p.wood}},
+{id:'water',type:'fill',source:'water',paint:{'fill-color':p.water}},
+{id:'roads',type:'line',source:'roads',paint:{'line-color':p.road,'line-width':['interpolate',['linear'],['zoom'],13,2,17,14]}},
+{id:'paths',type:'line',source:'paths',layout:{'line-cap':'round'},paint:{'line-color':p.path,'line-width':['interpolate',['linear'],['zoom'],14,['match',['get','k'],2,2.5,1,1.5,.8],18,['match',['get','k'],2,16,1,9,4]]}},
+{id:'shadow',type:'fill',source:'shadow',paint:{'fill-color':p.shadow,'fill-opacity':p.so}},
+{id:'heat',type:'line',source:'heat',layout:{'line-cap':'round'},paint:{'line-color':['match',['get','s'],0,p.heat,1,p.shade,p.roof],'line-opacity':.3,'line-width':['interpolate',['linear'],['zoom'],14,.8,18,3]}},
+{id:'rs',type:'line',source:'rs',layout:{'line-join':'round'},paint:{'line-color':p.heat,'line-width':5,'line-dasharray':[1.6,1.1]}},
+{id:'conn',type:'line',source:'conn',layout:{'line-cap':'round'},paint:{'line-color':p.shade,'line-width':3,'line-dasharray':[.1,2]}},
+{id:'rbc',type:'line',source:'rb',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':p.casing,'line-width':11}},
+{id:'rb',type:'line',source:'rb',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':p.shade,'line-width':6.5}},
+{id:'ex',type:'fill-extrusion',source:'ex',filter:['!',['has','p']],paint:{'fill-extrusion-color':['get','c'],'fill-extrusion-base':['get','b'],'fill-extrusion-height':['get','h'],'fill-extrusion-opacity':.92,'fill-extrusion-vertical-gradient':true}},
+{id:'exw',type:'fill-extrusion',source:'ex',filter:['has','p'],paint:{'fill-extrusion-pattern':['get','p'],'fill-extrusion-base':['get','b'],'fill-extrusion-height':['get','h'],'fill-extrusion-opacity':.95}},
+{id:'roofs',type:'fill-extrusion',source:'roofs',paint:{'fill-extrusion-color':['get','c'],'fill-extrusion-base':['get','b'],'fill-extrusion-height':['get','h'],'fill-extrusion-opacity':.9}},
+{id:'trees',type:'fill-extrusion',source:'trees',minzoom:15,paint:{'fill-extrusion-color':['get','c'],'fill-extrusion-base':['get','b'],'fill-extrusion-height':['get','h'],'fill-extrusion-opacity':.95}},
+{id:'rbx',type:'line',source:'rb',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':p.shade,'line-width':4,'line-opacity':.85,'line-dasharray':[1,1.3]}},
+{id:'names',type:'symbol',source:'names',minzoom:15,layout:{'symbol-placement':'line','text-field':['get','t'],'text-font':['Noto Sans Regular'],'text-size':['match',['get','k'],2,13,3,13,11.5],'text-max-angle':30,'symbol-spacing':320},paint:{'text-color':p.txt,'text-halo-color':p.halo,'text-halo-width':1.6}},
+{id:'blocks',type:'symbol',source:'pt',minzoom:16.6,filter:['==',['get','r'],3],layout:{'text-field':['get','t'],'text-font':['Noto Sans Bold'],'text-size':11},paint:{'text-color':p.txt,'text-halo-color':p.halo,'text-halo-width':1.4,'text-opacity':.85}},
+{id:'places',type:'symbol',source:'pt',minzoom:14.5,filter:['in',['get','r'],['literal',[1,2]]],layout:{'text-field':['get','t'],'text-font':['Noto Sans Bold'],'text-size':12,'text-max-width':9,'text-padding':4},paint:{'text-color':['match',['get','r'],2,'#7fe0b8',p.txt],'text-halo-color':p.halo,'text-halo-width':1.6}},
+{id:'stations',type:'symbol',source:'pt',filter:['==',['get','r'],0],layout:{'icon-image':'stn','text-field':['get','t'],'text-font':['Noto Sans Bold'],'text-size':14,'text-offset':[0,.9],'text-anchor':'top','text-max-width':10,'text-optional':true,'text-padding':4},paint:{'text-color':p.stn,'text-halo-color':p.halo,'text-halo-width':2}},
+{id:'me',type:'symbol',source:'me',layout:{'icon-image':'me','icon-allow-overlap':true,'icon-rotation-alignment':'map','icon-pitch-alignment':'map'}},
+{id:'pins',type:'symbol',source:'pins',layout:{'icon-image':['get','i'],'icon-anchor':'bottom','icon-allow-overlap':true,'icon-padding':6}}]}});
+addImages();
+map.on('load',async()=>{ready=true;try{map.setSky({'sky-color':'#2a1f7a','horizon-color':'#7048e8','fog-color':'#0b0b2b','sky-horizon-blend':.65,'horizon-fog-blend':.75,'fog-ground-blend':.3})}catch(e){}
+try{const g=await fetch('t/ground.json').then(r=>r.json());for(const k of ['land','water','park','wood'])map.getSource(k).setData(FC(g[k].map(a=>{const r=[];for(let i=0;i<a.length;i+=2)r.push(toLL(a[i],a[i+1]));return F({type:'Polygon',coordinates:[r]})})))}catch(e){}
+placeMarkers();refreshView();plan()});
+map.on('moveend',refreshView);
+map.on('dragstart',()=>{if(NAV)stopWalk()});
+map.on('error',e=>{const m=(e.error&&e.error.message)||'';if(!/glyph|pbf|font/i.test(m))$('#hint').textContent='Map error: '+(m||'unknown')});
+setTimeout(()=>{if(!ready)$('#hint').textContent='The map is still starting. If it stays blank, reload the page.'},12000);
+map.on('click',e=>{if(!S.mode)return;const k=S.mode,[x,y]=toXY(e.lngLat.lng,e.lngLat.lat);S.mode=null;drawMode();$('#toast').hidden=true;setPt(k,{x,y,l:'Dropped pin'})});
+new MutationObserver(applyTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme)}
+function applyTheme(){if(!ready)return;const p=PAL(),set=(l,k,v)=>map.setPaintProperty(l,k,v);
+set('bg','background-color',p.sea);set('land','fill-color',p.land);set('park','fill-color',p.park);set('wood','fill-color',p.wood);set('water','fill-color',p.water);set('roads','line-color',p.road);set('paths','line-color',p.path);
+set('shadow','fill-color',p.shadow);set('shadow','fill-opacity',p.so);set('heat','line-color',['match',['get','s'],0,p.heat,1,p.shade,p.roof]);
+set('rs','line-color',p.heat);set('rbc','line-color',p.casing);set('rb','line-color',p.shade);set('conn','line-color',p.shade);set('rbx','line-color',p.shade);
+for(const l of ['names','blocks','places','stations'])set(l,'text-halo-color',p.halo);set('names','text-color',p.txt);set('blocks','text-color',p.txt);set('stations','text-color',p.stn);
+for(const v of CACHE.values())v.then(t=>{t.geo=null}).catch(()=>{});setTimeout(refreshView,50)}
+function img(w,h,draw){const c=document.createElement('canvas');c.width=w*2;c.height=h*2;const x=c.getContext('2d');x.scale(2,2);draw(x);return x.getImageData(0,0,w*2,h*2)}
+function pinDraw(x,l,f,acc){const tip=()=>{x.beginPath();x.moveTo(20,46);x.arc(20,17,15,Math.PI*.7,Math.PI*2.3);x.closePath()};
+x.save();x.translate(3,-2);x.fillStyle=acc;tip();x.fill();x.restore();x.fillStyle=f;x.strokeStyle='#fff';x.lineWidth=3;tip();x.fill();x.stroke();
+x.fillStyle='#fff';x.font='800 16px system-ui,sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(l,20,18)}
+function addImages(){const add=(n,i)=>{if(!map.hasImage(n))map.addImage(n,i,{pixelRatio:2})};
+add('pa',img(44,50,x=>pinDraw(x,'A','#ff6f91','#04041a')));add('pb',img(44,50,x=>pinDraw(x,'B','#7048e8','#ffd23f')));
+let sd=7;const rnd=()=>(sd=sd*16807%2147483647)/2147483647;
+const FAC=[['#3d3a7a','win'],['#3f3c88','hdb'],['#4a3d7e','house'],['#2f3f86','glass'],['#383658','panel'],['#4a3a8c','win'],['#5a3f7c','win'],['#2f2e57','panel']];
+FAC.forEach(([base,kind],k)=>add('w'+k,img(32,32,x=>{x.fillStyle=base;x.fillRect(0,0,32,32);
+if(kind==='glass'){for(let r=0;r<4;r++)for(let c=0;c<4;c++){x.fillStyle=rnd()<.35?'#ffd98a':(rnd()<.5?'#4f63c9':'#3a4aa8');x.fillRect(c*8+1,r*8+1,6,6.5)}return}
+if(kind==='panel'){x.fillStyle='#2a294a';for(let r=0;r<4;r++)x.fillRect(0,r*8+6,32,1.5);return}
+if(kind==='hdb'){for(let r=0;r<2;r++){x.fillStyle='#5b57a8';x.fillRect(0,r*16+12,32,2.2);for(let c=0;c<4;c++){x.fillStyle=rnd()<.42?'#ffd98a':'#1d1b4f';x.fillRect(c*8+1.5,r*16+3,5,7)}}return}
+const n=kind==='house'?2:4,w=kind==='house'?9:5;for(let r=0;r<2;r++)for(let c=0;c<n;c++){x.fillStyle=rnd()<.4?'#ffd98a':'#1d1b4f';x.fillRect(c*(32/n)+(32/n-w)/2,r*16+4,w,8)}})));
+add('me',img(30,30,x=>{x.fillStyle='#ffffff';x.beginPath();x.arc(15,15,13,0,7);x.fill();x.fillStyle='#7048e8';x.beginPath();x.arc(15,15,11,0,7);x.fill();x.fillStyle='#ffd23f';x.beginPath();x.arc(15,15,6.5,0,7);x.fill()}));
+add('stn',img(18,18,x=>{x.fillStyle='#c4b5fd';x.beginPath();x.arc(9,9,8,0,7);x.fill();x.fillStyle='#3b1fa3';x.beginPath();x.arc(9,9,5.5,0,7);x.fill()}))}
+function placeMarkers(){if(!ready)return;map.getSource('pins').setData(FC(['a','b'].filter(k=>S[k]).map(k=>F({type:'Point',coordinates:toLL(S[k].x,S[k].y)},{i:'p'+k}))))}
+function setMe(p){if(ready)map.getSource('me').setData(FC(p?[F({type:'Point',coordinates:toLL(p[0],p[1])})]:[]))}
+let viewTok=0;
+async function refreshView(){if(!ready)return;const tok=++viewTok,z=map.getZoom();
+if(z<14){for(const s of ['ex','roofs','trees','paths','roads','shadow','pt','names'])map.getSource(s).setData(FC([]));VIEW=[];$('#hint').textContent='Zoom in to see buildings and shadows';return}
+$('#hint').textContent='';
+const c=map.getCenter(),[cx,cy]=toXY(c.lng,c.lat),b=map.getBounds(),[x0,y0]=toXY(b.getWest(),b.getSouth()),[x1,y1]=toXY(b.getEast(),b.getNorth());
+let ks=keysIn(Math.max(x0,cx-5000),Math.max(y0,cy-5000),Math.min(x1,cx+5000),Math.min(y1,cy+5000));
+const d=k=>{const [i,j]=k.split('_').map(Number);return Math.hypot((i+.5)*TILE-cx,(j+.5)*TILE-cy)};ks.sort((p,q)=>d(p)-d(q));ks=ks.slice(0,12);
+let ts;try{ts=await Promise.all(ks.map(tile))}catch(e){$('#hint').textContent='Some map tiles failed to load. Move the map to retry.';return}
+if(tok!==viewTok)return;VIEW=ts;const g=ts.map(geo),all=k=>FC(g.flatMap(x=>x[k]));
+for(const k of ['ex','roofs','trees','paths','roads','pt','names'])map.getSource(k).setData(all(k));drawShadows()}
+function hull(p){p.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cr=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);const lo=[],up=[];
+for(const q of p){while(lo.length>1&&cr(lo[lo.length-2],lo[lo.length-1],q)<=0)lo.pop();lo.push(q)}
+for(let i=p.length-1;i>=0;i--){const q=p[i];while(up.length>1&&cr(up[up.length-2],up[up.length-1],q)<=0)up.pop();up.push(q)}
+return lo.slice(0,-1).concat(up.slice(0,-1))}
+function drawShadows(){if(!ready)return;map.setLight({anchor:'map',position:[1.2,SUN.az,90-Math.max(5,SUN.el)],intensity:SUN.up?.35:.15,color:SUN.up?'#fff6df':'#9fb4d6'});
+if(!SUN.up){map.getSource('shadow').setData(FC([]));return}
+const f=[];for(const t of VIEW){for(const b of t.B){if(b.hide)continue;const L=Math.min(b.h/SUN.tn,400),dx=-SUN.ux*L,dy=-SUN.uy*L,pts=[];
+for(let i=0;i<b.c.length;i+=2){pts.push([b.c[i],b.c[i+1]],[b.c[i]+dx,b.c[i+1]+dy])}
+const h=hull(pts);if(h.length<3)continue;const r=h.map(q=>toLL(q[0],q[1]));r.push(r[0]);f.push(F({type:'Polygon',coordinates:[r]}))}
+const d=7/SUN.tn;for(let i=0;i<t.T.length;i+=2)f.push(F({type:'Polygon',coordinates:[oct(t.T[i]-SUN.ux*d,t.T[i+1]-SUN.uy*d,3.4)]}))}
+map.getSource('shadow').setData(FC(f))}
+
+let AREA=null,R1=null,R2=null,CD=[],planTok=0,chartFresh=false;
+async function plan(){const tok=++planTok;CD=[];drawChart();if(NAV)endNav(true);
+const A=S.a,B=S.b;if(!A||!B)return;const dAB=Math.hypot(A.x-B.x,A.y-B.y);
+if(dAB>MAXD){AREA=null;R1=R2=null;setRoutes();$('#headline').textContent=`These points are ${dist(dAB)} apart. We plan walks up to 6 km.`;$('#cmp').innerHTML='';$('#strips').innerHTML='';return}
+$('#headline').textContent='Loading buildings and paths…';
+const pad=450,bx0=Math.min(A.x,B.x)-pad,by0=Math.min(A.y,B.y)-pad,bx1=Math.max(A.x,B.x)+pad,by1=Math.max(A.y,B.y)+pad;
+let ts;try{ts=await Promise.all(keysIn(bx0,by0,bx1,by1).map(tile))}catch(e){$('#headline').textContent='Map data failed to load. Try again in a moment.';return}
+if(tok!==planTok)return;
+const lim=dAB*1.45+500,inE=(x,y)=>Math.hypot(x-A.x,y-A.y)+Math.hypot(x-B.x,y-B.y)<=lim;
+const PS=[];for(const t of ts)for(const p of t.P){const n=p.c.length;if(inE(p.c[0],p.c[1])||inE(p.c[n-2],p.c[n-1]))PS.push(p)}
+const res=Math.max(2,Math.ceil(Math.max(bx1-bx0,by1-by0)/3200)),w=Math.ceil((bx1-bx0)/res),h=Math.ceil((by1-by0)/res);
+const cv=document.createElement('canvas');cv.width=w;cv.height=h;const cx=cv.getContext('2d',{willReadFrequently:true});
+const bl=ts.flatMap(t=>t.B).sort((a,b)=>a.h-b.h);let Hmax=0;
+for(const b of bl){const v=Math.min(255,Math.round(b.h/2));Hmax=Math.max(Hmax,v*2);cx.fillStyle=`rgb(${v},0,0)`;cx.beginPath();for(let i=0;i<b.c.length;i+=2){const X=(b.c[i]-bx0)/res,Y=(by1-b.c[i+1])/res;i?cx.lineTo(X,Y):cx.moveTo(X,Y)}cx.closePath();cx.fill()}
+cx.globalCompositeOperation='lighter';cx.fillStyle='rgb(0,255,0)';
+for(const t of ts)for(let i=0;i<t.T.length;i+=2){cx.beginPath();cx.arc((t.T[i]-bx0)/res,(by1-t.T[i+1])/res,4/res,0,7);cx.fill()}
+const img=cx.getImageData(0,0,w,h).data,RH=new Uint8Array(w*h),RG=new Uint8Array(w*h);for(let i=0;i<w*h;i++){RH[i]=img[4*i];RG[i]=img[4*i+1]}
+const sx=[],sy=[];for(const p of PS){p.s0=sx.length;const n=Math.max(1,Math.round(p.len/4));let acc=0,ci=0;
+const c=p.c;for(let k=0;k<n;k++){const target=(k+.5)*p.len/n;while(ci+3<c.length&&acc+Math.hypot(c[ci+2]-c[ci],c[ci+3]-c[ci+1])<target){acc+=Math.hypot(c[ci+2]-c[ci],c[ci+3]-c[ci+1]);ci+=2}
+const L=Math.hypot(c[ci+2]-c[ci],c[ci+3]-c[ci+1])||1,f=Math.min(1,(target-acc)/L);sx.push(c[ci]+(c[ci+2]-c[ci])*f);sy.push(c[ci+1]+(c[ci+3]-c[ci+1])*f)}p.ns=n;p.kk=new Uint8Array(n)}
+const idx=new Map();const id=u=>{if(!idx.has(u))idx.set(u,idx.size);return idx.get(u)};const NX=[],NY=[];
+for(const p of PS){p.a=id(p.u);p.b=id(p.v);NX[p.a]=p.c[0];NY[p.a]=p.c[1];NX[p.b]=p.c[p.c.length-2];NY[p.b]=p.c[p.c.length-1]}
+const adj=Array.from({length:idx.size},()=>[]);PS.forEach((p,i)=>{adj[p.a].push(i);adj[p.b].push(i)});
+const comp=new Int32Array(idx.size).fill(-1);let best=-1,bestN=0;
+for(let s=0,c=0;s<idx.size;s++){if(comp[s]>=0)continue;let q=[s],n=0;comp[s]=c;while(q.length){const u=q.pop();n++;for(const e of adj[u]){const v=PS[e].a===u?PS[e].b:PS[e].a;if(comp[v]<0){comp[v]=c;q.push(v)}}}if(n>bestN){bestN=n;best=c}c++}
+const snap=P=>{let bi=-1,bd=1e18;for(let i=0;i<idx.size;i++){if(comp[i]!==best)continue;const d=(NX[i]-P.x)**2+(NY[i]-P.y)**2;if(d<bd){bd=d;bi=i}}return bd<300**2?bi:-1};
+AREA={PS,adj,w,h,res,bx0,by1,RH,RG,Hmax,sx:Float64Array.from(sx),sy:Float64Array.from(sy),sa:snap(A),sb:snap(B)};
+if(AREA.sa<0||AREA.sb<0||AREA.sa===AREA.sb){R1=R2=null;setRoutes();$('#headline').textContent=AREA.sa===AREA.sb&&AREA.sa>=0?'Start and end are the same spot. Pick two places further apart.':'One of these points is too far from a mapped path. Try a spot nearer a road or walkway.';$('#cmp').innerHTML='';$('#strips').innerHTML='';return}
+update();fitRoute();chartLater(tok)}
+function shade(sun){const A=AREA;if(!A)return;const {RH,RG,w,h,res,bx0,by1,sx,sy,Hmax}=A;const up=sun.up,dz=sun.tn*res,steps=up?Math.min(4000,Math.ceil((Hmax+2)/dz)):0,ddx=sun.ux,ddy=-sun.uy;
+for(const p of A.PS){const kk=p.kk;if(p.f===1||p.f===3){kk.fill(2);p.sun=0;continue}if(p.f===2||!up){kk.fill(1);p.sun=0;continue}let sunny=0;
+for(let j=0;j<p.ns;j++){const s=p.s0+j;let X=(sx[s]-bx0)/res,Y=(by1-sy[s])/res;if(X<0||Y<0||X>=w||Y>=h){kk[j]=0;sunny++;continue}
+if(RH[(Y|0)*w+(X|0)]>3){kk[j]=2;continue}let z=0,sh=0;
+for(let k=0;k<steps;k++){X+=ddx;Y+=ddy;z+=dz;if(X<0||Y<0||X>=w||Y>=h)break;const c=(Y|0)*w+(X|0);if(RH[c]*2>z||(RG[c]>100&&z>2&&z<10)){sh=1;break}}
+kk[j]=sh;if(!sh)sunny++}p.sun=sunny/p.ns}}
+function route(w){const A=AREA,n=A.adj.length,D=new Float64Array(n).fill(Infinity),PE=new Int32Array(n).fill(-1),H=[];D[A.sa]=0;H.push([0,A.sa]);
+const push=x=>{H.push(x);let i=H.length-1;while(i){const p=(i-1)>>1;if(H[p][0]<=H[i][0])break;[H[p],H[i]]=[H[i],H[p]];i=p}};
+const pop=()=>{const t=H[0],l=H.pop();if(H.length){H[0]=l;let i=0;for(;;){const a=2*i+1,b=a+1;let m=i;if(a<H.length&&H[a][0]<H[m][0])m=a;if(b<H.length&&H[b][0]<H[m][0])m=b;if(m===i)break;[H[m],H[i]]=[H[i],H[m]];i=m}}return t};
+while(H.length){const [d,u]=pop();if(d>D[u])continue;if(u===A.sb)break;for(const e of A.adj[u]){const p=A.PS[e],v=p.a===u?p.b:p.a,c=d+p.len*(1+w*p.sun)+.01;if(c<D[v]){D[v]=c;PE[v]=e;push([c,v])}}}
+if(PE[A.sb]<0)return null;const seq=[];let v=A.sb;while(v!==A.sa){const p=A.PS[PE[v]],u=p.a===v?p.b:p.a;seq.unshift({p,fwd:p.a===u});v=u}
+let len=0,sun=0;const runs=[],coords=[],pts=[];for(const {p,fwd} of seq){len+=p.len;sun+=p.len*p.sun;const sl=p.len/p.ns;
+for(let j=0;j<p.ns;j++){const k=p.kk[fwd?j:p.ns-1-j],r=runs[runs.length-1];if(r&&r.k===k)r.l+=sl;else runs.push({k,l:sl})}
+const c=p.c,m=c.length/2;for(let j=0;j<m;j++){const q=fwd?j:m-1-j;if(j||!pts.length){coords.push(toLL(c[2*q],c[2*q+1]));pts.push([c[2*q],c[2*q+1]])}}}
+return{len,sun,runs,coords,pts,seq,key:seq.map(s=>s.p.u+'-'+s.p.v).join()}}
+let lastKey='',anim=0;
+function drawRoute(coords){cancelAnimationFrame(anim);const src=map.getSource('rb'),put=c=>src.setData(FC([F({type:'LineString',coordinates:c})]));
+if(RM||coords.length<2){put(coords);return}const cum=[0];for(let i=1;i<coords.length;i++)cum.push(cum[i-1]+Math.hypot(coords[i][0]-coords[i-1][0],coords[i][1]-coords[i-1][1]));
+const total=cum[cum.length-1],dur=timer?380:1000,t0=performance.now();
+const step=t=>{const f=Math.min(1,(t-t0)/dur),d=(1-Math.pow(1-f,3))*total,out=[coords[0]];
+for(let i=1;i<coords.length;i++){if(cum[i]<=d)out.push(coords[i]);else{const k=(d-cum[i-1])/((cum[i]-cum[i-1])||1);out.push([coords[i-1][0]+(coords[i][0]-coords[i-1][0])*k,coords[i-1][1]+(coords[i][1]-coords[i-1][1])*k]);break}}
+put(out.length>1?out:[coords[0],coords[0]]);if(f<1)anim=requestAnimationFrame(step)};anim=requestAnimationFrame(step)}
+function setRoutes(){if(!ready)return;map.getSource('rs').setData(FC(R1&&R2&&R1.key!==R2.key?[F({type:'LineString',coordinates:R1.coords})]:[]));
+if(!R2){cancelAnimationFrame(anim);lastKey='';map.getSource('rb').setData(FC([]))}else if(R2.key!==lastKey){lastKey=R2.key;drawRoute(R2.coords)}
+map.getSource('conn').setData(FC(R2?[F({type:'LineString',coordinates:[toLL(S.a.x,S.a.y),R2.coords[0]]}),F({type:'LineString',coordinates:[R2.coords[R2.coords.length-1],toLL(S.b.x,S.b.y)]})]:[]));
+map.getSource('heat').setData(FC(AREA&&R2?AREA.PS.map(p=>F({type:'LineString',coordinates:line(p.c)},{s:p.f===1||p.f===3?2:(p.sun>.5?0:1)})):[]))}
+
+let panelKey='';function drawPanel(){$('#tOut').textContent=fmt(S.t);$('#t').value=S.t;
+$('#sunTxt').textContent=SUN.up?`Sun ${Math.round(SUN.el)}° above the horizon, in the ${dirName(SUN.az)}.`:'The sun is down or barely up, so every path counts as shade.';
+document.querySelectorAll('#days button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===S.day));
+document.querySelectorAll('#prio button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.w===S.w));
+$('#start').disabled=!R2;if(!R1||!R2)return;const fresh=R2.key!==panelKey;panelKey=R2.key;const same=R1.key===R2.key,dt=(R2.len-R1.len)/SPEED,ds=(R1.sun-R2.sun)/SPEED;
+$('#headline').textContent=!SUN.up?'No sun to dodge. Take the shortest way.':(same||ds<.05)?'At this hour the shortest walk is already the shadiest.':dt<.05?`Same distance, ${f1(ds)} min less in the sun`:`${f1(dt)} min longer, ${f1(ds)} min less in the sun`;
+const row=(n,c,r)=>`<tr><td><i class="dot" style="background:${c}"></i>${n}</td><td>${f1(r.len/SPEED)} min</td><td>${f1(r.sun/SPEED)} min</td><td>${r.len?Math.round(100-r.sun/r.len*100):100}%</td></tr>`;
+$('#cmp').innerHTML=row('Shortest','#ff6f91',R1)+row('Shade route','#c4b5fd',R2);
+const strip=(n,r)=>`<div class="sl"><span>${n}</span><span>${dist(r.len)}</span></div><div class="strip${fresh?' new':''}">${r.runs.map(x=>`<i class="k${x.k}" style="width:${x.l/r.len*100}%"></i>`).join('')}</div>`;
+$('#strips').innerHTML=strip('Shortest, A to B',R1)+strip('Shade route, A to B',R2)+`<div class="sl"><span><i class="dot k0"></i>Sun</span><span><i class="dot k1"></i>Shadow or trees</span><span><i class="dot k2"></i>Roof, linkway or void deck</span></div>`}
+function drawMode(){document.querySelectorAll('#mode button[data-m]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===S.mode));$('#map').classList.toggle('arming',!!S.mode)}
+const ptName=k=>k==='a'?'Start':'End';
+function setPt(k,v){const prev=S[k];S[k]=v;$('#q'+k).value=v.l;placeMarkers();plan();
+if(prev&&(prev.x!==v.x||prev.y!==v.y))toast(`${ptName(k)} moved to ${v.l}.`,'Undo',()=>{S[k]=prev;$('#q'+k).value=prev.l;placeMarkers();plan();toast(`${ptName(k)} put back: ${prev.l}.`)})}
+let toastT=0;function toast(msg,btn,fn,ms){const t=$('#toast'),b=$('#toastBtn');$('#toastMsg').textContent=msg;b.hidden=!btn;b.textContent=btn||'';b.onclick=()=>{t.hidden=true;if(fn)fn()};t.hidden=false;clearTimeout(toastT);if(ms!==0)toastT=setTimeout(()=>t.hidden=true,ms||8000)}
+function armToast(){if(S.mode)toast(`Tap the map to set your ${S.mode==='a'?'start (A)':'end (B)'}.`,'Cancel',()=>{S.mode=null;drawMode()},0);else $('#toast').hidden=true}
+function goTrip(){if(!ready)return;if(R2)fitRoute();else{const p=S.a||S.b;if(p)map.easeTo({center:toLL(p.x,p.y),zoom:16.5,duration:RM?0:900})}}
+function update(){SUN=sunPos(doy(),S.t);pageShadow(SUN);if(AREA&&AREA.sa>=0){shade(SUN);R1=route(0);R2=route(S.w);if(!R1||!R2){$('#headline').textContent='No connected walking route found between these points.';$('#cmp').innerHTML='';$('#strips').innerHTML=''}}
+if(NAV){if(R2){NAV.steps=buildSteps(R2);NAV.i=Math.min(NAV.i,NAV.steps.length-1);drawNav()}else endNav(true)}
+setRoutes();drawShadows();drawPanel();drawChart();save()}
+
+/* ---------- walk mode: turn-by-turn ---------- */
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let NAV=null;
+const brg=(a,b)=>(Math.atan2(b[0]-a[0],b[1]-a[1])*180/Math.PI+360)%360;
+const norm=d=>((d+540)%360)-180;
+function headOut(P){let d=0;for(let i=1;i<P.length;i++){d+=Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]);if(d>=12||i===P.length-1)return brg(P[0],P[i])}return 0}
+function headIn(P){let d=0,n=P.length-1;for(let i=n-1;i>=0;i--){d+=Math.hypot(P[i+1][0]-P[i][0],P[i+1][1]-P[i][1]);if(d>=12||i===0)return brg(P[i],P[n])}return 0}
+const turnOf=(a,b)=>norm(headOut(b)-headIn(a));
+function desc(p){const n=p.nm||'';
+if(p.ty===2)return{key:'st',act:'Take the steps'};
+if(p.ty===3)return{key:'x'+n,act:n?`Cross ${n}`:'Cross the road'};
+if(p.ty===4)return{key:'br',act:p.f===1||p.f===3?'Cross the covered overhead bridge':'Cross the overhead bridge'};
+if(p.ty===7)return{key:'tu',act:'Go through the underpass'};
+if(p.f===3)return{key:'in'+n,act:n?`Walk through ${n}`:'Walk through the void deck or building'};
+if(p.f===1)return{key:'cv',what:'the covered linkway'};
+if(n)return{key:'n'+n,what:n,named:true};
+if(p.f===2)return{key:'wd',what:'the wooded path'};
+return{key:'fp'+(p.k?1:0),what:p.k?'the road':'the footpath'}}
+function turnWord(d){const a=Math.abs(d),s=d>0?'right':'left';return a<25?'Continue':a<60?'Bear '+s:a<135?'Turn '+s:'Make a U-turn'}
+function buildSteps(R){const legs=[];
+const join=(T,L,front)=>{if(front){T.pts=L.pts.concat(T.pts.slice(1))}else T.pts.push(...L.pts.slice(1));T.len+=L.len;T.su+=L.su;T.sh+=L.sh;T.sc+=L.sc};
+for(const {p,fwd} of R.seq){const m=p.c.length/2,pts=[];for(let j=0;j<m;j++){const q=fwd?j:m-1-j;pts.push([p.c[2*q],p.c[2*q+1]])}
+let su=0,sh=0,sc=0;const sl=p.len/p.ns;for(let j=0;j<p.ns;j++){const k=p.kk[j];if(k===0)su+=sl;else if(k===1)sh+=sl;else sc+=sl}
+const D=desc(p),L={...D,pts,len:p.len,su,sh,sc},T=legs[legs.length-1];
+if(T&&T.key===D.key&&Math.abs(turnOf(T.pts,pts))<55)join(T,L);else legs.push(L)}
+for(let pass=0;pass<3;pass++){
+for(let i=0;i<legs.length&&legs.length>1;i++){const L=legs[i];if(L.len<(L.act?6:20)){if(i>0)join(legs[i-1],L);else join(legs[1],L,true);legs.splice(i,1);i--}}
+for(let i=1;i<legs.length;i++){const A=legs[i-1],B=legs[i];if(A.key===B.key&&(Math.abs(turnOf(A.pts,B.pts))<30||Math.min(A.len,B.len)<30)){join(A,B);legs.splice(i,1);i--}}}
+let d=0;legs.forEach((L,i)=>{L.start=d;d+=L.len;L.turn=i?turnOf(legs[i-1].pts,L.pts):0;const tw=i?turnWord(L.turn):'';
+L.text=i===0?(L.act||`Head ${dirName(headOut(L.pts))} along ${L.what}`):L.act?(tw==='Continue'?L.act:`${tw}, then ${L.act[0].toLowerCase()+L.act.slice(1)}`):(tw==='Continue'?`Continue along ${L.what}`:`${tw} ${L.named?'onto':'along'} ${L.what}`);
+L.badge=!SUN.up?'Sun is down':L.sc/L.len>.6?'Covered':(L.sh+L.sc)/L.len>.7?'Shaded':L.su/L.len>.6?'Sunny':'Part shade';
+L.meta=`${dist(L.len)} · ${f1(L.len/SPEED)} min · ${L.badge}`});
+const last=R.pts[R.pts.length-1];legs.push({text:`Arrive at ${S.b.l}`,meta:`${dist(R.len)} walk · ${f1(R.sun/SPEED)} min in the sun`,pts:[last],start:R.len,arrive:true,turn:0});
+return legs}
+function arrowSvg(L){if(L.arrive)return'<svg width="22" height="22" viewBox="-12 -12 24 24" aria-hidden="true"><path d="M-6 9V-9h11l-2 4 2 4H-6" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+const a=Math.abs(L.turn)<25?0:Math.abs(L.turn)>=135?180:Math.sign(L.turn)*(Math.abs(L.turn)<60?45:90);
+return`<svg width="24" height="24" viewBox="-12 -12 24 24" aria-hidden="true"><g transform="rotate(${a})"><path d="M0-10 7-2H2.5V10h-5V-2H-7z" fill="currentColor"/></g></svg>`}
+const navPad=()=>({top:70,left:20,right:20,bottom:($('#nav').offsetHeight||150)+40});
+function drawNav(){if(!NAV)return;const L=NAV.steps[NAV.i];$('#navArrow').innerHTML=arrowSvg(L);$('#navTitle').textContent=L.text;$('#navMeta').textContent=`Step ${NAV.i+1} of ${NAV.steps.length} · ${L.meta}`;
+$('#prev').disabled=NAV.i===0;$('#next').disabled=NAV.i===NAV.steps.length-1;
+$('#dir').innerHTML=NAV.steps.map((s,i)=>`<li><button type="button" data-i="${i}" aria-current="${i===NAV.i}"><span class="arrow">${arrowSvg(s)}</span><span><b>${esc(s.text)}</b><small>${esc(s.meta)}</small></span></button></li>`).join('');
+const cur=$('#dir').querySelector('[aria-current=true]');if(cur){const box=$('#dir'),t=cur.parentElement.offsetTop-box.offsetTop;if(t<box.scrollTop||t>box.scrollTop+box.clientHeight-60)box.scrollTop=t-8}}
+function goStep(i){if(!NAV)return;stopWalk();NAV.i=Math.max(0,Math.min(NAV.steps.length-1,i));const L=NAV.steps[NAV.i],p=L.pts[0];setMe(p);drawNav();
+map.easeTo({center:toLL(p[0],p[1]),bearing:L.arrive?map.getBearing():headOut(L.pts),pitch:56,zoom:18,padding:navPad(),duration:RM?0:900})}
+function startNav(){if(!R2||!ready)return;NAV={steps:buildSteps(R2),i:0,walking:false};
+map.setLayoutProperty('heat','visibility','none');map.setLayoutProperty('rs','visibility','none');map.setPaintProperty('ex','fill-extrusion-opacity',.72);map.setPaintProperty('exw','fill-extrusion-opacity',.72);map.setPaintProperty('roofs','fill-extrusion-opacity',.75);
+$('#nav').hidden=false;$('#dir').hidden=false;$('#start').textContent='End walk';goStep(0);$('.stage').scrollIntoView({behavior:RM?'auto':'smooth',block:'start'})}
+function endNav(silent){stopWalk();NAV=null;setMe(null);$('#nav').hidden=true;$('#dir').hidden=true;$('#start').textContent='Start walk';
+if(ready){map.setLayoutProperty('heat','visibility','visible');map.setLayoutProperty('rs','visibility','visible');map.setPaintProperty('ex','fill-extrusion-opacity',.92);map.setPaintProperty('exw','fill-extrusion-opacity',.95);map.setPaintProperty('roofs','fill-extrusion-opacity',.9)}
+if(!silent)fitRoute()}
+function fitRoute(){if(!ready||!R2)return;const b=new maplibregl.LngLatBounds();for(const c of R2.coords)b.extend(c);if(R1)for(const c of R1.coords)b.extend(c);
+const cam=map.cameraForBounds(b,{padding:{top:90,bottom:70,left:90,right:70},bearing:-20});if(cam)map.easeTo({center:cam.center,zoom:Math.min(17.4,cam.zoom-.35),bearing:-20,pitch:48,padding:{top:0,bottom:0,left:0,right:0},duration:RM?0:1100})}
+function posAt(d){const P=R2.pts;let acc=0;for(let i=1;i<P.length;i++){const L=Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]);if(acc+L>=d){const f=L?(d-acc)/L:0;return[P[i-1][0]+(P[i][0]-P[i-1][0])*f,P[i-1][1]+(P[i][1]-P[i-1][1])*f,brg(P[i-1],P[i])]}acc+=L}const n=P.length-1;return[P[n][0],P[n][1],n?brg(P[n-1],P[n]):0]}
+function stopWalk(){if(NAV&&NAV.walking){NAV.walking=false;clearInterval(NAV.tm)}$('#walk').textContent='Play walk'}
+function playWalk(){if(!NAV)return;if(NAV.walking){stopWalk();return}NAV.walking=true;$('#walk').textContent='Pause';
+if(NAV.i>=NAV.steps.length-1)NAV.i=0;
+if(RM){NAV.tm=setInterval(()=>{if(NAV.i>=NAV.steps.length-1){stopWalk();return}const k=NAV.i+1;NAV.walking=false;goStep(k);NAV.walking=true;$('#walk').textContent='Pause'},2200);return}
+let d=NAV.steps[NAV.i].start,last=performance.now(),hb=map.getBearing();const total=R2.len,spd=Math.max(30,total/40);
+const tick=t=>{if(!NAV||!NAV.walking)return;const dt=Math.min(.1,(t-last)/1000);last=t;d=Math.min(total,d+dt*spd);
+const [x,y,hd]=posAt(d),ahead=posAt(Math.min(total,d+25));const want=d<total-2?brg([x,y],ahead):hd;hb=hb+norm(want-hb)*.05;setMe([x,y]);
+map.jumpTo({center:toLL(x,y),bearing:hb,pitch:58,zoom:18.2,padding:navPad()});let k=0;for(let j=0;j<NAV.steps.length;j++)if(NAV.steps[j].start<=d+.5)k=j;if(k!==NAV.i){NAV.i=k;drawNav()}
+if(d>=total){NAV.i=NAV.steps.length-1;drawNav();stopWalk();return}requestAnimationFrame(tick)};requestAnimationFrame(tick)}
+
+async function chartLater(tok){const pts=[];for(let t=420;t<=1140;t+=30){if(tok!==planTok)return;const s=sunPos(doy(),t);shade(s);const a=route(0),b=route(S.w);if(!a||!b)return;pts.push({t,a:a.sun/SPEED,b:b.sun/SPEED});await new Promise(r=>setTimeout(r,0))}
+if(tok!==planTok)return;shade(SUN);CD=pts;chartFresh=true;
+const win=CD.filter(d=>d.t>=480&&d.t<=1080),best=win.reduce((m,d)=>d.b<m.b?d:m,win[0]),worst=win.reduce((m,d)=>d.b>m.b?d:m,win[0]);
+$('#chartTitle').textContent=`Leave at ${fmt(best.t)} for the least sun: ${f1(best.b)} min`;
+$('#chartSub').textContent=`From ${S.a.l} to ${S.b.l}. Between 8 am and 6 pm on ${DAYS.find(d=>d.id===S.day).n.replace('Today, ','')}, this walk is worst at ${fmt(worst.t)}: ${f1(worst.b)} min of sun on the shade route and ${f1(worst.a)} min on the shortest route. The white line marks your chosen time.`;drawChart()}
+function drawChart(){const s=$('#chart'),W=s.clientWidth,H=s.clientHeight;if(!W)return;if(!CD.length){s.innerHTML=`<text x="${W/2}" y="${H/2}" text-anchor="middle">Working out the day…</text>`;return}
+const m={l:40,r:14,t:20,b:30},iw=W-m.l-m.r,ih=H-m.t-m.b,top=Math.max(2,Math.ceil(Math.max(...CD.map(d=>d.a))/2)*2);
+const x=t=>m.l+(t-420)/720*iw,y=v=>m.t+ih-v/top*ih;let g='';
+[0,top/2,top].forEach(v=>{g+=`<line class="grid" x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end">${v}</text>`});
+[420,540,660,780,900,1020,1140].filter((t,i)=>W>=520||i%2===0).forEach(t=>{g+=`<text x="${x(t)}" y="${H-8}" text-anchor="middle">${hr(t)}</text>`});
+g+=`<text x="${m.l}" y="${m.t-6}">min in sun</text>`;
+const pa=CD.map((d,i)=>(i?'L':'M')+x(d.t).toFixed(1)+','+y(d.a).toFixed(1)).join(''),pb=CD.map((d,i)=>(i?'L':'M')+x(d.t).toFixed(1)+','+y(d.b).toFixed(1)).join('');
+g+=`<path class="ab" d="${pb}L${x(1140)},${y(0)}L${x(420)},${y(0)}Z"/><path class="la" d="${pa}"/><path class="lb" d="${pb}"/>`;
+const cx=x(Math.min(S.t,1140));g+=`<line x1="${cx}" x2="${cx}" y1="${m.t}" y2="${m.t+ih}" stroke="#ffffff" stroke-width="2"/>`;
+const win=CD.filter(d=>d.t>=480&&d.t<=1080),best=win.reduce((a,d)=>d.b<a.b?d:a,win[0]);g+=`<circle cx="${x(best.t)}" cy="${y(best.b)}" r="7" fill="#c4b5fd" stroke="#0b0b2b" stroke-width="2.5"/>`;
+s.innerHTML=g;if(chartFresh){chartFresh=false;const p=s.querySelector('.lb');if(p&&!RM){const L=p.getTotalLength();p.style.strokeDasharray=L;p.style.strokeDashoffset=L;p.getBoundingClientRect();p.style.transition='stroke-dashoffset 1.3s cubic-bezier(.4,.1,.2,1)';p.style.strokeDashoffset=0}}}
+
+let SEARCH=null,SP=null;
+function loadSearch(){if(!SP)SP=fetch('t/search.json').then(r=>r.json()).then(a=>{SEARCH=a.map(e=>({l:e[0],s:e[4]===2?'MRT/LRT station':e[1],x:e[2],y:e[3],k:e[4],h:(e[0]+' '+e[1]+(e[4]===2?' mrt lrt station':'')).toLowerCase()}));return SEARCH}).catch(()=>{SP=null});return SP}
+const KR=[2,0,1,4,3],KN=['Address','Place','MRT/LRT','Bus stop','Street'];
+function find(q){q=q.toLowerCase().trim();if(q.length<2||!SEARCH)return[];const tk=q.split(/\s+/),out=[];
+for(const e of SEARCH){let ok=true;for(const t of tk)if(!e.h.includes(t)){ok=false;break}if(!ok)continue;const ll=e.l.toLowerCase();
+out.push([(ll===q?0:ll.startsWith(q)?1:ll.includes(q)?2:3)*10+KR.indexOf(e.k)*2+Math.min(1,e.l.length/60),e]);if(out.length>4000)break}
+return out.sort((a,b)=>a[0]-b[0]).slice(0,8).map(a=>a[1])}
+for(const k of ['a','b']){const inp=$('#q'+k),ul=$('#r'+k);let items=[],sel=-1;
+inp.value=S[k]?S[k].l:'';
+const render=()=>{ul.innerHTML=items.map((e,i)=>`<li role="option" id="o${k}${i}" aria-selected="${i===sel}" data-i="${i}">${esc(e.l)}<small>${esc(e.s||KN[e.k])}</small></li>`).join('');inp.setAttribute('aria-activedescendant',sel>=0?'o'+k+sel:'')};
+const choose=e=>{items=[];render();setPt(k,{x:e.x,y:e.y,l:e.l})};
+inp.addEventListener('focus',()=>{inp.select();loadSearch()});
+inp.addEventListener('input',async()=>{await loadSearch();items=find(inp.value);sel=items.length?0:-1;render()});
+inp.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){sel=Math.min(items.length-1,sel+1);render();e.preventDefault()}else if(e.key==='ArrowUp'){sel=Math.max(0,sel-1);render();e.preventDefault()}else if(e.key==='Enter'&&items[sel]){choose(items[sel]);e.preventDefault()}else if(e.key==='Escape'){items=[];render()}});
+ul.addEventListener('mousedown',e=>{const li=e.target.closest('li');if(li){e.preventDefault();choose(items[+li.dataset.i])}});
+inp.addEventListener('blur',()=>setTimeout(()=>{items=[];render();if(S[k])inp.value=S[k].l},150))}
+
+$('#days').innerHTML=DAYS.map(d=>`<button type="button" data-id="${d.id}">${esc(d.n)}</button>`).join('');
+$('#prio').innerHTML=PRIO.map(p=>`<button type="button" data-w="${p.w}">${p.n}</button>`).join('');
+$('#days').addEventListener('click',e=>{const b=e.target.closest('button');if(b){S.day=b.dataset.id;update();chartLater(++planTok)}});
+$('#prio').addEventListener('click',e=>{const b=e.target.closest('button');if(b){S.w=+b.dataset.w;update();chartLater(++planTok)}});
+$('#mode').addEventListener('click',e=>{const b=e.target.closest('button[data-m]');if(b){S.mode=S.mode===b.dataset.m?null:b.dataset.m;drawMode();armToast()}});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&S.mode){S.mode=null;drawMode();armToast()}});
+$('#home').addEventListener('click',goTrip);
+$('#swap').addEventListener('click',()=>{[S.a,S.b]=[S.b,S.a];$('#qa').value=S.a.l;$('#qb').value=S.b.l;placeMarkers();plan()});
+let raf=0;$('#t').addEventListener('input',e=>{S.t=+e.target.value;$('#tOut').textContent=fmt(S.t);if(!raf)raf=requestAnimationFrame(()=>{raf=0;update()})});
+$('#zin').addEventListener('click',()=>map&&map.zoomIn());$('#zout').addEventListener('click',()=>map&&map.zoomOut());
+$('#tilt').addEventListener('click',()=>{if(!map)return;const flat=map.getPitch()>5;map.easeTo({pitch:flat?0:58,bearing:flat?0:-20});$('#tilt').textContent=flat?'3D':'2D'});
+let timer=null;const play=$('#play');
+play.addEventListener('click',()=>{if(timer){clearInterval(timer);timer=null;play.textContent='Play the day';return}
+if(S.t>=1170)S.t=420;play.textContent='Pause';timer=setInterval(()=>{S.t+=15;if(S.t>=1170){S.t=1170;clearInterval(timer);timer=null;play.textContent='Play the day'}update()},matchMedia('(prefers-reduced-motion: reduce)').matches?900:450)});
+$('#start').addEventListener('click',()=>NAV?endNav():startNav());
+$('#prev').addEventListener('click',()=>NAV&&goStep(NAV.i-1));$('#next').addEventListener('click',()=>NAV&&goStep(NAV.i+1));
+$('#walk').addEventListener('click',playWalk);$('#end').addEventListener('click',()=>endNav());
+$('#dir').addEventListener('click',e=>{const b=e.target.closest('button[data-i]');if(b){goStep(+b.dataset.i);if(matchMedia('(max-width:1020px)').matches)$('.stage').scrollIntoView({behavior:RM?'auto':'smooth',block:'start'})}});
+const ro=new ResizeObserver(drawChart);ro.observe($('#chart'));
+/* ---------- views, infographics, privacy ---------- */
+const VIEWS=['plan','why','how','accuracy','privacy'];let wantMap=false,mapStarted=false,lastV='';const DONE={};
+const curView=()=>{const v=location.hash.slice(1);return VIEWS.includes(v)?v:'plan'};
+function show(){const v=curView();
+for(const id of VIEWS)document.getElementById(id).classList.toggle('on',id===v);
+document.querySelectorAll('.tabs a').forEach(a=>{if(a.getAttribute('href')==='#'+v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+document.title=v==='plan'?'shade,where?':{why:'Why shade',how:'How it works',accuracy:'Accuracy',privacy:'Privacy'}[v]+' · shade,where?';
+const back=lastV&&lastV!=='plan';if(v==='plan'){if(wantMap&&!mapStarted){mapStarted=true;initMap()}if(map)requestAnimationFrame(()=>{map.resize();if(ready){refreshView();if(back)goTrip()}});drawChart()}else if(S.mode){S.mode=null;drawMode();$('#toast').hidden=true}
+lastV=v;
+if(v!=='why')stopSim();if(v!=='how'&&typeof stopSky==='function')stopSky();if(v==='how')playHow();
+if(v==='why')playWhy();if(v==='privacy')showSaved();
+window.scrollTo(0,0)}
+addEventListener('hashchange',show);
+const NS='http://www.w3.org/2000/svg',svgEl=(w,h,body,label)=>`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label)}" xmlns="${NS}">${body}</svg>`;
+const T='font-family="DM Sans,system-ui,sans-serif"',clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function tween(el,from,to,dec,pre,suf,dur){if(el._tw)cancelAnimationFrame(el._tw);const fin=pre+to.toFixed(dec)+suf;if(RM){el.textContent=fin;return}
+const t0=performance.now(),step=t=>{const f=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-f,4);el.textContent=pre+(from+(to-from)*e).toFixed(dec)+suf;if(f<1)el._tw=requestAnimationFrame(step);else el.textContent=fin};el._tw=requestAnimationFrame(step)}
+function countUp(el){tween(el,0,+el.dataset.count,+el.dataset.dec||0,el.dataset.pre||'',el.dataset.suf||'',1300)}
+function playWhy(){const w=$('#why');if(!DONE.why){DONE.why=1;initStory()}
+w.classList.remove('play');void w.offsetWidth;w.classList.add('play');
+w.querySelectorAll('[data-count]').forEach(countUp);openChap(CH,0)}
+
+/* story chapters */
+const CHN=['Hotter years','Sun & shadow','Shade works','Heat alerts','Covered paths'];let CH=0;const chDone=[];
+const CHI=[drawYears,initSim,initScene,initGauge,drawShelter];
+function openChap(i,dir){i=clamp(i,0,4);CH=i;
+for(let k=0;k<5;k++){const t=$('#cht'+k),p=$('#ch'+k),on=k===i;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1;p.hidden=!on;p.classList.remove('fromL','fromR')}
+const p=$('#ch'+i);if(dir&&!RM){void p.offsetWidth;p.classList.add(dir>0?'fromR':'fromL')}
+if(!chDone[i]){chDone[i]=1;CHI[i]()}
+$('#chPrev').disabled=i===0;$('#chNext').innerHTML=i<4?`Next<span class="nm">: ${esc(CHN[i+1])}</span> →`:'Plan a walk →';
+$('#chDots').querySelectorAll('i').forEach((d,k)=>d.classList.toggle('on',k===i));
+const b=$('#cht'+i),c=b.parentNode;c.scrollTo({left:b.offsetLeft-c.clientWidth/2+b.offsetWidth/2,behavior:RM?'auto':'smooth'});
+if(i!==1)stopSim();if(i===0){$('#yrsTip').hidden=true;setTimeout(()=>{if(CH===0)selYear(SELY)},RM?0:1150)}if(i===2)demoShade();if(i===3)gaugeIntro()}
+function initStory(){
+for(let k=0;k<5;k++)$('#cht'+k).addEventListener('click',()=>openChap(k,k>CH?1:-1));
+$('#story .chap').addEventListener('keydown',e=>{const d={ArrowRight:1,ArrowLeft:-1}[e.key];if(!d)return;e.preventDefault();openChap(CH+d,d);$('#cht'+CH).focus()});
+$('#chPrev').addEventListener('click',()=>openChap(CH-1,-1));
+$('#chNext').addEventListener('click',()=>{if(CH<4)openChap(CH+1,1);else location.hash='#plan'});
+let sx=null,sy=0;const wr=$('#chwrap');
+wr.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||e.target.closest('input,button,#gaugeFig'))return;sx=e.clientX;sy=e.clientY});
+wr.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){const d=dx<0?1:-1;openChap(CH+d,d)}});
+wr.addEventListener('pointercancel',()=>sx=null)}
+
+/* 1. hottest years */
+const YRS=[[1997,28.2],[2002,28.1],[2010,28.1],[2015,28.2],[2016,28.4],[2019,28.4],[2023,28.2],[2024,28.4],[2025,28.1]],DEFY=7;
+function drawYears(){const f=$('#yrsFig'),nar=f.clientWidth<600,fs=nar?20:12,W=nar?520:960,H=nar?380:290,m={l:nar?62:44,r:16,t:nar?40:30,b:nar?44:34},iw=W-m.l-m.r,ih=H-m.t-m.b,x=y=>m.l+(y-1994)/(2027-1994)*iw,y=v=>m.t+ih-(v-27.6)/(28.6-27.6)*ih;let g='';
+[27.6,27.8,28,28.2,28.4,28.6].forEach(v=>{g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="#ffffff14"/><text x="${m.l-8}" y="${y(v)+4}" text-anchor="end" font-size="${fs}" fill="#aaa6d8" ${T}>${v.toFixed(1)}</text>`});
+(nar?[2000,2010,2020]:[1995,2000,2005,2010,2015,2020,2025]).forEach(t=>{g+=`<text x="${x(t)}" y="${H-12}" text-anchor="middle" font-size="${fs}" fill="#aaa6d8" ${T}>${t}</text>`});
+g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(27.8)}" y2="${y(27.8)}" stroke="#38e1d1" stroke-width="2" stroke-dasharray="6 5"/><text x="${m.l+6}" y="${y(27.8)+18}" font-size="${nar?19:13}" fill="#38e1d1" ${T} font-weight="700">Long-term average 27.8°C</text>`;
+g+=`<text x="${m.l}" y="${m.t-14}" font-size="${fs}" fill="#aaa6d8" ${T}>°C, annual mean</text>`;
+YRS.forEach(([yr,v],i)=>{const hot=v>=28.4,c=hot?'#ff6f91':'#c4b5fd',d=(i*.08).toFixed(2);
+g+=`<g class="yd" data-i="${i}" tabindex="0" role="button" aria-label="${yr}: ${v} degrees"><rect x="${x(yr)-(nar?10:14)}" y="${m.t}" width="${nar?20:28}" height="${ih}" fill="transparent"/><rect class="stem" style="animation-delay:${d}s" x="${x(yr)-3}" y="${y(v)}" width="6" height="${y(27.8)-y(v)}" rx="3" fill="${c}" opacity=".55"/><circle class="dot pop" style="animation-delay:${(+d+.5).toFixed(2)}s" cx="${x(yr)}" cy="${y(v)}" r="${(hot?9:7)*(nar?1.4:1)}" fill="${c}" stroke="#0b0b2b" stroke-width="2.5"/></g>`});
+f.insertAdjacentHTML('beforeend',svgEl(W,H,g,'Warmest years on record in Singapore: 2016, 2019 and 2024 at 28.4°C; 1997, 2015 and 2023 at 28.2°C; 2002, 2010 and 2025 at 28.1°C; long-term average 27.8°C'));
+const pick=e=>{const gg=e.target.closest('.yd');if(gg)selYear(+gg.dataset.i)};
+f.addEventListener('pointerover',pick);f.addEventListener('click',pick);f.addEventListener('focusin',pick);
+addEventListener('resize',()=>{if(CH===0&&curView()==='why')selYear(SELY)})}
+let SELY=DEFY;
+function selYear(i){const f=$('#yrsFig'),tip=$('#yrsTip'),gs=f.querySelectorAll('.yd');if(!gs.length)return;SELY=i;
+gs.forEach((g,k)=>g.classList.toggle('sel',k===i));const [yr,v]=YRS[i],svg=f.querySelector('svg'),ci=gs[i].querySelector('circle'),M=svg.getScreenCTM(),r=f.getBoundingClientRect();
+if(!M||!r.width){tip.hidden=true;return}const pt=svg.createSVGPoint();pt.x=+ci.getAttribute('cx');pt.y=+ci.getAttribute('cy')-+ci.getAttribute('r');const q=pt.matrixTransform(M);
+tip.innerHTML=`<b>${yr}</b> · ${v.toFixed(1)}°C<br>${v>=28.4?'Joint hottest on record':'Among the ten warmest'} · +${(v-27.8).toFixed(1)}° vs average`;
+tip.hidden=false;const tw=tip.offsetWidth/2,cx=q.x-r.left;const lf=clamp(cx,tw+4,f.clientWidth-tw-4);tip.style.left=lf+'px';tip.style.setProperty('--ax',clamp(cx-lf,-tw+14,tw-14)+'px');tip.style.top=(q.y-r.top)+'px'}
+
+/* 2. sun & shadow simulator */
+const SIMD=[{n:'Today',d:todayDoy},{n:'21 Mar',d:80},{n:'21 Jun',d:172},{n:'21 Dec',d:355}];let SIM={i:0,t:900},simTimer=null;
+const DIR8=['north','north-east','east','south-east','south','south-west','west','north-west'],dir8=a=>DIR8[Math.round(((a%360)+360)%360/45)%8];
+function initSim(){const now=sg.hour*60+sg.minute;SIM.t=now>=420&&now<=1140?Math.round(now/5)*5:900;$('#simT').value=SIM.t;
+$('#simDays').innerHTML=SIMD.map((o,i)=>`<button type="button" data-i="${i}" aria-pressed="${i===0}">${o.n}</button>`).join('');
+$('#simDays').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;SIM.i=+b.dataset.i;$('#simDays').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderSim()});
+$('#simT').addEventListener('input',e=>{SIM.t=+e.target.value;renderSim()});
+$('#simPlay').addEventListener('click',()=>simTimer?stopSim():startSim());renderSim()}
+function startSim(){if(RM){SIM.t=SIM.t>=1140?420:SIM.t+60;$('#simT').value=SIM.t;renderSim();return}
+$('#simPlayIco').setAttribute('d','M6 4h4v16H6zM14 4h4v16h-4z');$('#simPlay').setAttribute('aria-label','Pause');
+simTimer=setInterval(()=>{SIM.t+=5;if(SIM.t>1140)SIM.t=420;$('#simT').value=SIM.t;renderSim()},45)}
+function stopSim(){if(!simTimer)return;clearInterval(simTimer);simTimer=null;$('#simPlayIco').setAttribute('d','M7 4l13 8-13 8z');$('#simPlay').setAttribute('aria-label','Play the day')}
+function renderSim(){const dy=SIMD[SIM.i].d,s=sunPos(dy,SIM.t),R=110,S=140,P=o=>{const r=(90-o.el)/90*R,a=o.az*R_;return[S+r*Math.sin(a),S-r*Math.cos(a)]};
+let g=`<defs><radialGradient id="sg"><stop offset="0" stop-color="#ffd23f" stop-opacity=".7"/><stop offset="1" stop-color="#ffd23f" stop-opacity="0"/></radialGradient></defs><circle cx="${S}" cy="${S}" r="${R}" fill="#14134a" stroke="#3f3ba8" stroke-width="1.5"/>`;
+[30,60].forEach(e=>{g+=`<circle cx="${S}" cy="${S}" r="${(90-e)/90*R}" fill="none" stroke="#ffffff1a" stroke-dasharray="3 4"/>`});
+[['N',0,-1],['E',1,0],['S',0,1],['W',-1,0]].forEach(([l,dx,dyy])=>{g+=`<text x="${S+dx*(R+15)}" y="${S+dyy*(R+15)+4}" text-anchor="middle" font-size="13" font-weight="800" fill="#d8d2ff" ${T}>${l}</text>`});
+SIMD.forEach((o,i)=>{if(i!==SIM.i&&i===0)return;const pts=[];for(let t=380;t<=1180;t+=6){const q=sunPos(o.d,t);if(q.el>0)pts.push(P(q))}if(pts.length<2)return;const on=i===SIM.i;
+g+=`<path d="M${pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L')}" fill="none" stroke="${on?'#ffd23f':'#ffffff26'}" stroke-width="${on?3.5:1.5}" stroke-linecap="round"/>`;
+if(on)for(let h=7;h<=19;h++){const q=sunPos(o.d,h*60);if(q.el>0){const [x,y]=P(q);g+=`<circle cx="${x}" cy="${y}" r="${h===13?3.5:2}" fill="#ffd23f"/>`}}});
+g+=`<circle cx="${S}" cy="${S}" r="3" fill="#fff"/>`;
+if(s.el>0){const [x,y]=P(s);g+=`<line x1="${S}" y1="${S}" x2="${x}" y2="${y}" stroke="#ffd23f" stroke-width="1.5" stroke-dasharray="3 4"/><circle cx="${x}" cy="${y}" r="26" fill="url(#sg)"/><circle cx="${x}" cy="${y}" r="11" fill="#ffd23f" stroke="#0b0b2b" stroke-width="2.5"/>`}
+$('#domeFig').innerHTML=svgEl(280,280,g,`Sun position on ${SIMD[SIM.i].n} at ${fmt(SIM.t)}`);
+/* plan view */
+const H=37,BW=24,C=[160,150],k=.72,sq=[[-BW/2,-BW/2],[BW/2,-BW/2],[BW/2,BW/2],[-BW/2,BW/2]],X=v=>(C[0]+v*k).toFixed(1),Y=v=>(C[1]-v*k).toFixed(1);
+let p=`<rect width="320" height="300" fill="#0e0d35"/>`;for(let i=20;i<320;i+=40)p+=`<line x1="${i}" x2="${i}" y1="0" y2="300" stroke="#ffffff08"/><line y1="${i}" y2="${i}" x1="0" x2="320" stroke="#ffffff08"/>`;
+const trail=[];for(let t=420;t<=1140;t+=10){const q=sunPos(dy,t);if(q.up){const L=Math.min(H/q.tn,190);trail.push([-q.ux*L,-q.uy*L])}}
+if(trail.length>1)p+=`<path d="M${trail.map(q=>X(q[0])+','+Y(q[1])).join('L')}" fill="none" stroke="#c4b5fd" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+let L=0;if(s.up){L=Math.min(H/s.tn,190);const dx=-s.ux*L,dyy=-s.uy*L,pts=[];for(const [a,b] of sq)pts.push([a,b],[a+dx,b+dyy]);
+p+=`<path d="M${hull(pts).map(q=>X(q[0])+','+Y(q[1])).join('L')}Z" fill="#000" fill-opacity=".6" stroke="#5b57a8"/>`;
+const sx=clamp(C[0]+s.ux*128,14,306),sy2=clamp(C[1]-s.uy*128,14,286);p+=`<circle cx="${sx}" cy="${sy2}" r="16" fill="url(#sg2)"/><circle cx="${sx}" cy="${sy2}" r="8" fill="#ffd23f" stroke="#0b0b2b" stroke-width="2"/>`}
+p=`<defs><radialGradient id="sg2"><stop offset="0" stop-color="#ffd23f" stop-opacity=".6"/><stop offset="1" stop-color="#ffd23f" stop-opacity="0"/></radialGradient></defs>`+p;
+p+=`<rect x="${X(-BW/2)}" y="${Y(BW/2)}" width="${BW*k}" height="${BW*k}" fill="#7048e8" stroke="#c4b5fd" stroke-width="2"/>`;
+p+=`<g transform="translate(298 268)"><path d="M0-12 6 4 0 0-6 4Z" fill="#d8d2ff"/><text y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#d8d2ff" ${T}>N</text></g><g transform="translate(14 284)"><line x1="0" x2="${30*k}" stroke="#d8d2ff" stroke-width="2"/><text x="${30*k+6}" y="4" font-size="11" fill="#d8d2ff" ${T}>30 m</text></g>`;
+$('#planFig').innerHTML=svgEl(320,300,p,s.up?`Shadow ${Math.round(L)} metres long, pointing ${dir8(s.az+180)}`:'The sun is down');
+$('#simClock').textContent=fmt(SIM.t);
+$('#simEl').textContent=s.el>0?`Sun ${Math.round(s.el)}° up, ${dir8(s.az)}`:'Sun is down';
+$('#simLen').textContent=s.up?(L>=190?'Shadow 190 m+':`Shadow ${Math.round(L)} m`)+`, to the ${dir8(s.az+180)}`:'No shadow'}
+
+/* 3. sun vs shade */
+let shadeOn=false,shadeTouched=false;
+function initScene(){$('#scene').innerHTML=svgEl(600,230,`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b1fa3"/><stop offset="1" stop-color="#14134a"/></linearGradient><radialGradient id="hg"><stop offset="0" stop-color="#ff6f91" stop-opacity=".55"/><stop offset="1" stop-color="#ff6f91" stop-opacity="0"/></radialGradient></defs>
+<rect width="600" height="230" fill="url(#sky)"/><rect y="188" width="600" height="42" fill="#1c1a5e"/><rect y="196" width="600" height="10" fill="#2e2b7a"/>
+<g class="rays" fill="#ffd23f" opacity=".22"><polygon points="520,52 150,196 210,196"/><polygon points="520,52 260,196 330,196"/><polygon points="520,52 380,196 430,196"/></g>
+<g class="sunb"><g stroke="#ffd23f" stroke-width="4" stroke-linecap="round"><line x1="520" y1="10" x2="520" y2="20"/><line x1="520" y1="84" x2="520" y2="94"/><line x1="478" y1="52" x2="488" y2="52"/><line x1="552" y1="52" x2="562" y2="52"/><line x1="490" y1="22" x2="497" y2="29"/><line x1="543" y1="75" x2="550" y2="82"/><line x1="550" y1="22" x2="543" y2="29"/><line x1="497" y1="75" x2="490" y2="82"/></g></g><circle cx="520" cy="52" r="24" fill="#ffd23f"/>
+<ellipse class="gshadow" cx="245" cy="200" rx="135" ry="9" fill="#000" opacity=".45"/>
+<g class="roof"><rect x="120" y="98" width="190" height="12" rx="3" fill="#38e1d1"/><rect x="132" y="110" width="6" height="86" fill="#2aa79b"/><rect x="292" y="110" width="6" height="86" fill="#2aa79b"/></g>
+<g class="tree"><rect x="362" y="120" width="12" height="76" rx="4" fill="#6b5a86"/><circle cx="368" cy="96" r="48" fill="#1d8a78"/><circle cx="340" cy="112" r="30" fill="#2fbf8f"/><circle cx="392" cy="84" r="30" fill="#5fe0ad"/></g>
+<circle class="glow" cx="230" cy="150" r="60" fill="url(#hg)"/>
+<g fill="none" stroke="#ff6f91" stroke-width="2.5" stroke-linecap="round"><path class="wave" d="M196 130q5-6 0-12t0-12"/><path class="wave" d="M262 128q5-6 0-12t0-12"/><path class="wave" d="M230 108q5-6 0-12t0-12"/></g>
+<g><rect x="219" y="150" width="22" height="40" rx="9" fill="#c4b5fd"/><rect x="222" y="184" width="7" height="12" rx="3" fill="#7048e8"/><rect x="231" y="184" width="7" height="12" rx="3" fill="#7048e8"/><circle cx="230" cy="136" r="15" fill="#ffd9c2"/><circle cx="225" cy="134" r="1.8" fill="#0b0b2b"/><circle cx="235" cy="134" r="1.8" fill="#0b0b2b"/>
+<g class="face hot"><ellipse cx="230" cy="143" rx="3.5" ry="2.5" fill="#0b0b2b"/><path d="M244 126q4 6 0 9q-4-3 0-9z" fill="#38e1d1"/></g><path class="face cool" d="M225 141q5 5 10 0" fill="none" stroke="#0b0b2b" stroke-width="2" stroke-linecap="round"/></g>`,'A person on a pavement, first in full sun, then under a linkway roof and a tree');
+$('#inSun').addEventListener('click',()=>{shadeTouched=true;setShade(false)});$('#inShade').addEventListener('click',()=>{shadeTouched=true;setShade(true)})}
+function setShade(on){if(on===shadeOn)return;shadeOn=on;$('#inSun').setAttribute('aria-pressed',!on);$('#inShade').setAttribute('aria-pressed',on);
+$('#scene').className='scene '+(on?'shade':'sun');$('#ch2').classList.toggle('on-shade',on);
+$('#ch2').querySelectorAll('.gains b').forEach(b=>{const v=+b.dataset.v,cur=parseFloat(b.textContent.replace(/[^\d.]/g,''))||0;tween(b,cur,on?v:0,+b.dataset.dec,on?(b.dataset.pre||''):'',b.dataset.suf,900)})}
+function demoShade(){if(shadeTouched||DONE.demo)return;DONE.demo=1;setTimeout(()=>{if(CH===2&&!shadeTouched&&curView()==='why')setShade(true)},RM?0:1300)}
+
+/* 4. WBGT gauge */
+const GB=[{a:28,b:31,n:'Low',c:'#38e1d1',t:'Usual activities. Keep drinking water.'},{a:31,b:33,n:'Moderate',c:'#ffd23f',t:'Cut outdoor activity. Rest in the shade, drink more.'},{a:33,b:36,n:'High',c:'#ff6f91',t:'Minimise long or strenuous time outdoors.'}];
+let gV=32;const gAng=v=>Math.PI*(1-(v-28)/8),gPt=(v,r)=>[200+r*Math.cos(gAng(v)),200-r*Math.sin(gAng(v))];
+function initGauge(){let g='';const arc=(a,b,r)=>{const [x1,y1]=gPt(a,r),[x2,y2]=gPt(b,r);return`M${x1.toFixed(1)} ${y1.toFixed(1)}A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`};
+GB.forEach(o=>{g+=`<path class="gb" data-n="${o.n}" d="${arc(o.a,o.b,150)}" fill="none" stroke="${o.c}" stroke-width="30" opacity=".35"/>`});
+for(let v=28;v<=36;v+=.5){const [x1,y1]=gPt(v,128),[x2,y2]=gPt(v,v%1?122:116);g+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#aaa6d8" stroke-width="${v%1?1:2}"/>`}
+[28,31,33,36].forEach(v=>{const [x,y]=gPt(v,100);g+=`<text x="${x}" y="${y+5}" text-anchor="middle" font-size="15" font-weight="800" fill="#eeeaff" ${T}>${v}</text>`});
+const [rx,ry]=gPt(35,170),[rx0,ry0]=gPt(35,132),[lx,ly]=gPt(35,104);g+=`<line x1="${rx0}" y1="${ry0}" x2="${rx}" y2="${ry}" stroke="#fff" stroke-width="3"/><text x="${lx}" y="${ly}" text-anchor="end" font-size="12" font-weight="800" fill="#fff" ${T}>Record</text>`;
+g+=`<g class="needle" id="gNeedle"><path d="M200 194 L56 200 L200 206 Z" fill="#fff"/><circle cx="200" cy="200" r="14" fill="#fff" stroke="#0b0b2b" stroke-width="4"/></g>`;
+$('#gaugeFig').innerHTML=svgEl(400,222,g,'Heat stress dial from 28 to 36 degrees WBGT');
+const svg=$('#gaugeFig svg'),from=e=>{const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const q=pt.matrixTransform(svg.getScreenCTM().inverse());let a=Math.atan2(200-q.y,q.x-200)/R_;if(a<-90)a=180;if(a<0)a=0;setG(28+(180-a)/180*8)};
+svg.addEventListener('pointerdown',e=>{svg.setPointerCapture(e.pointerId);$('#ch3').classList.add('dragging');from(e)});
+svg.addEventListener('pointermove',e=>{if(svg.hasPointerCapture(e.pointerId))from(e)});
+svg.addEventListener('pointerup',()=>$('#ch3').classList.remove('dragging'));
+$('#gT').addEventListener('input',e=>setG(+e.target.value));$('#gRec').addEventListener('click',()=>setG(35))}
+function setG(v){gV=clamp(Math.round(v*10)/10,28,36);$('#gT').value=gV;const o=GB.find(o=>gV<o.b)||GB[2];
+$('#gNeedle').style.transform=`rotate(${(gV-28)/8*180}deg)`;$('#gVal').textContent=gV.toFixed(1)+'°C';const em=$('#gBand');em.textContent=o.n+(gV>=35?' · record level':'');em.style.background=o.c;em.style.color='#0b0b2b';$('#gTip').textContent=o.t;
+$('#gaugeFig').querySelectorAll('.gb').forEach(p=>p.setAttribute('opacity',p.dataset.n===o.n?1:.3))}
+function gaugeIntro(){if(DONE.gauge){setG(gV);return}DONE.gauge=1;setG(28);requestAnimationFrame(()=>requestAnimationFrame(()=>setG(32)))}
+
+/* 5. covered paths donut */
+const SH=[{n:'Open to the sky',s:'open to the sky',v:82.7,km:'5,844',c:'#ff6f91'},{n:'Covered linkways',s:'covered linkways',v:9.8,km:'691',c:'#38e1d1'},{n:'Under tree canopy',s:'under trees',v:5.0,km:'357',c:'#2fbf8f'},{n:'Through buildings and void decks',s:'through buildings',v:2.5,km:'174',c:'#c4b5fd'}];let shSel=-1;
+function drawShelter(){const r=88,C=2*Math.PI*r;let off=0,g=`<circle cx="120" cy="120" r="${r}" fill="none" stroke="#ffffff12" stroke-width="30"/>`;
+SH.forEach((d,i)=>{const len=d.v/100*C;g+=`<circle class="seg2" data-i="${i}" data-len="${len.toFixed(1)}" cx="120" cy="120" r="${r}" fill="none" stroke="${d.c}" stroke-width="30" stroke-dasharray="${RM?len.toFixed(1):0} ${C.toFixed(1)}" stroke-dashoffset="${(-off).toFixed(1)}" transform="rotate(-90 120 120)"/>`;off+=len});
+g+=`<text id="dc1" x="120" y="122" text-anchor="middle" font-size="40" font-weight="900" fill="#fff" ${T}>12%</text><text id="dc2" x="120" y="146" text-anchor="middle" font-size="14" fill="#aaa6d8" ${T}>under a roof</text>`;
+$('#shelterFig').innerHTML=svgEl(240,240,g,'Footpaths: 82.7% open to the sky, 9.8% covered linkways, 5.0% under tree canopy, 2.5% through buildings and void decks');
+$('#shelterLeg').innerHTML=SH.map((d,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><i style="background:${d.c}"></i><span>${d.n}</span><b>${d.v.toFixed(1)}%</b></button>`).join('');
+const pick=e=>{const t=e.target.closest('[data-i]');if(t)selShelter(+t.dataset.i===shSel?-1:+t.dataset.i)};
+$('#shelterFig').addEventListener('click',pick);$('#shelterLeg').addEventListener('click',pick);
+if(!RM){const segs=[...document.querySelectorAll('.seg2')],t0=performance.now(),step=t=>{const f=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-f,3);segs.forEach(s=>s.setAttribute('stroke-dasharray',`${(s.dataset.len*e).toFixed(1)} ${C.toFixed(1)}`));if(f<1)requestAnimationFrame(step)};requestAnimationFrame(step)}}
+function selShelter(i){shSel=i;const box=$('.donut');box.classList.toggle('hl',i>=0);document.querySelectorAll('.seg2').forEach(s=>s.classList.toggle('sel',+s.dataset.i===i));
+$('#shelterLeg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.i===i));
+const d=SH[i];$('#dc1').textContent=i<0?'12%':d.v.toFixed(1)+'%';$('#dc2').textContent=i<0?'under a roof':`${d.km} km ${d.s}`}
+
+/* ---------- how it works ---------- */
+const lerpC=(a,b,f)=>{const p=x=>[1,3,5].map(i=>parseInt(x.slice(i,i+2),16)),A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(v+(B[i]-v)*f).toString(16).padStart(2,'0')).join('')};
+const SKY=[[-8,'#070720','#14134a'],[0,'#2a1a6e','#ff8f6b'],[10,'#3b1fa3','#ffb38a'],[30,'#4a33c9','#9d8cff'],[90,'#5638d8','#b8acff']];
+function skyCol(el){for(let i=1;i<SKY.length;i++)if(el<=SKY[i][0]){const a=SKY[i-1],b=SKY[i],f=clamp((el-a[0])/(b[0]-a[0]),0,1);return[lerpC(a[1],b[1],f),lerpC(a[2],b[2],f)]}return[SKY[4][1],SKY[4][2]]}
+function sunDefs(p){return`<radialGradient id="${p}c" cx=".42" cy=".4"><stop offset="0" stop-color="#fffef2"/><stop offset=".35" stop-color="#fff0a8"/><stop offset=".78" stop-color="#ffd23f"/><stop offset="1" stop-color="#ffa82e"/></radialGradient><radialGradient id="${p}h"><stop offset="0" stop-color="#ffe680" stop-opacity=".8"/><stop offset=".3" stop-color="#ffb84a" stop-opacity=".32"/><stop offset="1" stop-color="#ff8f6b" stop-opacity="0"/></radialGradient>`}
+function sunBody(p,r){let rays='';for(let i=0;i<16;i++){const a=i*22.5*R_,l=i%2?1.7:2.2,w=i%2?.09:.13,q=(ang,rr)=>(Math.cos(ang)*rr).toFixed(1)+','+(Math.sin(ang)*rr).toFixed(1);rays+=`<polygon points="${q(a-w,r*1.15)} ${q(a,r*l)} ${q(a+w,r*1.15)}"/>`}
+return`<circle class="halo" r="${r*3.6}" fill="url(#${p}h)"/><g class="rays2" fill="#ffd23f" opacity=".9">${rays}</g><circle r="${r*1.1}" fill="#ffb84a" opacity=".45"/><circle r="${r}" fill="url(#${p}c)"/><ellipse cx="${-r*.32}" cy="${-r*.36}" rx="${r*.28}" ry="${r*.18}" fill="#fff" opacity=".55" transform="rotate(-35 ${-r*.32} ${-r*.36})"/>`}
+const svgS=(w,h,body,label,cls)=>`<svg class="${cls||''}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label)}" xmlns="${NS}">${body}</svg>`;
+let HS=0;const hsDone=[];
+function playHow(){if(!DONE.how){DONE.how=1;for(let k=0;k<3;k++)$('#hst'+k).addEventListener('click',()=>openStep(k));
+$('.hsteps').addEventListener('keydown',e=>{const d={ArrowRight:1,ArrowLeft:-1}[e.key];if(!d)return;e.preventDefault();openStep(clamp(HS+d,0,2));$('#hst'+HS).focus()});
+$('#flips').addEventListener('click',e=>{const b=e.target.closest('.flipc');if(b)b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true')})}
+openStep(HS)}
+function openStep(i){HS=i;for(let k=0;k<3;k++){const t=$('#hst'+k),on=k===i;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1;t.classList.toggle('done',k<i);$('#hs'+k).hidden=!on}
+document.querySelectorAll('.hline').forEach((l,k)=>l.classList.toggle('on',k<i));
+if(!hsDone[i]){hsDone[i]=1;[initSky,initRay,initWay][i]()}if(i!==0)stopSky();if(i===2)wayDemo()}
+
+/* step 1: sky */
+let SKYS={i:0,t:900},skyTimer=null;const SKYW=720,SKYH=330,HZ=262,tx=t=>30+(t-400)/(1170-400)*660,ty=el=>HZ-el/90*220;
+function initSky(){const nar=$('#skyFig').clientWidth<560,fs=nar?1.9:1;const now=sg.hour*60+sg.minute;SKYS.t=now>=400&&now<=1170?Math.round(now/5)*5:900;$('#skyT').value=SKYS.t;
+let st='';for(let i=0;i<40;i++){const x=(i*137.5)%720,y=(i*61.7)%200+10;st+=`<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${i%5?1:1.6}" fill="#fff"/>`}
+let city='',win='';const B=[[0,50,60],[52,40,95],[95,58,70],[150,34,120],[186,46,82],[236,60,104],[300,28,140],[330,52,90],[388,44,116],[436,62,74],[502,36,130],[540,54,96],[598,40,78],[642,78,110]];
+B.forEach(([x,w,h],k)=>{const top=HZ+56-h;city+=`<rect x="${x}" y="${top}" width="${w}" height="${h}" fill="#110f3d"/>`;for(let yy=top+8;yy<HZ+50;yy+=12)for(let xx=x+6;xx<x+w-6;xx+=10){if(((xx*7+yy*3+k)%5)<2)win+=`<rect x="${xx}" y="${yy}" width="5" height="6"/>`}});
+const g=`<defs><linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop id="skT" offset="0"/><stop id="skB" offset="1"/></linearGradient>${sunDefs('ks')}<linearGradient id="gnd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1a5e"/><stop offset="1" stop-color="#0e0d35"/></linearGradient></defs>
+<rect width="${SKYW}" height="${SKYH}" fill="url(#skyG)"/><g id="skStars">${st}</g>
+<path id="skArc" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="${2*fs}" stroke-dasharray="${4*fs} ${6*fs}"/>
+<g id="skSun" class="sky">${sunBody('ks',nar?26:20)}</g>
+${city}<g id="skWin" fill="#ffd98a">${win}</g>
+<rect y="${HZ+50}" width="${SKYW}" height="${SKYH-HZ-50}" fill="url(#gnd)"/>
+<polygon id="skShadow" fill="#000" opacity=".55"/>
+<g id="skMe"><circle cx="0" cy="-${30*fs}" r="${5*fs}" fill="#ffd9c2"/><rect x="-${5*fs}" y="-${25*fs}" width="${10*fs}" height="${16*fs}" rx="${4*fs}" fill="#c4b5fd"/><rect x="-${4.5*fs}" y="-${10*fs}" width="${3.5*fs}" height="${10*fs}" rx="${1.5*fs}" fill="#7048e8"/><rect x="${1*fs}" y="-${10*fs}" width="${3.5*fs}" height="${10*fs}" rx="${1.5*fs}" fill="#7048e8"/></g>
+${[420,600,780,960,1140].map(t=>`<text x="${tx(t)}" y="${SKYH-10}" text-anchor="middle" font-size="${12*fs}" font-weight="700" fill="#aaa6d8" ${T}>${fmt(t).replace(':00','')}</text>`).join('')}
+<text x="16" y="${24*fs}" font-size="${12*fs}" font-weight="800" fill="#ffffffaa" ${T}>EAST</text><text x="${SKYW-16}" y="${24*fs}" text-anchor="end" font-size="${12*fs}" font-weight="800" fill="#ffffffaa" ${T}>WEST</text>`;
+$('#skyFig').innerHTML=svgS(SKYW,SKYH,g,'The sun crossing the sky over a Singapore skyline, with a person and their shadow');SKYS.fs=fs;
+$('#skyDays').innerHTML=SIMD.map((o,i)=>`<button type="button" data-i="${i}" aria-pressed="${i===0}">${o.n}</button>`).join('');
+$('#skyDays').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;SKYS.i=+b.dataset.i;$('#skyDays').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));skyArc();renderSky()});
+$('#skyT').addEventListener('input',e=>{SKYS.t=+e.target.value;renderSky()});$('#skyPlay').addEventListener('click',()=>skyTimer?stopSky():startSky());
+const svg=$('#skyFig svg');svg.addEventListener('pointerdown',e=>{svg.setPointerCapture(e.pointerId);skyDrag(e)});svg.addEventListener('pointermove',e=>{if(svg.hasPointerCapture(e.pointerId))skyDrag(e)});
+skyArc();renderSky()}
+function skyDrag(e){const svg=$('#skyFig svg'),pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const q=pt.matrixTransform(svg.getScreenCTM().inverse());SKYS.t=clamp(Math.round((400+(q.x-30)/660*770)/5)*5,400,1170);$('#skyT').value=SKYS.t;renderSky()}
+function skyArc(){const d=SIMD[SKYS.i].d,pts=[];for(let t=400;t<=1170;t+=5){const s=sunPos(d,t);pts.push(tx(t).toFixed(1)+','+ty(s.el).toFixed(1))}$('#skArc').setAttribute('d','M'+pts.join('L'))}
+function startSky(){if(RM){SKYS.t=SKYS.t>=1170?400:Math.min(1170,SKYS.t+60);$('#skyT').value=SKYS.t;renderSky();return}$('#skyPlayIco').setAttribute('d','M6 4h4v16H6zM14 4h4v16h-4z');skyTimer=setInterval(()=>{SKYS.t+=5;if(SKYS.t>1170)SKYS.t=400;$('#skyT').value=SKYS.t;renderSky()},45)}
+function stopSky(){if(!skyTimer)return;clearInterval(skyTimer);skyTimer=null;$('#skyPlayIco').setAttribute('d','M7 4l13 8-13 8z')}
+function renderSky(){const d=SIMD[SKYS.i].d,s=sunPos(d,SKYS.t),[c1,c2]=skyCol(s.el),fs=SKYS.fs;
+$('#skT').setAttribute('stop-color',c1);$('#skB').setAttribute('stop-color',c2);
+$('#skStars').setAttribute('opacity',clamp(-s.el/8,0,1).toFixed(2));$('#skWin').setAttribute('opacity',clamp((12-s.el)/18,.12,1).toFixed(2));
+$('#skSun').setAttribute('transform',`translate(${tx(SKYS.t).toFixed(1)} ${ty(s.el).toFixed(1)})`);
+const px=590,py=SKYH-8,me=$('#skMe');me.setAttribute('transform',`translate(${px} ${py})`);
+let L=0;if(s.el>0){L=1.6/Math.tan(s.el*R_);const S=18*fs,len=Math.min(L,16)*S,dx=Math.sin(s.az*R_)*len,dy=-Math.cos(s.az*R_)*len*.25,w=4*fs;
+$('#skShadow').setAttribute('points',`${px-w},${py} ${px+w},${py} ${(px+dx+w*.4).toFixed(1)},${(py+dy).toFixed(1)} ${(px+dx-w*.4).toFixed(1)},${(py+dy).toFixed(1)}`)}else $('#skShadow').setAttribute('points','');
+$('#skyClock').textContent=fmt(SKYS.t);$('#skyEl').textContent=s.el>0?`Sun ${Math.round(s.el)}° up in the ${dir8(s.az)}`:'The sun is down';
+$('#skyMe').textContent=s.el>0?(L>25?'Your shadow: really long':`Your shadow: ${L<10?L.toFixed(1):Math.round(L)} m`):'No shadow';}
+
+/* step 2: rays */
+const RS=5.6,RX=24,RG=300,rX=x=>RX+x*RS,rY=z=>RG-z*RS;
+const OB=[{k:'r',x1:30,x2:48,z1:3.5,z2:37,n:'the HDB block'},{k:'c',cx:72,cz:7.5,r:5.5,n:'a tree'},{k:'r',x1:86,x2:106,z1:3.0,z2:3.4,n:'the linkway roof'}];
+let RAY={x:38,t:900};
+function rayHit(x0,z0,dx,dz){let best=Infinity,who=null;for(const o of OB){let t=Infinity;
+if(o.k==='r'){let tmin=-Infinity,tmax=Infinity;for(const [p,d,a,b] of [[x0,dx,o.x1,o.x2],[z0,dz,o.z1,o.z2]]){if(Math.abs(d)<1e-9){if(p<a||p>b){tmin=Infinity;break}}else{let t1=(a-p)/d,t2=(b-p)/d;if(t1>t2)[t1,t2]=[t2,t1];tmin=Math.max(tmin,t1);tmax=Math.min(tmax,t2)}}if(tmin<=tmax&&tmax>0)t=Math.max(tmin,0)}
+else{const fx=x0-o.cx,fz=z0-o.cz,b=fx*dx+fz*dz,c=fx*fx+fz*fz-o.r*o.r,disc=b*b-c;if(disc>=0){const t1=-b-Math.sqrt(disc);if(t1>0)t=t1;else if(-b+Math.sqrt(disc)>0)t=0}}
+if(t<best){best=t;who=o}}return{t:best,o:who}}
+function initRay(){const nar=$('#rayFig').clientWidth<560,fs=nar?1.8:1;RAY.fs=fs;RAY.t=+$('#simT').value||900;
+const now=sg.hour*60+sg.minute;RAY.t=now>=420&&now<=1140?Math.round(now/5)*5:900;$('#rayT').value=RAY.t;
+let win='';for(let z=6;z<36;z+=3)for(let x=31.5;x<47;x+=3.2)win+=`<rect x="${rX(x).toFixed(1)}" y="${rY(z+1.6).toFixed(1)}" width="${(1.7*RS).toFixed(1)}" height="${(1.4*RS).toFixed(1)}"/>`;
+let ticks='';for(let x=2;x<=118;x+=4)ticks+=`<rect class="tk" data-x="${x}" x="${(rX(x)-1.6*RS/2).toFixed(1)}" y="${RG+6}" width="${(1.6*RS).toFixed(1)}" height="${10*fs}" rx="2"/>`;
+const lab=(x,z,t)=>`<text x="${rX(x)}" y="${rY(z)}" text-anchor="middle" font-size="${12*fs}" font-weight="800" fill="#fff" ${T} paint-order="stroke" stroke="#0b0b2b" stroke-width="${3*fs}">${t}</text>`;
+const g=`<defs><linearGradient id="rsky" x1="0" y1="0" x2="0" y2="1"><stop id="rT" offset="0"/><stop id="rB" offset="1"/></linearGradient>${sunDefs('rs')}<linearGradient id="blk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4a46b8"/><stop offset="1" stop-color="#2e2b7a"/></linearGradient></defs>
+<rect width="720" height="330" fill="url(#rsky)"/><g id="rBeams" stroke="#ffe680" stroke-opacity=".05" stroke-width="${22*fs}"></g>
+<g id="rShad" fill="#05041a" fill-opacity=".45"></g>
+<rect x="${rX(30)}" y="${rY(37)}" width="${18*RS}" height="${33.5*RS}" fill="url(#blk)" stroke="#c4b5fd" stroke-width="1.5"/><rect x="${rX(29.4)}" y="${rY(37.8)}" width="${19.2*RS}" height="${.8*RS}" fill="#7c74d8"/><g fill="#ffd98a" opacity=".55">${win}</g>
+<g fill="#7c74d8">${[30.4,36.6,42.8,46.8].map(x=>`<rect x="${rX(x)}" y="${rY(3.5)}" width="${.8*RS}" height="${3.5*RS}"/>`).join('')}</g>
+<rect x="${rX(71.6)}" y="${rY(4.5)}" width="${.8*RS}" height="${4.5*RS}" fill="#6b5a86"/><circle cx="${rX(72)}" cy="${rY(7.5)}" r="${5.5*RS}" fill="#1d8a78"/><circle cx="${rX(70)}" cy="${rY(8.6)}" r="${3*RS}" fill="#2fbf8f"/><circle cx="${rX(74.5)}" cy="${rY(6.4)}" r="${2.4*RS}" fill="#5fe0ad" opacity=".8"/>
+<path d="M${rX(85)} ${rY(3.4)}H${rX(107)}L${rX(106)} ${rY(4.2)}H${rX(86)}Z" fill="#38e1d1"/><rect x="${rX(86)}" y="${rY(3.4)}" width="${20*RS}" height="${.4*RS}" fill="#2aa79b"/><g fill="#2aa79b"><rect x="${rX(86.5)}" y="${rY(3)}" width="${.5*RS}" height="${3*RS}"/><rect x="${rX(105)}" y="${rY(3)}" width="${.5*RS}" height="${3*RS}"/></g>
+<rect y="${RG}" width="720" height="30" fill="#1c1a5e"/><rect y="${RG}" width="720" height="4" fill="#2e2b7a"/>
+<g id="rStrip"></g><g id="rTicks">${ticks}</g>
+<line id="rRay" stroke-width="${3*fs}" stroke-linecap="round"/><circle id="rHit" r="${5*fs}" fill="#fff"/>
+<g id="rSun">${sunBody('rs',nar?20:15)}</g>
+<g id="rWalk" class="walker"><circle cx="0" cy="${-30*fs}" r="${5*fs}" fill="#ffd9c2"/><rect x="${-5*fs}" y="${-25*fs}" width="${10*fs}" height="${15*fs}" rx="${4*fs}" fill="#c4b5fd"/><rect x="${-4.5*fs}" y="${-11*fs}" width="${3.5*fs}" height="${11*fs}" rx="1.5" fill="#7048e8"/><rect x="${1*fs}" y="${-11*fs}" width="${3.5*fs}" height="${11*fs}" rx="1.5" fill="#7048e8"/><circle r="${16*fs}" cy="${-16*fs}" fill="transparent"/></g>
+${lab(39,40,'HDB block')}${lab(72,15,'Tree')}${lab(96,7,'Linkway')}${lab(39,1.2,'void deck')}`;
+$('#rayFig').innerHTML=svgS(720,330,g,'Side view of a street with an HDB block, a tree and a covered linkway; a ray from the walker to the sun shows whether they are in shade');
+$('#rayX').addEventListener('input',e=>{RAY.x=+e.target.value;renderRay()});$('#rayT').addEventListener('input',e=>{RAY.t=+e.target.value;renderRay()});
+const svg=$('#rayFig svg'),drag=e=>{const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const q=pt.matrixTransform(svg.getScreenCTM().inverse());RAY.x=clamp(Math.round((q.x-RX)/RS),2,118);$('#rayX').value=RAY.x;renderRay()};
+svg.addEventListener('pointerdown',e=>{svg.setPointerCapture(e.pointerId);drag(e)});svg.addEventListener('pointermove',e=>{if(svg.hasPointerCapture(e.pointerId))drag(e)});
+renderRay()}
+function renderRay(){const s=sunPos(todayDoy,RAY.t),[c1,c2]=skyCol(s.el),fs=RAY.fs;$('#rT').setAttribute('stop-color',c1);$('#rB').setAttribute('stop-color',c2);
+$('#rWalk').setAttribute('transform',`translate(${rX(RAY.x)} ${RG})`);$('#rayClock').textContent=fmt(RAY.t);
+const st=$('#rayState');
+if(s.el<=0){st.textContent='Sun is down';st.className='night';['rRay','rHit','rSun'].forEach(id=>$('#'+id).setAttribute('visibility','hidden'));$('#rShad').innerHTML='';$('#rBeams').innerHTML='';$('#rStrip').innerHTML='';$('#rTicks').querySelectorAll('.tk').forEach(t=>t.setAttribute('fill','#3f3ba8'));$('#raySum').textContent='All in shade tonight';return}
+['rRay','rSun'].forEach(id=>$('#'+id).removeAttribute('visibility'));
+const se=Math.sin(s.el*R_),ce=Math.cos(s.el*R_),dx=-ce*Math.sin(s.az*R_),dz=se,n=Math.hypot(dx,dz),ux=dx/n,uz=dz/n,cot=ux/uz;
+/* shadows */
+let sh='',strip='';const proj=([x,z])=>[x-z*cot,0];
+for(const o of OB){let pts=[];if(o.k==='r')pts=[[o.x1,o.z1],[o.x2,o.z1],[o.x2,o.z2],[o.x1,o.z2]];else for(let i=0;i<20;i++){const a=i/20*2*Math.PI;pts.push([o.cx+o.r*Math.cos(a),o.cz+o.r*Math.sin(a)])}
+const all=pts.concat(pts.map(proj)),h=hull(all.map(p=>p.slice()));sh+=`<path d="M${h.map(p=>rX(p[0]).toFixed(1)+','+rY(p[1]).toFixed(1)).join('L')}Z"/>`;
+const xs=pts.map(p=>proj(p)[0]),a=Math.min(...xs),b=Math.max(...xs);strip+=`<rect x="${rX(a).toFixed(1)}" y="${RG}" width="${((b-a)*RS).toFixed(1)}" height="4" fill="#000" opacity=".5"/>`}
+$('#rShad').innerHTML=sh;$('#rStrip').innerHTML=strip;
+/* beams */
+let bm='';for(let i=-4;i<14;i++){const x0=i*60,len=900;bm+=`<line x1="${x0+ux*len*RS/RS}" y1="${-uz*len+RG}" x2="${x0}" y2="${RG}"/>`}$('#rBeams').innerHTML=bm;
+/* ticks */
+let sunny=0;$('#rTicks').querySelectorAll('.tk').forEach(t=>{const h=rayHit(+t.dataset.x,1,ux,uz);const lit=h.t===Infinity;if(lit)sunny+=4;t.setAttribute('fill',lit?'#ff6f91':'#38e1d1')});
+$('#raySum').textContent=`${sunny} of 120 m sunny`;
+/* walker ray */
+const h=rayHit(RAY.x,1,ux,uz),x0=rX(RAY.x),y0=rY(1);let far=Infinity;if(uz>0)far=Math.min(far,(y0-18)/(uz));if(ux>0)far=Math.min(far,(702-x0)/ux);if(ux<0)far=Math.min(far,(18-x0)/ux);
+const sx=x0+ux*far,sy=y0-uz*far;$('#rSun').setAttribute('transform',`translate(${sx.toFixed(1)} ${sy.toFixed(1)})`);
+const ray=$('#rRay'),hit=$('#rHit');
+if(h.t===Infinity){ray.setAttribute('x1',x0);ray.setAttribute('y1',y0);ray.setAttribute('x2',sx.toFixed(1));ray.setAttribute('y2',sy.toFixed(1));ray.setAttribute('stroke','#ffd23f');ray.removeAttribute('stroke-dasharray');hit.setAttribute('visibility','hidden');st.textContent='In the sun';st.className='sun'}
+else{const ex=x0+ux*h.t*RS,ey=y0-uz*h.t*RS;ray.setAttribute('x1',x0);ray.setAttribute('y1',y0);ray.setAttribute('x2',ex.toFixed(1));ray.setAttribute('y2',ey.toFixed(1));ray.setAttribute('stroke','#38e1d1');ray.setAttribute('stroke-dasharray',`${5*fs} ${4*fs}`);hit.removeAttribute('visibility');hit.setAttribute('cx',ex.toFixed(1));hit.setAttribute('cy',ey.toFixed(1));st.textContent='In shade: blocked by '+h.o.n;st.className='shade'}}
+
+/* step 3: weigh the walk */
+const WAYS=[{n:'Shortest',len:600,f:.7,c:'#ff6f91',p:[[60,250],[360,150],[660,50]]},{n:'Park path',len:680,f:.45,c:'#ffd23f',p:[[60,250],[230,250],[450,120],[660,50]]},{n:'Shady way',len:960,f:.08,c:'#38e1d1',p:[[60,250],[60,74],[300,74],[300,26],[640,26],[660,50]]}];
+let WW=0,wayTouched=false;
+function initWay(){const nar=$('#wayFig').clientWidth<560,fs=nar?1.8:1;let g=`<rect width="720" height="290" fill="#0e0d35"/>`;
+for(let x=0;x<720;x+=40)g+=`<line x1="${x}" x2="${x}" y1="0" y2="290" stroke="#ffffff07"/>`;for(let y=0;y<290;y+=40)g+=`<line y1="${y}" y2="${y}" x1="0" x2="720" stroke="#ffffff07"/>`;
+[[110,110,90,56],[400,190,100,60],[480,60,70,40],[150,160,60,50],[560,140,90,60]].forEach(([x,y,w,h])=>{g+=`<rect x="${x+6}" y="${y+6}" width="${w}" height="${h}" fill="#000" opacity=".35"/><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="#2e2b7a" stroke="#4a46b8"/>`});
+[[230,230],[280,205],[330,180],[380,152],[420,132],[200,262]].forEach(([x,y])=>{g+=`<circle cx="${x}" cy="${y}" r="16" fill="#1d8a78" opacity=".85"/><circle cx="${x-4}" cy="${y-4}" r="9" fill="#2fbf8f"/>`});
+g+=`<rect x="48" y="70" width="24" height="170" rx="4" fill="#38e1d1" opacity=".28"/><rect x="60" y="62" width="250" height="24" rx="4" fill="#38e1d1" opacity=".28"/><rect x="292" y="14" width="360" height="24" rx="4" fill="#38e1d1" opacity=".28"/>`;
+WAYS.forEach((w,i)=>{g+=`<path id="wp${i}" d="M${w.p.map(q=>q.join(',')).join('L')}" fill="none" stroke="${w.c}" stroke-width="${5*fs}" stroke-linecap="round" stroke-linejoin="round" opacity=".3"/>`});
+g+=`<circle id="wDot" r="${7*fs}" fill="#fff" stroke="#0b0b2b" stroke-width="3"/>`;
+g+=`<circle cx="60" cy="250" r="${13*fs}" fill="#ff6f91" stroke="#0b0b2b" stroke-width="3"/><text x="60" y="${250+5*fs}" text-anchor="middle" font-size="${14*fs}" font-weight="900" fill="#fff" ${T}>A</text><circle cx="660" cy="50" r="${13*fs}" fill="#7048e8" stroke="#0b0b2b" stroke-width="3"/><text x="660" y="${50+5*fs}" text-anchor="middle" font-size="${14*fs}" font-weight="900" fill="#fff" ${T}>B</text>`;
+$('#wayFig').innerHTML=svgS(720,290,g,'Three example routes from A to B: the shortest along a sunny road, a park path and a longer shady way under linkways');
+$('#ways').innerHTML=WAYS.map((w,i)=>`<div id="wc${i}"><b><i style="background:${w.c}"></i>${w.n}</b><span>${w.len} m · ${(w.len/SPEED).toFixed(1)} min · ${(w.len*w.f/SPEED).toFixed(1)} min in sun</span><div class="cost"><i style="background:${w.c}"></i></div><em></em></div>`).join('');
+$('#wayW').addEventListener('input',e=>{wayTouched=true;setWay(+e.target.value)});
+document.querySelector('#hs2 .marks').addEventListener('click',e=>{const b=e.target.closest('button');if(b){wayTouched=true;setWay(+b.dataset.w)}});setWay(0)}
+let wayAnim=0,lastWin=-1;
+function setWay(w){WW=w;$('#wayW').value=w;const cost=WAYS.map(o=>o.len*(1+w*o.f)),mx=Math.max(...cost),win=cost.indexOf(Math.min(...cost));
+WAYS.forEach((o,i)=>{const c=$('#wc'+i);c.classList.toggle('win',i===win);c.querySelector('.cost i').style.width=(cost[i]/mx*100).toFixed(1)+'%';c.querySelector('em').textContent=`Feels like ${Math.round(cost[i]).toLocaleString('en-SG')} m`;
+const p=$('#wp'+i);p.setAttribute('opacity',i===win?1:.25);p.setAttribute('stroke-width',(i===win?8:5)*(innerWidth<600?1.8:1))});
+document.querySelectorAll('#hs2 .marks button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.w===w));
+if(win!==lastWin){lastWin=win;runDot(win)}}
+function runDot(i){cancelAnimationFrame(wayAnim);const p=$('#wp'+i),L=p.getTotalLength(),dot=$('#wDot');if(RM){const q=p.getPointAtLength(L);dot.setAttribute('cx',q.x);dot.setAttribute('cy',q.y);return}
+const t0=performance.now(),dur=2600,step=t=>{const f=((t-t0)%(dur+600))/dur,q=p.getPointAtLength(Math.min(1,f)*L);dot.setAttribute('cx',q.x.toFixed(1));dot.setAttribute('cy',q.y.toFixed(1));if(curView()==='how'&&HS===2)wayAnim=requestAnimationFrame(step)};wayAnim=requestAnimationFrame(step)}
+function wayDemo(){if(lastWin>=0&&!wayTouched)runDot(lastWin);if(DONE.wayDemo||wayTouched)return;DONE.wayDemo=1;if(RM)return;let v=0;const id=setInterval(()=>{if(wayTouched||HS!==2){clearInterval(id);return}v+=.25;setWay(v);if(v>=3)clearInterval(id)},140)}
+function showSaved(){let s=null;try{s=JSON.parse(localStorage.getItem('shade-where')||'null')}catch(e){}
+const el=$('#savedNow');if(!s||!s.a){el.textContent='Saved in this browser right now: nothing.';return}
+el.textContent=`Saved in this browser right now: your last trip, ${s.a.l||'a pin'} to ${s.b&&s.b.l||'a pin'}, and the “${(PRIO.find(p=>p.w===s.w)||PRIO[1]).n}” route option.`}
+$('#clearData').addEventListener('click',()=>{try{localStorage.removeItem('shade-where')}catch(e){}NOSAVE=true;$('#cleared').textContent='Cleared. Nothing more will be saved during this visit.';showSaved()});
+
+/* result tabs */
+const rtab=b=>{const best=b.id==='tabBest';$('#tabSum').setAttribute('aria-selected',!best);$('#tabBest').setAttribute('aria-selected',best);$('#paneSum').hidden=best;$('#paneBest').hidden=!best;if(best)drawChart()};
+$('#tabSum').addEventListener('click',e=>rtab(e.currentTarget));$('#tabBest').addEventListener('click',e=>rtab(e.currentTarget));
+document.querySelector('.rtabs').addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){const n=document.activeElement.id==='tabSum'?$('#tabBest'):$('#tabSum');n.focus();rtab(n)}});
+/* accuracy sub-tabs */
+$('#accTabs').addEventListener('click',e=>{const b=e.target.closest('button[data-p]');if(!b)return;$('#accTabs').querySelectorAll('button').forEach(x=>{x.setAttribute('aria-selected',x===b);document.getElementById(x.dataset.p).hidden=x!==b})});
+
+drawDial();drawMode();pageShadow(SUN);drawPanel();show();
+$('#hint').textContent='Loading map…';
+fetch('t/index.json').then(r=>{if(!r.ok)throw new Error('index '+r.status);return r.json()}).then(a=>{AVAIL=new Set(a.map(p=>p[0]+'_'+p[1]));$('#hint').textContent='';wantMap=true;if(curView()==='plan'){mapStarted=true;initMap()}}).catch(e=>{$('#hint').textContent='Map data failed to load ('+e.message+').';$('#headline').textContent='Map data failed to load. Reload the page to try again.'});
+}
+</script>
+</body>
+</html>

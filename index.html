@@ -1209,6 +1209,72 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .lr-panel.sw .lr-box{animation:lrIn .35s ease both}
 @keyframes lrIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .lumi-ask{margin-top:clamp(26px,4vw,44px)}
+/* passion projects */
+.pp-dev{position:relative;background:#16181d;border-radius:clamp(14px,2vw,26px);padding:clamp(8px,1.1vw,14px);box-shadow:0 30px 60px -22px rgba(0,0,0,.45);max-width:1040px;margin:0 auto}
+.pp-dev.ppm{max-width:340px;border-radius:46px;padding:11px}
+.pp-scr{position:relative;border-radius:clamp(8px,1.2vw,16px);overflow:hidden;background:#0b0b0b}
+.pp-dev.ppm .pp-scr{border-radius:36px}
+.pp-scr img,.pp-scr iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;object-fit:cover;object-position:top}
+.pp-play{position:absolute;inset:0;display:grid;place-items:center;background:rgba(10,12,20,.38);border:0;cursor:pointer;color:#fff;font:inherit;transition:background .25s}
+.pp-play:hover{background:rgba(10,12,20,.2)}
+.pp-play span{display:inline-flex;align-items:center;gap:12px;background:var(--p);border:3px solid #fff;border-radius:999px;padding:14px 26px;font-weight:700;font-size:clamp(15px,1.6vw,19px);box-shadow:0 10px 24px rgba(0,0,0,.3)}
+.pp-play svg{width:22px;height:22px}
+.pp-dev.ppm + .lumi-bar{justify-content:center}
+.pp-dev.ppm + .lumi-bar p:empty{display:none}
+.pp-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px;margin-top:26px}
+.pp-cards>div{background:var(--plate);border-radius:18px;padding:18px 20px}
+.pp-cards small{display:block;color:var(--pa);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.pp-cards b{display:block;font-family:var(--display);font-size:18px;margin-bottom:4px}
+.pp-cards p{margin:0;font-size:14.5px;line-height:1.5;color:var(--muted)}
+.pp-stats .stat .n{font-size:clamp(40px,4.6vw,60px)}
+.pp-src{font-size:13px;color:var(--muted);margin-top:16px;max-width:70ch}
+.pp-h3{font-family:var(--display);font-size:clamp(19px,2vw,23px);margin:40px 0 0}
+.pp-steps{list-style:none;margin:0;padding:0;display:grid;gap:14px;counter-reset:s}
+.pp-steps li{counter-increment:s;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px;background:var(--plate);border-radius:18px;padding:16px 18px}
+.pp-steps li::before{content:counter(s);grid-row:span 2;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--p);color:#fff;font-weight:800;font-family:var(--display)}
+.pp-steps b{font-family:var(--display);font-size:18px}
+.pp-steps p{margin:0;font-size:14.5px;line-height:1.5;color:var(--muted)}
+.pp-quote{font-family:var(--display);font-style:italic;font-size:clamp(19px,2vw,23px);line-height:1.4;color:var(--ink-2);margin-top:26px;max-width:36ch}
+.pp-tour{display:grid;grid-template-columns:minmax(210px,290px) minmax(0,1fr);gap:clamp(18px,3vw,36px);align-items:start;margin-top:22px}
+.pp-tl{display:grid;gap:8px}
+.pp-tl button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;border:0;background:var(--plate);color:inherit;border-radius:14px;padding:12px 16px;cursor:pointer;font:inherit;transition:transform .2s,background .2s}
+.pp-tl button b{font-family:var(--display);font-size:16px}
+.pp-tl button span{font-size:13.5px;color:var(--muted);line-height:1.35}
+.pp-tl button:hover{transform:translateX(3px)}
+.pp-tl button[aria-selected="true"]{background:var(--p);color:#fff}
+.pp-tl button[aria-selected="true"] span{color:rgba(255,255,255,.85)}
+.pp-tl button:focus-visible{outline:3px solid var(--pa);outline-offset:2px}
+.pp-ts{display:grid;gap:18px;min-width:0}
+.pp-ts .pp-dev{max-width:none;margin:0}
+.pp-ts.ppm{display:flex;align-items:center;gap:clamp(20px,3vw,40px)}
+.pp-ts.ppm .pp-dev{flex:0 0 min(290px,42%)}
+.pp-ts.ppm .pp-ti{flex:1;min-width:0}
+.pp-dev.bare{background:none;padding:0;box-shadow:none;border-radius:0}
+.pp-dev.bare .pp-scr{background:none;border-radius:0}
+.pp-dev.bare .pp-scr img{border-radius:13.2%/6.3%;object-fit:contain;filter:drop-shadow(0 24px 30px rgba(0,0,0,.25))}
+.pp-ti h3{font-family:var(--display);font-size:clamp(20px,2vw,24px);margin:0 0 6px}
+.pp-ti p{margin:0;color:var(--ink-2);font-size:15.5px;line-height:1.55;max-width:62ch}
+.pp-scr img.fade{animation:ppIn .4s ease both}
+.pp-scr img.zoom{cursor:zoom-in}
+@keyframes ppIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.pp-phones{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:clamp(16px,2vw,24px)}
+.pp-phones figure{margin:0;max-width:280px}
+.pp-phones .plate{aspect-ratio:820/1704;background:none;border-radius:0;overflow:visible}
+.pp-phones .plate img{border-radius:13.2%/6.3%;object-fit:contain;filter:drop-shadow(0 18px 24px rgba(0,0,0,.22))}
+.pp-phones.framed .plate{aspect-ratio:390/844;background:#121613;border-radius:34px;padding:8px;overflow:hidden}
+.pp-phones.framed .plate img{border-radius:27px;object-fit:cover;object-position:top;filter:none}
+.pp-phones figcaption{margin-top:10px;font-size:14px;line-height:1.45;color:var(--muted)}
+.pp-phones figcaption b{display:block;color:var(--ink,inherit);font-size:16px;margin-bottom:2px}
+.pp-jc .pp-phones{justify-items:center}
+.pp-duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center;margin-top:22px}
+.pp-stories{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px;margin-top:24px}
+.pp-stories>div{background:var(--plate);border-radius:16px;padding:16px 18px}
+.pp-stories small{display:block;color:var(--pa);font-weight:700;font-size:12px;letter-spacing:.08em}
+.pp-stories b{display:block;font-family:var(--display);font-size:18px;margin-top:4px}
+.pp-stories em{display:block;font-style:normal;font-weight:600;font-size:13px;color:var(--pa);margin:2px 0 6px}
+.pp-stories p{margin:0;font-size:14px;line-height:1.45;color:var(--muted)}
+@media (max-width:860px){.pp-tour{grid-template-columns:minmax(0,1fr)}.pp-tl{grid-auto-flow:column;grid-auto-columns:minmax(190px,1fr);overflow-x:auto;padding-bottom:6px}.pp-ts.ppm{flex-direction:column}.pp-ts.ppm .pp-dev{flex:none;width:min(280px,100%)}.pp-duo{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:reduce){.pp-scr img.fade{animation:none}}
 .lumi-new{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.4vw,28px) clamp(14px,2vw,22px)}
 .lumi-new figure{margin:0}
 .lumi-new figcaption{margin-top:10px;font-size:14.5px;line-height:1.5;color:var(--muted)}
@@ -1382,7 +1448,7 @@ const PROJECTS = [
   hero:"syn-cover.jpg", thumb:"syn-cover.jpg", thumbPos:"0% 50%",
   blurb:"A modular play system that helps children with ADHD turn restless energy into purposeful play, building coordination, confidence and focus at home."},
  {id:"lumi", role:"Solo · design, art &amp; code", num:"02", name:"Lumi", sub:"A Calm Companion App", p:"#2F7E79", pd:"#7CC9C2",
-  cat:"UI/UX · Game &amp; App Design", year:"2026", ctx:"Passion project · Companion app", tags:["uiux","game"], tagLabels:["UI/UX","Game Design","Accessibility"],
+  cat:"UI/UX · Game &amp; App Design", year:"2026", ctx:"Passion project · Companion app", tags:["uiux","game","passion"], tagLabels:["UI/UX","Game Design","Accessibility"],
   hero:"lumi-cover.jpg", thumb:"lumi-cover.jpg", thumbPos:"0% 50%",
   blurb:"A free tablet game for non-speaking children and young people: talk with pictures, plan the day, calm down, and practise real life with Lumi."},
  {id:"bus", role:"Solo designer", num:"03", name:"SG Bus Displays", sub:"Reading the Bus, for Everyone", p:"#8A6A00", pd:"#FFD400",
@@ -1394,7 +1460,7 @@ const PROJECTS = [
   hero:"safm-cover.jpg", thumb:"safm-cover.jpg", thumbPos:"0% 50%",
   blurb:"A desk set for Singapore Air Force Museum VIP guests: a turbine fan, stationery holder and wireless charger shaped by the museum itself."},
  {id:"carecircle", role:"Solo designer", num:"05", name:"CareCircle+", sub:"Caregiving App", p:"#B83A78", pd:"#EE8DBD",
-  cat:"UI/UX · Mobile App", year:"2025", ctx:"Passion project", tags:["uiux"], tagLabels:["UI/UX","Mobile App"],
+  cat:"UI/UX · Mobile App", year:"2025", ctx:"Passion project", tags:["uiux","passion"], tagLabels:["UI/UX","Mobile App"],
   hero:"cc-cover.jpg", thumb:"cc-cover.jpg", thumbPos:"0% 50%",
   blurb:"An all-in-one caregiving app with shared calendars, mood check-ins, peer support and service booking. Every caregiver deserves care too."},
  {id:"ae-queue", role:"UI/UX design intern", num:"06", name:"A&amp;E Queue System", sub:"Changi General Hospital", p:"#0B6CC4", pd:"#7CC4F2",
@@ -1424,7 +1490,27 @@ const PROJECTS = [
  {id:"vase", role:"Solo maker", num:"12", name:"Flower Vase", sub:"Laser-Cut Gift", p:"#B5562F", pd:"#F0A27C",
   cat:"Product Design · Laser Cutting", year:"2024", ctx:"Personal project · Mother's Day gift", tags:["product"], tagLabels:["Laser Cutting","Product Design"],
   hero:"vase-cover.jpg", thumb:"vase-cover.jpg", thumbPos:"0% 50%",
-  blurb:"A Mother's Day gift cut from a single sheet of scrap wood, with flat pieces that slot together into a 3D vase of flowers."}
+  blurb:"A Mother's Day gift cut from a single sheet of scrap wood, with flat pieces that slot together into a 3D vase of flowers."},
+ {id:"shade-where", role:"Solo · research, design &amp; code", num:"13", name:"shade,where?", sub:"Walk in the Shade", p:"#5B3FD0", pd:"#B9A6FF",
+  cat:"UI/UX · Web App &amp; Data Viz", year:"2026", ctx:"Passion project · Web app", tags:["uiux","passion"], tagLabels:["Web App","Data Viz","Wayfinding"],
+  hero:"sw-cover.jpg", thumb:"sw-cover.jpg", thumbPos:"0% 50%",
+  blurb:"A walking planner for Singapore's heat. It casts real shadows from 159,000 buildings for the minute you leave, and finds the walk that keeps you out of the sun."},
+ {id:"block-88", role:"Solo · design, art &amp; code", num:"14", name:"Block 88", sub:"A Neighbourhood Game", p:"#23806D", pd:"#7FD1B9",
+  cat:"Game Design · 3D", year:"2026", ctx:"Passion project · Tablet game", tags:["game","passion"], tagLabels:["Game Design","3D","Community"],
+  hero:"b88-cover.jpg", thumb:"b88-cover.jpg", thumbPos:"0% 50%",
+  blurb:"A 3D game set in a Singapore HDB estate. Help your neighbours, light up every window of the block, then ride bus 36 around Singapore."},
+ {id:"last-chair", role:"Solo · writing, design, art &amp; code", num:"15", name:"The Last Chair", sub:"A Game About Grief", p:"#9A5A2C", pd:"#E8A85C",
+  cat:"Narrative Game Design", year:"2026", ctx:"Passion project · Narrative game", tags:["game","passion"], tagLabels:["Narrative Design","Game Design","Writing"],
+  hero:"lc-cover.jpg", thumb:"lc-cover.jpg", thumbPos:"0% 50%",
+  blurb:"A narrative game about grief, memory and the words we leave unsaid: ten stories told through the rooms, phones and objects people leave behind."},
+ {id:"bitsy", role:"Solo · design, art &amp; code", num:"16", name:"Bitsy's Maker Bin", sub:"Recycling for Kids", p:"#6E50C0", pd:"#C5B2F4",
+  cat:"Game Design · EdTech", year:"2026", ctx:"Passion project · Kindergarten tablet game", tags:["game","passion"], tagLabels:["Game Design","Children","Sustainability"],
+  hero:"bit-cover.jpg", thumb:"bit-cover.jpg", thumbPos:"0% 50%",
+  blurb:"A tablet game for kindergarten children about reusing, recycling and making crafts from things at home, with Bitsy the robot as their guide."},
+ {id:"jiak-clean", role:"Solo · research, design &amp; code", num:"17", name:"Jiak Clean", sub:"Food Rescue App", p:"#1F6B45", pd:"#7FC79B",
+  cat:"UI/UX · Mobile App", year:"2026", ctx:"Passion project · App prototype", tags:["uiux","passion"], tagLabels:["UI/UX","Mobile App","Sustainability"],
+  hero:"jc-cover.jpg", thumb:"jc-cover.jpg", thumbPos:"0% 50%",
+  blurb:"A household food-rescue app for Singapore. It shows what to eat first, turns it into dinner, and helps you freeze or share the rest."}
 ];
 const IMG = n => "img/" + n;
 const $ = (s, el=document) => el.querySelector(s);
@@ -1666,6 +1752,7 @@ function viewHome(){
         <button class="chip" aria-pressed="false" data-f="product">Product Design</button>
         <button class="chip" aria-pressed="false" data-f="uiux">UI/UX</button>
         <button class="chip" aria-pressed="false" data-f="service">Service Design</button>
+        <button class="chip" aria-pressed="false" data-f="passion">Passion Projects</button>
       </div>
     </div>
     <div class="grid" id="workGrid">${PROJECTS.map((p,i)=>card(p, i===0)).join("")}</div>
@@ -2100,6 +2187,103 @@ const BUS_SCENES = [
    c:{sc:"ic", bg:"bs-ic-c.jpg", hs:[hp("kiosk","bus-kiosk-audio.jpg",1), hp("berth","bus-berth.jpg")]}},
   {n:{sc:"ic", bg:"bs-ic.jpg", hs:[hp("berth","bus-berth.jpg",1), hp("kiosk","bus-kiosk.jpg")]}}
 ];
+/* ---------- passion projects: shared bits ---------- */
+const PLAY_SVG = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>`;
+const ppPlay = (src, poster, ratio, label, note, opts={}) => `
+    <div class="pp-dev${opts.phone?" ppm":""}"><div class="pp-scr" style="aspect-ratio:${ratio}">
+      <img src="${IMG(poster)}" alt="" loading="lazy">
+      <button class="pp-play" data-src="${src}" data-title="${label}" type="button"><span>${PLAY_SVG}${label}</span></button>
+    </div></div>
+    <div class="lumi-bar"><p>${note}</p><a class="btn" href="${src}" target="_blank" rel="noopener">Open full screen <span class="arr">${arrow}</span></a></div>`;
+const ppCards = (items) => `<div class="pp-cards">${items.map(([k,t,d])=>`<div>${k?`<small>${k}</small>`:""}<b>${t}</b><p>${d}</p></div>`).join("")}</div>`;
+const ppStats = (items) => `<div class="stats pp-stats">${items.map(([n,t])=>`<div class="stat"><div class="n">${n}</div><p>${t}</p></div>`).join("")}</div>`;
+const ppTour = (id, items, opts={}) => `<div class="pp-tour" id="${id}">
+      <div class="pp-tl" role="tablist" aria-label="Screens">${items.map((f,i)=>`<button role="tab" type="button" aria-selected="${i===0}" data-i="${i}"><b>${f.t}</b><span>${f.k}</span></button>`).join("")}</div>
+      <div class="pp-ts${opts.phone?" ppm":""}">
+        <div class="pp-dev${opts.phone?" ppm":""}${opts.bare?" bare":""}"><div class="pp-scr" style="aspect-ratio:${opts.ratio||"16/10"}"><img class="zoom" alt="" loading="lazy"></div></div>
+        <div class="pp-ti"><h3></h3><p aria-live="polite"></p></div>
+      </div>
+    </div>`;
+function initTour(id, items){
+  const root = $("#"+id); if (!root) return;
+  const btns = $$(".pp-tl button", root), im = $(".pp-scr img", root), h = $(".pp-ti h3", root), p = $(".pp-ti p", root);
+  const show = i => { const f = items[i];
+    btns.forEach((b,j)=>b.setAttribute("aria-selected", j===i));
+    im.classList.remove("fade"); void im.offsetWidth; im.classList.add("fade");
+    im.src = IMG(f.img); im.alt = f.alt || f.t; h.textContent = f.t; p.textContent = f.d;
+    const list = btns[0].parentElement, b = btns[i]; if (list.scrollWidth > list.clientWidth + 4) list.scrollTo({left: b.offsetLeft - list.offsetLeft - 8, behavior: reduce ? "auto" : "smooth"}); };
+  btns.forEach(b => b.onclick = () => show(+b.dataset.i));
+  items.forEach(f => { const i = new Image(); i.src = IMG(f.img); });
+  show(0); setupZoom();
+}
+function initPlay(){
+  $$(".pp-play").forEach(b => b.onclick = () => {
+    const scr = b.parentElement;
+    scr.innerHTML = `<iframe src="${b.dataset.src}" title="${b.dataset.title}, playable" allow="autoplay; fullscreen; clipboard-write" allowfullscreen></iframe>`;
+  });
+}
+const ppGallery = (items, ratio) => `<div class="lumi-new">${items.map(([img,k,t,d,alt])=>`<figure><div class="plate" style="aspect-ratio:${ratio}"><img class="zoom" src="${IMG(img)}" alt="${alt||t}" loading="lazy"></div><figcaption>${k?`<small>${k}</small>`:""}<b>${t}</b>${d}</figcaption></figure>`).join("")}</div>`;
+const ppPhones = (items, framed) => `<div class="pp-phones${framed?" framed":""}">${items.map(([img,t,d])=>`<figure><div class="plate"><img class="zoom" src="${IMG(img)}" alt="${t}" loading="lazy"></div><figcaption><b>${t}</b>${d}</figcaption></figure>`).join("")}</div>`;
+
+const SW_TOUR = [
+  {t:"Plan a walk", k:"Start, end and when you leave", img:"sw-plan.jpg", d:"Search 126,000 addresses, postcodes, stations and places, or tap the map. The shady route is drawn in lilac against the shortest route in coral, with the shadows for that minute laid over a live 3D map of Singapore."},
+  {t:"Best time to leave", k:"Minutes in the sun, all day", img:"sw-best.jpg", d:"A chart of how many minutes you'd spend in the sun for every departure time, so you can see that leaving at 8am, or after 5pm, beats the 1pm glare."},
+  {t:"Walk it, step by step", k:"Turn-by-turn directions", img:"sw-walk.jpg", d:"Each step says how long it is and whether it's covered, like “Go through the underpass”. Play the walk to fly along the route in 3D."},
+  {t:"Why shade", k:"Interactive heat stories", img:"sw-why.jpg", d:"Five short chapters on Singapore's heat, with real numbers from the Met Service and researchers. Hover the hottest years, drag the sun, read a heat alert."},
+  {t:"Sun and shadow", k:"A live solar simulator", img:"sw-sim.jpg", d:"Drag the time and watch a 12-storey block's shadow swing and shrink, using the same solar maths as the route planner."},
+  {t:"Step into the shade", k:"What shade really does", img:"sw-shade.jpg", d:"Flip between sun and shade to see what street shade did in a real one-north study: 3.1°C cooler to the body, and up to 92% less extreme heat stress."},
+  {t:"Accuracy", k:"Checked against official data", img:"sw-acc.jpg", d:"Every layer is compared with OneMap, HDB's records, published tower heights and independent sun calculators, with the known limits listed plainly."},
+  {t:"Privacy", k:"Your trips stay on your device", img:"sw-priv.jpg", d:"No sign-in, no cookies, no analytics and no location tracking. Searches, routes and times are worked out inside the browser and never sent anywhere."}
+];
+const B88_TOUR = [
+  {t:"The void deck", k:"Explore in 3D", img:"b88-voiddeck.jpg", d:"Walk around Tembusu Estate with a thumb stick. The jump button is a lift button and the action button is a red bus bell. A to-do list and a yellow arrow show who needs help."},
+  {t:"Plan my day", k:"Morning, afternoon, evening", img:"b88-plan.jpg", d:"Pick up to two things for each part of the day: help neighbours, spend time with family, or play five stones, pick-up sticks and chapteh at the void deck."},
+  {t:"The block phone", k:"Chats, neighbours, passport", img:"b88-neighbours.jpg", d:"Mei's phone has the block group chat, a list of neighbours with hearts and gifts, a food passport, an album, and things to try in real life."},
+  {t:"Food passport", k:"Nine dishes to taste", img:"b88-passport.jpg", d:"Chicken rice, mee pok, nasi lemak, rojak, wanton mee, economic rice, kaya bun, and kopi you made yourself at Ah Seng's stall, with a kopi lingo cheat sheet."},
+  {t:"Ride bus 36", k:"A loop round Singapore", img:"b88-map.jpg", d:"Take the bus to Katong, Bras Basah, Marina Bay, Haw Par Villa and Little India, with daily goals and a bus 36 photo trail."},
+  {t:"Be someone else today", k:"Six neighbours to play", img:"b88-role.jpg", d:"Spend a day as Uncle Rahim, Ah Ma Lim, Auntie Kavitha, Kopi Uncle, Uncle Muthu or the karung guni uncle, each with three missions of their own."},
+  {t:"Story chapters", k:"Four doors, one block", img:"b88-cast.jpg", d:"Meet the neighbours, then follow a seven-chapter story about a torn 1985 photograph of the block and the night every window was lit."}
+];
+const LC_STORIES = [
+  ["The Last Chair","Alex · Grandma","An expected loss. A house still full of her."],
+  ["Left on Read","Sam · Jordan, best friend","A sudden loss. The last thing you said to him was angry."],
+  ["Closing Time","Wei · Ah Pa, father","A father who said “I love you” with food, not words."],
+  ["Still Here","Nurul · Mak, mother","Grieving someone who is still alive."],
+  ["Long Distance","Maria · Nanay, mother","Grieving a parent from another country, without being able to go home."],
+  ["Four O'Clock","Priya · Milo, the family dog","A first loss. Ten years of a dog who was always waiting at the door."],
+  ["Fifty-Two Years","Mr Ong · Lan, his wife","Losing a life partner late in life, and learning to live alone."],
+  ["Block 51","Rachel · the home she grew up in","Grieving a place: the last day in a flat before the block is torn down."],
+  ["The Top Bunk","Daniel · Ethan, his little brother","Losing a younger sibling to illness. Being the one who grew up."],
+  ["Visiting Hours","Jia Hui · Ah Kong, her grandfather","Saying goodbye while there is still time."]
+];
+const LC_TOUR = [
+  {t:"Before you begin", k:"Who you are, who they were", img:"lc-intro.jpg", d:"Each story opens with who you are, who they were to you, where you are and what you'll find, plus a plain note of what it contains."},
+  {t:"Step inside", k:"Walk through their home", img:"lc-room2.jpg", d:"Walk with the keys or the on-screen pad, look around, and pick up whatever catches your eye. Short narration sets the scene: “The house smells the same.”"},
+  {t:"Her bedroom", k:"Rooms that change with the light", img:"lc-bedroom.jpg", d:"Every room has its own sound and light, with captions for sounds like rain at night and the lamp buzzing softly."},
+  {t:"Memory lane", k:"Objects that remember", img:"lc-memory.jpg", d:"Click an object and its memory plays as a short film, from its oldest moment to today. Tap the people to hear them."},
+  {t:"A room for your own person", k:"Make their room", img:"lc-makeroom.jpg", d:"Choose a room, place a few of their things and write what each one holds, then walk through it as many times as you like. It stays only in your browser."},
+  {t:"One Singapore, ten families", k:"Where their lives touched", img:"lc-map.jpg", d:"Every story happens somewhere real, from Tiong Bahru to Punggol. Finish two stories and you may find where their lives crossed."}
+];
+const BIT_TOUR = [
+  {t:"My world", k:"A neighbourhood that grows", img:"bit-home.jpg", d:"An HDB neighbourhood that grows with every good choice: plants to water, litter to pick up, animal friends like a community cat, an otter, a hornbill and a pangolin, with weather and day and night."},
+  {t:"My bin", k:"Count what's at home", img:"bit-bin.jpg", d:"Children count the tubes, boxes, caps, bottles and cartons in their recycling bin at home, or ask a grown-up to take a photo."},
+  {t:"Make", k:"12 crafts, plus invent", img:"bit-make.jpg", d:"Crafts they can make from what they counted, from a counting caterpillar to a box racing car, and an “Invent your own” mode for free play."},
+  {t:"Step by step", k:"Grown-up jobs marked", img:"bit-step.jpg", d:"Each step is shown, animated and read aloud. Cutting, rinsing and small parts are always marked as a grown-up job."},
+  {t:"Learn path", k:"Care, Reuse, Sort and more", img:"bit-learn.jpg", d:"Short stories and games in stages: Care, Reuse, Sort, Recycle right, Together and Use less."},
+  {t:"Where does it go?", k:"Use again, blue bin or rubbish", img:"bit-sort.jpg", d:"A sorting game that follows NEA guidance, so a styrofoam box or a juice bottle with juice still inside isn't ready for the blue bin."},
+  {t:"Inspection station", k:"Shake it, look, turn, feel", img:"bit-inspect.jpg", d:"Children play detective with an item before they sort it: is it empty, clean and dry?"}
+];
+const JC_TOUR = [
+  {t:"Daily rescue", k:"One next action", img:"jc-today.jpg", d:"Today leads with a single rescue for tonight, like clear-the-fridge fried rice from rice, kai lan and chicken that are due. Everything else waits in Later."},
+  {t:"Live fridge", k:"See every food on its shelf", img:"jc-fridge.jpg", d:"A drawn fridge, freezer, cupboard and counter. Bananas brown, greens wilt and frozen food frosts over as the days pass, with a fridge health score."},
+  {t:"Put groceries away", k:"Older food to the front", img:"jc-putaway.jpg", d:"After shopping, each item is guided to its zone in the fridge, with older food moved forward so it gets eaten first."},
+  {t:"Fridge temperature", k:"Below 5°C keeps food longer", img:"jc-temp.jpg", d:"A quick check with a thermometer, showing how much longer milk, cucumber and broccoli last in a colder fridge."},
+  {t:"Look, smell, taste", k:"Is it still good?", img:"jc-lst.jpg", d:"A three-step check for best-before food. Use-by food, raw meat and leftovers follow the date instead."},
+  {t:"Rice planner", k:"Cook just enough", img:"jc-rice.jpg", d:"Who's eating tonight and how hungry they are becomes the number of rice-cooker cups to cook."},
+  {t:"Learn and donate", k:"Right answers fund meals", img:"jc-learn.jpg", d:"Flashcards and quick games. The first right answers each day earn points that a sponsor would turn into meals for a food charity you choose (demo only)."},
+  {t:"Impact", k:"This week, progress, community", img:"jc-impact.jpg", d:"Money saved, food kept from the bin and items used before their date, in everyday terms, with the price of waste against your goal."}
+];
+
 const CONTENT = {
 "synapsys": () => `
   ${blk("Research","A Ferrari with bicycle brakes",`
@@ -2809,6 +2993,176 @@ const CONTENT = {
     </div>`)}
   ${blk("Video","See BON in action",`
     ${videoCard("https://drive.google.com/file/d/1RU8SvEpFQhF8LleJs5OFkFgXQqF92vhh/view?usp=sharing","bon-video.jpg","Watch the BON video","Opens in Google Drive")}`)}
+`,
+"shade-where": () => `
+  ${blk("Concept","The shortest walk isn't always the kindest",`
+    <div class="two">
+      <div>
+        <p class="body-strong">Map apps send you the shortest way. In Singapore that is often a long stretch in full sun, when a covered linkway, a void deck or the shady side of a block was one street over.</p>
+        <p class="hmw">How might we help people walking in Singapore's heat find the shadiest way, for the exact minute they leave?</p>
+        <p class="body-strong" style="margin-top:26px">shade,where? is a walking planner that knows where the shadows are. Pick a start and an end, choose when you leave, and it casts real shadows from every building, tree and roof to find the walk that keeps you out of the sun.</p>
+      </div>
+      <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("sw-plan.jpg")}" alt="shade,where? planning a walk from a hawker centre to Tampines MRT on a 3D map of Tampines, with the shade route in lilac and a time slider set to 3pm" loading="lazy"></div>
+    </div>
+    ${ppCards([["3D map","159,206 buildings","Every building footprint in Singapore, with real heights for 12,022 HDB blocks and the tallest towers."],["Any minute","Leave now, or later","Slide the time, play the whole day, or compare the longest and shortest days of the year."],["Private","Stays on your device","No account and no tracking. Searches and routes are worked out in the browser and never sent anywhere."]])}`)}
+  ${blk("Why it matters","Singapore is heating up. Shade helps, fast.",`
+    <p class="body-strong">I started with the numbers. Singapore's hottest years are the recent ones, and a few degrees in the shade make a real difference to how a walk feels.</p>
+    ${ppStats([["28.4°C","Hottest year on record, reached in 2016, 2019 and 2024"],["+0.24°C","Warmer every decade, from 1984 to 2022"],["29 days","Of high heat stress in 2025, up from 21 in 2024"],["3.1°C","Cooler to the body in street shade, in a one-north study"]])}
+    <p class="pp-src">Sources cited in the app: Meteorological Service Singapore, Cooling Singapore, and Xu, Bardhan et al. (one-north, August 2023).</p>`)}
+  ${blk("How it works","From sun angle to a cooler walk",`
+    <div class="two">
+      <div>
+        <ol class="pp-steps">
+          <li><b>Find the sun</b><p>Solar formulas give the sun's height and direction over Singapore for any minute, checked against four sun calculators.</p></li>
+          <li><b>Cast the shadows</b><p>Every 4 m of path fires a ray at the sun. If a block, tree or roof is in the way, that spot is shaded.</p></li>
+          <li><b>Weigh the walk</b><p>Sunny metres count as longer than shady ones. Gentle, Balanced or Avoid all sun decides how far it detours for shade.</p></li>
+        </ol>
+      </div>
+      <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("sw-how.jpg")}" alt="How it works page showing the sun's path over a row of buildings from 7am to 7pm" loading="lazy"></div>
+    </div>
+    <h3 class="pp-h3">Built for how Singapore walks</h3>
+    ${ppCards([["Shelter","Void decks","A path under an HDB block counts as sheltered, so the planner happily cuts through void decks."],["7,222 roofs","Covered linkways","LTA's linkway outlines stand as 3D roofs and count as full shade at any hour, rain or shine."],["847 roofed","Overhead bridges","3,161 footbridge sections stand in 3D, and the ones with a roof count as shade on the way across."],["1 pm","The 1 pm problem","Singapore's sun peaks near 1pm, not noon, and almost overhead. Shadows shrink to a puddle, so only roofs really help."]])}`)}
+  ${blk("Inside the app","Plan it, compare it, walk it",`
+    <p class="body-strong">Pick a screen to see how each part works.</p>
+    ${ppTour("swTour", SW_TOUR)}`)}
+  ${blk("Accuracy","Checked against official maps",`
+    <p class="body-strong">A shade map is only useful if people trust it, so every layer is built from open government and community data and checked against an official source.</p>
+    ${ppStats([["159,206","Building footprints"],["12,022","HDB blocks with official storey counts"],["7,222","LTA covered linkway outlines"],["219","MRT and LRT platforms from OneMap"]])}
+    <div class="two" style="margin-top:36px">
+      <div><h3 class="pp-h3" style="margin-top:0">What it was checked against</h3>
+        <ul class="list">
+          <li><span><b>Sun position:</b> an exact match with four sun calculators, such as solar noon at 12:50pm on 15 Nov</span></li>
+          <li><span><b>Addresses:</b> within 55 m of OneMap, median about 30 m</span></li>
+          <li><span><b>HDB heights:</b> from HDB Property Information, median difference 1.4 m</span></li>
+          <li><span><b>Skyscrapers:</b> 37 towers matched by name, 5 corrected, including Guoco Tower</span></li>
+          <li><span><b>Covered linkways:</b> LTA outlines line up with mapped paths to within 0.3 m</span></li>
+        </ul></div>
+      <div><h3 class="pp-h3" style="margin-top:0">Known limits, said plainly</h3>
+        <ul class="list">
+          <li><span><b>Trees are undercounted.</b> About 20,000 are mapped; NParks manages millions, so tree-lined roads may look sunnier than they are.</span></li>
+          <li><span><b>Low-rise heights are estimates</b> where no official figure exists.</span></li>
+          <li><span><b>Weather isn't included yet.</b> Live NEA heat readings are on the roadmap.</span></li>
+        </ul></div>
+    </div>`)}
+  ${blk("Try it","Plan a shady walk right here",`
+    ${ppPlay("/play/shade-where/","sw-plan.jpg","16/10","Play shade,where? here","The real web app, running live. It loads a 3D map of all of Singapore, so give it a few seconds.")}
+    <h3 class="pp-h3">On a phone</h3>
+    <div class="pp-duo">
+      ${ppPhones([["swm-plan.jpg","Map first","On a phone the map comes first, then the trip panel below it."],["swm-panel.jpg","Trip panel","Start, end, leaving time and the route summary, all within thumb reach."]],true)}
+      <p class="body-strong">The same planner works on a phone. The 3D map sits on top and the trip controls stack underneath, with large touch targets and a 2D button for a flat view when you're on the move.</p>
+    </div>`)}
+`,
+"block-88": () => `
+  ${blk("Concept","A whole HDB estate to grow up in",`
+    <div class="two">
+      <div>
+        <p class="body-strong">Block 88 is a 3D neighbourhood game set in Tembusu Estate, built for tablets. You play Mei, ten years old, who has lived at #12-34 for three months and knows exactly four of her neighbours by name.</p>
+        <p class="hmw">How might a game turn the people we pass at the void deck every day into neighbours we actually know?</p>
+        <p class="body-strong" style="margin-top:26px">Every errand you run for a neighbour lights up a window on Blk 88. Light them all, and the whole block comes together for its 40th anniversary.</p>
+      </div>
+      <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("b88-estate.jpg")}" alt="A 3D HDB estate with Block 88 in front, a playground, trees and a covered walkway" loading="lazy"></div>
+    </div>
+    ${ppCards([["The estate","A full neighbourhood","Void deck, kopitiam, provision shop, food centre, wet market, MRT, bus interchange and a reservoir park."],["Old-school games","Five stones and chapteh","Plus pick-up sticks, goli, hopscotch and zero point, played with friends at the void deck."],["The story","Seven chapters","A torn 1985 photograph of the block, and the night every window was lit."]])}`)}
+  ${blk("Gameplay","A day in Tembusu",`
+    <p class="body-strong">Pick a screen to see how each part works.</p>
+    ${ppTour("b88Tour", B88_TOUR)}`)}
+  ${blk("Systems","Kindness that adds up",`
+    <p class="body-strong">Underneath the errands is a set of systems that reward getting to know people, not just finishing tasks.</p>
+    ${ppCards([["Levels","Seven community levels","From New Neighbour to Heart of Tembusu. Each level opens bigger projects: a block clean-up, a get-together, a donation drive, a residents' meeting and Tembusu Day."],["Town projects","Kampung points","Points from helping fund estate upgrades the player votes on, including lift upgrading."],["Introductions","Who knows who","Bring together neighbours who have never spoken, and watch the web of friendships grow."],["Journal","Kindness journal","Fills in as you help, with six questions to ask a parent, grandparent or neighbour in real life, and their answers kept."],["Singapore, everywhere","Small local details","Kopi lingo, a lift that only stops at certain floors, festival decorations for Chinese New Year, Hari Raya, National Day, Deepavali and Christmas, and sudden rain showers."],["Made for tablets","Comfortable to play","Landscape layout, a thumb stick, guide arrows that can be switched off, and settings for look speed and camera distance. Progress stays on the device."]])}`)}
+  ${blk("Try it","Play Block 88 right here",`
+    ${ppPlay("/play/block-88/","b88-title.jpg","16/10","Play Block 88 here","The real game, running live in 3D. Best on a tablet or laptop held sideways; use W A S D or the on-screen stick to walk.")}`)}
+`,
+"last-chair": () => `
+  ${blk("Concept","The people we lose stay in the places they leave",`
+    <div class="two">
+      <div>
+        <p class="body-strong">The Last Chair is a narrative game about grief, memory and the words we leave unsaid. Ten short stories go back to the places people leave behind, in homes across Singapore.</p>
+        <p class="hmw">How might a game make space for grief, gently, without ever asking the player to win or to fail?</p>
+        <p class="pp-quote">“The people we lose stay with us through the spaces, objects, words and memories they leave behind.”</p>
+      </div>
+      <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("lc-hero.jpg")}" alt="The Last Chair title screen over an illustrated living room on a rainy evening" loading="lazy"></div>
+    </div>
+    ${ppCards([["Ten stories","Play in any order","Each one is complete on its own and says what it contains before you start."],["No pressure","No timers, no way to fail","Take as long as you need. Pause, skip a memory or leave at any time."],["Sound","Best with sound on","Each room has its own sounds, with subtitles for every one."]])}`)}
+  ${blk("Ten homes","Ten homes, ten goodbyes",`
+    <p class="body-strong">Each story is a different kind of loss, from an expected goodbye to grieving someone who is still alive, or a home that is about to be torn down.</p>
+    <div class="pp-stories">${LC_STORIES.map(([t,w,d],i)=>`<div><small>${String(i+1).padStart(2,"0")}</small><b>${t}</b><em>${w}</em><p>${d}</p></div>`).join("")}</div>
+    <div class="plate" style="aspect-ratio:16/10;margin-top:28px"><img class="zoom" src="${IMG("lc-stories.jpg")}" alt="Story cards for The Last Chair, Left on Read, Closing Time and Still Here, each with an illustration, a content note and a Play button" loading="lazy"></div>`)}
+  ${blk("How it plays","Rooms, phones and memories",`
+    ${ppCards([["01","Step into their world","Walk through a grandmother's house, a hawker stall, a bedroom or a park, as them, at your own pace."],["02","Read what they left","Their phone opens up as you explore: messages, voice notes, photos, and an unsent message that slowly makes sense."],["03","Click to remember","Any object plays a short memory film, from its oldest moment to today, with the sounds of the life around it."],["04","Choose how to remember","Decide how to read each memory and what to do with their last words. There are no right answers."]])}
+    ${ppTour("lcTour", LC_TOUR)}`)}
+  ${blk("Made with care","Designing for people who are grieving",`
+    <div class="two">
+      <div>
+        <p class="body-strong">These stories deal with death, illness and loss, and some players will be grieving themselves. So care is built into every screen, not added at the end.</p>
+        <ul class="list" style="margin-top:18px">
+          <li><span><b>Nothing is graphic,</b> and every story states plainly what happened, so no one is left guessing about something painful</span></li>
+          <li><span><b>A Breathe button</b> is always on screen, and you can pause, skip a memory or leave at any time</span></li>
+          <li><span><b>Adjustable text size and speed,</b> with subtitles for sounds</span></li>
+          <li><span><b>Reduce-motion and high-contrast</b> options, full screen, and full keyboard and touch support</span></li>
+          <li><span><b>Real support services</b> are kept separate from the stories, with notes for educators and counsellors</span></li>
+        </ul>
+      </div>
+      <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("lc-care.jpg")}" alt="The Made with care section listing pause, text size, subtitles, reduce motion and support resources" loading="lazy"></div>
+    </div>`)}
+  ${blk("Try it","Play The Last Chair right here",`
+    ${ppPlay("/play/last-chair/","lc-hero.jpg","16/10","Play The Last Chair here","The real game, running live. Best with sound on, on a laptop or tablet. Take as long as you need.")}`)}
+`,
+"bitsy": () => `
+  ${blk("Concept","Little hands, big helpers",`
+    <div class="two">
+      <div>
+        <p class="body-strong">Bitsy's Maker Bin is a tablet game for kindergarten children, ages 4 to 6, in Singapore, about reusing, recycling and making crafts from things at home. Bitsy the robot guides every step, out loud.</p>
+        <p class="hmw">How might we help young children see their recycling bin as a box of materials, and learn to sort it right?</p>
+        <p class="body-strong" style="margin-top:26px">Children count what is in their bin at home, make something from it, learn where things really go, and watch their HDB neighbourhood grow with every good choice.</p>
+      </div>
+      <div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("bit-home.jpg")}" alt="Bitsy's Maker Bin home screen with Bitsy greeting Mei over a pastel HDB neighbourhood strung with festive lights" loading="lazy"></div>
+    </div>
+    ${ppCards([["Show me","I'll show you every step","A pointing hand and Bitsy's voice lead the way, for children trying something for the first time."],["Hints please","I'll help if you get stuck","Children try on their own, and Bitsy steps in with a hint when they pause."],["I can do it!","Tap ? if you need me","For confident helpers. Help is always one tap away."]])}`)}
+  ${blk("Gameplay","Sort it, clean it, make it",`
+    <p class="body-strong">Pick a screen to see how each part works.</p>
+    ${ppTour("bitTour", BIT_TOUR, {ratio:"1194/834"})}`)}
+  ${blk("Designing for 4 to 6 year olds","Big buttons, kind voices, grown-ups nearby",`
+    ${ppCards([["No reading needed","Everything is read aloud","Big picture tabs, one simple job per screen, and a speaker button on every line."],["Small hands","Touch targets of 60 px or more","Large, rounded buttons with soft feedback: a gentle wobble for “try again” and a sparkle for “yes”."],["Safety first","Grown-up jobs are marked","Cutting, rinsing and small parts always show a “Grown-up helps” label."],["Real rules","Follows NEA guidance","Blue bin items must be empty, clean and dry. The game teaches why, not just where."],["For grown-ups","Hold 3 seconds to open","A grown-ups area for settings and approving photos. Pilot sessions use labels like “Child B”, never names."],["Inclusive","Options for every child","Strong outlines for bright rooms or low vision, a left-handed layout, quiet mode and a gentler pace."]])}`)}
+  ${blk("Try it","Play with Bitsy right here",`
+    ${ppPlay("/play/bitsy/","bit-boot.jpg","1194/834","Play Bitsy's Maker Bin here","The real game, running live. Turn your sound on: Bitsy talks. The shared class garden and photo checking only work in the original Claude version, so they are hidden here.")}`)}
+`,
+"jiak-clean": () => `
+  ${blk("Concept","Eat it clean, waste nothing",`
+    <div class="two pp-jc">
+      <div>
+        <p class="body-strong">“Jiak” means eat in Hokkien. Jiak Clean is a working prototype of a household food-rescue app. It makes the next right thing to do with your food fast, positive and local, and works even when your kitchen list is incomplete.</p>
+        <p class="hmw">How might we help Singapore households use up the food they already have, before it ends up in the bin?</p>
+        <p class="body-strong" style="margin-top:26px">Instead of a fridge spreadsheet, it leads with one rescue at a time: what to eat tonight, how to cook it, and what to freeze or share.</p>
+      </div>
+      ${ppPhones([["jc-welcome.jpg","First open","“Turn what you already have into dinner.” Try it with a sample kitchen, no account needed."]])}
+    </div>`)}
+  ${blk("Inside the app","From fridge to dinner",`
+    <p class="body-strong">Pick a screen to see how each part works.</p>
+    ${ppTour("jcTour", JC_TOUR, {phone:true, bare:true, ratio:"820/1704"})}`)}
+  ${blk("Fits real homes","Designed for everyone in the kitchen",`
+    <p class="body-strong" style="margin-bottom:22px">Singapore households are mixed: grandparents, helpers, teens and young children all touch the same fridge. Jiak Clean gives each of them a way in.</p>
+    ${ppPhones([["jc-simple.jpg","Simple mode in 中文","Large text in Mandarin, Malay or Tamil, with one big action per food."],["jc-helper.jpg","Helper view","Maria's own view, in Tagalog or Bahasa Indonesia."],["jc-kids.jpg","Kids mode","Rescue missions, a fridge detective, stickers and a kitchen garden."],["jc-lock.jpg","Lock-screen widget","Eat-today items you can mark as used without opening the app."]])}`)}
+  ${blk("Playtest","What changed after testing with personas",`
+    <div class="two">
+      <ul class="list">
+        <li><span><b>Less to read.</b> Shorter copy on every screen, and Impact split into This week, Progress and Community tabs</span></li>
+        <li><span><b>Food that looks like food.</b> Every recipe is a plated dish, and fridge foods brown, wilt and frost over time</span></li>
+        <li><span><b>Leaves the app.</b> A lock-screen widget, a tap-to-log fridge magnet and a chat helper</span></li>
+      </ul>
+      <ul class="list">
+        <li><span><b>Less typing.</b> Supermarket receipts import themselves, and a weekly fridge snap corrects the list</span></li>
+        <li><span><b>Research-backed fixes.</b> Fridge zones, a temperature check, put-away guidance, a rice planner and a look-smell-taste check</span></li>
+        <li><span><b>Something new each week.</b> A kitchen garden, mystery basket, festive weeks and Bao the fridge buddy</span></li>
+      </ul>
+    </div>`)}
+  ${blk("Try it","Try Jiak Clean right here",`
+    <div class="pp-duo">
+      <div>${ppPlay("/play/jiak-clean/","jc-phone.jpg","390/844","Try it here","",{phone:true})}</div>
+      <div>
+        <p class="body-strong">The working prototype, running live. Tap “Explore with a sample kitchen” to jump in. Open it full screen on a laptop to see the guide with 27 journeys to walk through, from first open to the caregiver view.</p>
+        <p class="pp-src">Sample data: foods, prices, people and partners are made up. Progress is kept in your browser only.</p>
+      </div>
+    </div>`)}
 `,
 "vase": () => `
   ${blk("Concept","A gift from scrap",`
@@ -3978,6 +4332,11 @@ const INIT = {
     const shown = x ? $("#hotX") : $("#hot"); shown.classList.remove("swap"); void shown.offsetWidth; shown.classList.add("swap");
   });
 },
+"shade-where"(){ initTour("swTour", SW_TOUR); initPlay(); },
+"block-88"(){ initTour("b88Tour", B88_TOUR); initPlay(); },
+"last-chair"(){ initTour("lcTour", LC_TOUR); initPlay(); },
+"bitsy"(){ initTour("bitTour", BIT_TOUR); initPlay(); },
+"jiak-clean"(){ initTour("jcTour", JC_TOUR); initPlay(); },
 "vase"(){},
 "ae-queue"(){
   initSmap("aeMap");
@@ -4062,7 +4421,7 @@ function viewWorks(){
   return `<section class="wrap p-head">
     <p class="eyebrow">2023 – 2026</p>
     <h1 style="margin-top:10px">My Works</h1>
-    <p class="lead">Twelve projects across product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital and the Ministry of Education, to studio briefs and my own explorations.</p>
+    <p class="lead">Seventeen projects across games, product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital and the Ministry of Education, to studio briefs and the passion projects I design and build myself.</p>
   </section>
   <section class="wrap" style="padding-top:44px">
     <div class="grid">${PROJECTS.map(p=>card(p)).join("")}</div>
