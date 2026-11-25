@@ -17493,6 +17493,797 @@ Object.assign(BEAT_ACT39.thosai, {act:'thosaiLift'});
 Object.assign(BEAT_ACT39.orhluak, {act:'omelette'});
 
 /* =================================================================
+   55. REALISTIC FOOD
+   Food is painted like the illustrated cooking apps: no dark outlines,
+   soft contact shadows where food sits on the plate, a fine natural
+   texture (rice grain, crumb, pores), gentle top-left light, and
+   white glazed plates with a thin coloured band.
+   How: each dish is drawn into two offscreen layers (plate / food).
+   The food layer gets texture and lighting, then is laid on the plate
+   with a soft shadow.
+   ================================================================= */
+const REAL55 = {on:true, depth:0, P:null, F:null, cvs:{}};
+function layer55(k, w, h){
+  let c = REAL55.cvs[k];
+  if (!c){ c = REAL55.cvs[k] = document.createElement('canvas'); }
+  if (c.width < w || c.height < h){ c.width = Math.max(c.width, w); c.height = Math.max(c.height, h); }
+  const x = c.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, w + 2, h + 2);
+  return x;
+}
+/* a mid-grey grain tile: fine pores plus soft blotches. Mid-grey changes nothing under soft-light */
+const GRAIN55 = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 192; const x = c.getContext('2d');
+  const d = x.createImageData(192, 192), r = rng(5501);
+  const blot = []; for (let i = 0; i < 70; i++) blot.push([r()*192, r()*192, 4 + r()*14, (r() - 0.5)*60]);
+  for (let y = 0; y < 192; y++) for (let X = 0; X < 192; X++){
+    let v = 128 + (r() - 0.5)*70;
+    for (const [bx, by, br, bv] of blot){ let dx = Math.abs(X - bx), dy = Math.abs(y - by); dx = Math.min(dx, 192 - dx); dy = Math.min(dy, 192 - dy); const dd = (dx*dx + dy*dy)/(br*br); if (dd < 1) v += bv*(1 - dd); }
+    const i = (y*192 + X)*4; d.data[i] = d.data[i + 1] = d.data[i + 2] = Math.max(0, Math.min(255, v)); d.data[i + 3] = 255;
+  }
+  x.putImageData(d, 0, 0); return c;
+})();
+
+const CACHE55 = new Map();
+function realDraw55(fn, key, B){
+  B = B || 150;
+  if (!REAL55.on || REAL55.depth) return fn();
+  const T = g.getTransform(), sc = Math.hypot(T.a, T.b);
+  if (sc < 0.9) return fn();                         /* tiny icons stay crisp and cheap */
+  const cvW = g.canvas.width, cvH = g.canvas.height;
+  const pts = [[-B, -B], [B, -B], [-B, B], [B, B]].map(([x, y]) => [T.a*x + T.c*y + T.e, T.b*x + T.d*y + T.f]);
+  const x0 = Math.max(0, Math.floor(Math.min(...pts.map(p => p[0])))), y0 = Math.max(0, Math.floor(Math.min(...pts.map(p => p[1]))));
+  const x1 = Math.min(cvW, Math.ceil(Math.max(...pts.map(p => p[0])))), y1 = Math.min(cvH, Math.ceil(Math.max(...pts.map(p => p[1]))));
+  const w = x1 - x0, h = y1 - y0; if (w < 8 || h < 8) return fn();
+  const ck = key ? key + '|' + [T.a, T.b, T.c, T.d, T.e, T.f].map(v => Math.round(v*100)).join(',') + '|' + cvW + 'x' + cvH : null;
+  if (ck && CACHE55.has(ck)){ const c = CACHE55.get(ck); CACHE55.delete(ck); CACHE55.set(ck, c); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(c, x0, y0); g.restore(); return; }
+  const P = layer55('p', w, h), F = layer55('f', w, h);
+  P.setTransform(T.a, T.b, T.c, T.d, T.e - x0, T.f - y0); F.setTransform(T.a, T.b, T.c, T.d, T.e - x0, T.f - y0);
+  const g0 = g, ga = g0.globalAlpha;
+  REAL55.depth++; REAL55.P = P; REAL55.F = F; g = F;
+  try { fn(); } finally { g = g0; REAL55.depth--; REAL55.P = REAL55.F = null; }
+  /* texture + light, only where there is food */
+  const N = layer55('n', w, h);
+  N.drawImage(F.canvas, 0, 0, w, h, 0, 0, w, h);
+  N.globalCompositeOperation = 'source-in';
+  const pat = N.createPattern(GRAIN55, 'repeat'); if (pat.setTransform) pat.setTransform(new DOMMatrix().scale(Math.max(0.5, sc*0.42)));
+  N.fillStyle = pat; N.fillRect(0, 0, w, h);
+  const L = N.createLinearGradient(0, 0, w, h); L.addColorStop(0, 'rgba(255,255,255,.5)'); L.addColorStop(0.55, 'rgba(128,128,128,0)'); L.addColorStop(1, 'rgba(20,10,0,.45)');
+  N.globalCompositeOperation = 'source-atop'; N.fillStyle = L; N.fillRect(0, 0, w, h);
+  F.setTransform(1, 0, 0, 1, 0, 0); F.globalCompositeOperation = 'soft-light'; F.globalAlpha = 0.75;
+  F.drawImage(N.canvas, 0, 0, w, h, 0, 0, w, h);
+  F.globalCompositeOperation = 'source-over'; F.globalAlpha = 1;
+  /* lay the food onto the plate with a soft contact shadow, then onto the scene */
+  const out = document.createElement('canvas'); out.width = w; out.height = h; const O = out.getContext('2d');
+  O.drawImage(P.canvas, 0, 0, w, h, 0, 0, w, h);
+  const sk = B < 60 ? 0.45 : 1; O.shadowColor = 'rgba(70,38,12,.42)'; O.shadowBlur = 5*sc*sk; O.shadowOffsetX = 1.2*sc*sk; O.shadowOffsetY = 2.6*sc*sk;
+  O.drawImage(F.canvas, 0, 0, w, h, 0, 0, w, h);
+  g0.save(); g0.setTransform(1, 0, 0, 1, 0, 0); g0.globalAlpha = ga; g0.drawImage(out, x0, y0); g0.restore();
+  out.__sc = sc;
+  if (ck){ CACHE55.set(ck, out); while (CACHE55.size > 24) CACHE55.delete(CACHE55.keys().next().value); }
+}
+const key55 = (p, a) => { try { return p + JSON.stringify(a); } catch(e){ return null; } };
+/* plates and saucers go on the plate layer, under the food */
+function onPlate55(fn){ return function(...a){ if (!REAL55.depth || !REAL55.P || g !== REAL55.F) return fn.apply(this, a); const gg = g, P = REAL55.P; P.setTransform(gg.getTransform()); P.globalAlpha = gg.globalAlpha; g = P; try { return fn.apply(this, a); } finally { g = gg; } }; }
+
+/* no dark outlines on food: edges become a soft, slightly darker rim of the food's own colour */
+const _paint55 = paint;
+paint = function(fill, stroke, lw){
+  if (REAL55.depth && stroke && g === REAL55.F) return _paint55(fill, 'rgba(60,32,12,.14)', (lw || 2)*0.55);
+  return _paint55(fill, stroke, lw);
+};
+
+/* white glazed plate with a thin coloured band, like a real hawker plate */
+const _plate55 = plate;
+plate = onPlate55(function(rx, ry){
+  ry = ry || rx; const rim = (typeof rimCol40 === 'function') ? rimCol40() : '#c7372c';
+  g.save(); g.shadowColor = 'rgba(40,40,40,.28)'; g.shadowBlur = 10; g.shadowOffsetY = 5;
+  ell(0, 0, rx, ry, '#f4f2ee'); g.restore();
+  ell(0, 0, rx, ry, rad(-rx*0.3, -ry*0.35, 2, rx*1.1, [[0, '#ffffff'], [0.75, '#f6f4f0'], [1, '#dcd8d2']]));
+  g.beginPath(); g.ellipse(0, 0, rx*0.93, ry*0.93, 0, 0, Math.PI*2); g.strokeStyle = rim; g.lineWidth = Math.max(1.6, rx*0.028); g.stroke();
+  g.beginPath(); g.ellipse(0, 0, rx*0.955, ry*0.955, 0, 0, Math.PI*2); g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = 0.8; g.stroke();
+  /* the shallow well in the middle */
+  ell(0, 0, rx*0.8, ry*0.8, rad(rx*0.1, ry*0.12, rx*0.2, rx*0.85, [[0, 'rgba(255,255,255,0)'], [0.85, 'rgba(0,0,0,.03)'], [1, 'rgba(0,0,0,.07)']]));
+  g.beginPath(); g.ellipse(0, 0, rx*0.8, ry*0.8, 0, Math.PI*0.95, Math.PI*1.6); g.strokeStyle = 'rgba(255,255,255,.95)'; g.lineWidth = 1.6; g.stroke();
+  g.beginPath(); g.ellipse(0, 0, rx*0.8, ry*0.8, 0, Math.PI*0.05, Math.PI*0.6); g.strokeStyle = 'rgba(0,0,0,.06)'; g.lineWidth = 1.6; g.stroke();
+  /* glaze reflection */
+  g.save(); g.globalAlpha = 0.55; g.beginPath(); g.ellipse(-rx*0.55, -ry*0.6, rx*0.22, ry*0.06, -0.6, 0, Math.PI*2); g.fillStyle = '#ffffff'; g.fill(); g.restore();
+});
+saucer = onPlate55(saucer);
+
+/* every finished dish and every plating step is painted this way */
+const _drawFinal55 = drawFinal;
+drawFinal = function(id, w, t){ return realDraw55(() => _drawFinal55(id, w, t), key55('F|' + id + '|', w)); };
+
+
+/* =================================================================
+   Realistic ingredient painters. Same names and arguments as before,
+   so every dish that uses them gets the new look.
+   ================================================================= */
+const rgba55 = (c, a) => { const [r, g2, b] = hex(c); return `rgba(${r},${g2},${b},${a})`; };
+
+/* rice: hundreds of separate glossy grains on a softly shaded mound */
+riceDome = function(x, y, rx, ry, tint, seed){
+  const base = tint || '#f7f3e8', r = rng((seed || 3) + 5500);
+  ell(x + 2, y + 4, rx*0.98, ry*0.9, 'rgba(90,70,40,.18)');
+  ell(x, y, rx, ry, rad(x - rx*0.35, y - ry*0.45, 2, rx*1.1, [[0, mix(base, '#ffffff', 0.6)], [0.6, base], [1, mix(base, '#9a8a6a', 0.35)]]));
+  g.save(); g.beginPath(); g.ellipse(x, y, rx + 1.5, ry + 1.5, 0, 0, Math.PI*2); g.clip();
+  const n = Math.round(rx*ry/3.2);
+  for (let i = 0; i < n; i++){
+    const a = r()*6.28, d = Math.pow(r(), 0.6), gx = x + Math.cos(a)*d*rx, gy = y + Math.sin(a)*d*ry;
+    const lt = 1 - ((gx - x)/rx*0.5 + (gy - y)/ry*0.6 + 1.1)/2.2;          /* lit from top left */
+    const edge = d > 0.85 ? 0.75 : 1;
+    g.save(); g.translate(gx, gy); g.rotate(r()*Math.PI); g.scale(edge, edge);
+    g.beginPath(); g.ellipse(0.5, 0.7, 2.3, 1.05, 0, 0, Math.PI*2); g.fillStyle = 'rgba(120,100,70,.2)'; g.fill();
+    g.beginPath(); g.ellipse(0, 0, 2.25, 1, 0, 0, Math.PI*2); g.fillStyle = mix(mix(base, '#c8bca0', 0.5), '#ffffff', 0.25 + lt*0.75); g.fill();
+    g.beginPath(); g.ellipse(-0.5, -0.35, 1.1, 0.35, 0, 0, Math.PI*2); g.fillStyle = 'rgba(255,255,255,.85)'; g.fill();
+    g.restore();
+  }
+  g.restore();
+};
+
+/* cucumber: dark waxy skin, pale translucent flesh, three seed chambers */
+cucSlice = function(cx, cy, R){
+  const r = rng(Math.round(cx*7 + cy*13 + 551));
+  ell(cx + 1, cy + 1.8, R, R*0.92, 'rgba(40,60,20,.22)');
+  circle(cx, cy, R, rad(cx - R*0.3, cy - R*0.3, 1, R*1.05, [[0, '#3f7a2c'], [0.7, '#24561a'], [1, '#173d10']]));
+  for (let i = 0; i < 14; i++){ const a = i/14*6.28 + r()*0.2; ell(cx + Math.cos(a)*R*0.93, cy + Math.sin(a)*R*0.93, R*0.08, R*0.05, 'rgba(120,170,80,.35)'); }
+  circle(cx, cy, R*0.86, rad(cx, cy, R*0.4, R*0.9, [[0, '#e6f2cf'], [0.75, '#cfe6a8'], [1, '#9fcf74']]));
+  circle(cx, cy, R*0.48, rad(cx, cy, 0, R*0.5, [[0, '#d6ebb4'], [1, '#e9f5d4']]));
+  for (let k = 0; k < 3; k++){
+    const a = k*2.094 + 0.5; ell(cx + Math.cos(a)*R*0.24, cy + Math.sin(a)*R*0.24, R*0.2, R*0.13, 'rgba(190,220,150,.55)');
+    for (let s = 0; s < 3; s++){ const b = a + (s - 1)*0.42; g.save(); g.translate(cx + Math.cos(b)*R*0.28, cy + Math.sin(b)*R*0.28); g.rotate(b); ell(0, 0, R*0.075, R*0.045, 'rgba(252,255,240,.95)'); g.restore(); }
+  }
+  ell(cx - R*0.35, cy - R*0.42, R*0.32, R*0.1, 'rgba(255,255,255,.55)');
+};
+cucumberRow = function(x, y, n){ for (let i = 0; i < (n || 5); i++) cucSlice(x - 24 + i*12, y, 9.5); };
+
+/* fried egg: frilly crisp edge, glossy white, domed yolk with a wet highlight */
+friedEgg = function(x, y, s){
+  s = s || 1; const r = rng(Math.round(x*3 + y*5 + 777));
+  blob(x, y, 22*s, 17*s, 0.42, 771, rad(x, y, 10*s, 23*s, [[0, '#f0c27a'], [0.7, '#c9853a'], [1, '#8a4e1c']]));
+  for (let i = 0; i < 22; i++){ const a = r()*6.28, d = 17 + r()*4; blob(x + Math.cos(a)*d*s, y + Math.sin(a)*d*0.78*s, 2.6*s, 1.6*s, 0.6, 780 + i, 'rgba(110,60,20,.45)'); }
+  blob(x - 0.5*s, y - 0.5*s, 18*s, 13.5*s, 0.34, 772, rad(x - 6*s, y - 6*s, 2, 19*s, [[0, '#ffffff'], [0.75, '#fbf8f1'], [1, '#ece2cc']]));
+  ell(x - 8*s, y - 6*s, 7*s, 2*s, 'rgba(255,255,255,.8)');
+  ell(x + 2.5*s, y + 0.5*s, 7.6*s, 7*s, 'rgba(160,110,30,.25)');
+  circle(x + 2*s, y - 1*s, 7.2*s, rad(x - 0.5*s, y - 3.5*s, 0.5, 8*s, [[0, '#ffe08a'], [0.45, '#f7b52c'], [1, '#e08a14']]));
+  ell(x - 0.5*s, y - 4*s, 3*s, 1.6*s, 'rgba(255,255,255,.85)'); circle(x + 4.5*s, y + 2.5*s, 1*s, 'rgba(255,255,255,.4)');
+};
+
+/* braised egg: soy-brown outside, cut to show the white and yolk */
+braisedEgg = function(x, y){
+  ell(x + 1.5, y + 3, 14, 10, 'rgba(60,30,10,.25)');
+  ell(x, y, 14, 10.5, rad(x - 4, y - 4, 1, 15, [[0, '#c98a4a'], [0.6, '#9a5a26'], [1, '#6a3814']]));
+  ell(x + 1, y + 0.5, 10.5, 7.8, rad(x - 2, y - 2, 1, 11, [[0, '#f6ead6'], [1, '#d9b88a']]));
+  circle(x + 1.2, y + 0.8, 4.8, rad(x, y - 0.5, 0.5, 5.2, [[0, '#f6c95a'], [1, '#d9962a']]));
+  ell(x - 6, y - 6, 4.5, 1.4, 'rgba(255,240,220,.6)');
+};
+
+/* sambal: glossy chunky chilli paste with oil pooling round the edge */
+sambal = function(x, y, s){
+  s = s || 1;
+  blob(x, y + 1*s, 17*s, 13.5*s, 0.35, 51, 'rgba(200,60,20,.35)');                       /* the oil */
+  blob(x, y, 14.5*s, 11.5*s, 0.4, 52, rad(x - 4*s, y - 4*s, 1, 15*s, [[0, '#d9442a'], [0.6, '#a8241a'], [1, '#6a1008']]));
+  const r = rng(53);
+  for (let i = 0; i < 16; i++){ const a = r()*6.28, d = Math.sqrt(r())*10*s; blob(x + Math.cos(a)*d, y + Math.sin(a)*d*0.8, (1.6 + r()*2)*s, (1.2 + r()*1.4)*s, 0.6, 54 + i, r() < 0.5 ? 'rgba(120,20,10,.6)' : 'rgba(240,110,60,.55)'); }
+  for (let i = 0; i < 9; i++){ const a = r()*6.28, d = Math.sqrt(r())*9*s; ell(x + Math.cos(a)*d, y + Math.sin(a)*d*0.8, 1.4*s, 0.6*s, 'rgba(255,230,200,.7)'); }
+  ell(x - 5*s, y - 5*s, 4*s, 1.4*s, 'rgba(255,240,220,.65)');
+};
+sambalDollop = function(x, y, s){ sambal(x, y, (s || 1)*0.78); };
+
+/* fishballs: bouncy, matt off-white with tiny surface pits */
+fishballs = function(x, y, n){
+  const pos = [[0, 0], [-14, 6], [13, 7], [-6, -12], [9, -12], [-20, -6], [20, -4], [0, 14]];
+  for (let i = 0; i < n; i++){
+    const [dx, dy] = pos[i % 8], cx = x + dx, cy = y + dy, r = rng(5600 + i);
+    ell(cx + 1, cy + 2.4, 8, 6.5, 'rgba(80,70,50,.25)');
+    circle(cx, cy, 8, rad(cx - 3, cy - 3.2, 0.5, 9, [[0, '#ffffff'], [0.55, '#f2ede2'], [1, '#c9bea6']]));
+    for (let k = 0; k < 7; k++){ const a = r()*6.28, d = r()*6; circle(cx + Math.cos(a)*d, cy + Math.sin(a)*d, 0.45, 'rgba(160,145,115,.45)'); }
+    ell(cx - 2.6, cy - 3.2, 2.6, 1.5, 'rgba(255,255,255,.95)');
+  }
+};
+
+/* fishcake: springy white slices with an orange-pink rim */
+fishcake = function(x, y){
+  [[-10, 0], [0, -3], [10, 0]].forEach(([dx, dy], i) => {
+    g.save(); g.translate(x + dx, y + dy); g.rotate(-0.3 + i*0.3);
+    ell(1, 2, 6.4, 11.4, 'rgba(80,60,40,.22)');
+    ell(0, 0, 6.4, 11.4, lin(-6, 0, 6, 0, [[0, '#e88a6a'], [0.5, '#f0a080'], [1, '#d9765a']]));
+    ell(0, 0, 5.3, 10.2, rad(-2, -3, 1, 10, [[0, '#ffffff'], [1, '#efe6d6']]));
+    speckle(5700 + i, 10, 0, 0, 4.2, 9, ['rgba(200,180,150,.45)'], 0.6);
+    ell(-1.4, -4, 1.8, 3.4, 'rgba(255,255,255,.7)');
+    g.restore();
+  });
+};
+
+/* coriander: three soft-lobed leaflets with pale veins */
+coriander = function(x, y){
+  g.save(); g.translate(x, y);
+  for (let i = 0; i < 3; i++){
+    g.save(); g.rotate(i*2.1 + 0.3);
+    g.beginPath(); g.moveTo(0, 0);
+    for (let k = 0; k <= 6; k++){ const a = -0.9 + k*0.3, rr = 4.6 + (k % 2 ? -1.1 : 0.6); g.lineTo(Math.sin(a)*rr, -2.4 - Math.cos(a)*rr); }
+    g.closePath(); g.fillStyle = lin(0, -8, 0, 0, [[0, '#5aa847'], [1, '#2f7a28']]); g.fill();
+    g.beginPath(); g.moveTo(0, -0.5); g.lineTo(0, -6.4); g.moveTo(0, -3.4); g.lineTo(-2.2, -5.6); g.moveTo(0, -3.4); g.lineTo(2.2, -5.6); g.strokeStyle = 'rgba(200,235,170,.55)'; g.lineWidth = 0.4; g.stroke();
+    g.restore();
+  }
+  g.beginPath(); g.moveTo(0, 0); g.quadraticCurveTo(2, 4, 1, 8); g.strokeStyle = '#6a9e3a'; g.lineWidth = 0.7; g.stroke();
+  g.restore();
+};
+
+/* spring onion: hollow green rings, pale towards the root end */
+springOnion = function(x, y, rx, ry, seed){
+  const r = rng(seed || 95);
+  for (let i = 0; i < 16; i++){
+    const a = r()*6.28, d = Math.sqrt(r()), cx = x + Math.cos(a)*rx*d, cy = y + Math.sin(a)*ry*d, pale = r() < 0.3, rr = 1.6 + r()*0.8;
+    g.beginPath(); g.ellipse(cx, cy, rr, rr*0.85, r()*3, 0, Math.PI*2);
+    g.strokeStyle = pale ? '#cfe6a0' : (r() < 0.5 ? '#3f9a3a' : '#5ab24a'); g.lineWidth = 0.9; g.stroke();
+    g.fillStyle = pale ? 'rgba(240,250,220,.6)' : 'rgba(200,235,170,.35)'; g.fill();
+  }
+};
+
+/* beansprouts: crisp, translucent white stems with little yellow heads */
+sprouts = function(x, y, n, seed, rx, ry){
+  const r = rng(seed || 41); rx = rx || 20; ry = ry || 12; g.lineCap = 'round';
+  for (let i = 0; i < n; i++){
+    const cx = x + (r() - 0.5)*rx*2, cy = y + (r() - 0.5)*ry*2, a = r()*Math.PI, L = 7 + r()*6, ex = cx + Math.cos(a)*L, ey = cy + Math.sin(a)*L, bx = (cx + ex)/2 + (r() - 0.5)*3, by = (cy + ey)/2 + (r() - 0.5)*3;
+    g.beginPath(); g.moveTo(cx + 0.4, cy + 0.8); g.quadraticCurveTo(bx + 0.4, by + 0.8, ex + 0.4, ey + 0.8); g.strokeStyle = 'rgba(120,110,80,.22)'; g.lineWidth = 1.9; g.stroke();
+    g.beginPath(); g.moveTo(cx, cy); g.quadraticCurveTo(bx, by, ex, ey); g.strokeStyle = 'rgba(250,250,238,.95)'; g.lineWidth = 1.6; g.stroke();
+    g.beginPath(); g.moveTo(cx, cy); g.quadraticCurveTo(bx, by, ex, ey); g.strokeStyle = 'rgba(255,255,255,.9)'; g.lineWidth = 0.5; g.stroke();
+    ell(ex, ey, 1.5, 1.1, '#e8d878');
+  }
+  g.lineCap = 'butt';
+};
+
+/* lime: glossy rind, segments full of tiny juice cells */
+limeHalf = function(x, y){
+  ell(x + 1, y + 2, 10, 9, 'rgba(40,60,20,.25)');
+  circle(x, y, 10, rad(x - 3, y - 3, 1, 11, [[0, '#9ccf4a'], [1, '#3f7a1c']]));
+  circle(x, y, 8.8, '#f4f8d8');
+  circle(x, y, 8, rad(x - 2, y - 2, 1, 9, [[0, '#eef8c0'], [1, '#bcdc66']]));
+  const r = rng(Math.round(x + y*3));
+  for (let i = 0; i < 9; i++){
+    const a = i/9*6.28; g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a)*8, y + Math.sin(a)*8); g.strokeStyle = 'rgba(250,255,230,.9)'; g.lineWidth = 0.7; g.stroke();
+    for (let k = 0; k < 4; k++){ const b = a + 0.2 + r()*0.3, d = 2.5 + r()*4.5; ell(x + Math.cos(b)*d, y + Math.sin(b)*d, 0.9, 0.5, 'rgba(255,255,230,.6)'); }
+  }
+  circle(x, y, 1.3, '#f6fadc'); ell(x - 3.5, y - 4.5, 3, 1, 'rgba(255,255,255,.75)');
+};
+
+/* lettuce: frilly, ruffled leaf with a pale rib and veins */
+lettuce = function(x, y, s){
+  g.save(); g.translate(x, y); g.scale(s || 1, s || 1);
+  g.beginPath(); for (let k = 0; k <= 28; k++){ const a = k/28*6.28, rr = 1 + Math.sin(k*2.3)*0.12; g.lineTo(Math.cos(a)*18*rr, Math.sin(a)*12*rr); } g.closePath();
+  g.fillStyle = rad(-4, -4, 2, 20, [[0, '#d9f0a8'], [0.6, '#8fcf5a'], [1, '#4f9a2e']]); g.fill();
+  g.beginPath(); g.moveTo(-15, 3); g.quadraticCurveTo(0, -1, 15, -2); g.strokeStyle = 'rgba(240,250,210,.9)'; g.lineWidth = 1.6; g.stroke();
+  for (let i = -3; i <= 3; i++){ g.beginPath(); g.moveTo(i*4, 0.5 - i*0.2); g.quadraticCurveTo(i*4 + 2, -5, i*4 + 4, -10 + Math.abs(i)); g.moveTo(i*4, 0.5 - i*0.2); g.quadraticCurveTo(i*4 + 2, 5, i*4 + 3, 10 - Math.abs(i)); g.strokeStyle = 'rgba(230,248,200,.45)'; g.lineWidth = 0.6; g.stroke(); }
+  g.restore();
+};
+
+/* tau pok: deep-fried golden puff with a spongy, pitted surface */
+const _taupok55 = taupokCube;
+taupokCube = function(x, y, s, wet){
+  g.save(); g.translate(x, y); g.scale(s || 1, s || 1);
+  ell(1.5, 4, 11, 5, 'rgba(60,30,10,.25)');
+  box(-9.5, -7.5, 19, 17, 4, wet ? '#b8742a' : '#c98a3a');
+  box(-9.5, -9.5, 19, 16, 4, rad(-4, -6, 1, 14, [[0, wet ? '#e8a04a' : '#f6c870'], [0.7, wet ? '#c8782a' : '#e0a04a'], [1, wet ? '#a05a1a' : '#b8742a']]));
+  const r = rng(Math.round(x*5 + y*3 + 9));
+  for (let i = 0; i < 16; i++) circle(-7 + r()*14, -7.5 + r()*12, 0.5 + r()*0.8, wet ? 'rgba(120,50,10,.5)' : 'rgba(150,90,30,.5)');
+  if (wet){ ell(-2, -4, 6, 2, 'rgba(255,200,120,.45)'); ell(3, 1, 3, 1.2, 'rgba(255,220,160,.5)'); }
+  ell(-4, -6.5, 3.5, 1.1, 'rgba(255,250,220,.6)');
+  g.restore();
+};
+
+/* noodles: every strand has a shadow side, a body and a wet highlight; lower strands are darker */
+noodleMound = function(x, y, rx, ry, cols, width, n, seed){
+  const r = rng(seed || 7); g.lineCap = 'round';
+  ell(x + 1.5, y + 3, rx*0.95, ry*0.9, 'rgba(70,45,15,.16)');
+  const S = [];
+  for (let i = 0; i < n; i++){
+    const a = r()*Math.PI*2, d = Math.sqrt(r())*0.85, cx = x + Math.cos(a)*rx*d, cy = y + Math.sin(a)*ry*d, len = 12 + r()*18, ang = r()*Math.PI;
+    S.push({c:cols[i % cols.length], w:width*(0.7 + r()*0.5), x0:cx - Math.cos(ang)*len, y0:cy - Math.sin(ang)*len*0.6, x1:cx + Math.cos(ang)*len, y1:cy + Math.sin(ang)*len*0.6,
+      c1x:cx + (r() - 0.5)*14, c1y:cy + (r() - 0.5)*12, c2x:cx + (r() - 0.5)*14, c2y:cy + (r() - 0.5)*12, depth:i/n});
+  }
+  for (const s of S){
+    const path = (dx, dy) => { g.beginPath(); g.moveTo(s.x0 + dx, s.y0 + dy); g.bezierCurveTo(s.c1x + dx, s.c1y + dy, s.c2x + dx, s.c2y + dy, s.x1 + dx, s.y1 + dy); };
+    const dark = 0.25*(1 - s.depth);
+    path(0.5, 0.9); g.strokeStyle = 'rgba(90,60,20,.28)'; g.lineWidth = s.w + 0.8; g.stroke();
+    path(0, 0); g.strokeStyle = typeof s.c === 'string' && (s.c[0] === '#' || s.c.startsWith('rgb(')) ? mix(s.c, '#5a3a14', dark) : s.c; g.lineWidth = s.w; g.stroke();
+    path(-s.w*0.18, -s.w*0.22); g.strokeStyle = 'rgba(255,255,245,.55)'; g.lineWidth = Math.max(0.4, s.w*0.28); g.stroke();
+  }
+  g.lineCap = 'butt';
+};
+
+/* chicken rice: bigger, juicier slices sitting in a glossy soy and sesame oil dressing */
+(function(){
+  const cs = chickenSlices;
+  chickenSlices = function(x, y, n){
+    g.save(); g.globalAlpha = 0.8;
+    blob(x + 2, y + 5, 44, 20, 0.25, 5801, rad(x - 6, y, 4, 46, [[0, 'rgba(170,96,30,.55)'], [0.7, 'rgba(120,64,18,.35)'], [1, 'rgba(120,64,18,0)']]));
+    for (let i = 0; i < 6; i++) ell(x - 30 + i*12, y + 6 + (i % 2)*4, 2.6, 1, 'rgba(255,230,170,.7)');
+    g.restore();
+    const blob0 = blob; blob = function(bx, by, brx, bry, jit, seed, fill, ...rest){ if (seed === 801) return; return blob0(bx, by, brx, bry, jit, seed, fill, ...rest); };
+    try { g.save(); g.translate(x, y); g.scale(1.2, 1.2); g.translate(-x, -y); cs(x, y, n); g.restore(); } finally { blob = blob0; }
+  };
+})();
+
+/* fruit wedges: juicy, grainy flesh fading into pale rind, small glossy seeds */
+fruitWedge = function(x, y, R, rot, flesh, flesh2, rind, rind2, seeds, seed){
+  const r = rng(seed || 1);
+  g.save(); g.translate(x, y); g.rotate(rot);
+  const wedge = (k) => { g.beginPath(); g.moveTo(-R*k, 0); g.quadraticCurveTo(0, R*0.55*k, R*k, 0); g.lineTo(R*0.12*k, -R*1.05*k); g.closePath(); };
+  g.save(); g.translate(1.5, 3); wedge(1.04); g.fillStyle = 'rgba(60,30,20,.2)'; g.fill(); g.restore();
+  wedge(1.04); g.fillStyle = lin(0, R*0.1, 0, R*0.5, [[0, rind], [1, rind2]]); g.fill();                     /* skin */
+  wedge(0.97); g.fillStyle = seeds === 'drop' ? '#f2f6e2' : mix(flesh, '#fff8e0', 0.6); g.fill();             /* pale inner rind */
+  wedge(0.9); g.fillStyle = lin(R*0.1, -R*0.95, 0, R*0.4, [[0, flesh2], [0.6, flesh], [1, mix(flesh, '#ffffff', 0.35)]]); g.fill();
+  /* juicy grain */
+  g.save(); wedge(0.9); g.clip();
+  for (let i = 0; i < 70; i++){ const px = (r() - 0.5)*R*1.7, py = -R*0.95 + r()*R*1.3; ell(px, py, 0.9 + r()*1.4, 0.5 + r()*0.8, r() < 0.5 ? 'rgba(255,255,255,.28)' : rgba55(flesh, 0.5)); }
+  if (seeds === 'drop') for (let i = 0; i < 6; i++){ const px = (i - 2.5)*R*0.2, py = -R*0.25 - Math.abs(i - 2.5)*R*0.06; g.save(); g.translate(px, py); g.rotate((i - 2.5)*0.25); g.beginPath(); g.moveTo(0, -2.6); g.quadraticCurveTo(1.9, 0.6, 0, 2); g.quadraticCurveTo(-1.9, 0.6, 0, -2.6); g.fillStyle = '#1a1210'; g.fill(); ell(-0.4, -0.6, 0.5, 0.9, 'rgba(255,255,255,.55)'); g.restore(); }
+  if (seeds === 'cavity'){ ell(0, -R*0.2, R*0.42, R*0.18, rgba55(mix(flesh, '#7a3a10', 0.4), 0.55)); for (let i = 0; i < 11; i++){ const px = -R*0.34 + i*R*0.068, py = -R*0.2 + Math.sin(i*1.7)*R*0.06; circle(px, py, 1.5, '#1c1410'); circle(px - 0.4, py - 0.5, 0.45, 'rgba(255,255,255,.6)'); } }
+  if (seeds === 'line'){ g.beginPath(); g.moveTo(-R*0.5, -R*0.15); g.quadraticCurveTo(0, R*0.05, R*0.5, -R*0.15); g.strokeStyle = rgba55(mix(flesh, '#a8c060', 0.5), 0.6); g.lineWidth = 2; g.stroke(); }
+  g.restore();
+  ell(-R*0.25, -R*0.45, R*0.22, R*0.05, 'rgba(255,255,255,.45)');
+  g.restore();
+};
+
+/* ice kachang from above: a fluffy shaved-ice mound in a bowl, syrups soaked in, toppings scattered */
+(function(){
+  const k0 = DISH.kachang;
+  DISH.kachang = function(has, phase){
+    const top = phase === 'top' || phase === 'full', r = rng(5901);
+    /* the bowl */
+    g.save(); g.shadowColor = 'rgba(40,50,60,.3)'; g.shadowBlur = 10; g.shadowOffsetY = 5; circle(0, 0, 92, '#eef2f4'); g.restore();
+    circle(0, 0, 92, rad(-30, -30, 4, 96, [[0, '#ffffff'], [1, '#dfe6ea']]));
+    g.beginPath(); g.arc(0, 0, 86, 0, Math.PI*2); g.strokeStyle = '#d9468f'; g.lineWidth = 2.2; g.stroke();
+    circle(0, 0, 80, rad(10, 12, 20, 82, [[0, '#f6f8fa'], [1, '#d7dfe4']]));
+    /* what sits at the bottom of the bowl */
+    const bits = [['redbean', -30, -22], ['attap', 26, -26], ['grassjelly', -28, 24], ['jelly', 28, 22], ['chendol', 0, -42], ['corn', 0, 40]];
+    bits.forEach(([id, x, y], i) => {
+      if (!has[id]) return; const rr = rng(5910 + i);
+      if (id === 'redbean') for (let k = 0; k < 16; k++){ const bx = x + (rr() - 0.5)*24, by = y + (rr() - 0.5)*16; ell(bx, by, 2.6, 1.9, rad(bx - 0.8, by - 0.8, 0.3, 3, [[0, '#a8404a'], [1, '#4a0e16']])); ell(bx - 0.8, by - 0.7, 0.9, 0.4, 'rgba(255,220,220,.6)'); }
+      if (id === 'attap') for (let k = 0; k < 7; k++){ const bx = x + (rr() - 0.5)*22, by = y + (rr() - 0.5)*14; ell(bx, by, 3.6, 2.4, rad(bx - 1, by - 1, 0.3, 4, [[0, '#fffdf2'], [1, '#e0d6b0']])); }
+      if (id === 'grassjelly') for (let k = 0; k < 6; k++){ const bx = x - 10 + (k % 3)*8, by = y - 5 + Math.floor(k/3)*8; box(bx, by, 7, 7, 1.2, lin(bx, by, bx + 7, by + 7, [[0, '#3a2e26'], [1, '#100c0a']])); ell(bx + 2, by + 1.6, 1.8, 0.6, 'rgba(255,255,255,.35)'); }
+      if (id === 'jelly') for (let k = 0; k < 6; k++){ const bx = x - 10 + (k % 3)*8, by = y - 5 + Math.floor(k/3)*8, c = ['#e8406a', '#f6c22a', '#4cbf5a'][k % 3]; box(bx, by, 6.5, 6.5, 1.6, rgba55(c, 0.85)); ell(bx + 2, by + 1.5, 1.6, 0.6, 'rgba(255,255,255,.6)'); }
+      if (id === 'chendol') for (let k = 0; k < 7; k++){ const bx = x - 12 + k*4; g.beginPath(); g.moveTo(bx, y - 6); g.bezierCurveTo(bx + 3, y - 2, bx - 3, y + 2, bx + 1, y + 7); g.strokeStyle = '#3f9a3a'; g.lineWidth = 2.6; g.lineCap = 'round'; g.stroke(); g.strokeStyle = 'rgba(200,240,170,.6)'; g.lineWidth = 0.8; g.stroke(); g.lineCap = 'butt'; }
+      if (id === 'corn') for (let k = 0; k < 12; k++){ const bx = x + (rr() - 0.5)*20, by = y + (rr() - 0.5)*12; box(bx - 1.8, by - 1.8, 3.6, 3.6, 1.2, rad(bx - 0.6, by - 0.6, 0.2, 3, [[0, '#fff0a0'], [1, '#e6b422']])); }
+    });
+    if (!top) return;
+    /* the mound of shaved ice: thousands of tiny crystals, lit from the top left */
+    circle(2, 4, 76, 'rgba(70,100,120,.22)');
+    circle(0, 0, 76, rad(-24, -26, 4, 80, [[0, '#ffffff'], [0.55, '#f2f6f8'], [1, '#c9d8e0']]));
+    for (let i = 0; i < 900; i++){ const a = r()*6.28, d = Math.sqrt(r())*74, x = Math.cos(a)*d, y = Math.sin(a)*d, lit = (x + y) < 0; g.fillStyle = lit ? 'rgba(255,255,255,.85)' : (r() < 0.5 ? 'rgba(170,195,210,.45)' : 'rgba(255,255,255,.5)'); g.fillRect(x, y, 0.8 + r()*1.2, 0.6 + r()*1); }
+    /* syrups soak into the ice in soft patches */
+    const syr = has.syrups || [['#d9465f', 0.6], ['#4caf50', 0.5], ['#7a4a24', 0.55]];
+    g.save(); g.globalCompositeOperation = 'multiply';
+    syr.forEach(([c, a], i) => { const ang = -1.9 + i*2.1, cx = Math.cos(ang)*30, cy = Math.sin(ang)*30; for (let k = 0; k < 4; k++){ const bx = cx + (r() - 0.5)*30, by = cy + (r() - 0.5)*30; g.globalAlpha = 0.35 + a*0.35; circle(bx, by, 20 + r()*12, rad(bx, by, 2, 30, [[0, c], [1, rgba55(c, 0)]])); } });
+    g.restore();
+    for (let i = 0; i < 260; i++){ const a = r()*6.28, d = Math.sqrt(r())*72; g.fillStyle = 'rgba(255,255,255,.7)'; g.fillRect(Math.cos(a)*d, Math.sin(a)*d, 0.8, 0.8); }
+    /* evaporated milk drizzle */
+    if (has.milk !== 0){ g.save(); g.lineCap = 'round'; g.beginPath(); for (let t = 0; t < 6.28*2.2; t += 0.12){ const rr = 8 + t*4.4; g.lineTo(Math.cos(t)*rr, Math.sin(t)*rr*0.95); } g.strokeStyle = 'rgba(250,244,226,.85)'; g.lineWidth = 3; g.stroke(); g.strokeStyle = 'rgba(255,255,255,.9)'; g.lineWidth = 1; g.stroke(); g.restore(); }
+    if (has.corn) for (let k = 0; k < 14; k++){ const a = r()*6.28, d = 8 + r()*40, bx = Math.cos(a)*d, by = Math.sin(a)*d; box(bx - 1.8, by - 1.8, 3.6, 3.6, 1.2, rad(bx - 0.6, by - 0.6, 0.2, 3, [[0, '#fff0a0'], [1, '#e6b422']])); }
+    if (has.icecream){ circle(2, 4, 20, 'rgba(80,60,40,.25)'); circle(0, 0, 19, rad(-6, -6, 2, 20, [[0, '#fff2ea'], [1, '#e8b8a8']])); for (let k = 0; k < 8; k++){ const a = k*0.8; ell(Math.cos(a)*14, Math.sin(a)*14, 3, 1.4, 'rgba(255,255,255,.5)'); } }
+    if (has.durian){ blob(-18, 14, 14, 10, 0.5, 5920, rad(-22, 10, 1, 15, [[0, '#fff1a0'], [1, '#e8c24a']])); ell(-22, 10, 4, 1.6, 'rgba(255,255,255,.55)'); }
+    if (has.chendol) for (let k = 0; k < 6; k++){ const bx = 14 + k*4, by = -12; g.beginPath(); g.moveTo(bx, by - 6); g.bezierCurveTo(bx + 3, by - 2, bx - 3, by + 2, bx + 1, by + 7); g.strokeStyle = '#3f9a3a'; g.lineWidth = 2.4; g.lineCap = 'round'; g.stroke(); g.lineCap = 'butt'; }
+    ell(-30, -34, 16, 6, 'rgba(255,255,255,.6)');
+  };
+})();
+
+/* satay: chunky marinated meat, caramelised and charred at the edges, on bamboo skewers */
+satayStick = function(x, y, col, seed, ang){
+  g.save(); g.translate(x, y); g.rotate(ang || -0.35);
+  g.lineCap = 'round'; line(-46, 1.2, 42, 1.2, 'rgba(60,40,20,.25)', 3); line(-46, 0, 42, 0, lin(-46, 0, 42, 0, [[0, '#e2c28a'], [1, '#b8905a']]), 2.4); line(-46, -0.6, 42, -0.6, 'rgba(255,240,210,.55)', 0.7); g.lineCap = 'butt';
+  const r = rng(seed || 1);
+  for (let j = 0; j < 4; j++){
+    const cx = -22 + j*13;
+    blob(cx + 0.8, 2, 7.6, 6, 0.4, seed + j + 40, 'rgba(50,25,10,.3)');
+    blob(cx, 0, 7.4, 5.9, 0.42, seed + j, rad(cx - 2.5, -2.5, 0.5, 8.5, [[0, mix(col, '#f6c27a', 0.5)], [0.55, col], [1, mix(col, '#2a1006', 0.55)]]));
+    for (let k = 0; k < 6; k++){ const a = r()*6.28, d = 2 + r()*4; blob(cx + Math.cos(a)*d, Math.sin(a)*d*0.8, 1.4 + r()*1.4, 0.9 + r()*0.8, 0.6, seed + j*10 + k, 'rgba(40,14,4,.6)'); }
+    for (let k = 0; k < 3; k++) ell(cx - 3 + k*2.6, -2.6 + (k % 2), 1.4, 0.5, 'rgba(255,230,170,.65)');
+  }
+  g.restore();
+};
+
+/* oysters: plump, glossy and soft, grey-beige with a darker frilly edge */
+oyster47 = function(x, y, s, rot){
+  g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale((s || 1)*1.15, (s || 1)*1.15);
+  const sd = 470 + Math.round(x*7 + y);
+  blob(0.8, 2, 9, 6.6, 0.35, sd + 1, 'rgba(60,50,40,.3)');
+  blob(0, 0, 9, 6.6, 0.38, sd, rad(-2, -2, 0.5, 10, [[0, '#f4efe6'], [0.6, '#d6cbb8'], [1, '#9a8c78']]));
+  g.beginPath(); g.ellipse(1.2, 0.4, 7.4, 5, 0.1, 0.1, 3.4); g.strokeStyle = 'rgba(90,80,70,.55)'; g.lineWidth = 1.6; g.stroke();
+  g.beginPath(); g.ellipse(1.2, 0.4, 7.4, 5, 0.1, 0.1, 3.4); g.strokeStyle = 'rgba(40,35,30,.35)'; g.lineWidth = 0.5; g.stroke();
+  ell(-2.5, -2.2, 3, 1.3, 'rgba(255,255,255,.75)'); ell(2.5, 1.5, 1.4, 0.6, 'rgba(255,255,255,.4)');
+  g.restore();
+};
+
+/* chicken chop: golden, crisp-edged grilled thigh with char lines and a sticky glaze */
+chickenChop = function(x, y, s){
+  g.save(); g.translate(x, y); g.scale(s || 1, s || 1);
+  blob(3, 6, 44, 30, 0.18, 5951, 'rgba(60,30,10,.3)');
+  blob(0, 0, 44, 30, 0.18, 5950, rad(-14, -12, 4, 48, [[0, '#f2c07a'], [0.55, '#d08a3e'], [1, '#8a4a1a']]));
+  g.save(); blob(0, 0, 43, 29, 0.18, 5950, null); g.clip();
+  const r = rng(5952);
+  for (let i = 0; i < 26; i++){ const a = r()*6.28, d = 6 + r()*32; blob(Math.cos(a)*d, Math.sin(a)*d*0.66, 3 + r()*4, 2 + r()*2.4, 0.6, 5960 + i, r() < 0.5 ? 'rgba(255,220,150,.35)' : 'rgba(120,56,16,.35)'); }
+  for (let i = -2; i <= 2; i++){ g.beginPath(); g.moveTo(-34 + i*4, -16 + i*10); g.lineTo(30 + i*4, -26 + i*10); g.strokeStyle = 'rgba(50,22,6,.6)'; g.lineWidth = 3.4; g.lineCap = 'round'; g.stroke(); g.strokeStyle = 'rgba(30,12,2,.4)'; g.lineWidth = 1.2; g.stroke(); }
+  g.lineCap = 'butt';
+  for (let i = 0; i < 9; i++){ const a = r()*6.28, d = 8 + r()*26; ell(Math.cos(a)*d, Math.sin(a)*d*0.66, 2.6, 0.9, 'rgba(255,240,200,.6)'); }
+  g.restore(); g.restore();
+};
+
+/* nasi lemak sides */
+omelette = function(x, y, s){
+  s = s || 1; g.save(); g.translate(x, y); g.rotate(-0.2);
+  box(-22*s + 2, -12*s + 4, 44*s, 24*s, 11*s, 'rgba(90,60,10,.25)');
+  box(-22*s, -12*s, 44*s, 24*s, 11*s, lin(0, -12*s, 0, 12*s, [[0, '#ffe58a'], [0.5, '#f6c844'], [1, '#d99a22']]));
+  const r = rng(6001);
+  for (let i = 0; i < 14; i++) blob(-18*s + r()*36*s, -9*s + r()*18*s, (2 + r()*3)*s, (1.2 + r()*1.6)*s, 0.6, 6010 + i, r() < 0.6 ? 'rgba(200,120,30,.35)' : 'rgba(255,250,210,.5)');
+  g.beginPath(); g.moveTo(-18*s, 2*s); g.bezierCurveTo(-6*s, -2*s, 6*s, 6*s, 18*s, 1*s); g.strokeStyle = 'rgba(190,120,20,.45)'; g.lineWidth = 1.2*s; g.stroke();
+  speckle(6020, 6, 0, 0, 16*s, 7*s, ['rgba(60,140,50,.7)'], 1.2*s);
+  ell(-8*s, -7*s, 10*s, 2.2*s, 'rgba(255,255,240,.7)');
+  g.restore();
+};
+wing = function(x, y, s){
+  s = s || 1; g.save(); g.translate(x, y); g.rotate(-0.3);
+  blob(2, 4, 23*s, 13*s, 0.3, 6031, 'rgba(70,30,10,.3)');
+  blob(-24*s, 2*s, 6*s, 5*s, 0.3, 63, rad(-25*s, 1*s, 0.5, 6*s, [[0, '#fbf0dc'], [1, '#d8b888']]));
+  blob(0, 0, 22*s, 12*s, 0.32, 61, rad(-6*s, -5*s, 1, 24*s, [[0, '#f6c070'], [0.55, '#c8782c'], [1, '#7a3a10']]));
+  const r = rng(6032);
+  for (let i = 0; i < 30; i++){ const a = r()*6.28, d = Math.sqrt(r())*17*s; blob(Math.cos(a)*d, Math.sin(a)*d*0.55, (1.2 + r()*2)*s, (0.8 + r()*1.2)*s, 0.7, 6040 + i, r() < 0.5 ? 'rgba(255,220,150,.55)' : 'rgba(90,40,10,.45)'); }
+  ell(-6*s, -5*s, 8*s, 2*s, 'rgba(255,240,200,.55)');
+  g.restore();
+};
+otah = function(x, y){
+  g.save(); g.translate(x, y); g.rotate(0.4);
+  box(-17, -8, 38, 22, 5, 'rgba(40,50,20,.28)');
+  box(-19, -11, 38, 22, 5, lin(0, -11, 0, 11, [[0, '#6a9a3a'], [1, '#3a6a22']]));
+  for (let i = 0; i < 7; i++) line(-17 + i*5.6, -10, -17 + i*5.6, 10, 'rgba(30,60,15,.35)', 0.6);
+  box(-14, -6.5, 28, 13, 4, rad(-4, -3, 1, 16, [[0, '#f6a66a'], [0.6, '#e0743a'], [1, '#b8501e']]));
+  for (let i = 0; i < 10; i++){ const r = rng(6050 + i); blob(-11 + r()*22, -4 + r()*8, 1.6 + r()*2, 1 + r(), 0.6, 6060 + i, r() < 0.5 ? 'rgba(150,50,10,.45)' : 'rgba(255,210,160,.5)'); }
+  ell(-6, -3.5, 5, 1.2, 'rgba(255,240,220,.6)');
+  g.restore();
+};
+luncheon = function(x, y){
+  [[-6, -2], [6, 3]].forEach(([dx, dy], i) => {
+    g.save(); g.translate(x + dx, y + dy); g.rotate(-0.2 + i*0.3);
+    box(-10, -6, 22, 16, 3, 'rgba(80,30,20,.25)');
+    box(-11, -8, 22, 16, 3, lin(0, -8, 0, 8, [[0, '#c86a4a'], [1, '#9a4a2e']]));
+    box(-9.5, -6.5, 19, 13, 2.4, rad(-3, -3, 1, 12, [[0, '#f6c2b8'], [0.7, '#e89a90'], [1, '#d07a6e']]));
+    speckle(80 + i, 9, 0, 0, 7, 4.5, ['rgba(255,240,235,.7)', 'rgba(200,110,100,.5)'], 0.9);
+    ell(-4, -3.5, 4, 1, 'rgba(255,255,255,.55)');
+    g.restore();
+  });
+};
+
+/* shaved ice seen from above: thousands of crystals, a soft mound shape */
+function iceTex55(x, y, rx, ry, seed){
+  const r = rng(seed || 6100);
+  blob(x + 2, y + 4, rx, ry, 0.12, (seed || 6100) + 1, 'rgba(70,100,120,.2)');
+  blob(x, y, rx, ry, 0.12, seed || 6100, rad(x - rx*0.32, y - ry*0.36, 4, rx*1.1, [[0, '#ffffff'], [0.55, '#f1f6f8'], [1, '#c4d5de']]));
+  g.save(); blob(x, y, rx, ry, 0.12, seed || 6100, null); g.clip();
+  const n = Math.round(rx*ry/5);
+  for (let i = 0; i < n; i++){ const a = r()*6.28, d = Math.sqrt(r()), px = x + Math.cos(a)*d*rx, py = y + Math.sin(a)*d*ry, lit = (px - x)/rx + (py - y)/ry < 0;
+    g.fillStyle = lit ? (r() < 0.7 ? 'rgba(255,255,255,.9)' : 'rgba(200,222,235,.5)') : (r() < 0.55 ? 'rgba(150,180,198,.4)' : 'rgba(255,255,255,.6)'); g.fillRect(px, py, 0.7 + r()*1.3, 0.5 + r()*1); }
+  g.restore();
+}
+iceMound = function(x, y, rx, ry, seed){ iceTex55(x, y, rx, ry, seed || 361); };
+
+/* chendol jelly: soft, translucent pandan-green strands with a wet sheen */
+jellyStrand = function(x, y, a, s){
+  g.save(); g.translate(x, y); g.rotate(a); g.scale(s || 1, s || 1); g.lineCap = 'round';
+  const path = (dy) => { g.beginPath(); g.moveTo(-9, dy); g.bezierCurveTo(-4, -4 + dy, 1, 3 + dy, 5, -1 + dy); g.quadraticCurveTo(8, -3 + dy, 10, 0 + dy); };
+  path(0.8); g.strokeStyle = 'rgba(30,70,20,.3)'; g.lineWidth = 3.8; g.stroke();
+  path(0); g.strokeStyle = 'rgba(82,170,64,.92)'; g.lineWidth = 3.4; g.stroke();
+  path(-0.3); g.strokeStyle = 'rgba(140,210,110,.75)'; g.lineWidth = 1.8; g.stroke();
+  path(-0.8); g.strokeStyle = 'rgba(230,255,220,.7)'; g.lineWidth = 0.6; g.stroke();
+  g.lineCap = 'butt'; g.restore();
+};
+
+/* carrot cake: soft scrambled egg folded through, browned at the edges */
+eggScramble = function(x, y, rx, ry, seed, dark){
+  const r = rng(seed || 91);
+  for (let i = 0; i < 16; i++){
+    const a = r()*6.28, d = Math.sqrt(r()), bx = x + Math.cos(a)*rx*d, by = y + Math.sin(a)*ry*d, w = 4 + r()*5, h = 3 + r()*3;
+    blob(bx, by, w, h, 0.5, 900 + i, dark ? rad(bx - 1, by - 1, 0.5, w + 1, [[0, '#d9a84a'], [1, '#8a5a1a']]) : rad(bx - 1, by - 1, 0.5, w + 1, [[0, '#fff2a8'], [0.6, '#f6d260'], [1, '#d9a032']]));
+    blob(bx + w*0.3, by + h*0.2, w*0.45, h*0.35, 0.6, 920 + i, dark ? 'rgba(60,30,8,.45)' : 'rgba(190,110,30,.45)');
+    ell(bx - w*0.3, by - h*0.35, w*0.35, h*0.18, 'rgba(255,255,240,.65)');
+  }
+};
+chaipoh = function(x, y, rx, ry, seed){
+  const r = rng(seed || 93);
+  for (let i = 0; i < 22; i++){ const a = r()*6.28, d = Math.sqrt(r()), px = x + Math.cos(a)*rx*d, py = y + Math.sin(a)*ry*d; g.save(); g.translate(px, py); g.rotate(r()*3); box(-1.6, -1.2, 3.2, 2.4, 0.8, rad(-0.5, -0.5, 0.2, 2.5, [[0, '#d9a050'], [1, '#7a4a14']])); g.restore(); }
+};
+
+/* rojak pieces */
+youtiaoStick = function(x, y, s, rot){
+  g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s || 1, s || 1);
+  box(-29, -5, 60, 16, 7, 'rgba(70,30,6,.25)');
+  for (let k = 0; k < 2; k++){
+    box(-30, -7 + k*6.5, 60, 8, 4, lin(0, -7 + k*6.5, 0, 1 + k*6.5, [[0, '#f8d488'], [0.45, '#e0a040'], [1, '#9a5a14']]));
+    const r = rng(331 + k); for (let i = 0; i < 14; i++) ell(-26 + r()*52, -4 + k*6.5 + r()*3, 1.2 + r()*2, 0.6 + r()*0.8, r() < 0.5 ? 'rgba(255,245,210,.6)' : 'rgba(110,60,10,.45)');
+  }
+  g.restore();
+};
+pineappleChunk47 = function(x, y, s, rot){
+  g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s || 1, s || 1);
+  g.beginPath(); g.moveTo(-7, 6); g.lineTo(1, -7); g.lineTo(10, 5); g.closePath(); g.fillStyle = 'rgba(80,60,10,.25)'; g.fill();
+  g.beginPath(); g.moveTo(-8, 5); g.lineTo(0, -8); g.lineTo(9, 4); g.closePath(); g.fillStyle = lin(0, -8, 0, 5, [[0, '#fff2a0'], [0.6, '#f6cf40'], [1, '#e0a820']]); g.fill();
+  for (let k = 0; k < 4; k++) line(-4 + k*2.6, 3, -1 + k*2, -4, 'rgba(220,160,20,.5)', 0.5);
+  ell(-1, -2, 2, 0.8, 'rgba(255,255,230,.7)');
+  g.restore();
+};
+cucumberChunk47 = function(x, y, s, rot){
+  g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s || 1, s || 1);
+  box(-6, -4, 14, 10, 2, 'rgba(30,60,10,.25)');
+  box(-7, -5, 14, 10, 2, lin(0, -5, 0, 5, [[0, '#eef8d8'], [1, '#c6e2a0']]));
+  box(-7, -5, 14, 3, 1.4, lin(0, -5, 0, -2, [[0, '#4a8a2a'], [1, '#24561a']]));
+  speckle(Math.round(x + y), 4, 0, 2, 4, 2, ['rgba(250,255,235,.9)'], 0.8);
+  g.restore();
+};
+jambu47 = function(x, y, s, rot){
+  g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s || 1, s || 1);
+  g.beginPath(); g.moveTo(-6, 6); g.quadraticCurveTo(-7, -5, 1, -6); g.quadraticCurveTo(9, -5, 8, 6); g.closePath(); g.fillStyle = 'rgba(80,20,30,.25)'; g.fill();
+  g.beginPath(); g.moveTo(-7, 5); g.quadraticCurveTo(-8, -6, 0, -7); g.quadraticCurveTo(8, -6, 7, 5); g.closePath(); g.fillStyle = lin(-6, -7, 6, 5, [[0, '#ff7a8e'], [1, '#c8304a']]); g.fill();
+  ell(0, 2.4, 5.4, 2.6, rad(-1, 2, 0.5, 5.5, [[0, '#ffffff'], [1, '#f6dede']]));
+  ell(-3, -3.5, 2.2, 0.8, 'rgba(255,255,255,.7)');
+  g.restore();
+};
+/* rojak sauce: glossy black prawn paste coating, not a flat puddle */
+(function(){
+  const r0 = DISH.rojak;
+  DISH.rojak = function(has, w){
+    const b0 = blob;
+    blob = function(x, y, rx, ry, jit, seed, fill, ...rest){
+      if (seed === 492) return b0(x, y, rx, ry, jit, seed, rad(x - rx*0.3, y - ry*0.3, 4, rx*1.1, [[0, 'rgba(150,90,45,.85)'], [0.6, 'rgba(100,55,25,.88)'], [1, 'rgba(70,38,18,.85)']]), ...rest);
+      return b0(x, y, rx, ry, jit, seed, fill, ...rest);
+    };
+    try { r0(has, w); } finally { blob = b0; }
+    const r = rng(6200); for (let i = 0; i < 30; i++){ const a = r()*6.28, d = Math.sqrt(r())*50; ell(Math.cos(a)*d, Math.sin(a)*d*0.7, 2 + r()*2, 0.7, 'rgba(255,220,180,.45)'); }
+  };
+})();
+
+/* chendol, redrawn: glass bowl, coconut milk, shaved ice, pandan jelly, gula melaka soaking in */
+DISH.chendol = function(has, w){
+  w = w || {}; const N = id => has[id] || 0, ice = has.ice == null ? 1 : has.ice, san = has.santan || 0, gm = has.gm || 0, r = rng(6300);
+  return realDraw55(() => {
+    g.save(); g.shadowColor = 'rgba(40,60,70,.3)'; g.shadowBlur = 10; g.shadowOffsetY = 5; circle(0, 0, 88, 'rgba(230,240,244,1)'); g.restore();
+    circle(0, 0, 88, rad(-26, -26, 4, 92, [[0, '#ffffff'], [0.7, '#e8f2f5'], [1, '#bcd2da']]));
+    g.beginPath(); g.arc(0, 0, 84, 0, Math.PI*2); g.strokeStyle = 'rgba(255,255,255,.9)'; g.lineWidth = 2; g.stroke();
+    circle(0, 0, 80, rad(0, 0, 20, 82, [[0, san > 0 ? '#f8f4ea' : '#dfeef2'], [1, san > 0 ? '#e6dcc8' : '#c4dce4']]));
+    if (N('redbean')) for (let k = 0; k < 30; k++){ const a = r()*6.28, d = 30 + r()*44, bx = Math.cos(a)*d, by = Math.sin(a)*d*0.92; ell(bx, by, 2.8, 2, rad(bx - 0.8, by - 0.8, 0.3, 3.2, [[0, '#a8404a'], [1, '#4a0e16']])); ell(bx - 0.8, by - 0.7, 0.9, 0.4, 'rgba(255,220,220,.6)'); }
+    if (N('attap')) for (let i = 0; i < 5; i++){ const bx = 34 + (i % 3)*9, by = 26 + Math.floor(i/3)*9; ell(bx, by, 4.2, 2.8, rad(bx - 1, by - 1, 0.3, 4.5, [[0, '#fffdf2'], [1, '#d8ccaa']])); }
+    if (N('pulut')) for (let k = 0; k < 26; k++){ const a = r()*6.28, d = r()*16, bx = 26 + Math.cos(a)*d, by = -34 + Math.sin(a)*d; ell(bx, by, 2, 1.1, '#3a1a2a'); }
+    if (N('chendol')) for (let i = 0; i < 14*N('chendol'); i++){ const a = i*2.39, d = 50 + (i*13) % 26; jellyStrand(Math.cos(a)*d, Math.sin(a)*d*0.9, a + 1.6, 1); }
+    if (N('durian')) blob(-30, -26, 20, 15, 0.3, 53, rad(-34, -30, 2, 22, [[0, '#fff3b0'], [1, '#e0bc40']]));
+    if (ice > 0) iceTex55(0, -2, 58*ice, 54*ice, 6301);
+    if (ice > 0 && N('chendol')) for (let i = 0; i < 6 + 4*N('chendol'); i++){ const a = r()*6.28, d = Math.sqrt(r())*38*ice; jellyStrand(Math.cos(a)*d, Math.sin(a)*d*0.9 - 4, r()*6.28, 0.95); }
+    if (san > 0){ g.save(); g.globalAlpha = Math.min(0.5, san*0.6); g.globalCompositeOperation = 'screen'; circle(0, 0, 80, rad(0, 0, 50, 82, [[0, 'rgba(255,252,240,0)'], [1, 'rgba(255,252,240,.9)']])); g.restore(); }
+    if (gm > 0){
+      /* gula melaka soaks into the ice in a dark caramel pool, with glossy drips */
+      g.save(); g.globalCompositeOperation = 'multiply';
+      for (let k = 0; k < 7; k++){ const bx = (r() - 0.5)*44*gm, by = -6 + (r() - 0.5)*36*gm; g.globalAlpha = 0.35 + gm*0.3; blob(bx, by, 14 + r()*12, 10 + r()*10, 0.5, 6310 + k, rad(bx, by, 2, 26, [[0, '#7a3a0e'], [0.6, 'rgba(160,90,30,.7)'], [1, 'rgba(200,140,60,0)']])); }
+      g.restore();
+      g.lineCap = 'round';
+      for (let k = 0; k < 3 + Math.round(gm*3); k++){ const a = r()*6.28, d = 10 + r()*30, x0 = Math.cos(a)*d, y0 = Math.sin(a)*d*0.9, x1 = x0 + (r() - 0.5)*14, y1 = y0 + 4 + r()*8;
+        g.beginPath(); g.moveTo(x0, y0); g.quadraticCurveTo((x0 + x1)/2 + 6, (y0 + y1)/2, x1, y1); g.strokeStyle = 'rgba(110,50,12,.85)'; g.lineWidth = 3; g.stroke(); g.strokeStyle = 'rgba(255,200,130,.55)'; g.lineWidth = 0.8; g.stroke(); }
+      g.lineCap = 'butt';
+    }
+    if (N('durian') && ice > 0.6) blob(10, -40, 16, 12, 0.3, 57, rad(6, -44, 2, 18, [[0, '#fff3b0'], [1, '#e0bc40']]));
+    ell(-34, -46, 18, 6, 'rgba(255,255,255,.5)');
+  });
+};
+
+/* rojak: every piece gets a glossy coat of dark prawn-paste sauce, with crushed peanuts on top */
+(function(){
+  const r1 = DISH.rojak;
+  DISH.rojak = function(has, w){
+    return realDraw55(() => {
+      const sp = speckle; let skip = false;
+      speckle = function(seed, ...a){ if (seed === 494 || seed === 493) { skip = true; return; } return sp(seed, ...a); };
+      try { r1(has, w); } finally { speckle = sp; }
+      const tossed = has.tossed == null ? 1 : has.tossed, big = (w || {}).size === 'large', R = big ? 62 : 54;
+      if (tossed > 0){ g.save(); g.globalCompositeOperation = 'multiply'; g.globalAlpha = 0.15 + tossed*0.3; blob(0, 2, R + 2, R*0.74, 0.25, 492, '#9a6a3e'); g.restore();
+        const r = rng(6320); for (let i = 0; i < 40; i++){ const a = r()*6.28, d = Math.sqrt(r())*R*0.9; ell(Math.cos(a)*d, Math.sin(a)*d*0.7, 1.4 + r()*2.2, 0.6, 'rgba(255,225,190,.55)'); } }
+      if (has.peanuts){ const r = rng(6330); for (let i = 0; i < 46; i++){ const a = r()*6.28, d = Math.sqrt(r())*R*0.85, px = Math.cos(a)*d, py = Math.sin(a)*d*0.65; blob(px, py, 1.4 + r()*1.6, 1 + r()*1.2, 0.6, 6340 + i, rad(px - 0.5, py - 0.5, 0.2, 2.5, [[0, '#fbe6c0'], [1, '#c99a5a']])); } }
+    });
+  };
+})();
+
+/* ice kachang syrup: poured in streaks from the peak, soaking unevenly */
+(function(){
+  const k1 = DISH.kachang;
+  DISH.kachang = function(has, phase){
+    const top = phase === 'top' || phase === 'full';
+    if (!top) return k1(has, phase);
+    return realDraw55(() => {
+      const syr = has.syrups; has = Object.assign({}, has, {syrups:[]});
+      k1(has, 'base'); /* bowl + bits */
+      iceTex55(0, 0, 76, 74, 6401);
+      const r = rng(6402);
+      g.save(); blob(0, 0, 76, 74, 0.12, 6401, null); g.clip(); g.globalCompositeOperation = 'multiply';
+      (syr || [['#d9465f', 0.6], ['#4caf50', 0.5], ['#7a4a24', 0.55]]).forEach(([c0, a], i) => { const c = c0 === '#7a4a24' ? '#b8743a' : c0;
+        const ang = -2.2 + i*2.1;
+        for (let k = 0; k < 26; k++){ const t = r(), spread = (r() - 0.5)*0.9, d = t*70, bx = Math.cos(ang + spread*(0.4 + t))*d, by = Math.sin(ang + spread*(0.4 + t))*d;
+          g.globalAlpha = (0.25 + a*0.4)*(1 - t*0.6); blob(bx, by, 6 + r()*12, 4 + r()*8, 0.6, 6410 + i*40 + k, c); }
+      });
+      g.restore();
+      for (let i = 0; i < 300; i++){ const a = r()*6.28, d = Math.sqrt(r())*72; g.fillStyle = 'rgba(255,255,255,.75)'; g.fillRect(Math.cos(a)*d, Math.sin(a)*d, 0.8, 0.8); }
+      if (has.milk !== 0){ g.save(); g.lineCap = 'round'; g.beginPath(); for (let t = 0; t < 6.28*2.2; t += 0.12){ const rr = 8 + t*4.4; g.lineTo(Math.cos(t)*rr, Math.sin(t)*rr*0.95); } g.strokeStyle = 'rgba(250,244,226,.85)'; g.lineWidth = 3; g.stroke(); g.strokeStyle = 'rgba(255,255,255,.9)'; g.lineWidth = 1; g.stroke(); g.restore(); }
+      if (has.corn) for (let k = 0; k < 16; k++){ const a = r()*6.28, d = 8 + r()*46, bx = Math.cos(a)*d, by = Math.sin(a)*d; box(bx - 1.8, by - 1.8, 3.6, 3.6, 1.2, rad(bx - 0.6, by - 0.6, 0.2, 3, [[0, '#fff0a0'], [1, '#e6b422']])); }
+      if (has.icecream){ circle(2, 4, 19, 'rgba(80,60,40,.25)'); circle(0, 0, 18, rad(-6, -6, 2, 19, [[0, '#fff4ec'], [1, '#e4b0a0']])); const rr = rng(6450); for (let k = 0; k < 10; k++){ const a = rr()*6.28, d = rr()*14; ell(Math.cos(a)*d, Math.sin(a)*d, 3, 1.2, 'rgba(255,255,255,.5)'); } }
+      if (has.durian){ blob(-18, 14, 14, 10, 0.5, 5920, rad(-22, 10, 1, 15, [[0, '#fff3b0'], [1, '#e0bc40']])); }
+      if (has.chendol) for (let k = 0; k < 6; k++) jellyStrand(14 + k*4, -12, 1.4, 0.8);
+      ell(-30, -34, 16, 6, 'rgba(255,255,255,.55)');
+    });
+  };
+})();
+
+/* orh luak oysters: plump, soft, grey-brown, glistening, no shells */
+oyster47 = function(x, y, s, rot){
+  g.save(); g.translate(x, y); g.rotate(rot || 0); s = (s || 1)*1.1; g.scale(s, s);
+  const sd = 470 + Math.round(x*7 + y), r = rng(sd);
+  blob(0.8, 2, 9.4, 6.8, 0.4, sd + 1, 'rgba(60,45,30,.3)');
+  blob(0, 0, 9.4, 6.8, 0.45, sd, rad(-1, -1, 0.5, 10, [[0, '#d8cfc0'], [0.5, '#a89a86'], [1, '#6a5e50']]));
+  /* the darker frilly mantle round the edge */
+  g.save(); blob(0, 0, 9.4, 6.8, 0.45, sd, null); g.clip();
+  for (let k = 0; k < 10; k++){ const a = k/10*6.28 + r()*0.3; ell(Math.cos(a)*8.2, Math.sin(a)*5.8, 2.6, 1.4, 'rgba(70,60,52,.55)'); }
+  g.restore();
+  ell(-1, -0.5, 5.2, 3.4, rad(-2, -1.5, 0.3, 5.5, [[0, '#f2ece2'], [1, 'rgba(200,190,175,.4)']]));
+  ell(-2.4, -2.2, 2.6, 1.1, 'rgba(255,255,255,.85)'); ell(2.6, 1.6, 1.2, 0.5, 'rgba(255,255,255,.5)');
+  g.restore();
+};
+
+/* western sauces: glossy gravy that runs off the edge, with sliced mushrooms or cracked pepper */
+sauceOver = function(x, y, kind, k){
+  if (k <= 0) return;
+  const mush = kind === 'mushroom', r = rng(6500);
+  blob(x, y, 34*k, 22*k, 0.32, 131, rad(x - 8, y - 6, 2, 36*k, mush ? [[0, 'rgba(214,176,120,.95)'], [0.7, 'rgba(160,116,64,.95)'], [1, 'rgba(120,80,40,.9)']] : [[0, 'rgba(120,70,40,.95)'], [0.7, 'rgba(70,36,18,.95)'], [1, 'rgba(46,22,10,.92)']]));
+  for (let i = 0; i < 4; i++){ const a = r()*6.28; blob(x + Math.cos(a)*30*k, y + Math.sin(a)*19*k + 4, 5*k, 7*k, 0.5, 6510 + i, mush ? 'rgba(160,116,64,.9)' : 'rgba(60,30,14,.9)'); }
+  if (mush) for (let i = 0; i < Math.round(6*k); i++){ const a = i*1.1, mx = x + Math.cos(a)*16*k, my = y + Math.sin(a)*10*k;
+    g.save(); g.translate(mx, my); g.rotate(a); g.beginPath(); g.moveTo(-5, 1.5); g.quadraticCurveTo(-5, -5, 0, -5); g.quadraticCurveTo(5, -5, 5, 1.5); g.lineTo(1.4, 1.5); g.lineTo(1.4, 4.5); g.lineTo(-1.4, 4.5); g.lineTo(-1.4, 1.5); g.closePath();
+    g.fillStyle = lin(0, -5, 0, 4.5, [[0, '#8a6a4a'], [0.5, '#c9ae8a'], [1, '#e8dcc6']]); g.fill(); g.restore(); }
+  else for (let i = 0; i < 40; i++){ const a = r()*6.28, d = Math.sqrt(r())*26*k; circle(x + Math.cos(a)*d, y + Math.sin(a)*d*0.65, 0.6 + r()*0.7, '#140a04'); }
+  for (let i = 0; i < 8; i++){ const a = r()*6.28, d = r()*22*k; ell(x + Math.cos(a)*d, y + Math.sin(a)*d*0.6, 3*k, 0.9, 'rgba(255,240,210,.55)'); }
+};
+
+/* mala tang: deep chilli-red broth, ingredients half under the surface, oil beads floating */
+(function(){
+  const m0 = DISH.mala;
+  DISH.mala = function(has, w){
+    w = w || {}; if (w.style !== 'soup') return m0(has, w);
+    return realDraw55(() => {
+      const spice = w.spice || 'medium', heat = {none:0, mild:0.35, medium:0.7, hot:1}[spice] != null ? {none:0, mild:0.35, medium:0.7, hot:1}[spice] : 0.7, r = rng(6600);
+      g.save(); g.shadowColor = 'rgba(40,20,10,.3)'; g.shadowBlur = 10; g.shadowOffsetY = 5; circle(0, 0, 96, '#f2eee8'); g.restore();
+      circle(0, 0, 96, rad(-30, -30, 4, 100, [[0, '#ffffff'], [1, '#dcd6ce']]));
+      for (let i = 0; i < 16; i++){ const a = i*Math.PI/8; circle(Math.cos(a)*90, Math.sin(a)*90, 2.6, '#c7372c'); }
+      const broth = [mix('#f0a050', '#e04a1e', heat), mix('#c06a2a', '#8a1a0c', heat)];
+      circle(0, 0, 82, rad(-20, -24, 4, 84, [[0, broth[0]], [1, broth[1]]]));
+      const ids = (MALA_ITEMS || []).filter(id => has[id]), list = ids.length ? ids : ['luncheon', 'lotus', 'enoki', 'cabbage', 'fishball'];
+      list.forEach((id, k) => { const a = -Math.PI/2 + k*(Math.PI*2/list.length), cx = Math.cos(a)*40, cy = Math.sin(a)*36; for (let j = 0; j < 3; j++) malaPiece(id, cx + (r() - 0.5)*22, cy + (r() - 0.5)*18, r()*3, 1.6); });
+      /* broth over the lower half of everything: submerged */
+      g.save(); g.globalAlpha = 0.42; circle(0, 0, 82, rad(-20, -24, 4, 84, [[0, broth[0]], [1, broth[1]]])); g.restore();
+      for (let i = 0; i < 40; i++){ const a = r()*6.28, d = 6 + r()*72, bx = Math.cos(a)*d, by = Math.sin(a)*d, rr = 1.2 + r()*3.2; circle(bx, by, rr, 'rgba(255,150,50,.5)'); ell(bx - rr*0.3, by - rr*0.35, rr*0.4, rr*0.2, 'rgba(255,240,200,.8)'); }
+      for (let i = 0; i < Math.round(heat*10); i++){ const a = r()*6.28, d = 14 + r()*58; g.save(); g.translate(Math.cos(a)*d, Math.sin(a)*d); g.rotate(r()*6.28); ell(0, 0, 6.5, 2.4, lin(-6, 0, 6, 0, [[0, '#7a100a'], [0.5, '#c8221a'], [1, '#9a160e']])); g.restore(); }
+      speckle(6610, Math.round(heat*16), 0, 0, 64, 60, ['#3a1408'], 1.5);
+      for (let i = 0; i < 10; i++){ const a = r()*6.28, d = r()*60; g.beginPath(); g.arc(Math.cos(a)*d, Math.sin(a)*d, 2, 0, Math.PI*2); g.strokeStyle = '#4f9e3a'; g.lineWidth = 1.1; g.stroke(); }
+      ell(-38, -44, 16, 5, 'rgba(255,255,255,.35)');
+    });
+  };
+})();
+
+/* mala ingredients, one by one */
+malaPiece = function(id, x, y, a, s){
+  g.save(); g.translate(x, y); g.rotate(a); g.scale(s || 1, s || 1);
+  const sh = (w, h) => ell(0.8, 1.6, w, h, 'rgba(60,20,10,.3)');
+  if (id === 'luncheon'){ box(-8.4, -5, 18, 12, 2, 'rgba(60,20,10,.3)'); box(-9, -6, 18, 12, 2, lin(0, -6, 0, 6, [[0, '#c8604a'], [1, '#8a3a2a']])); box(-8, -5, 16, 10, 1.6, rad(-3, -3, 0.5, 11, [[0, '#f6b8aa'], [1, '#d88a7c']])); speckle(Math.round(x*3 + y), 8, 0, 0, 6, 3.5, ['rgba(255,240,235,.75)', 'rgba(190,100,90,.5)'], 0.8); ell(-3, -3, 3.4, 0.8, 'rgba(255,255,255,.55)'); }
+  else if (id === 'fishball'){ sh(6.5, 5.4); circle(0, 0, 6.5, rad(-2.4, -2.6, 0.4, 7.2, [[0, '#ffffff'], [0.6, '#efe8da'], [1, '#c4b8a0']])); ell(-2, -2.6, 2, 1.1, 'rgba(255,255,255,.95)'); }
+  else if (id === 'cabbage'){ sh(11, 7); g.beginPath(); for (let k = 0; k <= 18; k++){ const t = k/18*6.28, rr = 1 + Math.sin(k*2.7)*0.1; g.lineTo(Math.cos(t)*11*rr, Math.sin(t)*7*rr); } g.closePath(); g.fillStyle = rad(-3, -2, 1, 12, [[0, '#f6fbe6'], [0.6, '#dcedb6'], [1, '#a8cc78']]); g.fill();
+    g.beginPath(); g.moveTo(-9, 1); g.quadraticCurveTo(0, -1, 9, -1.5); g.strokeStyle = 'rgba(255,255,250,.9)'; g.lineWidth = 2; g.stroke(); for (let i = -2; i <= 2; i++) line(i*3.5, 0, i*3.5 + 2, -5, 'rgba(255,255,245,.55)', 0.6); }
+  else if (id === 'lotus'){ sh(8, 7.4); circle(0, 0, 8, rad(-2.5, -2.5, 0.5, 8.6, [[0, '#fbf4e2'], [1, '#d8c49a']])); circle(0, 0, 7, null, 'rgba(180,150,100,.4)', 0.6);
+    [[0, 0], [-4, -3], [4, -3], [-4.4, 2.8], [4.4, 2.8], [0, -5], [0, 5]].forEach(([dx, dy], i) => { ell(dx, dy, i ? 1.5 : 1.8, i ? 1.3 : 1.6, rad(dx - 0.4, dy - 0.4, 0.2, 2, [[0, '#8a6a40'], [1, '#c4a676']])); }); }
+  else if (id === 'enoki'){ for (let i = 0; i < 6; i++){ g.beginPath(); g.moveTo(-6 + i*2.6, 6); g.quadraticCurveTo(-5 + i*2.6, 0, -4 + i*2.4, -6); g.strokeStyle = 'rgba(80,60,40,.25)'; g.lineWidth = 2.2; g.stroke(); g.strokeStyle = '#fbf6e8'; g.lineWidth = 1.5; g.stroke(); circle(-4 + i*2.4, -7, 1.9, rad(-4.5 + i*2.4, -7.6, 0.2, 2.2, [[0, '#fffaf0'], [1, '#e2d4b0']])); } }
+  else if (id === 'beancurd'){ sh(10, 4.5); box(-10, -4, 20, 8, 3, lin(0, -4, 0, 4, [[0, '#fbe29a'], [0.5, '#e8b850'], [1, '#c08a2a']])); for (let i = -2; i <= 2; i++){ g.beginPath(); g.moveTo(i*4, -4); g.quadraticCurveTo(i*4 + 1.5, 0, i*4, 4); g.strokeStyle = 'rgba(160,100,30,.45)'; g.lineWidth = 0.7; g.stroke(); } ell(-3, -2, 4, 0.8, 'rgba(255,250,220,.6)'); }
+  else if (id === 'potato'){ sh(8, 6); ell(0, 0, 8, 6, rad(-2, -2, 0.5, 8.5, [[0, '#fff2bc'], [0.7, '#f0d27a'], [1, '#c8a040']])); speckle(Math.round(x + y*5), 5, 0, 0, 5, 3.6, ['rgba(200,160,60,.5)'], 0.8); ell(-2.5, -2.2, 2.8, 1, 'rgba(255,255,255,.6)'); }
+  else if (id === 'instantnoodle'){ sh(10, 6); g.lineCap = 'round'; for (let i = 0; i < 5; i++){ g.beginPath(); for (let k = 0; k <= 14; k++){ const xx = -9 + k*1.3, yy = -5 + i*2.6 + Math.sin(k*1.5 + i)*1.4; k ? g.lineTo(xx, yy) : g.moveTo(xx, yy); } g.strokeStyle = '#d8a83a'; g.lineWidth = 1.7; g.stroke(); g.strokeStyle = 'rgba(255,240,180,.7)'; g.lineWidth = 0.6; g.stroke(); } g.lineCap = 'butt'; }
+  else if (id === 'prawn'){ g.scale(0.55, 0.55); prawnHalf(0, 0, 0, 1); }
+  else if (id === 'beef'){ sh(10, 6); blob(0, 0, 10, 6, 0.4, 151, rad(-3, -2, 0.5, 11, [[0, '#b8704e'], [0.6, '#8a4a2e'], [1, '#5a2a14']])); for (let i = 0; i < 3; i++) line(-7, -2 + i*2, 7, -1 + i*2, 'rgba(240,200,180,.4)', 0.6); ell(-3, -2.4, 3, 0.8, 'rgba(255,230,210,.5)'); }
+  g.restore();
+};
+
+/* wrap every dish last, so the redrawn ones above are included */
+Object.keys(DISH).forEach(k => { const f = DISH[k]; if (typeof f !== 'function') return; DISH[k] = function(...a){ return realDraw55(() => f.apply(this, a), key55('D|' + k + '|', a)); }; });
+
+/* =================================================================
+   Ingredient tray icons: painted the same way, in small white dishes
+   ================================================================= */
+function dish55(r, fn){
+  r = r || 17;
+  g.save(); g.shadowColor = 'rgba(40,40,40,.25)'; g.shadowBlur = 3; g.shadowOffsetY = 1.5; circle(0, 0, r, '#f4f2ee'); g.restore();
+  circle(0, 0, r, rad(-r*0.3, -r*0.35, 1, r*1.1, [[0, '#ffffff'], [1, '#dcd8d2']]));
+  circle(0, 0, r*0.78, rad(r*0.1, r*0.1, r*0.2, r*0.8, [[0, '#ffffff'], [1, '#e9e5df']]));
+  if (fn){ g.save(); g.beginPath(); g.arc(0, 0, r*0.76, 0, Math.PI*2); g.clip(); fn(r*0.76); g.restore(); }
+}
+const pool55 = (rr, c1, c2) => circle(0, 0, rr, rad(-rr*0.35, -rr*0.35, 1, rr*1.05, [[0, c1], [1, c2]]));
+const shine55 = rr => ell(-rr*0.35, -rr*0.42, rr*0.32, rr*0.12, 'rgba(255,255,255,.7)');
+const pile55 = (n, seed, rr, fn) => { const r = rng(seed); for (let i = 0; i < n; i++){ const a = r()*6.28, d = Math.sqrt(r())*rr*0.78; fn(Math.cos(a)*d, Math.sin(a)*d, r); } };
+Object.assign(ICON, {
+  chilli(){ dish55(17, rr => { pool55(rr, '#f0603a', '#a81e10'); pile55(14, 7001, rr, (x, y) => ell(x, y, 1.2, 0.8, 'rgba(255,220,120,.85)')); shine55(rr); }); },
+  ginger(){ dish55(17, rr => { pool55(rr, '#f6e6a0', '#d8b85a'); pile55(30, 7002, rr, (x, y, r) => line(x, y, x + (r() - 0.5)*5, y + (r() - 0.5)*5, 'rgba(200,160,60,.55)', 0.7)); shine55(rr); }); },
+  soy(){ dish55(17, rr => { pool55(rr, '#5a3418', '#1e0e04'); ell(-rr*0.3, -rr*0.38, rr*0.4, rr*0.16, 'rgba(255,230,200,.45)'); }); },
+  chillisauce(){ ICON.chilli(); },
+  sugar(){ dish55(17, rr => { pool55(rr, '#ffffff', '#e6e2da'); pile55(60, 7003, rr, (x, y, r) => g.fillRect(x, y, 1 + r(), 1 + r())); }); },
+  ice(){ dish55(17, rr => { pool55(rr, '#e8f4f8', '#bcd6e0'); [[-5, -4], [5, -3], [0, 5], [-6, 5], [6, 5]].forEach(([x, y], i) => { box(x - 4.2, y - 4.2, 8.4, 8.4, 2, rad(x - 2, y - 2, 0.5, 7, [[0, 'rgba(255,255,255,.95)'], [1, 'rgba(180,215,230,.8)']])); ell(x - 1.6, y - 2, 2, 0.8, '#ffffff'); }); }); },
+  peanut(){ ICON.peanuts(); },
+  peanuts(){ dish55(17, rr => { pool55(rr, '#f6f2ea', '#e2dcd0'); pile55(13, 7004, rr, (x, y, r) => { g.save(); g.translate(x, y); g.rotate(r()*3); ell(-1.4, 0, 2.4, 1.8, rad(-2, -0.8, 0.2, 3, [[0, '#f2d6a4'], [1, '#b88a4a']])); ell(1.4, 0, 2.4, 1.8, rad(0.6, -0.8, 0.2, 3, [[0, '#f2d6a4'], [1, '#b88a4a']])); line(0, -1.6, 0, 1.6, 'rgba(120,80,40,.5)', 0.4); g.restore(); }); }); },
+  redbean(){ dish55(17, rr => { pool55(rr, '#5a1418', '#2a0608'); pile55(18, 7005, rr, (x, y, r) => { ell(x, y, 2.6, 1.9, rad(x - 0.8, y - 0.8, 0.2, 3, [[0, '#b0464e'], [1, '#4a0e14']])); ell(x - 0.8, y - 0.7, 0.8, 0.35, 'rgba(255,220,220,.6)'); }); }); },
+  attap(){ dish55(17, rr => { pool55(rr, '#f4f2ea', '#dedad0'); pile55(8, 7006, rr, (x, y) => { ell(x, y, 3.6, 2.6, rad(x - 1, y - 1, 0.3, 4, [[0, 'rgba(255,255,248,.95)'], [1, 'rgba(210,200,170,.9)']])); ell(x - 1, y - 1, 1.2, 0.5, '#ffffff'); }); }); },
+  grassjelly(){ dish55(17, rr => { pool55(rr, '#2a201a', '#0c0806'); [[-6, -5], [3, -6], [-5, 3], [5, 3], [0, -1]].forEach(([x, y]) => { box(x - 3.5, y - 3.5, 7, 7, 1.2, lin(x, y - 3.5, x, y + 3.5, [[0, '#4a3a2e'], [1, '#14100c']])); ell(x - 1, y - 2, 2, 0.6, 'rgba(255,255,255,.4)'); }); }); },
+  jelly(){ dish55(17, rr => { pool55(rr, '#f4f2ea', '#dedad0'); [[-6, -5, '#e8406a'], [3, -6, '#f6c22a'], [-5, 3, '#4cbf5a'], [5, 3, '#e8406a'], [0, -1, '#f6c22a']].forEach(([x, y, c]) => { box(x - 3.4, y - 3.4, 6.8, 6.8, 1.6, rgba55(c, 0.85)); ell(x - 1.2, y - 1.8, 1.6, 0.6, 'rgba(255,255,255,.7)'); }); }); },
+  chendol(){ dish55(17, rr => { pool55(rr, '#e6f2e0', '#c4dcc0'); for (let i = 0; i < 7; i++) jellyStrand(-6 + (i % 3)*6, -6 + Math.floor(i/3)*6, 0.5 + i, 0.7); }); },
+  corn(){ dish55(17, rr => { pool55(rr, '#f6f2ea', '#e2dcd0'); pile55(20, 7007, rr, (x, y) => box(x - 1.9, y - 1.9, 3.8, 3.8, 1.3, rad(x - 0.6, y - 0.6, 0.2, 3, [[0, '#fff2a8'], [1, '#e0aa1a']]))); }); },
+  cockles(){ dish55(17, rr => { pool55(rr, '#f4f2ea', '#dedad0'); pile55(8, 7008, rr, (x, y) => { ell(x, y, 3.4, 2.6, rad(x - 1, y - 1, 0.3, 4, [[0, '#b8584a'], [1, '#5a1a12']])); ell(x - 1, y - 1, 1.1, 0.5, 'rgba(255,220,210,.6)'); }); }); },
+  garlic(){ dish55(17, rr => { pool55(rr, '#f6f2ea', '#e2dcd0'); pile55(40, 7009, rr, (x, y, r) => box(x - 1, y - 0.8, 2 + r(), 1.6, 0.4, r() < 0.5 ? '#fbf6e6' : '#e8dcbc')); }); },
+  turnip(){ dish55(17, rr => { pool55(rr, '#e8d4a8', '#b8945a'); pile55(26, 7010, rr, (x, y, r) => { const a = r()*3; line(x, y, x + Math.cos(a)*6, y + Math.sin(a)*6, r() < 0.3 ? '#e8823a' : 'rgba(250,240,215,.9)', 1); }); }); },
+  eggstrand(){ dish55(17, rr => { pool55(rr, '#f6f2ea', '#e2dcd0'); pile55(16, 7011, rr, (x, y, r) => { const a = r()*3; g.lineCap = 'round'; line(x, y, x + Math.cos(a)*7, y + Math.sin(a)*7, '#f6c844', 1.8); line(x, y - 0.4, x + Math.cos(a)*7, y + Math.sin(a)*7 - 0.4, 'rgba(255,250,200,.7)', 0.5); g.lineCap = 'butt'; }); }); },
+  prawn(){ prawnHalf(0, 0, 0.3, 0.75); },
+  chillipaste(){ sambal(0, 0, 0.95); },
+  egg(){ ell(1, 2, 11, 13, 'rgba(60,40,20,.25)'); ell(0, 0, 10.5, 13, rad(-3, -5, 1, 14, [[0, '#fff8ee'], [0.6, '#ecd8bc'], [1, '#c8a880']])); ell(-3.5, -6, 2.6, 4, 'rgba(255,255,255,.75)'); },
+  sprouts(){ dish55(17, () => sprouts(0, 0, 16, 7012, 9, 7)); },
+  chives(){ dish55(17, rr => { pool55(rr, '#f6f2ea', '#e2dcd0'); pile55(22, 7013, rr, (x, y, r) => { const a = r()*3; g.lineCap = 'round'; line(x, y, x + Math.cos(a)*4, y + Math.sin(a)*4, r() < 0.5 ? '#3f9a3a' : '#5ab84a', 1.6); line(x, y - 0.3, x + Math.cos(a)*4, y + Math.sin(a)*4 - 0.3, 'rgba(220,250,200,.6)', 0.4); g.lineCap = 'butt'; }); }); },
+  lapcheong(){ for (let i = 0; i < 4; i++){ const x = -8 + (i % 2)*12, y = -6 + Math.floor(i/2)*12; ell(x + 0.6, y + 1.4, 6, 6, 'rgba(60,20,10,.3)'); circle(x, y, 6, rad(x - 2, y - 2, 0.5, 6.5, [[0, '#d0505a'], [1, '#7a1820']])); speckle(7014 + i, 9, x, y, 4.2, 4.2, ['rgba(255,235,230,.85)'], 0.9); ell(x - 2, y - 2.4, 2, 0.8, 'rgba(255,255,255,.55)'); } },
+  skin(){ for (let i = 2; i >= 0; i--){ ell(i*1.2 + 1, i*1.2 + 2, 17, 15, 'rgba(60,50,30,.18)'); ell(i*1.2, i*1.2, 17, 15, rad(-5, -5, 2, 18, [[0, '#fffcf2'], [1, '#e8dcc0']])); } ell(-6, -7, 6, 2, 'rgba(255,255,255,.7)'); },
+  taupok(){ taupokCube(-6, -2, 0.9, false); taupokCube(7, 4, 0.9, false); },
+  hbegg(){ halfEgg(-6, 0, 0.8, -0.2); halfEgg(7, 2, 0.8, 0.3); },
+  thickbh(){ dish55(17, () => noodleMound(0, 0, 12, 10, ['#fbf8f0', '#efe8da'], 2.6, 24, 7015)); },
+  noodles(){ dish55(17, () => noodleMound(0, 0, 12, 10, ['#f2d06a', '#e6b84a', '#fbf2d6'], 1.8, 30, 7016)); },
+  yellownoodle(){ dish55(17, () => noodleMound(0, 0, 12, 10, ['#f6d24a', '#e8b82a'], 2.2, 28, 7017)); },
+  laksagravy(){ dish55(17, rr => { pool55(rr, '#f6b25e', '#c45a22'); pile55(10, 7018, rr, (x, y) => circle(x, y, 1, 'rgba(255,170,60,.6)')); shine55(rr); }); },
+  meegravy(){ dish55(17, rr => { pool55(rr, '#e0904a', '#8a4414'); pile55(8, 7019, rr, (x, y) => circle(x, y, 0.9, 'rgba(255,200,120,.6)')); shine55(rr); }); },
+  chaipoh(){ dish55(17, () => chaipoh(0, 0, 10, 10, 7020)); },
+  ribs(){ porkRib(0, 0, 0.75, -0.4, 7021); },
+  garlicw(){ for (let i = 0; i < 3; i++){ const x = -8 + i*8, y = (i % 2)*3; ell(x + 0.6, y + 1.6, 5.4, 7, 'rgba(60,50,30,.25)'); ell(x, y, 5.4, 7, rad(x - 2, y - 3, 0.5, 8, [[0, '#ffffff'], [0.7, '#f2ead6'], [1, '#c9b894']])); line(x, y - 7, x + 0.5, y - 9.5, '#c9b894', 0.8); for (let k = -1; k <= 1; k++) line(x + k*2.2, y - 6, x + k*2.6, y + 6, 'rgba(180,160,120,.45)', 0.4); } },
+  youtiao(){ youtiaoStick(0, 0, 0.42, -0.3); },
+  oyster(){ for (let i = 0; i < 3; i++) oyster47(-7 + i*7, (i % 2)*5 - 2, 0.9, i); },
+  coriander(){ coriander(-5, -2); coriander(5, 3); coriander(0, -6); },
+  bungakantan(){ dish55(17, rr => { pool55(rr, '#f6f2ea', '#e2dcd0'); pile55(16, 7022, rr, (x, y, r) => { const a = r()*3; line(x, y, x + Math.cos(a)*4, y + Math.sin(a)*4, r() < 0.5 ? '#e8406a' : '#f490b0', 1.5); }); }); },
+  jellyfish(){ dish55(17, rr => { pool55(rr, '#f6f2ea', '#e2dcd0'); pile55(10, 7023, rr, (x, y, r) => { const a = r()*3; line(x, y, x + Math.cos(a)*8, y + Math.sin(a)*8, 'rgba(230,214,170,.9)', 2); line(x, y - 0.5, x + Math.cos(a)*8, y + Math.sin(a)*8 - 0.5, 'rgba(255,255,240,.7)', 0.6); }); }); },
+  taukwa(){ for (let i = 0; i < 4; i++){ const x = -6 + (i % 2)*11, y = -5 + Math.floor(i/2)*10; box(x - 4.6, y - 3.4, 10, 8, 1.4, 'rgba(60,40,20,.25)'); box(x - 5, y - 4, 10, 8, 1.4, rad(x - 2, y - 2, 0.5, 8, [[0, '#f6d88a'], [1, '#c8922a']])); box(x - 3.5, y - 2.5, 7, 5, 1, rad(x - 1, y - 1, 0.5, 5, [[0, '#fffaf0'], [1, '#efe2c4']])); } },
+  greenchilli(){ for (let i = 0; i < 6; i++){ const x = -9 + (i % 3)*9, y = -5 + Math.floor(i/3)*10; ell(x + 0.6, y + 1.2, 4.4, 4.2, 'rgba(30,50,10,.25)'); circle(x, y, 4.2, rad(x - 1, y - 1, 0.5, 4.5, [[0, '#7ac84a'], [1, '#2f7a1c']])); circle(x, y, 2.9, '#dff2c0'); speckle(7024 + i, 4, x, y, 1.6, 1.6, ['#fffbe0'], 0.6); } },
+  limau(){ limeHalf(-6, -3); limeHalf(7, 5); },
+  onionring(){ for (let i = 0; i < 3; i++){ const x = -7 + i*7, y = (i % 2)*4 - 2; g.beginPath(); g.ellipse(x, y, 7, 5.6, 0.3, 0, Math.PI*2); g.strokeStyle = '#b8609a'; g.lineWidth = 2; g.stroke(); g.strokeStyle = 'rgba(255,240,250,.85)'; g.lineWidth = 0.7; g.stroke(); } },
+  pulut(){ dish55(17, rr => { pool55(rr, '#4a2a3a', '#1e0a14'); pile55(40, 7025, rr, (x, y, r) => { g.save(); g.translate(x, y); g.rotate(r()*3); ell(0, 0, 1.8, 0.8, r() < 0.5 ? '#5a2a40' : '#3a1424'); ell(-0.5, -0.3, 0.7, 0.25, 'rgba(255,220,240,.5)'); g.restore(); }); }); },
+  satay_chicken(){ satayStick(0, 0, '#c4762e', 7030, -0.4); },
+  satay_beef(){ satayStick(0, 0, '#8a3e20', 7031, -0.4); },
+  kosong(){ prataPiece(0, 0, 0.55, 7032); },
+  telur(){ telurPiece(0, 0, 0.55, 7033); },
+  fishball(){ fishballs(0, 0, 3); },
+  saltveg(){ dish55(17, rr => { pool55(rr, '#8a7a3a', '#3f3410'); pile55(10, 7034, rr, (x, y, r) => line(x, y, x + (r() - 0.5)*8, y + (r() - 0.5)*8, 'rgba(200,190,120,.5)', 1)); shine55(rr); }); },
+  minced(){ dish55(17, rr => { pool55(rr, '#c49a7a', '#8a5a3a'); pile55(30, 7035, rr, (x, y, r) => blob(x, y, 1.4 + r(), 1 + r()*0.8, 0.6, 7036 + Math.round(x*10 + y), r() < 0.5 ? '#e0b896' : '#9a6a48')); }); },
+  shallots(){ dish55(17, rr => { pool55(rr, '#f6f2ea', '#e2dcd0'); pile55(24, 7037, rr, (x, y, r) => { g.save(); g.translate(x, y); g.rotate(r()*3); g.beginPath(); g.arc(0, 0, 2.2, 0.3, 3.4); g.strokeStyle = r() < 0.5 ? '#c88a3a' : '#e0aa5a'; g.lineWidth = 1.1; g.stroke(); g.restore(); }); }); }
+});
+
+Object.assign(ICON, {
+  watermelon(){ g.save(); g.scale(0.62, 0.62); FRUIT.watermelon(0, 4); g.restore(); },
+  papaya(){ g.save(); g.scale(0.62, 0.62); FRUIT.papaya(0, 4); g.restore(); },
+  honeydew(){ g.save(); g.scale(0.62, 0.62); FRUIT.honeydew(0, 4); g.restore(); },
+  pineapple(){ g.save(); g.scale(0.8, 0.8); pineappleChunks(0, 4, 6); g.restore(); },
+  mango(){ g.save(); g.scale(0.62, 0.62); mangoHedgehog(0, 0); g.restore(); },
+  dragon(){ g.save(); g.scale(0.7, 0.7); dragonSlices(0, 0); g.restore(); },
+  lotus(){ malaPiece('lotus', -5, -3, 0, 1.3); malaPiece('lotus', 6, 4, 0.5, 1.2); },
+  potato(){ malaPiece('potato', -5, -3, 0.3, 1.3); malaPiece('potato', 6, 4, -0.4, 1.2); },
+  cabbage(){ malaPiece('cabbage', 0, 0, 0.2, 1.5); },
+  enoki(){ malaPiece('enoki', 0, 0, 0, 1.6); },
+  beancurd(){ malaPiece('beancurd', 0, -4, 0.2, 1.3); malaPiece('beancurd', 0, 6, -0.1, 1.2); },
+  instantnoodle(){ malaPiece('instantnoodle', 0, 0, 0, 1.6); },
+  beef(){ malaPiece('beef', -3, -4, 0.3, 1.3); malaPiece('beef', 4, 5, -0.4, 1.3); },
+  onion(){ ICON.onionring(); },
+  squid(){ squidRings(0, 0, 4); }
+});
+
+/* icons go through the same paint pass, at icon size */
+(function(){
+  const icon0 = icon;
+  icon = function(id, x, y, k){ g.save(); g.translate(x, y); g.scale(k || 1, k || 1); try { realDraw55(() => icon0(id, 0, 0, 1), 'I|' + id, 28); } finally { g.restore(); } };
+})();
+
+/* =================================================================
    48. QUICK WINS
    - Save backup: copy your progress as a code (or a file) and load it
      on another device or browser.
