@@ -1209,6 +1209,145 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .lr-panel.sw .lr-box{animation:lrIn .35s ease both}
 @keyframes lrIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .lumi-ask{margin-top:clamp(26px,4vw,44px)}
+/* passion projects: infographics, motion, renders */
+.ig{background:var(--plate);border-radius:22px;padding:clamp(18px,3vw,32px);margin-top:28px;color:var(--ink)}
+.ig-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 20px;margin-bottom:16px}
+.ig-head small{display:block;color:var(--pa);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.ig-head b{font-family:var(--display);font-size:clamp(19px,2vw,24px);line-height:1.25}
+.ig svg{display:block;width:100%;height:auto;overflow:visible;color:var(--ink)}
+.ig svg text{fill:var(--ink);font-family:var(--body)}
+.ig svg text.mu{fill:var(--muted)}
+.ig-note{margin:16px 0 0;color:var(--ink-2);font-size:15px;line-height:1.55;max-width:72ch}
+.ig .pp-src{margin-top:8px}
+.ig-seg{display:inline-flex;background:var(--bg);border-radius:999px;padding:4px;gap:2px}
+.ig-seg button{border:0;background:none;color:var(--ink-2);font:inherit;font-weight:700;font-size:14px;padding:8px 14px;border-radius:999px;cursor:pointer;min-height:40px}
+.ig-seg button[aria-pressed="true"]{background:var(--p);color:#fff}
+.ig-seg button:focus-visible{outline:3px solid var(--pa);outline-offset:2px}
+.ig .gd{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1) var(--d,0s)}
+.ig.go .gd{stroke-dashoffset:0}
+.ig .gy,.ig .gy-d,.ig .gx,.ig .gp{transform-box:fill-box;transition:transform .8s cubic-bezier(.2,.8,.2,1) var(--d,0s),opacity .5s ease var(--d,0s)}
+.ig .gy{transform-origin:50% 100%;transform:scaleY(0)}
+.ig .gy-d{transform-origin:50% 0;transform:scaleY(0)}
+.ig .gx{transform-origin:0 50%;transform:scaleX(0)}
+.ig .gp{transform-origin:50% 50%;transform:scale(0);opacity:0}
+.ig .gf{opacity:0;transition:opacity .6s ease var(--d,0s)}
+.ig.go .gy,.ig.go .gy-d{transform:scaleY(1)}
+.ig.go .gx{transform:scaleX(1)}
+.ig.go .gp{transform:scale(var(--s,1));opacity:1}
+.ig.go .gf{opacity:1}
+.ig .ig-arc{stroke-dashoffset:var(--c);transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1) var(--d,0s)}
+.ig.go .ig-arc{stroke-dashoffset:0}
+.ig-orbit{transform-box:view-box;offset-rotate:0deg;offset-distance:0%;opacity:0;transition:opacity .4s 1.6s}
+.ig.go .ig-orbit{opacity:1;animation:igOrbit 6s linear 1.6s infinite}
+@keyframes igOrbit{to{offset-distance:100%}}
+.ig-bars{display:grid;gap:14px}
+.ig-bars>div{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,2fr) 8ch;gap:6px 16px;align-items:center}
+.ig-bars span{font-size:15px;color:var(--ink-2);line-height:1.3}
+.ig-bars i{height:16px;border-radius:99px;background:var(--bg);overflow:hidden;display:block}
+.ig-bars u{display:block;height:100%;border-radius:99px;background:var(--p)}
+.ig-bars b{font-family:var(--display);font-size:19px;text-align:right;font-variant-numeric:tabular-nums}
+.ig>svg,.ig-svg>svg{max-width:860px;margin:0 auto}
+.ig-legend.seven{grid-template-columns:repeat(7,minmax(0,1fr));max-width:860px;margin-inline:auto}
+.ig-legend.seven li{grid-template-columns:1fr;text-align:center;justify-items:center;row-gap:2px}
+.ig-legend.seven li::before{grid-row:auto}
+.ig-legend.six{grid-template-columns:repeat(6,minmax(0,1fr));max-width:860px;margin-inline:auto}
+.ig-legend.six li{grid-template-columns:1fr;text-align:center;justify-items:center;row-gap:2px}
+.ig-legend.six li::before{grid-row:auto}
+.ig-earn{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:22px auto 0;max-width:860px}
+.ig-earn>b{font-family:var(--display);font-size:16px;margin-right:6px}
+.ig-earn span{background:var(--bg);border-radius:999px;padding:7px 14px;font-size:14px}
+.ig-earn u{text-decoration:none;font-weight:800;color:var(--pa);margin-left:4px}
+.ig-cycle{display:none;list-style:none;margin:0;padding:0;gap:6px}
+.ig-cycle li{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:14px;padding:10px 14px;font-weight:700;font-size:16px}
+.ig-cycle li:last-child{background:none;justify-content:center;color:var(--pa);font-weight:700}
+.ig-cycle em{font-style:normal;font-size:26px}
+.ig-legend{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 16px;counter-reset:l}
+.ig-legend li{counter-increment:l;display:grid;grid-template-columns:28px minmax(0,1fr);column-gap:8px;font-size:14px;line-height:1.35}
+.ig-legend li::before{content:counter(l);grid-row:span 2;width:26px;height:26px;border-radius:50%;background:var(--p);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center}
+.ig-legend span{color:var(--muted)}
+.ig-map{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(240px,1fr);gap:24px;align-items:center}
+.ig-map .ig-legend{margin:0;grid-template-columns:1fr 1fr}
+.ig-stars{display:grid;gap:10px}
+.ig-stars>div{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:14px;background:var(--bg);border-radius:14px;padding:10px 16px}
+.ig-stars em{font-style:normal;font-size:30px;text-align:center}
+.ig-stars b{display:block;font-family:var(--display);font-size:17px}
+.ig-stars small{color:var(--muted);font-size:13.5px}
+.ig-stars i{font-style:normal;color:#F2B632;font-size:22px;letter-spacing:1px;white-space:nowrap}
+.ig-stars u{text-decoration:none;display:inline-block}
+.ig-waffle{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;max-width:680px}
+.ig-waffle i{aspect-ratio:1;border-radius:22%;display:block}
+.ig-key{list-style:none;padding:0;margin:18px 0 0;display:flex;flex-wrap:wrap;gap:10px 20px;font-size:14.5px}
+.ig-key li{display:flex;align-items:center;gap:8px}
+.ig-key i{width:14px;height:14px;border-radius:4px;display:inline-block;flex:none}
+.ig-key b{font-family:var(--display)}
+.ig-key.big{flex-direction:column;font-size:16px;gap:16px;margin:0}
+.ig-key.big i{width:18px;height:18px}
+.ig-key.big b{font-size:30px;margin-left:6px}
+.ig-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ig-mx{border-collapse:separate;border-spacing:4px;min-width:640px;width:100%;font-size:14px}
+.ig-mx thead th{font-weight:700;font-size:12.5px;color:var(--muted);text-align:center;vertical-align:bottom;padding-bottom:4px}
+.ig-mx thead em{display:block;font-style:normal;font-size:22px;margin-bottom:2px}
+.ig-mx tbody th{text-align:left;font-weight:700;white-space:nowrap;padding-right:10px;font-size:14.5px;position:sticky;left:0;background:var(--plate);z-index:1}
+.ig-mx td{background:var(--bg);border-radius:8px;height:36px;text-align:center}
+.ig-mx td span{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--p);color:#fff;font-weight:800;font-size:13px}
+.ig-flow{display:flex;align-items:stretch;gap:10px}
+.ig-flow>div{flex:1 1 0;min-width:0;background:var(--bg);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.ig-flow b{font-family:var(--display);font-size:17px}
+.ig-flow span{font-size:14px;color:var(--muted);line-height:1.4}
+.ig-flow>em,.ig-flow>i{align-self:center;flex:none;font-style:normal;font-weight:700;color:var(--pa);font-size:15px}
+.ig-flow>em::after,.ig-flow>i::after{content:" →"}
+.ig-flow>i::after{content:"→";font-size:22px}
+.ig-flow .ok{background:var(--p);color:#fff}
+.ig-flow .ok span{color:rgba(255,255,255,.85)}
+.ig-flow.jc em{font-style:normal;font-size:28px}
+.ig-donut{display:flex;align-items:center;gap:clamp(18px,4vw,48px);flex-wrap:wrap}
+.ig-donut svg{width:min(240px,62vw);flex:none}
+.ig-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:12px;margin-top:22px}
+.ig-facts>div{background:var(--bg);border-radius:16px;padding:14px 16px}
+.ig-facts b{display:block;font-family:var(--display);font-size:24px;color:var(--pa);margin-bottom:4px}
+.ig-facts span{font-size:14.5px;color:var(--ink-2);line-height:1.45}
+.ig-two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,3vw,40px);align-items:start}
+.ig-two svg{max-width:250px;margin:0 auto}
+.ig-two p{font-size:15px;color:var(--ink-2);line-height:1.55;margin:14px 0 0}
+.ig-two p b{color:var(--ink)}
+.ig-people{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:270px;margin:20px auto 0;font-size:36px;text-align:center;line-height:1.3}
+.ig-people i{font-style:normal}
+.ig-people i:not(.on){filter:grayscale(1)}
+.ig-people i:not(.on).gp{--s:.8}
+.ig-row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,24px);align-items:stretch}
+.ig-row .ig{margin-top:28px}
+.pp-motion{margin:26px 0 0}
+.pp-motion video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#000}
+.pp-motion figcaption,.pp-render figcaption{text-align:center;color:var(--muted);font-size:14px;margin:14px auto 0;max-width:64ch}
+.pp-render{margin:30px 0 0}
+.pp-render img{width:100%;height:auto;display:block;border-radius:clamp(14px,2vw,24px)}
+@media (max-width:860px){
+  .ig-map,.ig-row,.ig-two{grid-template-columns:1fr}
+  .ig-flow{flex-direction:column}
+  .ig-flow>em,.ig-flow>i{align-self:center}
+  .ig-flow>em::after{content:" ↓"}
+  .ig-flow>i::after{content:"↓"}
+}
+@media (max-width:600px){
+  .ig-bars>div{grid-template-columns:minmax(0,1fr) auto}
+  .ig-bars i{grid-column:1/-1;grid-row:2}
+  .ig-waffle{grid-template-columns:repeat(5,1fr);max-width:300px}
+  .ig[data-ig="b88-loop"] svg{display:none}
+  .ig-cycle{display:grid}
+  .ig-map .ig-legend{grid-template-columns:1fr}
+  .ig-legend.seven{grid-template-columns:1fr 1fr}
+  .ig-legend.six{grid-template-columns:1fr}
+  .ig-flow.jc>div{display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:10px;align-items:center}
+  .ig-flow.jc>div em{grid-row:span 2}
+  .ig-legend.seven li,.ig-legend.six li{grid-template-columns:28px minmax(0,1fr);text-align:left;justify-items:start}
+  .ig-legend.seven li::before,.ig-legend.six li::before{grid-row:span 2}
+  .ig-stars i{font-size:17px}
+  .ig-stars>div{grid-template-columns:36px minmax(0,1fr);}
+  .ig-stars i{grid-column:2}
+}
+@media (prefers-reduced-motion:reduce){
+  .ig *{transition:none!important;animation:none!important}
+}
 /* passion projects */
 .pp-dev{position:relative;background:#16181d;border-radius:clamp(14px,2vw,26px);padding:clamp(8px,1.1vw,14px);box-shadow:0 30px 60px -22px rgba(0,0,0,.45);max-width:1040px;margin:0 auto}
 .pp-dev.ppm{max-width:340px;border-radius:46px;padding:11px}
@@ -2284,6 +2423,208 @@ const JC_TOUR = [
   {t:"Impact", k:"This week, progress, community", img:"jc-impact.jpg", d:"Money saved, food kept from the bin and items used before their date, in everyday terms, with the price of waste against your goal."}
 ];
 
+/* ---------- passion projects: animated infographics ---------- */
+const SUN_DAYS = {"21 Mar":{"n":792.6,"m":88.6,"e":[-3.2,4.3,11.8,19.3,26.8,34.3,41.8,49.3,56.8,64.3,71.8,79.3,86.6,85.4,78.1,70.6,63.1,55.6,48.1,40.6,33.1,25.6,18.1,10.6,3.1]},"21 Jun":{"n":786.0,"m":67.9,"e":[-0.8,6.0,12.9,19.8,26.5,33.3,39.8,46.2,52.3,57.9,62.7,66.2,67.9,67.2,64.3,60.0,54.6,48.7,42.4,35.9,29.3,22.5,15.7,8.8,1.9]},"21 Dec":{"n":782.6,"m":65.2,"e":[-1.1,5.8,12.6,19.4,26.1,32.8,39.2,45.4,51.3,56.5,60.9,64.0,65.2,64.3,61.6,57.4,52.2,46.4,40.3,33.9,27.3,20.6,13.8,6.9,0.1]}};
+const SG_MAP = {"main":[[103.605,1.3],[103.618,1.322],[103.64,1.345],[103.668,1.362],[103.69,1.392],[103.708,1.42],[103.735,1.444],[103.76,1.45],[103.785,1.452],[103.805,1.45],[103.822,1.456],[103.836,1.464],[103.858,1.455],[103.88,1.44],[103.9,1.425],[103.916,1.414],[103.932,1.403],[103.958,1.39],[103.985,1.39],[104.003,1.388],[104.03,1.37],[104.036,1.345],[104.02,1.326],[103.99,1.316],[103.96,1.31],[103.93,1.301],[103.9,1.295],[103.876,1.29],[103.866,1.279],[103.856,1.27],[103.842,1.27],[103.83,1.265],[103.816,1.271],[103.8,1.276],[103.78,1.286],[103.76,1.296],[103.74,1.302],[103.72,1.31],[103.7,1.305],[103.68,1.3],[103.66,1.299],[103.64,1.289],[103.62,1.283]],"ew":[[103.637,1.34],[103.678,1.328],[103.706,1.34],[103.742,1.333],[103.765,1.315],[103.79,1.307],[103.81,1.29],[103.827,1.286],[103.846,1.283],[103.852,1.293],[103.856,1.3],[103.871,1.311],[103.892,1.318],[103.912,1.321],[103.93,1.324],[103.946,1.327],[103.945,1.353],[103.949,1.373]],"ewc":[[103.946,1.327],[103.962,1.334],[103.988,1.357]],"ns":[[103.742,1.333],[103.75,1.349],[103.745,1.385],[103.762,1.425],[103.786,1.437],[103.82,1.449],[103.835,1.429],[103.85,1.37],[103.848,1.351],[103.848,1.333],[103.843,1.32],[103.832,1.304],[103.846,1.29],[103.851,1.284],[103.863,1.271]],"river":[[103.858,1.287],[103.851,1.288],[103.846,1.29],[103.84,1.292],[103.832,1.293]]};
+const igFmt = n => n.toLocaleString("en-SG");
+const IGSM = matchMedia("(max-width:600px)");
+const F = n => Math.round(n*(IGSM.matches?1.6:1));
+const IG = {
+  /* shade,where?: a day of shadows, for three dates */
+  "sw-day"(el){
+    const W=720,H=420,x0=60,x1=690,gy=250, X=i=>x0+i*(x1-x0)/24, Y=e=>gy-Math.max(e,0)*2.1;
+    const draw = key => { const d=SUN_DAYS[key];
+      const pts=d.e.map((e,i)=>[X(i),Y(e)]), line="M"+pts.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" L");
+      const ni=d.e.indexOf(Math.max(...d.e)), nh=Math.floor(d.n/60), noonT=`${nh>12?nh-12:nh}:${String(Math.round(d.n%60)).padStart(2,"0")}`;
+      const dirN = key==="21 Jun";
+      let bars=""; d.e.forEach((e,i)=>{ if(i%2||e<4) return; const L=37/Math.tan(e*Math.PI/180), h=Math.min(L,150)*0.85;
+        bars+=`<rect class="gy-d" x="${X(i)-7}" y="${gy+4}" width="14" height="${h.toFixed(1)}" rx="4" fill="var(--pa)" opacity=".75" style="--d:${.3+i*.03}s"/>`;
+        if (IGSM.matches ? (i-4)%8===0 : i%4===0) bars+=`<text class="gf" x="${X(i)}" y="${gy+h+(IGSM.matches?40:28)}" text-anchor="middle" style="--d:${.8+i*.03}s;font-size:${F(17)}px">${Math.round(L)} m</text>`; });
+      let hours=""; [0,6,12,18,24].forEach(i=>{ const h=7+i/2; hours+=`<text x="${X(i)}" y="${gy-10}" class="mu" text-anchor="middle" style="font-size:${F(16)}px">${h>12?h-12:h}${h>=12?"pm":"am"}</text>`; });
+      el.querySelector(".ig-svg").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Sun height and shadow length of a 37 metre block through ${key} in Singapore">
+        <line x1="${x0-10}" x2="${x1+10}" y1="${gy}" y2="${gy}" stroke="currentColor" opacity=".35" stroke-width="2"/>
+        <path class="gd" pathLength="1" d="${line}" fill="none" stroke="#F2B632" stroke-width="5" stroke-linecap="round"/>
+        ${pts.map((p,i)=>(i%2||d.e[i]<=0||i===ni)?"":`<circle class="gp" cx="${p[0]}" cy="${p[1]}" r="6" fill="#F2B632" style="--d:${.4+i*.035}s"/>`).join("")}<circle class="gp" cx="${pts[ni][0]}" cy="${pts[ni][1]}" r="14" fill="#F2B632" stroke="#fff" stroke-width="3" style="--d:1.1s"/>
+        <text class="gf" x="${pts[ni][0]}" y="${pts[ni][1]-(IGSM.matches?34:26)}" text-anchor="middle" style="--d:1.4s;font-size:${F(20)}px;font-weight:700">${d.m}° up at ${noonT}pm</text>
+        ${hours}${bars}
+        ${IGSM.matches?"":`<text x="${x0-12}" y="${gy+26}" class="mu" text-anchor="end" style="font-size:15px">shadow</text>`}
+      </svg>`;
+      el.querySelector(".ig-note").textContent = `Shadow of a 37 m HDB block each hour. The sun peaks near ${noonT}pm, not noon, and so close to overhead that the shadow almost vanishes. ${dirN?"In June the sun sits slightly north, so midday shadows fall south.":"From September to March the sun sits slightly south, so midday shadows fall north."}`;
+    };
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>A day of shadows in Singapore</b></div><div class="ig-seg" role="group" aria-label="Date">${Object.keys(SUN_DAYS).map((k,i)=>`<button type="button" aria-pressed="${i===0}" data-k="${k}">${k}</button>`).join("")}</div></div><div class="ig-svg"></div><p class="ig-note"></p><p class="pp-src">Calculated with the NOAA solar position formulas for Singapore (1.35°N, 103.82°E), the same maths the planner uses.</p>`;
+    const btns=[...el.querySelectorAll(".ig-seg button")];
+    btns.forEach(b=>b.onclick=()=>{ btns.forEach(x=>x.setAttribute("aria-pressed",x===b)); el.classList.remove("go"); draw(b.dataset.k); void el.offsetWidth; el.classList.add("go"); });
+    draw("21 Mar");
+  },
+  /* shade,where?: hottest years */
+  "sw-years"(el){
+    const YRS=[[1997,28.2],[2002,28.1],[2010,28.1],[2015,28.2],[2016,28.4],[2019,28.4],[2023,28.2],[2024,28.4],[2025,28.1]];
+    const W=720,H=330,x0=IGSM.matches?118:56,x=i=>x0+i*(696-x0)/(YRS.length-1),y=v=>262-(v-27.9)/(28.5-27.9)*215;
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>The hottest years are the recent ones</b></div></div>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Singapore's warmest years by annual mean temperature: three tie at 28.4 degrees, in 2016, 2019 and 2024">
+      ${[28.0,28.2,28.4].map(v=>`<line x1="20" x2="710" y1="${y(v)}" y2="${y(v)}" stroke="currentColor" opacity=".12"/><text x="0" y="${y(v)+6}" class="mu" style="font-size:${F(17)}px">${v.toFixed(1)}°</text>`).join("")}
+      ${YRS.map(([t,v],i)=>{const hot=v>=28.4,c=hot?"#FF6F91":"var(--pa)";return `<line class="gy" x1="${x(i)}" x2="${x(i)}" y1="${y(v)}" y2="${y(27.9)}" stroke="${c}" stroke-width="6" stroke-linecap="round" style="--d:${i*.1}s"/><circle class="gp" cx="${x(i)}" cy="${y(v)}" r="${hot?15:10}" fill="${c}" style="--d:${.3+i*.1}s"/>${hot&&!IGSM.matches?`<text class="gf" x="${x(i)}" y="${y(v)-26}" text-anchor="middle" style="font-size:${F(20)}px;font-weight:800;--d:${.6+i*.1}s">${v}°</text>`:""}<text x="${x(i)}" y="${H-12}" text-anchor="middle" style="font-size:${F(19)}px;font-weight:${hot?800:500}" class="${hot?"":"mu"}">’${String(t).slice(2)}</text>`}).join("")}
+    </svg><p class="ig-note">Singapore's nine warmest years on record, by annual mean temperature. The three hottest tie at 28.4°C: 2016, 2019 and 2024. Seven of the nine came after 2010.</p><p class="pp-src">Meteorological Service Singapore, as cited in the app.</p>`;
+  },
+  /* shade,where?: data layers */
+  "sw-layers"(el){
+    const L=[["Building footprints",159206],["Searchable addresses and places",126000],["Trees",20079],["HDB blocks with real heights",12022],["Covered linkway roofs",7222],["Overhead bridge sections",3161],["MRT and LRT platforms",219]];
+    const mx=Math.log10(200000);
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>What the planner knows about Singapore</b></div></div>
+      <div class="ig-bars">${L.map(([t,n],i)=>`<div><span>${t}</span><i><u class="gx" style="width:${(Math.log10(n)/mx*100).toFixed(1)}%;--d:${i*.1}s"></u></i><b data-to="${n}">${igFmt(n)}</b></div>`).join("")}</div>
+      <p class="pp-src">Bars use a log scale so small layers stay visible. Sources: OpenStreetMap, HDB, LTA and OneMap.</p>`;
+  },
+  /* Block 88: seven levels */
+  "b88-levels"(el){
+    const LV=[["New Neighbour","🚪",0,"Your corridor"],["Good Neighbour","🤝",12,"Your block"],["Block Volunteer","🧹",36,"The whole block"],["Block Captain","🎪",70,"The whole block"],["Estate Committee","📦",110,"Tembusu Estate"],["Community Leader","🗳️",160,"Tembusu Estate"],["Heart of Tembusu","💛",220,"The whole town"]];
+    const W=720,H=360,bw=94,gap=8,base=330,hy=v=>34+v*1.05;
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Seven levels, from your corridor to the whole town</b></div></div>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Seven community levels and the kindness needed for each">
+      ${LV.map(([n,ic,at],i)=>{ const x=10+i*(bw+gap), h=hy(at);
+        return `<rect class="gy" x="${x}" y="${base-h}" width="${bw}" height="${h}" rx="10" fill="var(--pa)" opacity="${.35+i*.09}" style="--d:${i*.12}s"/>
+        <text class="gp" x="${x+bw/2}" y="${base-h-14}" text-anchor="middle" style="font-size:${F(30)}px;--d:${.4+i*.12}s">${ic}</text>
+        <text class="gf" x="${x+bw/2}" y="${base-10}" text-anchor="middle" style="font-size:${F(17)}px;font-weight:700;fill:#fff;--d:${.6+i*.12}s">${at}</text>`; }).join("")}
+      <line x1="0" x2="${W}" y1="${base}" y2="${base}" stroke="currentColor" opacity=".3" stroke-width="2"/>
+    </svg>
+    <ol class="ig-legend seven">${LV.map(([n,ic,at,sc])=>`<li><b>${n}</b><span>${sc}</span></li>`).join("")}</ol>
+    <div class="ig-earn"><b>How to earn 💛</b>${[["🤝","Introduce two neighbours",15],["🙏","A thank-you",12],["🏢","Block or estate project",20],["📼","A grown-up's story",8],["🗳️","Town project built",8],["📌","Noticeboard favour",6],["🏠","Tried it for real",4]].map(([ic,t,n],i)=>`<span class="gp" style="--d:${1+i*.08}s">${ic} ${t} <u>+${n}</u></span>`).join("")}</div>
+    <p class="ig-note">The bars show the 💛 needed for each level. Every level opens something bigger to do, for more people.</p>`;
+  },
+  /* Block 88: the kindness loop */
+  "b88-loop"(el){
+    const N=[["🙋",["Help a neighbour"]],["🪟",["A window","lights up"]],["⭐",["Earn kampung","points"]],["🌳",["The estate","grows"]],["👋",["Meet new","neighbours"]]];
+    const cx=360,cy=200,R=135;
+    const P=N.map((n,i)=>{const a=-Math.PI/2+i*2*Math.PI/N.length;return [cx+R*Math.cos(a),cy+R*Math.sin(a)]});
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>The kindness loop</b></div></div>
+    <svg viewBox="0 0 720 380" role="img" aria-label="Game loop: help a neighbour, a window lights up, earn kampung points, the estate grows, meet new neighbours, and round again">
+      <circle class="gd" pathLength="1" cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--pa)" stroke-width="4" opacity=".5"/>
+      <circle class="ig-orbit" r="9" fill="#F2B632" style="offset-path:path('M ${cx} ${cy-R} A ${R} ${R} 0 1 1 ${cx-.01} ${cy-R}')"/>
+      ${N.map(([ic,t],i)=>{const [x,y]=P[i], right=x>cx+5, left=x<cx-5, tx=right?x+50:left?x-50:x, anc=right?"start":left?"end":"middle", ty=i===0?y-50:y-(t.length-1)*11+7;
+        return `<g class="gp" style="--d:${.3+i*.15}s"><circle cx="${x}" cy="${y}" r="36" fill="var(--bg,#fff)" stroke="var(--pa)" stroke-width="4"/><text x="${x}" y="${y+11}" text-anchor="middle" style="font-size:${F(30)}px">${ic}</text>
+        <text x="${tx}" y="${ty}" text-anchor="${anc}" style="font-size:${F(21)}px;font-weight:700">${t.map((l,k)=>`<tspan x="${tx}" dy="${k?24:0}">${l}</tspan>`).join("")}</text></g>`}).join("")}
+      <text x="${cx}" y="${cy-4}" text-anchor="middle" style="font-size:${F(24)}px;font-weight:800" class="gf">Blk 88</text>
+      <text x="${cx}" y="${cy+24}" text-anchor="middle" class="mu gf" style="font-size:${F(17)}px">one window at a time</text>
+    </svg>
+    <ol class="ig-cycle">${N.map(([ic,t],i)=>`<li class="gp" style="--d:${i*.12}s"><em>${ic}</em>${t.join(" ")}</li>`).join("")}<li class="gf" style="--d:.7s">↻ and round again</li></ol>`;
+  },
+  /* Block 88: town projects */
+  "b88-town"(el){
+    const T=[["🌳","Plant a tree",3,"Ah Ma Lim"],["🌱","Community garden",4,"Auntie Kavitha"],["🎨","Art wall",5,"the kids"],["🛝","New swings",6,"Siti and Jun"],["🏮","Night market",8,"Uncle Rahim"]];
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>What kampung points can build</b></div></div>
+      <div class="ig-stars">${T.map(([ic,n,c,v],i)=>`<div><em>${ic}</em><span><b>${n}</b><small>Voted for by ${v}</small></span><i>${"★".repeat(c).split("").map((s,k)=>`<u class="gp" style="--d:${i*.15+k*.06}s">★</u>`).join("")}</i></div>`).join("")}</div>
+      <p class="ig-note">Neighbours vote for what the estate needs, and the ⭐ kampung points you earn by helping pay for it. Each project appears in the 3D estate once it's built, and people start using it.</p>`;
+  },
+  /* The Last Chair: one Singapore, ten families */
+  "lc-map"(el){
+    const W=720,H=345,px=lon=>(lon-103.59)/(104.05-103.59)*W,py=lat=>(1.475-lat)/(1.475-1.255)*H;
+    const path=a=>"M"+a.map(([x,y])=>px(x).toFixed(1)+" "+py(y).toFixed(1)).join(" L");
+    const S=[["The Last Chair","Katong",103.905,1.305],["Left on Read","Jurong West",103.700,1.340],["Closing Time","Tiong Bahru",103.827,1.286],["Still Here","Bedok",103.930,1.324],["Long Distance","Botanic Gardens",103.815,1.315],["Four O'Clock","Punggol",103.905,1.405],["Fifty-Two Years","Toa Payoh",103.842,1.334],["Block 51","Queenstown",103.800,1.294],["The Top Bunk","Toa Payoh",103.854,1.338],["Visiting Hours","Novena",103.843,1.320]];
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>One Singapore, ten families</b></div></div>
+    <div class="ig-map"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Map of Singapore with the ten story locations">
+      <path d="${path(SG_MAP.main)} Z" fill="var(--pa)" opacity=".14" stroke="var(--pa)" stroke-width="2" stroke-opacity=".5"/>
+      <path class="gd" pathLength="1" d="${path(SG_MAP.ew)}" fill="none" stroke="#2F9E62" stroke-width="3" opacity=".55"/>
+      <path class="gd" pathLength="1" d="${path(SG_MAP.ewc)}" fill="none" stroke="#2F9E62" stroke-width="3" opacity=".55"/>
+      <path class="gd" pathLength="1" d="${path(SG_MAP.ns)}" fill="none" stroke="#D9352B" stroke-width="3" opacity=".55"/>
+      ${S.map(([t,p,lon,lat],i)=>`<g class="gp ig-pin" style="--d:${.6+i*.12}s"><circle cx="${px(lon)}" cy="${py(lat)}" r="${IGSM.matches?18:15}" fill="var(--p)" stroke="#fff" stroke-width="3"/><text x="${px(lon)}" y="${py(lat)+(IGSM.matches?8:6)}" text-anchor="middle" style="font-size:${F(15)}px;font-weight:800;fill:#fff">${i+1}</text></g>`).join("")}
+    </svg>
+    <ol class="ig-legend two">${S.map(([t,p])=>`<li><b>${t}</b><span>${p}</span></li>`).join("")}</ol></div>
+    <p class="ig-note">Every story happens somewhere real. The green and red lines are the East-West and North-South MRT lines.</p>`;
+  },
+  /* The Last Chair: who they lost */
+  "lc-who"(el){
+    const C=[["Grandparent",2,"#E8A85C"],["Parent",3,"#C98B8B"],["Best friend",1,"#6F9A98"],["Sibling",1,"#9C7BB8"],["Life partner",1,"#B5674D"],["Family dog",1,"#D9B26A"],["Childhood home",1,"#7A8FA6"]];
+    let k=0;
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Ten stories, seven kinds of loss</b></div></div>
+      <div class="ig-waffle">${C.map(([n,c,col])=>Array.from({length:c},()=>`<i class="gp" style="background:${col};--d:${(k++)*.1}s"></i>`).join("")).join("")}</div>
+      <ul class="ig-key">${C.map(([n,c,col])=>`<li><i style="background:${col}"></i>${n}<b>${c}</b></li>`).join("")}</ul>
+      <p class="ig-note">Grief isn't only for people. One story is about a dog who waited at the door for ten years, and another is about a home that's about to be torn down.</p>`;
+  },
+  /* Bitsy: what a bin can become */
+  "bit-matrix"(el){
+    const M=[["tube","🧻","Tube"],["box","📦","Box"],["cap","🔴","Cap"],["bottle","🧴","Bottle"],["egg","🥚","Egg tray"],["carton","🧃","Carton"],["paper","📄","Paper"],["cardboard","🟫","Cardboard"]];
+    const C=[["Tube owl",{tube:1,paper:1}],["Counting caterpillar",{cap:6,box:1}],["Explorer goggles",{tube:2,paper:1}],["Rainbow shaker",{bottle:1}],["Egg-tray flowers",{egg:1,paper:1}],["Pencil pot",{tube:3,box:1}],["Puppet show",{box:1,paper:2}],["Carton plant pot",{carton:1}],["Box racing car",{cardboard:1,cap:4,paper:1}],["Piggy bank",{bottle:1,cap:4,paper:1}],["Paper fan",{paper:1}],["Paper crown",{paper:2}]];
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>What a recycling bin can become</b></div></div>
+      <div class="ig-scroll"><table class="ig-mx"><thead><tr><th></th>${M.map(([k,ic,n])=>`<th><em>${ic}</em>${n}</th>`).join("")}</tr></thead>
+      <tbody>${C.map(([n,need],r)=>`<tr><th>${n}</th>${M.map(([k])=>`<td>${need[k]?`<span class="gp" style="--d:${r*.06}s;--s:${Math.min(1,.55+need[k]*.08)}">${need[k]}</span>`:""}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+      <p class="ig-note">The 12 crafts and how many of each item they need. Paper turns up in 8 of them, and tubes, boxes and caps in 3 each, so children learn to keep these instead of binning them.</p>`;
+  },
+  /* Bitsy: learning path */
+  "bit-path"(el){
+    const P=[["💛","Care","Look after things",2],["🔁","Reuse","Old things become new",4],["🗂️","Sort","Everything has a place",4],["♻️","Recycle right","Clean and dry for the blue bin",5],["🤝","Together","We help together",3],["🌏","Use less","Make less rubbish",2]];
+    const pts=P.map((p,i)=>[70+i*116, i%2?120:200]);
+    const d="M"+pts.map(p=>p.join(" ")).join(" L");
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Bitsy's learning path</b></div></div>
+    <svg viewBox="0 0 720 300" role="img" aria-label="Six learning stages: Care, Reuse, Sort, Recycle right, Together, Use less">
+      <path class="gd" pathLength="1" d="${d}" fill="none" stroke="var(--pa)" stroke-width="6" stroke-dasharray="1" stroke-linecap="round" opacity=".5"/>
+      <circle class="ig-orbit" r="10" fill="#FFDD73" stroke="#4A3F6B" stroke-width="3" style="offset-path:path('${d}');animation-duration:7s"/>
+      ${P.map(([ic,n],i)=>`<g class="gp" style="--d:${.3+i*.15}s"><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="40" fill="var(--bg,#fff)" stroke="var(--pa)" stroke-width="4"/><text x="${pts[i][0]}" y="${pts[i][1]+12}" text-anchor="middle" style="font-size:32px">${ic}</text>${IGSM.matches?"":`<text x="${pts[i][0]}" y="${pts[i][1]+(i%2?-56:72)}" text-anchor="middle" style="font-size:19px;font-weight:700">${i+1}. ${n}</text>`}</g>`).join("")}
+    </svg><ol class="ig-legend six">${P.map(([ic,n,idea,c])=>`<li><b>${n}</b><span>${idea} · ${c} activities</span></li>`).join("")}</ol>
+    <p class="ig-note">The game follows a ladder of six ideas, from caring for things to making less rubbish. Twenty games and activities sit along it, and each one teaches one of the six.</p>`;
+  },
+  /* Bitsy: blue bin check */
+  "bit-bin"(el){
+    const Q=[["Is it empty?","Pour out what's left inside."],["Is it clean?","Rinse it, with a grown-up."],["Is it dry?","Let it dry first."]];
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Is it ready for the blue bin?</b></div></div>
+      <div class="ig-flow">${Q.map(([q,no],i)=>`<div class="gp" style="--d:${i*.25}s"><b>${q}</b><span class="no">Not yet: ${no}</span></div><em class="gf" style="--d:${i*.25+.15}s">Yes</em>`).join("")}<div class="gp ok" style="--d:.8s"><b>Blue bin!</b><span>Ready to be recycled.</span></div></div>
+      <p class="ig-note">The same three checks the sorting games teach, following NEA's guidance that recyclables should be empty, clean and dry.</p>`;
+  },
+  /* Jiak Clean: Singapore's food waste */
+  "jc-waste"(el){
+    const r=80,c=2*Math.PI*r;
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Where Singapore's food waste goes</b></div></div>
+      <div class="ig-donut"><svg viewBox="0 0 220 220" role="img" aria-label="18% of food waste recycled, 82% disposed of">
+        <circle cx="110" cy="110" r="${r}" fill="none" stroke="currentColor" stroke-width="30" opacity=".12"/>
+        <circle class="ig-arc" cx="110" cy="110" r="${r}" fill="none" stroke="#E8642C" stroke-width="30" stroke-dasharray="${(c*.82).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 110 110)" style="--c:${(c*.82).toFixed(1)}"/>
+        <circle class="ig-arc" cx="110" cy="110" r="${r}" fill="none" stroke="var(--pa)" stroke-width="30" stroke-dasharray="${(c*.18).toFixed(1)} ${c.toFixed(1)}" transform="rotate(${-90+360*.82} 110 110)" style="--c:${(c*.18).toFixed(1)};--d:1s"/>
+        <text x="110" y="106" text-anchor="middle" style="font-size:28px;font-weight:800">790,000</text><text x="110" y="132" text-anchor="middle" class="mu" style="font-size:15px">tonnes in 2025</text></svg>
+        <ul class="ig-key big"><li><i style="background:#E8642C"></i>Disposed of and burned<b>82%</b></li><li><i style="background:var(--pa)"></i>Recycled<b>18%</b></li></ul></div>
+      <div class="ig-facts">
+        <div class="gp" style="--d:.2s"><b>About half</b><span>of the food Singapore households throw away could have been avoided.</span></div>
+        <div class="gp" style="--d:.35s"><b>2.5 kg</b><span>A bag of rice a week, per home: the avoidable waste, in everyday terms.</span></div>
+        <div class="gp" style="--d:.5s"><b>🍚 🍜 🍞</b><span>Rice, noodles and bread are the foods Singapore homes throw away most.</span></div>
+      </div>
+      <p class="pp-src">NEA food waste statistics and the NEA household waste study (2017), as cited in the app.</p>`;
+  },
+  /* Jiak Clean: fridge habits */
+  "jc-fridge"(el){
+    const merc=(t,x,col,d)=>{const h=(t+3)*13;return `<rect x="${x-14}" y="30" width="28" height="180" rx="14" fill="currentColor" opacity=".1"/><rect class="gy" x="${x-8}" y="${206-h}" width="16" height="${h}" rx="8" fill="${col}" style="--d:${d}s"/><circle cx="${x}" cy="222" r="22" fill="${col}"/><text x="${x}" y="268" text-anchor="middle" style="font-size:20px;font-weight:800">${t}°C</text>`};
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Two small habits, less waste</b></div></div>
+      <div class="ig-two">
+        <div><svg viewBox="0 0 260 290" role="img" aria-label="Milk lasts up to 3 days longer in a fridge below 5°C than at 7°C">${merc(7,70,"#E8642C",0)}${merc(4,190,"#1D5FA8",.2)}</svg>
+          <p><b>Up to 3 days longer.</b> Milk keeps up to three days longer in a fridge below 5°C than one at 7°C. The app has a quick fridge temperature check.</p></div>
+        <div><div class="ig-people">${Array.from({length:10},(_,i)=>`<i class="gp${i<3?" on":""}" style="--d:${i*.08}s">${i<3?"🛒":"🙂"}</i>`).join("")}</div>
+          <p><b>3 in 10 people</b> don't check their fridge before they shop. Jiak Clean shows what you already have on the shopping list, so you skip the double buy.</p></div>
+      </div>
+      <p class="pp-src">WRAP / Love Food Hate Waste, as cited in the app.</p>`;
+  },
+  /* Jiak Clean: the rescue flow */
+  "jc-flow"(el){
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>One rescue, start to finish</b></div></div>
+      <div class="ig-flow jc"><div class="gp" style="--d:0s"><em>👀</em><b>Spot</b><span>Today shows what's due tonight.</span></div><i class="gf" style="--d:.2s"></i>
+      <div class="gp" style="--d:.3s"><em>🤔</em><b>Decide</b><span>Eat it, freeze it or share it.</span></div><i class="gf" style="--d:.5s"></i>
+      <div class="gp" style="--d:.6s"><em>🍳</em><b>Cook</b><span>A recipe from what's due, with timers.</span></div><i class="gf" style="--d:.8s"></i>
+      <div class="gp" style="--d:.9s"><em>📊</em><b>Count it</b><span>Money and meals saved this week.</span></div></div>`;
+  }
+};
+IGSM.addEventListener && IGSM.addEventListener("change", () => $$(".ig[data-ig]").forEach(el => { if (IG[el.dataset.ig]) { IG[el.dataset.ig](el); } }));
+function initIG(){
+  $$(".ig[data-ig]").forEach(el => { if (!el.dataset.done && IG[el.dataset.ig]) { IG[el.dataset.ig](el); el.dataset.done = 1; } });
+  const go = el => { if (el.classList.contains("go")) return; el.classList.add("go");
+    el.querySelectorAll("[data-to]").forEach(b => { const to=+b.dataset.to, t0=performance.now(); if (reduce) return;
+      const step=t=>{const k=Math.min(1,(t-t0)/1200), e=1-Math.pow(1-k,3); b.textContent=igFmt(Math.round(to*e)); if(k<1) requestAnimationFrame(step)}; requestAnimationFrame(step); }); };
+  if (reduce || !("IntersectionObserver" in window)) { $$(".ig").forEach(go); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { go(e.target); io.unobserve(e.target); } }), {threshold:.25});
+  $$(".ig").forEach(el => io.observe(el));
+}
+const ppMotion = (src, poster, ratio, cap, opts={}) => `<figure class="pp-motion${opts.phone?" ppm":""}"><div class="pp-dev${opts.phone?" ppm":""}"><div class="pp-scr" style="aspect-ratio:${ratio}"><video src="${IMG("motion/"+src)}" poster="${IMG("motion/"+poster)}" muted loop playsinline preload="metadata" aria-label="${cap}"></video></div></div><figcaption>${cap}</figcaption></figure>`;
+function initMotion(){
+  const vids = $$(".pp-motion video"); if (!vids.length) return;
+  if (reduce) { vids.forEach(v => v.controls = true); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => { const v=e.target; if (e.isIntersecting) { const p=v.play(); if (p && p.catch) p.catch(()=>{ v.controls=true; }); } else v.pause(); }), {threshold:.35});
+  vids.forEach(v => io.observe(v));
+}
+const ppRender = (img, alt, cap) => `<figure class="pp-render"><img class="zoom" src="${IMG(img)}" alt="${alt}" loading="lazy">${cap?`<figcaption>${cap}</figcaption>`:""}</figure>`;
+
 const CONTENT = {
 "synapsys": () => `
   ${blk("Research","A Ferrari with bicycle brakes",`
@@ -3004,11 +3345,13 @@ const CONTENT = {
       </div>
       <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("sw-plan.jpg")}" alt="shade,where? planning a walk from a hawker centre to Tampines MRT on a 3D map of Tampines, with the shade route in lilac and a time slider set to 3pm" loading="lazy"></div>
     </div>
-    ${ppCards([["3D map","159,206 buildings","Every building footprint in Singapore, with real heights for 12,022 HDB blocks and the tallest towers."],["Any minute","Leave now, or later","Slide the time, play the whole day, or compare the longest and shortest days of the year."],["Private","Stays on your device","No account and no tracking. Searches and routes are worked out in the browser and never sent anywhere."]])}`)}
+    ${ppCards([["3D map","159,206 buildings","Every building footprint in Singapore, with real heights for 12,022 HDB blocks and the tallest towers."],["Any minute","Leave now, or later","Slide the time, play the whole day, or compare the longest and shortest days of the year."],["Private","Stays on your device","No account and no tracking. Searches and routes are worked out in the browser and never sent anywhere."]])}
+    ${ppRender("sw-render.jpg","shade,where? on a laptop and a phone, both showing a shade route through Tampines on a dark 3D map","The same planner on a laptop and a phone.")}`)}
   ${blk("Why it matters","Singapore is heating up. Shade helps, fast.",`
     <p class="body-strong">I started with the numbers. Singapore's hottest years are the recent ones, and a few degrees in the shade make a real difference to how a walk feels.</p>
     ${ppStats([["28.4°C","Hottest year on record, reached in 2016, 2019 and 2024"],["+0.24°C","Warmer every decade, from 1984 to 2022"],["29 days","Of high heat stress in 2025, up from 21 in 2024"],["3.1°C","Cooler to the body in street shade, in a one-north study"]])}
-    <p class="pp-src">Sources cited in the app: Meteorological Service Singapore, Cooling Singapore, and Xu, Bardhan et al. (one-north, August 2023).</p>`)}
+    <p class="pp-src">Sources cited in the app: Meteorological Service Singapore, Cooling Singapore, and Xu, Bardhan et al. (one-north, August 2023).</p>
+    <div class="ig" data-ig="sw-years"></div>`)}
   ${blk("How it works","From sun angle to a cooler walk",`
     <div class="two">
       <div>
@@ -3020,14 +3363,18 @@ const CONTENT = {
       </div>
       <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("sw-how.jpg")}" alt="How it works page showing the sun's path over a row of buildings from 7am to 7pm" loading="lazy"></div>
     </div>
+    <div class="ig" data-ig="sw-day"></div>
     <h3 class="pp-h3">Built for how Singapore walks</h3>
     ${ppCards([["Shelter","Void decks","A path under an HDB block counts as sheltered, so the planner happily cuts through void decks."],["7,222 roofs","Covered linkways","LTA's linkway outlines stand as 3D roofs and count as full shade at any hour, rain or shine."],["847 roofed","Overhead bridges","3,161 footbridge sections stand in 3D, and the ones with a roof count as shade on the way across."],["1 pm","The 1 pm problem","Singapore's sun peaks near 1pm, not noon, and almost overhead. Shadows shrink to a puddle, so only roofs really help."]])}`)}
+  ${blk("In motion","Watch the shade move through a day",`
+    <p class="body-strong">“Play the day” runs the clock from sunrise to sunset. Shadows swing from west to east, shrink to almost nothing around 1pm, then stretch out again, and the route shading updates as they go.</p>
+    ${ppMotion("sw-day.mp4","sw-day.jpg","16/10","Play the day, recorded in the live app. Tampines, from 7am to 7pm.")}`)}
   ${blk("Inside the app","Plan it, compare it, walk it",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
     ${ppTour("swTour", SW_TOUR)}`)}
   ${blk("Accuracy","Checked against official maps",`
     <p class="body-strong">A shade map is only useful if people trust it, so every layer is built from open government and community data and checked against an official source.</p>
-    ${ppStats([["159,206","Building footprints"],["12,022","HDB blocks with official storey counts"],["7,222","LTA covered linkway outlines"],["219","MRT and LRT platforms from OneMap"]])}
+    <div class="ig" data-ig="sw-layers"></div>
     <div class="two" style="margin-top:36px">
       <div><h3 class="pp-h3" style="margin-top:0">What it was checked against</h3>
         <ul class="list">
@@ -3062,13 +3409,19 @@ const CONTENT = {
       </div>
       <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("b88-estate.jpg")}" alt="A 3D HDB estate with Block 88 in front, a playground, trees and a covered walkway" loading="lazy"></div>
     </div>
-    ${ppCards([["The estate","A full neighbourhood","Void deck, kopitiam, provision shop, food centre, wet market, MRT, bus interchange and a reservoir park."],["Old-school games","Five stones and chapteh","Plus pick-up sticks, goli, hopscotch and zero point, played with friends at the void deck."],["The story","Seven chapters","A torn 1985 photograph of the block, and the night every window was lit."]])}`)}
+    ${ppCards([["The estate","A full neighbourhood","Void deck, kopitiam, provision shop, food centre, wet market, MRT, bus interchange and a reservoir park."],["Old-school games","Five stones and chapteh","Plus pick-up sticks, goli, hopscotch and zero point, played with friends at the void deck."],["The story","Seven chapters","A torn 1985 photograph of the block, and the night every window was lit."]])}
+    ${ppRender("b88-render.jpg","Block 88 on two tablets: the 3D HDB estate with its playground, and the void deck with the community notice board","Made for tablets, held sideways.")}`)}
   ${blk("Gameplay","A day in Tembusu",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
     ${ppTour("b88Tour", B88_TOUR)}`)}
+  ${blk("In motion","A walk around Tembusu",`
+    ${ppMotion("b88-tour.mp4","b88-tour.jpg","16/10","From the estate to the void deck, then planning the day, the estate menu, the My Singapore map and choosing who you are today.")}`)}
   ${blk("Systems","Kindness that adds up",`
     <p class="body-strong">Underneath the errands is a set of systems that reward getting to know people, not just finishing tasks.</p>
-    ${ppCards([["Levels","Seven community levels","From New Neighbour to Heart of Tembusu. Each level opens bigger projects: a block clean-up, a get-together, a donation drive, a residents' meeting and Tembusu Day."],["Town projects","Kampung points","Points from helping fund estate upgrades the player votes on, including lift upgrading."],["Introductions","Who knows who","Bring together neighbours who have never spoken, and watch the web of friendships grow."],["Journal","Kindness journal","Fills in as you help, with six questions to ask a parent, grandparent or neighbour in real life, and their answers kept."],["Singapore, everywhere","Small local details","Kopi lingo, a lift that only stops at certain floors, festival decorations for Chinese New Year, Hari Raya, National Day, Deepavali and Christmas, and sudden rain showers."],["Made for tablets","Comfortable to play","Landscape layout, a thumb stick, guide arrows that can be switched off, and settings for look speed and camera distance. Progress stays on the device."]])}`)}
+    <div class="ig" data-ig="b88-loop"></div>
+    <div class="ig" data-ig="b88-levels"></div>
+    ${ppCards([["Levels","Seven community levels","From New Neighbour to Heart of Tembusu. Each level opens bigger projects: a block clean-up, a get-together, a donation drive, a residents' meeting and Tembusu Day."],["Town projects","Kampung points","Points from helping fund estate upgrades the player votes on, including lift upgrading."],["Introductions","Who knows who","Bring together neighbours who have never spoken, and watch the web of friendships grow."],["Journal","Kindness journal","Fills in as you help, with six questions to ask a parent, grandparent or neighbour in real life, and their answers kept."],["Singapore, everywhere","Small local details","Kopi lingo, a lift that only stops at certain floors, festival decorations for Chinese New Year, Hari Raya, National Day, Deepavali and Christmas, and sudden rain showers."],["Made for tablets","Comfortable to play","Landscape layout, a thumb stick, guide arrows that can be switched off, and settings for look speed and camera distance. Progress stays on the device."]])}
+    <div class="ig" data-ig="b88-town"></div>`)}
   ${blk("Try it","Play Block 88 right here",`
     ${ppPlay("/play/block-88/","b88-title.jpg","16/10","Play Block 88 here","The real game, running live in 3D. Best on a tablet or laptop held sideways; use W A S D or the on-screen stick to walk.")}`)}
 `,
@@ -3082,14 +3435,20 @@ const CONTENT = {
       </div>
       <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("lc-hero.jpg")}" alt="The Last Chair title screen over an illustrated living room on a rainy evening" loading="lazy"></div>
     </div>
-    ${ppCards([["Ten stories","Play in any order","Each one is complete on its own and says what it contains before you start."],["No pressure","No timers, no way to fail","Take as long as you need. Pause, skip a memory or leave at any time."],["Sound","Best with sound on","Each room has its own sounds, with subtitles for every one."]])}`)}
+    ${ppCards([["Ten stories","Play in any order","Each one is complete on its own and says what it contains before you start."],["No pressure","No timers, no way to fail","Take as long as you need. Pause, skip a memory or leave at any time."],["Sound","Best with sound on","Each room has its own sounds, with subtitles for every one."]])}
+    ${ppRender("lc-render.jpg","The Last Chair on a laptop, showing a dim bedroom scene, with a memory film of a couple sharing an umbrella in front","A room to walk through, and a memory film from one of the objects in it.")}`)}
   ${blk("Ten homes","Ten homes, ten goodbyes",`
     <p class="body-strong">Each story is a different kind of loss, from an expected goodbye to grieving someone who is still alive, or a home that is about to be torn down.</p>
     <div class="pp-stories">${LC_STORIES.map(([t,w,d],i)=>`<div><small>${String(i+1).padStart(2,"0")}</small><b>${t}</b><em>${w}</em><p>${d}</p></div>`).join("")}</div>
+    <div class="ig" data-ig="lc-map"></div>
+    <div class="ig" data-ig="lc-who"></div>
     <div class="plate" style="aspect-ratio:16/10;margin-top:28px"><img class="zoom" src="${IMG("lc-stories.jpg")}" alt="Story cards for The Last Chair, Left on Read, Closing Time and Still Here, each with an illustration, a content note and a Play button" loading="lazy"></div>`)}
   ${blk("How it plays","Rooms, phones and memories",`
     ${ppCards([["01","Step into their world","Walk through a grandmother's house, a hawker stall, a bedroom or a park, as them, at your own pace."],["02","Read what they left","Their phone opens up as you explore: messages, voice notes, photos, and an unsent message that slowly makes sense."],["03","Click to remember","Any object plays a short memory film, from its oldest moment to today, with the sounds of the life around it."],["04","Choose how to remember","Decide how to read each memory and what to do with their last words. There are no right answers."]])}
     ${ppTour("lcTour", LC_TOUR)}`)}
+  ${blk("In motion","A memory, played back",`
+    <p class="body-strong">Tap an object and its memory plays as a short film. This one opens on the title, walks down the hallway, and plays “Her umbrella”, from its oldest moment to today.</p>
+    ${ppMotion("lc-film.mp4","lc-film.jpg","16/10","Recorded in the live game, with the sound off here. In the game, every sound has a caption.")}`)}
   ${blk("Made with care","Designing for people who are grieving",`
     <div class="two">
       <div>
@@ -3117,10 +3476,18 @@ const CONTENT = {
       </div>
       <div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("bit-home.jpg")}" alt="Bitsy's Maker Bin home screen with Bitsy greeting Mei over a pastel HDB neighbourhood strung with festive lights" loading="lazy"></div>
     </div>
-    ${ppCards([["Show me","I'll show you every step","A pointing hand and Bitsy's voice lead the way, for children trying something for the first time."],["Hints please","I'll help if you get stuck","Children try on their own, and Bitsy steps in with a hint when they pause."],["I can do it!","Tap ? if you need me","For confident helpers. Help is always one tap away."]])}`)}
+    ${ppCards([["Show me","I'll show you every step","A pointing hand and Bitsy's voice lead the way, for children trying something for the first time."],["Hints please","I'll help if you get stuck","Children try on their own, and Bitsy steps in with a hint when they pause."],["I can do it!","Tap ? if you need me","For confident helpers. Help is always one tap away."]])}
+    ${ppRender("bit-render.jpg","Bitsy's Maker Bin on two tablets: Bitsy greeting Mei over the neighbourhood, and the Where does it go sorting game","Built for tablets, for small hands.")}`)}
   ${blk("Gameplay","Sort it, clean it, make it",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
     ${ppTour("bitTour", BIT_TOUR, {ratio:"1194/834"})}`)}
+  ${blk("In motion","Bitsy at play",`
+    ${ppMotion("bit-play.mp4","bit-play.jpg","1194/834","Recorded in the live game: Bitsy's hello, the home screen, making a pencil pot with a grown-up, and sorting a toilet roll tube.")}`)}
+  ${blk("What children learn","From caring to using less",`
+    <p class="body-strong">The learning is laid out as a path, and every game ties back to one simple habit children can repeat at home.</p>
+    <div class="ig" data-ig="bit-path"></div>
+    <div class="ig" data-ig="bit-bin"></div>
+    <div class="ig" data-ig="bit-matrix"></div>`)}
   ${blk("Designing for 4 to 6 year olds","Big buttons, kind voices, grown-ups nearby",`
     ${ppCards([["No reading needed","Everything is read aloud","Big picture tabs, one simple job per screen, and a speaker button on every line."],["Small hands","Touch targets of 60 px or more","Large, rounded buttons with soft feedback: a gentle wobble for “try again” and a sparkle for “yes”."],["Safety first","Grown-up jobs are marked","Cutting, rinsing and small parts always show a “Grown-up helps” label."],["Real rules","Follows NEA guidance","Blue bin items must be empty, clean and dry. The game teaches why, not just where."],["For grown-ups","Hold 3 seconds to open","A grown-ups area for settings and approving photos. Pilot sessions use labels like “Child B”, never names."],["Inclusive","Options for every child","Strong outlines for bright rooms or low vision, a left-handed layout, quiet mode and a gentler pace."]])}`)}
   ${blk("Try it","Play with Bitsy right here",`
@@ -3135,10 +3502,21 @@ const CONTENT = {
         <p class="body-strong" style="margin-top:26px">Instead of a fridge spreadsheet, it leads with one rescue at a time: what to eat tonight, how to cook it, and what to freeze or share.</p>
       </div>
       ${ppPhones([["jc-welcome.jpg","First open","“Turn what you already have into dinner.” Try it with a sample kitchen, no account needed."]])}
-    </div>`)}
+    </div>
+    ${ppRender("jc-render.jpg","Jiak Clean on three phones: the Kitchen list, tonight's rescue on the Today screen, and the Impact screen","Kitchen, Today and Impact: the three screens people open most.")}`)}
+  ${blk("The problem","Most food waste starts at home",`
+    <p class="body-strong">Before designing anything, I looked at where Singapore's food waste goes and which small habits make the biggest difference in a home kitchen.</p>
+    <div class="ig" data-ig="jc-waste"></div>
+    <div class="ig" data-ig="jc-fridge"></div>`)}
   ${blk("Inside the app","From fridge to dinner",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
+    <div class="ig" data-ig="jc-flow"></div>
     ${ppTour("jcTour", JC_TOUR, {phone:true, bare:true, ratio:"820/1704"})}`)}
+  ${blk("In motion","One evening, one rescue",`
+    <div class="pp-duo">
+      ${ppMotion("jc-walk.mp4","jc-walk.jpg","540/1168","Recorded in the live prototype.",{phone:true})}
+      <p class="body-strong">A quick walk through the prototype: the first screen, tonight's rescue on Today, the kitchen list with its fridge health score, the rice planner, the fridge temperature check, this week's impact, and a rescue mission in kids mode.</p>
+    </div>`)}
   ${blk("Fits real homes","Designed for everyone in the kitchen",`
     <p class="body-strong" style="margin-bottom:22px">Singapore households are mixed: grandparents, helpers, teens and young children all touch the same fridge. Jiak Clean gives each of them a way in.</p>
     ${ppPhones([["jc-simple.jpg","Simple mode in 中文","Large text in Mandarin, Malay or Tamil, with one big action per food."],["jc-helper.jpg","Helper view","Maria's own view, in Tagalog or Bahasa Indonesia."],["jc-kids.jpg","Kids mode","Rescue missions, a fridge detective, stickers and a kitchen garden."],["jc-lock.jpg","Lock-screen widget","Eat-today items you can mark as used without opening the app."]])}`)}
@@ -4332,11 +4710,11 @@ const INIT = {
     const shown = x ? $("#hotX") : $("#hot"); shown.classList.remove("swap"); void shown.offsetWidth; shown.classList.add("swap");
   });
 },
-"shade-where"(){ initTour("swTour", SW_TOUR); initPlay(); },
-"block-88"(){ initTour("b88Tour", B88_TOUR); initPlay(); },
-"last-chair"(){ initTour("lcTour", LC_TOUR); initPlay(); },
-"bitsy"(){ initTour("bitTour", BIT_TOUR); initPlay(); },
-"jiak-clean"(){ initTour("jcTour", JC_TOUR); initPlay(); },
+"shade-where"(){ initTour("swTour", SW_TOUR); initPlay(); initIG(); initMotion(); },
+"block-88"(){ initTour("b88Tour", B88_TOUR); initPlay(); initIG(); initMotion(); },
+"last-chair"(){ initTour("lcTour", LC_TOUR); initPlay(); initIG(); initMotion(); },
+"bitsy"(){ initTour("bitTour", BIT_TOUR); initPlay(); initIG(); initMotion(); },
+"jiak-clean"(){ initTour("jcTour", JC_TOUR); initPlay(); initIG(); initMotion(); },
 "vase"(){},
 "ae-queue"(){
   initSmap("aeMap");
