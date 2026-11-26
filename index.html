@@ -1253,6 +1253,12 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .ig-legend.six{grid-template-columns:repeat(6,minmax(0,1fr));max-width:860px;margin-inline:auto}
 .ig-legend.six li{grid-template-columns:1fr;text-align:center;justify-items:center;row-gap:2px}
 .ig-legend.six li::before{grid-row:auto}
+.ic,.ig svg.ic{display:inline-block;width:1em;height:1em;max-width:none;vertical-align:-.18em;flex:none;margin:0}
+.ig .ig-earn svg.ic{width:22px;height:22px;margin-right:6px;vertical-align:-6px}
+.ig-earn span{display:inline-flex;align-items:center}
+.ig .ig-note svg.ic,.ig .ig-earn>b svg.ic{width:1.25em;height:1.25em;vertical-align:-.3em}
+.ig .ig-facts svg.ic{width:46px;height:46px;margin-right:4px}
+.ig .ig-flow.jc svg.ic{width:54px;height:54px}.ig .ch-six svg.ic{width:58px;height:58px}.ig .ig-mx svg.ic{width:42px;height:42px}.ig .ig-stars svg.ic{width:52px;height:52px}.ig .ig-cycle svg.ic{width:40px;height:40px}.ig .ig-people svg.ic{width:44px;height:44px}
 .ig-earn{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:22px auto 0;max-width:860px}
 .ig-earn>b{font-family:var(--display);font-size:16px;margin-right:6px}
 .ig-earn span{background:var(--bg);border-radius:999px;padding:7px 14px;font-size:14px}
@@ -1260,7 +1266,7 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .ig-cycle{display:none;list-style:none;margin:0;padding:0;gap:6px}
 .ig-cycle li{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:14px;padding:10px 14px;font-weight:700;font-size:16px}
 .ig-cycle li:last-child{background:none;justify-content:center;color:var(--pa);font-weight:700}
-.ig-cycle em{font-style:normal;font-size:26px}
+.ig-cycle em{font-style:normal;font-size:34px;line-height:0}
 .ig-legend{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 16px;counter-reset:l}
 .ig-legend li{counter-increment:l;display:grid;grid-template-columns:28px minmax(0,1fr);column-gap:8px;font-size:14px;line-height:1.35}
 .ig-legend li::before{content:counter(l);grid-row:span 2;width:26px;height:26px;border-radius:50%;background:var(--p);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center}
@@ -1269,7 +1275,7 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .ig-map .ig-legend{margin:0;grid-template-columns:1fr 1fr}
 .ig-stars{display:grid;gap:10px}
 .ig-stars>div{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:14px;background:var(--bg);border-radius:14px;padding:10px 16px}
-.ig-stars em{font-style:normal;font-size:30px;text-align:center}
+.ig-stars em{font-style:normal;font-size:48px;text-align:center;line-height:0}
 .ig-stars b{display:block;font-family:var(--display);font-size:17px}
 .ig-stars small{color:var(--muted);font-size:13.5px}
 .ig-stars i{font-style:normal;color:#F2B632;font-size:22px;letter-spacing:1px;white-space:nowrap}
@@ -1286,7 +1292,7 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .ig-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .ig-mx{border-collapse:separate;border-spacing:4px;min-width:640px;width:100%;font-size:14px}
 .ig-mx thead th{font-weight:700;font-size:12.5px;color:var(--muted);text-align:center;vertical-align:bottom;padding-bottom:4px}
-.ig-mx thead em{display:block;font-style:normal;font-size:22px;margin-bottom:2px}
+.ig-mx thead em{display:block;font-style:normal;font-size:38px;line-height:1;margin-bottom:4px}
 .ig-mx tbody th{text-align:left;font-weight:700;white-space:nowrap;padding-right:10px;font-size:14.5px;position:sticky;left:0;background:var(--plate);z-index:1}
 .ig-mx td{background:var(--bg);border-radius:8px;height:36px;text-align:center}
 .ig-mx td span{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--p);color:#fff;font-weight:800;font-size:13px}
@@ -1299,7 +1305,7 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .ig-flow>i::after{content:"→";font-size:22px}
 .ig-flow .ok{background:var(--p);color:#fff}
 .ig-flow .ok span{color:rgba(255,255,255,.85)}
-.ig-flow.jc em{font-style:normal;font-size:28px}
+.ig-flow.jc em{font-style:normal;font-size:48px;line-height:1}
 .ig-donut{display:flex;align-items:center;gap:clamp(18px,4vw,48px);flex-wrap:wrap}
 .ig-donut svg{width:min(240px,62vw);flex:none}
 .ig-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:12px;margin-top:22px}
@@ -1310,9 +1316,9 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .ig-two svg{max-width:250px;margin:0 auto}
 .ig-two p{font-size:15px;color:var(--ink-2);line-height:1.55;margin:14px 0 0}
 .ig-two p b{color:var(--ink)}
-.ig-people{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:270px;margin:20px auto 0;font-size:36px;text-align:center;line-height:1.3}
+.ig-people{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:290px;margin:20px auto 0;font-size:44px;text-align:center;line-height:1}
 .ig-people i{font-style:normal}
-.ig-people i:not(.on){filter:grayscale(1)}
+.ig-people i:not(.on){filter:grayscale(1);opacity:.55}
 .ig-people i:not(.on).gp{--s:.8}
 .ig-row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,24px);align-items:stretch}
 .ig-row .ig{margin-top:28px}
@@ -1353,7 +1359,7 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .ch-six{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .ch-six>div{background:var(--bg);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:4px}
 .ch-six small{display:flex;align-items:center;gap:8px;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.ch-six small em{font-style:normal;font-size:22px;letter-spacing:0}
+.ch-six small em{font-style:normal;font-size:44px;letter-spacing:0;line-height:0}
 .ch-six b{font-family:var(--display);font-size:17px;line-height:1.3;margin-top:4px}
 .ch-six strong{font-family:var(--display);font-size:28px;color:var(--pa);line-height:1.1;margin-top:8px}
 .ch-six span{font-size:14px;color:var(--ink-2);line-height:1.45}
@@ -2587,6 +2593,84 @@ const SG_MAP = {"main":[[103.605,1.3],[103.618,1.322],[103.64,1.345],[103.668,1.
 const igFmt = n => n.toLocaleString("en-SG");
 const IGSM = matchMedia("(max-width:600px)");
 const F = n => Math.round(n*(IGSM.matches?1.6:1));
+/* ---------- custom icon sets, one style per passion project ---------- */
+const ICO = (() => {
+  /* Block 88: chunky toy-town shapes, warm HDB colours, dark brown outline */
+  const bo = 'stroke="#3B2F2F" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"';
+  const B = {
+    door:`<rect x="13" y="7" width="38" height="50" rx="3" fill="#E2725B" ${bo}/><rect x="18" y="12" width="28" height="45" rx="2" fill="#F6D9A8" ${bo}/><rect x="22" y="17" width="20" height="14" rx="2" fill="#EBC285" ${bo}/><rect x="22" y="35" width="20" height="16" rx="2" fill="#EBC285" ${bo}/><circle cx="41" cy="33" r="2.2" fill="#F2B632" ${bo}/><rect x="25" y="9.5" width="14" height="5" rx="1.5" fill="#fff" ${bo}/><rect x="10" y="56" width="44" height="5" rx="2" fill="#2F8F8B" ${bo}/>`,
+    handshake:`<path d="M4 28h12l8 8-6 6H4z" fill="#2F8F8B" ${bo}/><path d="M60 28H48l-8 8 6 6h14z" fill="#E2725B" ${bo}/><path d="M16 28l10-4 8 3 10-3 6 5-12 14c-2 2-5 2-7 0l-11-9z" fill="#F2C49B" ${bo}/><path d="M28 40l3 3M31 37l4 4M34 34l4 4" fill="none" ${bo}/><path d="M34 27l-7 7" fill="none" ${bo}/>`,
+    broom:`<path d="M44 6L26 36" fill="none" stroke="#A0703A" stroke-width="5" stroke-linecap="round"/><path d="M44 6L26 36" fill="none" ${bo} stroke-width="1.6"/><path d="M20 33l12 7-6 16c-6-1-12-5-14-10z" fill="#F2B632" ${bo}/><path d="M17 45l7 4M20 40l8 4" fill="none" ${bo} stroke-width="1.8"/><path d="M38 52h18l-3 7H40z" fill="#2F8F8B" ${bo}/><path d="M48 52v-6" ${bo}/>`,
+    tent:`<path d="M6 30L32 10l26 20z" fill="#E2725B" ${bo}/><path d="M19 20l-6 10M32 10v20M45 20l6 10" fill="none" ${bo} stroke-width="2"/><path d="M6 30q6.5 6 13 0q6.5 6 13 0q6.5 6 13 0q6.5 6 13 0" fill="#FFF4DC" ${bo}/><rect x="10" y="34" width="44" height="24" rx="2" fill="#FFF4DC" ${bo}/><rect x="16" y="40" width="14" height="18" fill="#2F8F8B" ${bo}/><circle cx="43" cy="45" r="5" fill="#F2B632" ${bo}/><path d="M43 40v-3" ${bo}/>`,
+    box:`<path d="M10 24l22-8 22 8v28l-22 8-22-8z" fill="#D9A066" ${bo}/><path d="M10 24l22 8 22-8M32 32v28" fill="none" ${bo}/><path d="M10 24L4 14l22-6 6 8M54 24l6-10-22-6-6 8" fill="#EBC285" ${bo}/><path d="M24 42c0-3 4-4 5-1 1-3 5-2 5 1 0 3-5 6-5 6s-5-3-5-6z" transform="translate(-7 0)" fill="#E2725B" ${bo} stroke-width="1.8"/>`,
+    ballot:`<rect x="10" y="28" width="44" height="30" rx="3" fill="#2F8F8B" ${bo}/><rect x="10" y="28" width="44" height="7" fill="#24706D" ${bo}/><rect x="22" y="30" width="20" height="3" rx="1.5" fill="#3B2F2F"/><path d="M24 6h18l4 4v22H24z" fill="#fff" ${bo}/><path d="M29 19l4 4 7-9" fill="none" stroke="#E2725B" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 44h10" ${bo}/>`,
+    heart:`<path d="M32 56S8 41 8 24c0-8 6-14 13-14 5 0 9 3 11 7 2-4 6-7 11-7 7 0 13 6 13 14 0 17-24 32-24 32z" fill="#F2B632" ${bo}/><path d="M17 20c1-3 3-4 6-4" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/><rect x="26" y="28" width="12" height="12" rx="1.5" fill="#FFF4DC" ${bo} stroke-width="2"/><path d="M32 28v12M26 34h12" ${bo} stroke-width="1.6"/>`,
+    thanks:`<rect x="6" y="18" width="52" height="36" rx="3" fill="#FFF4DC" ${bo}/><path d="M6 20l26 18 26-18" fill="none" ${bo}/><path d="M22 6h20v22l-10 7-10-7z" fill="#fff" ${bo}/><path d="M27 15c0-3 4-4 5-1 1-3 5-2 5 1 0 3-5 6-5 6s-5-3-5-6z" fill="#E2725B" ${bo} stroke-width="1.6"/>`,
+    building:`<rect x="14" y="8" width="36" height="50" rx="2" fill="#F6D9A8" ${bo}/><rect x="14" y="8" width="36" height="6" fill="#E2725B" ${bo}/>${[0,1,2,3,4].map(r=>[0,1,2].map(c=>`<rect x="${19+c*10}" y="${18+r*7}" width="6" height="4" rx="1" fill="${(r+c)%3?"#9ED3E8":"#F2B632"}" stroke="#3B2F2F" stroke-width="1.4"/>`).join("")).join("")}<rect x="27" y="50" width="10" height="8" fill="#2F8F8B" ${bo}/><path d="M6 58h52" ${bo}/>`,
+    tape:`<rect x="6" y="14" width="52" height="36" rx="5" fill="#3B2F2F" ${bo}/><rect x="12" y="19" width="40" height="17" rx="3" fill="#F2B632" ${bo} stroke-width="2"/><circle cx="23" cy="28" r="5" fill="#FFF4DC" ${bo} stroke-width="2"/><circle cx="41" cy="28" r="5" fill="#FFF4DC" ${bo} stroke-width="2"/><path d="M28 28h8" stroke="#3B2F2F" stroke-width="2"/><path d="M18 50l3-8h22l3 8" fill="#E2725B" ${bo} stroke-width="2"/><path d="M14 23h6" stroke="#E2725B" stroke-width="2"/>`,
+    pin:`<rect x="6" y="10" width="52" height="42" rx="3" fill="#C98F5A" ${bo}/><rect x="11" y="15" width="18" height="16" fill="#FFF4DC" ${bo} stroke-width="2" transform="rotate(-6 20 23)"/><rect x="33" y="17" width="20" height="22" fill="#9ED3E8" ${bo} stroke-width="2" transform="rotate(5 43 28)"/><rect x="14" y="35" width="16" height="12" fill="#F2B632" ${bo} stroke-width="2"/><circle cx="20" cy="16" r="2.6" fill="#E2725B" ${bo} stroke-width="1.6"/><circle cx="43" cy="18" r="2.6" fill="#2F8F8B" ${bo} stroke-width="1.6"/><path d="M37 26h12M37 31h9M14 21h10" stroke="#3B2F2F" stroke-width="1.6"/>`,
+    house:`<path d="M8 30L32 10l24 20" fill="#E2725B" ${bo}/><rect x="14" y="28" width="36" height="28" fill="#FFF4DC" ${bo}/><rect x="27" y="40" width="10" height="16" fill="#2F8F8B" ${bo}/><rect x="18" y="33" width="7" height="6" fill="#9ED3E8" ${bo} stroke-width="1.8"/><circle cx="48" cy="44" r="11" fill="#7BC47F" ${bo}/><path d="M43 44l4 4 6-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`,
+    help:`<path d="M14 26h36l-4 32H18z" fill="#F6D9A8" ${bo}/><path d="M22 26c0-8 4-12 10-12s10 4 10 12" fill="none" ${bo}/><path d="M22 18l-4-12M28 16l2-11" stroke="#7BC47F" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="14" r="6" fill="#E2725B" ${bo} stroke-width="2"/><path d="M40 8l1-3" ${bo} stroke-width="2"/><path d="M24 40c0-3 4-4 5-1 1-3 5-2 5 1 0 3-5 6-5 6s-5-3-5-6z" transform="translate(3 0)" fill="#E2725B" ${bo} stroke-width="1.8"/>`,
+    window:`<rect x="8" y="8" width="48" height="48" rx="3" fill="#F6D9A8" ${bo}/><rect x="14" y="14" width="36" height="36" fill="#FFD95A" ${bo}/><circle cx="32" cy="32" r="12" fill="#FFF1B3" opacity=".9"/><path d="M14 14c8 0 10 14 8 36H14z" fill="#E2725B" ${bo} stroke-width="2"/><path d="M50 14c-8 0-10 14-8 36h8z" fill="#E2725B" ${bo} stroke-width="2"/><path d="M8 56h48" ${bo}/><path d="M26 38c2-6 10-6 12 0" fill="none" ${bo} stroke-width="2"/><circle cx="32" cy="30" r="4" fill="#3B2F2F"/>`,
+    star:`<circle cx="32" cy="32" r="25" fill="#F2B632" ${bo}/><circle cx="32" cy="32" r="19" fill="#FFD95A" ${bo} stroke-width="2"/><path d="M32 19l4 8.5 9.3 1.2-6.8 6.4 1.8 9.2L32 39.8l-8.3 4.5 1.8-9.2-6.8-6.4 9.3-1.2z" fill="#fff" ${bo} stroke-width="2"/>`,
+    tree:`<rect x="28" y="36" width="8" height="22" rx="2" fill="#A0703A" ${bo}/><path d="M32 46l-8-6M32 42l7-5" ${bo} stroke-width="2"/><path d="M8 34c-3-10 5-16 12-14 1-9 13-13 20-7 8-3 18 3 16 12 6 3 5 13-2 14H14c-4 0-6-2-6-5z" fill="#7BC47F" ${bo}/><circle cx="22" cy="28" r="3" fill="#E2725B"/><circle cx="41" cy="24" r="3" fill="#E2725B"/><circle cx="46" cy="34" r="3" fill="#E2725B"/><path d="M6 58h52" ${bo}/>`,
+    wave:`<circle cx="20" cy="36" r="12" fill="#F2C49B" ${bo}/><path d="M8 33c1-9 8-13 15-11 4 1 7 4 8 9-6 0-14-1-23 2z" fill="#3B2F2F"/><circle cx="16" cy="38" r="1.6" fill="#3B2F2F"/><circle cx="24" cy="38" r="1.6" fill="#3B2F2F"/><path d="M17 43q3 2 6 0" fill="none" ${bo} stroke-width="1.8"/><circle cx="46" cy="40" r="11" fill="#C98F5A" ${bo}/><path d="M35 38c2-8 18-9 22 0-6-3-15-3-22 0z" fill="#E2725B" ${bo} stroke-width="1.8"/><circle cx="42" cy="42" r="1.6" fill="#3B2F2F"/><circle cx="50" cy="42" r="1.6" fill="#3B2F2F"/><path d="M43 46q3 2 6 0" fill="none" ${bo} stroke-width="1.8"/><path d="M26 6h22a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H36l-6 5v-5h-4a4 4 0 0 1-4-4v-8a4 4 0 0 1 4-4z" fill="#fff" ${bo} stroke-width="2"/><text x="37" y="18" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="800" style="fill:#2F8F8B">Hi!</text>`,
+    sprout:`<path d="M8 40h48l-5 18H13z" fill="#C98F5A" ${bo}/><path d="M8 40h48" ${bo}/><path d="M12 40c4-4 36-4 40 0" fill="#6B4A2B"/><path d="M20 40V28M32 40V20M44 40V30" ${bo}/><path d="M20 30c-6 0-9-4-9-8 5 0 9 3 9 8zM20 30c5 0 8-3 8-7-5 0-8 3-8 7z" fill="#7BC47F" ${bo} stroke-width="2"/><path d="M32 22c-7 0-10-5-10-10 6 0 10 4 10 10zM32 22c6 0 10-4 10-9-6 0-10 4-10 9z" fill="#7BC47F" ${bo} stroke-width="2"/><path d="M44 32c-5 0-8-3-8-7 5 0 8 3 8 7zM44 32c5 0 7-3 7-6-4 0-7 2-7 6z" fill="#7BC47F" ${bo} stroke-width="2"/>`,
+    palette:`<rect x="4" y="12" width="56" height="40" rx="2" fill="#FFF4DC" ${bo}/><path d="M4 40c10-6 14 4 24-2s16-10 32-2v16H4z" fill="#9ED3E8" ${bo} stroke-width="2"/><circle cx="18" cy="26" r="7" fill="#F2B632" ${bo} stroke-width="2"/><path d="M32 34l8-14 8 14z" fill="#7BC47F" ${bo} stroke-width="2"/><path d="M42 40c3-2 5-1 6 1" fill="none" ${bo} stroke-width="2"/><path d="M52 4l-12 26" stroke="#A0703A" stroke-width="4" stroke-linecap="round"/><path d="M41 27l-3 7 5-3z" fill="#E2725B" ${bo} stroke-width="1.8"/>`,
+    swing:`<path d="M10 58L18 8M54 58L46 8M14 8h36" fill="none" stroke="#2F8F8B" stroke-width="5" stroke-linecap="round"/><path d="M10 58L18 8M54 58L46 8M14 8h36" fill="none" ${bo} stroke-width="1.4"/><path d="M24 9v30M32 9v30M36 9v34M44 9v34" ${bo} stroke-width="2"/><rect x="20" y="38" width="16" height="5" rx="2" fill="#E2725B" ${bo} stroke-width="2"/><rect x="33" y="42" width="14" height="5" rx="2" fill="#F2B632" ${bo} stroke-width="2"/>`,
+    lantern:`<path d="M4 10q28 10 56 0" fill="none" ${bo} stroke-width="2"/>${[14,32,50].map((x,i)=>`<path d="M${x} ${i===1?15:13}v4" ${bo} stroke-width="2"/><ellipse cx="${x}" cy="${(i===1?28:26)}" rx="8" ry="9" fill="${i===1?"#F2B632":"#E2725B"}" ${bo} stroke-width="2"/><path d="M${x-4} ${i===1?20:18}h8M${x-4} ${i===1?36:34}h8" ${bo} stroke-width="2"/><path d="M${x} ${i===1?37:35}v5" stroke="#F2B632" stroke-width="2"/>`).join("")}<rect x="8" y="44" width="48" height="14" rx="2" fill="#FFF4DC" ${bo}/><path d="M8 50h48" ${bo} stroke-width="1.6"/><circle cx="20" cy="47" r="2" fill="#E2725B"/><circle cx="32" cy="47" r="2" fill="#7BC47F"/><circle cx="44" cy="47" r="2" fill="#F2B632"/>`
+  };
+  /* Bitsy: kawaii pastel objects with faces, soft purple outline */
+  const ko = 'stroke="#4A3F6B" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"';
+  const face = (x, y, s=1) => `<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="-7" cy="3" rx="3" ry="1.8" fill="#F7A8C0" opacity=".85"/><ellipse cx="7" cy="3" rx="3" ry="1.8" fill="#F7A8C0" opacity=".85"/><circle cx="-4.5" cy="-1" r="1.7" fill="#4A3F6B"/><circle cx="4.5" cy="-1" r="1.7" fill="#4A3F6B"/><circle cx="-4" cy="-1.6" r=".55" fill="#fff"/><circle cx="5" cy="-1.6" r=".55" fill="#fff"/><path d="M-2.2 2.2q2.2 2 4.4 0" fill="none" stroke="#4A3F6B" stroke-width="1.5" stroke-linecap="round"/></g>`;
+  const K = {
+    tube:`<ellipse cx="32" cy="12" rx="13" ry="5" fill="#E9CFA4" ${ko}/><path d="M19 12v40c0 3 6 5 13 5s13-2 13-5V12" fill="#F3E0C2" ${ko}/><ellipse cx="32" cy="12" rx="8" ry="2.6" fill="#B58D58"/><path d="M19 24q13 6 26 0" fill="none" stroke="#E2C394" stroke-width="2"/>${face(32,36)}`,
+    box:`<rect x="15" y="8" width="34" height="48" rx="4" fill="#FFE6A0" ${ko}/><rect x="15" y="18" width="34" height="10" fill="#F8C8D8" ${ko} stroke-width="2"/><path d="M15 8l6-4h28l-6 4" fill="#FFF0C4" ${ko} stroke-width="2"/><circle cx="41" cy="23" r="3" fill="#fff" ${ko} stroke-width="1.6"/>${face(32,40)}`,
+    cap:`<circle cx="32" cy="32" r="22" fill="#F59AA8" ${ko}/><circle cx="32" cy="32" r="16" fill="#F8B8C2" ${ko} stroke-width="1.8"/>${Array.from({length:16},(_,i)=>{const a=i*Math.PI/8;return `<path d="M${(32+19*Math.cos(a)).toFixed(1)} ${(32+19*Math.sin(a)).toFixed(1)}L${(32+22*Math.cos(a)).toFixed(1)} ${(32+22*Math.sin(a)).toFixed(1)}" stroke="#4A3F6B" stroke-width="1.4"/>`}).join("")}${face(32,33)}`,
+    bottle:`<rect x="26" y="4" width="12" height="7" rx="2" fill="#BDEBD6" ${ko}/><path d="M27 11h10v5c6 3 9 7 9 13v24c0 3-2 5-5 5H23c-3 0-5-2-5-5V29c0-6 3-10 9-13z" fill="#CDE7FA" ${ko}/><rect x="18" y="30" width="28" height="15" fill="#BDEBD6" ${ko} stroke-width="2"/><path d="M22 20c1-1 2-2 4-2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>${face(32,37,.9)}`,
+    egg:`<path d="M6 28h52v14c0 4-3 7-7 7H13c-4 0-7-3-7-7z" fill="#E9DDF7" ${ko}/>${[14,26,38,50].map(x=>`<path d="M${x-6} 28c0-7 3-10 6-10s6 3 6 10" fill="#D9CCF5" ${ko} stroke-width="2"/>`).join("")}<ellipse cx="26" cy="20" rx="5" ry="6.5" fill="#FFF8EC" ${ko} stroke-width="2"/>${face(32,40,.9)}`,
+    carton:`<path d="M18 22l6-12h16l6 12" fill="#BDEBD6" ${ko}/><rect x="18" y="22" width="28" height="34" rx="2" fill="#FFFFFF" ${ko}/><path d="M24 10h16" ${ko}/><path d="M38 10l6-6" stroke="#F59AA8" stroke-width="3.2" stroke-linecap="round"/><path d="M38 10l6-6" fill="none" ${ko} stroke-width="1"/><circle cx="32" cy="30" r="5" fill="#FFB86B" ${ko} stroke-width="1.8"/><path d="M32 25v-2" ${ko} stroke-width="1.6"/>${face(32,44,.9)}`,
+    paper:`<path d="M15 6h24l10 10v42H15z" fill="#FFFFFF" ${ko}/><path d="M39 6v10h10" fill="#E9DDF7" ${ko} stroke-width="2"/><path d="M21 22h14M21 28h22M21 50h22" stroke="#CDE7FA" stroke-width="2.4" stroke-linecap="round"/>${face(32,39)}`,
+    cardboard:`<rect x="8" y="14" width="48" height="38" rx="3" fill="#D9B48A" ${ko}/>${[16,24,32,40,48].map(x=>`<path d="M${x} 14v38" stroke="#BE9466" stroke-width="2"/>`).join("")}<path d="M8 22h48" stroke="#BE9466" stroke-width="2"/><rect x="40" y="16" width="12" height="6" rx="1" fill="#FFE6A0" ${ko} stroke-width="1.6"/>${face(30,35)}`,
+    care:`<path d="M32 56S8 42 8 25c0-8 6-14 13-14 5 0 9 3 11 7 2-4 6-7 11-7 7 0 13 6 13 14 0 17-24 31-24 31z" fill="#F8C8D8" ${ko}/><path d="M16 22c0-3 2-5 5-5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>${face(32,32,1.1)}`,
+    reuse:`<circle cx="32" cy="32" r="24" fill="#BDEBD6" ${ko}/><path d="M18 30a14 14 0 0 1 24-9" fill="none" stroke="#4A3F6B" stroke-width="4.4" stroke-linecap="round"/><path d="M44 14l-1 9-9-2" fill="none" stroke="#4A3F6B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 34a14 14 0 0 1-24 9" fill="none" stroke="#4A3F6B" stroke-width="4.4" stroke-linecap="round"/><path d="M20 50l1-9 9 2" fill="none" stroke="#4A3F6B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="28" r="1.4" fill="#4A3F6B"/>`,
+    sort:`<rect x="6" y="24" width="15" height="30" rx="3" fill="#CDE7FA" ${ko}/><rect x="24.5" y="24" width="15" height="30" rx="3" fill="#BDEBD6" ${ko}/><rect x="43" y="24" width="15" height="30" rx="3" fill="#F8C8D8" ${ko}/><path d="M4 24h19M22.5 24h19M41 24h19" ${ko}/><circle cx="13.5" cy="14" r="5" fill="#FFE6A0" ${ko} stroke-width="2"/><rect x="28" y="8" width="8" height="11" rx="2" fill="#CDE7FA" ${ko} stroke-width="2"/><path d="M45 18l5-9 5 9z" fill="#D9CCF5" ${ko} stroke-width="2"/>${face(32,40,.8)}`,
+    recycle:`<path d="M14 18h36l-4 38c0 2-2 3-4 3H22c-2 0-4-1-4-3z" fill="#9CC9F0" ${ko}/><rect x="10" y="12" width="44" height="8" rx="3" fill="#7DB4E6" ${ko}/><rect x="26" y="7" width="12" height="5" rx="2" fill="#7DB4E6" ${ko} stroke-width="2"/><g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M29 29l3-5 4 6"/><path d="M33.5 29.5l2.6.4.4-2.6"/><path d="M38 34l3 5h-8"/><path d="M35 41.5l-2-2 2-2"/><path d="M27 39h-4l3-6"/><path d="M24.5 34.5l1.5-1.6 1.9 1.3"/></g>`,
+    together:`<circle cx="20" cy="20" r="9" fill="#FFE6A0" ${ko}/><circle cx="44" cy="20" r="9" fill="#D9CCF5" ${ko}/><path d="M8 54c0-12 5-20 12-20s12 8 12 20z" fill="#BDEBD6" ${ko}/><path d="M32 54c0-12 5-20 12-20s12 8 12 20z" fill="#F8C8D8" ${ko}/><path d="M26 44q6 4 12 0" fill="none" stroke="#4A3F6B" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="44.5" r="3.2" fill="#F3E0C2" ${ko} stroke-width="1.8"/>${face(20,21,.6)}${face(44,21,.6)}`,
+    earth:`<circle cx="32" cy="32" r="24" fill="#9CC9F0" ${ko}/><path d="M14 22c5-1 7 3 11 2s4-8 9-8c3 0 4 3 2 5s-6 3-5 7 7 2 8 6-4 6-8 6-6 5-10 3-3-6-6-8-5-4-6-8z" fill="#9BD8A8" ${ko} stroke-width="2"/><path d="M44 40c3 0 6 2 6 5-3 2-6 1-7-1z" fill="#9BD8A8" ${ko} stroke-width="2"/>${face(32,32)}`
+  };
+  /* Jiak Clean: soft green line art with gentle food colours */
+  const jo = 'stroke="#1F6B45" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+  const J = {
+    rice:`<path d="M8 30h48c0 14-10 24-24 24S8 44 8 30z" fill="#E9F3EA" ${jo}/><path d="M12 30c0-10 9-16 20-16s20 6 20 16" fill="#FFFDF7" ${jo}/>${[[22,22],[28,19],[35,20],[41,23],[25,26],[32,25],[38,27]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="2.2" ry="1.2" fill="#E3DCCB"/>`).join("")}<path d="M22 54h20" ${jo}/>`,
+    noodles:`<path d="M8 32h48c0 13-10 22-24 22S8 45 8 32z" fill="#FFF1DD" ${jo}/><path d="M14 32c2-6 6-6 8 0s6 6 8 0 6-6 8 0 6 6 8 0" fill="none" stroke="#E8B04C" stroke-width="3" stroke-linecap="round"/><circle cx="44" cy="28" r="5" fill="#FFF" ${jo} stroke-width="2"/><circle cx="44" cy="28" r="2.2" fill="#F5C451"/><path d="M46 6L30 28M54 8L36 29" ${jo}/><path d="M18 26c3-2 5 0 8-2" stroke="#4E9E6B" stroke-width="3" stroke-linecap="round" fill="none"/>`,
+    bread:`<path d="M10 30c-4-4-2-14 8-14h28c10 0 12 10 8 14v22c0 2-2 4-4 4H14c-2 0-4-2-4-4z" fill="#F3C98B" ${jo}/><path d="M16 30v-4c0-3 2-5 5-5h22c3 0 5 2 5 5v4" fill="none" stroke="#D99A4E" stroke-width="2.4"/><rect x="16" y="30" width="32" height="20" rx="3" fill="#FFF6E6" ${jo} stroke-width="2.2"/><path d="M22 38l4 4M34 36l4 4M28 44l3 3" stroke="#E3CFA8" stroke-width="2" stroke-linecap="round"/>`,
+    cart:`<path d="M4 10h8l6 30h30l6-22H15" fill="none" ${jo}/><path d="M16 18h37l-5 18H19z" fill="#E9F3EA" ${jo} stroke-width="2.4"/><circle cx="22" cy="50" r="5" fill="#fff" ${jo}/><circle cx="44" cy="50" r="5" fill="#fff" ${jo}/><circle cx="28" cy="24" r="4" fill="#E8642C"/><path d="M36 30c0-6 4-9 9-9-1 5-4 9-9 9z" fill="#4E9E6B"/>`,
+    person:`<circle cx="32" cy="22" r="11" fill="#FFF6E6" ${jo}/><path d="M12 56c0-12 9-20 20-20s20 8 20 20z" fill="#E9F3EA" ${jo}/><circle cx="28" cy="21" r="1.6" fill="#1F6B45"/><circle cx="36" cy="21" r="1.6" fill="#1F6B45"/><path d="M28.5 26q3.5 3 7 0" fill="none" stroke="#1F6B45" stroke-width="2" stroke-linecap="round"/>`,
+    spot:`<rect x="12" y="6" width="34" height="52" rx="5" fill="#E9F3EA" ${jo}/><path d="M12 24h34" ${jo}/><path d="M18 14v4M18 30v6" ${jo}/><circle cx="44" cy="42" r="12" fill="#fff" ${jo}/><path d="M52.5 50.5L60 58" ${jo} stroke-width="4"/><path d="M38 42c2-4 10-4 12 0-2 4-10 4-12 0z" fill="#FFF6E6" stroke="#1F6B45" stroke-width="2"/><circle cx="44" cy="42" r="2" fill="#E8642C"/>`,
+    decide:`<path d="M32 58V34" ${jo}/><path d="M32 34L14 16M32 34L50 16M32 34V10" fill="none" ${jo}/><circle cx="14" cy="14" r="8" fill="#FFF1DD" ${jo}/><path d="M10 14h8M14 10v8" stroke="#E8642C" stroke-width="2.4" stroke-linecap="round"/><circle cx="32" cy="9" r="7" fill="#E1EEF8" ${jo}/><path d="M28.5 9h7M32 5.5v7M29.5 6.5l5 5M34.5 6.5l-5 5" stroke="#3E7CB8" stroke-width="1.8" stroke-linecap="round"/><circle cx="50" cy="14" r="8" fill="#E9F3EA" ${jo}/><path d="M46 14c0-2 4-3 4 0 0-3 4-2 4 0 0 2-4 4-4 4s-4-2-4-4z" fill="#E8642C"/>`,
+    cook:`<path d="M6 34h40c0 10-8 18-20 18S6 44 6 34z" fill="#3E4B44" ${jo}/><path d="M46 36l14-4" ${jo} stroke-width="4"/><path d="M12 34c2-6 8-8 14-6 4-4 12-3 14 6" fill="#F5C451" ${jo} stroke-width="2.2"/><circle cx="20" cy="31" r="2" fill="#4E9E6B"/><circle cx="30" cy="30" r="2" fill="#E8642C"/><circle cx="35" cy="32" r="2" fill="#4E9E6B"/><path d="M18 22c-3-4 3-6 0-10M26 20c-3-4 3-6 0-10M34 22c-3-4 3-6 0-10" fill="none" stroke="#9BB8A6" stroke-width="2.4" stroke-linecap="round"/>`,
+    count:`<path d="M8 56h48" ${jo}/><rect x="12" y="34" width="9" height="22" rx="2" fill="#E9F3EA" ${jo} stroke-width="2.4"/><rect x="27" y="24" width="9" height="32" rx="2" fill="#BFDCC6" ${jo} stroke-width="2.4"/><rect x="42" y="14" width="9" height="42" rx="2" fill="#4E9E6B" ${jo} stroke-width="2.4"/><circle cx="20" cy="16" r="9" fill="#F5C451" ${jo} stroke-width="2.4"/><path d="M20 11v10M17 13.5c0-1.5 6-1.5 6 0s-6 1.5-6 3 6 1.5 6 0" fill="none" stroke="#1F6B45" stroke-width="1.6" stroke-linecap="round"/>`
+  };
+  /* Chope!: bold kopitiam outlines, cream with red, teal and yolk yellow */
+  const co = 'stroke="#2B1D16" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+  const C = {
+    pay:`<rect x="6" y="10" width="34" height="44" rx="5" fill="#FFF7E8" ${co}/><rect x="11" y="16" width="24" height="24" rx="2" fill="#fff" ${co} stroke-width="2"/>${[[13,18],[27,18],[13,32]].map(([x,y])=>`<rect x="${x}" y="${y}" width="6" height="6" fill="#2B1D16"/>`).join("")}${[[21,20],[23,26],[19,28],[27,28],[29,34],[23,34],[31,30]].map(([x,y])=>`<rect x="${x}" y="${y}" width="3" height="3" fill="#2B1D16"/>`).join("")}<path d="M14 47h18" stroke="#C8322A" stroke-width="3" stroke-linecap="round"/><circle cx="46" cy="44" r="12" fill="#F2B33D" ${co}/><circle cx="46" cy="44" r="7.5" fill="none" stroke="#2B1D16" stroke-width="1.6"/><text x="46" y="48" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="900" style="fill:#2B1D16">$</text>`,
+    tissue:`<path d="M4 46h56l-4 8H8z" fill="#17676B" ${co}/><rect x="14" y="26" width="36" height="20" rx="5" fill="#F3A6B8" ${co}/><rect x="22" y="30" width="20" height="5" rx="2.5" fill="#FFF7E8" ${co} stroke-width="2"/><path d="M28 31c-2-8 2-14 4-16 2 3 5 8 2 16" fill="#fff" ${co} stroke-width="2.2"/><path d="M18 41h8" stroke="#2B1D16" stroke-width="2" stroke-linecap="round"/><path d="M48 14l4-4M52 18h5M44 12V6" stroke="#C8322A" stroke-width="2.6" stroke-linecap="round"/>`,
+    order:`<rect x="30" y="6" width="28" height="22" rx="3" fill="#C8322A" ${co}/><path d="M35 13h18M35 20h12" stroke="#FFF7E8" stroke-width="2.6" stroke-linecap="round"/><path d="M6 34h44c0 12-9 20-22 20S6 46 6 34z" fill="#FFF7E8" ${co}/><path d="M6 34h44" ${co}/><path d="M12 34c2-5 6-5 8 0s6 5 8 0 6-5 8 0" fill="none" stroke="#F2B33D" stroke-width="3" stroke-linecap="round"/><path d="M14 54h28" ${co}/><path d="M40 30L24 14M46 31L32 14" ${co} stroke-width="2.6"/><path d="M14 40h28" stroke="#17676B" stroke-width="3" stroke-dasharray="3 4" stroke-linecap="round"/>`,
+    heat:`<circle cx="26" cy="26" r="12" fill="#F2B33D" ${co}/>${Array.from({length:8},(_,i)=>{const a=i*Math.PI/4;return `<path d="M${(26+16*Math.cos(a)).toFixed(1)} ${(26+16*Math.sin(a)).toFixed(1)}L${(26+21*Math.cos(a)).toFixed(1)} ${(26+21*Math.sin(a)).toFixed(1)}" stroke="#2B1D16" stroke-width="3" stroke-linecap="round"/>`}).join("")}<circle cx="22" cy="25" r="1.7" fill="#2B1D16"/><circle cx="30" cy="25" r="1.7" fill="#2B1D16"/><path d="M22 31q4-3 8 0" fill="none" stroke="#2B1D16" stroke-width="2" stroke-linecap="round"/><path d="M35 19c2 2 2 4 0 5-2-1-2-3 0-5z" fill="#7CC6D6" stroke="#2B1D16" stroke-width="1.4"/><rect x="44" y="22" width="10" height="30" rx="5" fill="#fff" ${co}/><circle cx="49" cy="52" r="7" fill="#C8322A" ${co}/><path d="M49 48V29" stroke="#C8322A" stroke-width="4" stroke-linecap="round"/>`,
+    cost:`<ellipse cx="22" cy="50" rx="14" ry="5" fill="#F2B33D" ${co}/><path d="M8 50v-6c0 3 6 5 14 5s14-2 14-5v6" fill="#F2B33D" ${co}/><ellipse cx="22" cy="44" rx="14" ry="5" fill="#F2B33D" ${co}/><path d="M8 44v-6c0 3 6 5 14 5s14-2 14-5v6" fill="#F2B33D" ${co}/><ellipse cx="22" cy="38" rx="14" ry="5" fill="#FFD36E" ${co}/><rect x="34" y="12" width="24" height="16" rx="3" fill="#17676B" ${co}/><text x="46" y="24" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="900" style="fill:#FFF7E8">S$</text><path d="M40 34l6 6 6-6" fill="none" stroke="#C8322A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M46 28v12" stroke="#C8322A" stroke-width="3" stroke-linecap="round"/>`,
+    halal:`<ellipse cx="32" cy="46" rx="26" ry="9" fill="#FFF7E8" ${co}/><ellipse cx="32" cy="44" rx="18" ry="5" fill="#F3E3C6" stroke="#2B1D16" stroke-width="1.8"/><path d="M18 42c3-6 9-8 14-7 6-1 11 2 14 7" fill="#F2B33D" ${co} stroke-width="2.2"/><circle cx="26" cy="38" r="2" fill="#C8322A"/><circle cx="36" cy="37" r="2" fill="#17676B"/><circle cx="46" cy="16" r="12" fill="#2F9E62" ${co}/><path d="M40 16l4 4 8-8" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 10h20M10 16h14M10 22h17" stroke="#2B1D16" stroke-width="2.6" stroke-linecap="round" opacity=".35"/>`,
+    dice:`<rect x="10" y="10" width="44" height="44" rx="10" fill="#C8322A" ${co}/><rect x="14" y="13" width="36" height="6" rx="3" fill="#fff" opacity=".25"/>${[[21,21],[43,21],[32,32],[21,43],[43,43]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="4" fill="#FFF7E8" stroke="#2B1D16" stroke-width="1.6"/>`).join("")}`,
+    question:`<rect x="12" y="6" width="40" height="52" rx="6" fill="#FFF7E8" ${co}/><rect x="12" y="6" width="40" height="10" rx="6" fill="#17676B" ${co}/><path d="M18 11h3M24 11h3M30 11h3M36 11h3M42 11h3" stroke="#F3A6B8" stroke-width="2.4" stroke-linecap="round"/><path d="M25 30c0-5 3-8 7-8s7 3 7 7c0 5-7 5-7 10" fill="none" stroke="#C8322A" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="47" r="2.6" fill="#C8322A"/>`,
+    bowl:`<path d="M6 30h52c0 14-11 24-26 24S6 44 6 30z" fill="#FFF7E8" ${co}/><path d="M6 30h52" ${co}/><path d="M10 38h44" stroke="#C8322A" stroke-width="3"/><path d="M12 44h40" stroke="#17676B" stroke-width="2" stroke-dasharray="2 3"/><path d="M14 30c2-5 6-5 8 0s6 5 8 0 6-5 8 0 6 5 8 0" fill="none" stroke="#F2B33D" stroke-width="3" stroke-linecap="round"/><path d="M22 20c-3-4 3-6 0-10M32 18c-3-4 3-6 0-10M42 20c-3-4 3-6 0-10" fill="none" stroke="#2B1D16" stroke-width="2.4" stroke-linecap="round" opacity=".5"/>`,
+    camera:`<rect x="6" y="18" width="52" height="36" rx="6" fill="#17676B" ${co}/><path d="M22 18l4-7h12l4 7" fill="#17676B" ${co}/><circle cx="32" cy="36" r="12" fill="#FFF7E8" ${co}/><circle cx="32" cy="36" r="6.5" fill="#2B1D16"/><circle cx="29.5" cy="33.5" r="2" fill="#fff"/><rect x="45" y="23" width="8" height="5" rx="2" fill="#F2B33D" stroke="#2B1D16" stroke-width="2"/><path d="M10 26h6" stroke="#F3A6B8" stroke-width="3" stroke-linecap="round"/>`
+  };
+  return {b88:B, bit:K, jc:J, ch:C};
+})();
+/* an icon as an inline <svg> (HTML), or nested inside another <svg> at x, y */
+const ico = (set, name, cls="ic") => `<svg class="${cls}" viewBox="0 0 64 64" aria-hidden="true">${ICO[set][name]}</svg>`;
+const icoAt = (set, name, x, y, s) => `<svg x="${x}" y="${y}" width="${s}" height="${s}" viewBox="0 0 64 64" aria-hidden="true">${ICO[set][name]}</svg>`;
 const IG = {
   /* shade,where?: a day of shadows, for three dates */
   "sw-day"(el){
@@ -2634,23 +2718,23 @@ const IG = {
   },
   /* Block 88: seven levels */
   "b88-levels"(el){
-    const LV=[["New Neighbour","🚪",0,"Your corridor"],["Good Neighbour","🤝",12,"Your block"],["Block Volunteer","🧹",36,"The whole block"],["Block Captain","🎪",70,"The whole block"],["Estate Committee","📦",110,"Tembusu Estate"],["Community Leader","🗳️",160,"Tembusu Estate"],["Heart of Tembusu","💛",220,"The whole town"]];
+    const LV=[["New Neighbour","door",0,"Your corridor"],["Good Neighbour","handshake",12,"Your block"],["Block Volunteer","broom",36,"The whole block"],["Block Captain","tent",70,"The whole block"],["Estate Committee","box",110,"Tembusu Estate"],["Community Leader","ballot",160,"Tembusu Estate"],["Heart of Tembusu","heart",220,"The whole town"]];
     const W=720,H=360,bw=94,gap=8,base=330,hy=v=>34+v*1.05;
     el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Seven levels, from your corridor to the whole town</b></div></div>
     <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Seven community levels and the kindness needed for each">
       ${LV.map(([n,ic,at],i)=>{ const x=10+i*(bw+gap), h=hy(at);
         return `<rect class="gy" x="${x}" y="${base-h}" width="${bw}" height="${h}" rx="10" fill="var(--pa)" opacity="${.35+i*.09}" style="--d:${i*.12}s"/>
-        <text class="gp" x="${x+bw/2}" y="${base-h-14}" text-anchor="middle" style="font-size:${F(30)}px;--d:${.4+i*.12}s">${ic}</text>
+        <g class="gp" style="--d:${.4+i*.12}s">${icoAt("b88",ic,x+bw/2-F(26),base-h-F(56),F(52))}</g>
         <text class="gf" x="${x+bw/2}" y="${base-10}" text-anchor="middle" style="font-size:${F(17)}px;font-weight:700;fill:#fff;--d:${.6+i*.12}s">${at}</text>`; }).join("")}
       <line x1="0" x2="${W}" y1="${base}" y2="${base}" stroke="currentColor" opacity=".3" stroke-width="2"/>
     </svg>
     <ol class="ig-legend seven">${LV.map(([n,ic,at,sc])=>`<li><b>${n}</b><span>${sc}</span></li>`).join("")}</ol>
-    <div class="ig-earn"><b>How to earn 💛</b>${[["🤝","Introduce two neighbours",15],["🙏","A thank-you",12],["🏢","Block or estate project",20],["📼","A grown-up's story",8],["🗳️","Town project built",8],["📌","Noticeboard favour",6],["🏠","Tried it for real",4]].map(([ic,t,n],i)=>`<span class="gp" style="--d:${1+i*.08}s">${ic} ${t} <u>+${n}</u></span>`).join("")}</div>
-    <p class="ig-note">The bars show the 💛 needed for each level. Every level opens something bigger to do, for more people.</p>`;
+    <div class="ig-earn"><b>How to earn ${ico("b88","heart")}</b>${[["handshake","Introduce two neighbours",15],["thanks","A thank-you",12],["building","Block or estate project",20],["tape","A grown-up's story",8],["ballot","Town project built",8],["pin","Noticeboard favour",6],["house","Tried it for real",4]].map(([ic,t,n],i)=>`<span class="gp" style="--d:${1+i*.08}s">${ico("b88",ic)}${t} <u>+${n}</u></span>`).join("")}</div>
+    <p class="ig-note">The bars show the hearts ${ico("b88","heart")} needed for each level. Every level opens something bigger to do, for more people.</p>`;
   },
   /* Block 88: the kindness loop */
   "b88-loop"(el){
-    const N=[["🙋",["Help a neighbour"]],["🪟",["A window","lights up"]],["⭐",["Earn kampung","points"]],["🌳",["The estate","grows"]],["👋",["Meet new","neighbours"]]];
+    const N=[["help",["Help a neighbour"]],["window",["A window","lights up"]],["star",["Earn kampung","points"]],["tree",["The estate","grows"]],["wave",["Meet new","neighbours"]]];
     const cx=360,cy=200,R=135;
     const P=N.map((n,i)=>{const a=-Math.PI/2+i*2*Math.PI/N.length;return [cx+R*Math.cos(a),cy+R*Math.sin(a)]});
     el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>The kindness loop</b></div></div>
@@ -2658,19 +2742,19 @@ const IG = {
       <circle class="gd" pathLength="1" cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--pa)" stroke-width="4" opacity=".5"/>
       <circle class="ig-orbit" r="9" fill="#F2B632" style="offset-path:path('M ${cx} ${cy-R} A ${R} ${R} 0 1 1 ${cx-.01} ${cy-R}')"/>
       ${N.map(([ic,t],i)=>{const [x,y]=P[i], right=x>cx+5, left=x<cx-5, tx=right?x+50:left?x-50:x, anc=right?"start":left?"end":"middle", ty=i===0?y-50:y-(t.length-1)*11+7;
-        return `<g class="gp" style="--d:${.3+i*.15}s"><circle cx="${x}" cy="${y}" r="36" fill="var(--bg,#fff)" stroke="var(--pa)" stroke-width="4"/><text x="${x}" y="${y+11}" text-anchor="middle" style="font-size:${F(30)}px">${ic}</text>
+        return `<g class="gp" style="--d:${.3+i*.15}s"><circle cx="${x}" cy="${y}" r="38" fill="var(--bg,#fff)" stroke="var(--pa)" stroke-width="4"/>${icoAt("b88",ic,x-26,y-26,52)}
         <text x="${tx}" y="${ty}" text-anchor="${anc}" style="font-size:${F(21)}px;font-weight:700">${t.map((l,k)=>`<tspan x="${tx}" dy="${k?24:0}">${l}</tspan>`).join("")}</text></g>`}).join("")}
       <text x="${cx}" y="${cy-4}" text-anchor="middle" style="font-size:${F(24)}px;font-weight:800" class="gf">Blk 88</text>
       <text x="${cx}" y="${cy+24}" text-anchor="middle" class="mu gf" style="font-size:${F(17)}px">one window at a time</text>
     </svg>
-    <ol class="ig-cycle">${N.map(([ic,t],i)=>`<li class="gp" style="--d:${i*.12}s"><em>${ic}</em>${t.join(" ")}</li>`).join("")}<li class="gf" style="--d:.7s">↻ and round again</li></ol>`;
+    <ol class="ig-cycle">${N.map(([ic,t],i)=>`<li class="gp" style="--d:${i*.12}s"><em>${ico("b88",ic)}</em>${t.join(" ")}</li>`).join("")}<li class="gf" style="--d:.7s">↻ and round again</li></ol>`;
   },
   /* Block 88: town projects */
   "b88-town"(el){
-    const T=[["🌳","Plant a tree",3,"Ah Ma Lim"],["🌱","Community garden",4,"Auntie Kavitha"],["🎨","Art wall",5,"the kids"],["🛝","New swings",6,"Siti and Jun"],["🏮","Night market",8,"Uncle Rahim"]];
+    const T=[["tree","Plant a tree",3,"Ah Ma Lim"],["sprout","Community garden",4,"Auntie Kavitha"],["palette","Art wall",5,"the kids"],["swing","New swings",6,"Siti and Jun"],["lantern","Night market",8,"Uncle Rahim"]];
     el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>What kampung points can build</b></div></div>
-      <div class="ig-stars">${T.map(([ic,n,c,v],i)=>`<div><em>${ic}</em><span><b>${n}</b><small>Voted for by ${v}</small></span><i>${"★".repeat(c).split("").map((s,k)=>`<u class="gp" style="--d:${i*.15+k*.06}s">★</u>`).join("")}</i></div>`).join("")}</div>
-      <p class="ig-note">Neighbours vote for what the estate needs, and the ⭐ kampung points you earn by helping pay for it. Each project appears in the 3D estate once it's built, and people start using it.</p>`;
+      <div class="ig-stars">${T.map(([ic,n,c,v],i)=>`<div><em>${ico("b88",ic)}</em><span><b>${n}</b><small>Voted for by ${v}</small></span><i>${"★".repeat(c).split("").map((s,k)=>`<u class="gp" style="--d:${i*.15+k*.06}s">★</u>`).join("")}</i></div>`).join("")}</div>
+      <p class="ig-note">Neighbours vote for what the estate needs, and the kampung points ${ico("b88","star")} you earn by helping pay for it. Each project appears in the 3D estate once it's built, and people start using it.</p>`;
   },
   /* The Last Chair: one Singapore, ten families */
   "lc-map"(el){
@@ -2699,23 +2783,23 @@ const IG = {
   },
   /* Bitsy: what a bin can become */
   "bit-matrix"(el){
-    const M=[["tube","🧻","Tube"],["box","📦","Box"],["cap","🔴","Cap"],["bottle","🧴","Bottle"],["egg","🥚","Egg tray"],["carton","🧃","Carton"],["paper","📄","Paper"],["cardboard","🟫","Cardboard"]];
+    const M=[["tube","tube","Tube"],["box","box","Box"],["cap","cap","Cap"],["bottle","bottle","Bottle"],["egg","egg","Egg tray"],["carton","carton","Carton"],["paper","paper","Paper"],["cardboard","cardboard","Cardboard"]];
     const C=[["Tube owl",{tube:1,paper:1}],["Counting caterpillar",{cap:6,box:1}],["Explorer goggles",{tube:2,paper:1}],["Rainbow shaker",{bottle:1}],["Egg-tray flowers",{egg:1,paper:1}],["Pencil pot",{tube:3,box:1}],["Puppet show",{box:1,paper:2}],["Carton plant pot",{carton:1}],["Box racing car",{cardboard:1,cap:4,paper:1}],["Piggy bank",{bottle:1,cap:4,paper:1}],["Paper fan",{paper:1}],["Paper crown",{paper:2}]];
     el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>What a recycling bin can become</b></div></div>
-      <div class="ig-scroll"><table class="ig-mx"><thead><tr><th></th>${M.map(([k,ic,n])=>`<th><em>${ic}</em>${n}</th>`).join("")}</tr></thead>
+      <div class="ig-scroll"><table class="ig-mx"><thead><tr><th></th>${M.map(([k,ic,n])=>`<th><em>${ico("bit",ic)}</em>${n}</th>`).join("")}</tr></thead>
       <tbody>${C.map(([n,need],r)=>`<tr><th>${n}</th>${M.map(([k])=>`<td>${need[k]?`<span class="gp" style="--d:${r*.06}s;--s:${Math.min(1,.55+need[k]*.08)}">${need[k]}</span>`:""}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
       <p class="ig-note">The 12 crafts and how many of each item they need. Paper turns up in 8 of them, and tubes, boxes and caps in 3 each, so children learn to keep these instead of binning them.</p>`;
   },
   /* Bitsy: learning path */
   "bit-path"(el){
-    const P=[["💛","Care","Look after things",2],["🔁","Reuse","Old things become new",4],["🗂️","Sort","Everything has a place",4],["♻️","Recycle right","Clean and dry for the blue bin",5],["🤝","Together","We help together",3],["🌏","Use less","Make less rubbish",2]];
+    const P=[["care","Care","Look after things",2],["reuse","Reuse","Old things become new",4],["sort","Sort","Everything has a place",4],["recycle","Recycle right","Clean and dry for the blue bin",5],["together","Together","We help together",3],["earth","Use less","Make less rubbish",2]];
     const pts=P.map((p,i)=>[70+i*116, i%2?120:200]);
     const d="M"+pts.map(p=>p.join(" ")).join(" L");
     el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Bitsy's learning path</b></div></div>
-    <svg viewBox="0 0 720 300" role="img" aria-label="Six learning stages: Care, Reuse, Sort, Recycle right, Together, Use less">
+    <svg viewBox="0 40 720 230" role="img" aria-label="Six learning stages: Care, Reuse, Sort, Recycle right, Together, Use less">
       <path class="gd" pathLength="1" d="${d}" fill="none" stroke="var(--pa)" stroke-width="6" stroke-dasharray="1" stroke-linecap="round" opacity=".5"/>
       <circle class="ig-orbit" r="10" fill="#FFDD73" stroke="#4A3F6B" stroke-width="3" style="offset-path:path('${d}');animation-duration:7s"/>
-      ${P.map(([ic,n],i)=>`<g class="gp" style="--d:${.3+i*.15}s"><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="40" fill="var(--bg,#fff)" stroke="var(--pa)" stroke-width="4"/><text x="${pts[i][0]}" y="${pts[i][1]+12}" text-anchor="middle" style="font-size:32px">${ic}</text>${IGSM.matches?"":`<text x="${pts[i][0]}" y="${pts[i][1]+(i%2?-56:72)}" text-anchor="middle" style="font-size:19px;font-weight:700">${i+1}. ${n}</text>`}</g>`).join("")}
+      ${P.map(([ic,n],i)=>`<g class="gp" style="--d:${.3+i*.15}s"><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="44" fill="var(--bg,#fff)" stroke="var(--pa)" stroke-width="4"/>${icoAt("bit",ic,pts[i][0]-31,pts[i][1]-31,62)}<circle cx="${pts[i][0]+32}" cy="${pts[i][1]-32}" r="15" fill="var(--pa)"/><text x="${pts[i][0]+32}" y="${pts[i][1]-26.5}" text-anchor="middle" style="font-size:16px;font-weight:800;fill:var(--bg,#fff)">${i+1}</text></g>`).join("")}
     </svg><ol class="ig-legend six">${P.map(([ic,n,idea,c])=>`<li><b>${n}</b><span>${idea} · ${c} activities</span></li>`).join("")}</ol>
     <p class="ig-note">The game follows a ladder of six ideas, from caring for things to making less rubbish. Twenty games and activities sit along it, and each one teaches one of the six.</p>`;
   },
@@ -2739,7 +2823,7 @@ const IG = {
       <div class="ig-facts">
         <div class="gp" style="--d:.2s"><b>About half</b><span>of the food Singapore households throw away could have been avoided.</span></div>
         <div class="gp" style="--d:.35s"><b>2.5 kg</b><span>A bag of rice a week, per home: the avoidable waste, in everyday terms.</span></div>
-        <div class="gp" style="--d:.5s"><b>🍚 🍜 🍞</b><span>Rice, noodles and bread are the foods Singapore homes throw away most.</span></div>
+        <div class="gp" style="--d:.5s"><b>${ico("jc","rice")}${ico("jc","noodles")}${ico("jc","bread")}</b><span>Rice, noodles and bread are the foods Singapore homes throw away most.</span></div>
       </div>
       <p class="pp-src">NEA food waste statistics and the NEA household waste study (2017), as cited in the app.</p>`;
   },
@@ -2750,7 +2834,7 @@ const IG = {
       <div class="ig-two">
         <div><svg viewBox="0 0 260 290" role="img" aria-label="Milk lasts up to 3 days longer in a fridge below 5°C than at 7°C">${merc(7,70,"#E8642C",0)}${merc(4,190,"#1D5FA8",.2)}</svg>
           <p><b>Up to 3 days longer.</b> Milk keeps up to three days longer in a fridge below 5°C than one at 7°C. The app has a quick fridge temperature check.</p></div>
-        <div><div class="ig-people">${Array.from({length:10},(_,i)=>`<i class="gp${i<3?" on":""}" style="--d:${i*.08}s">${i<3?"🛒":"🙂"}</i>`).join("")}</div>
+        <div><div class="ig-people">${Array.from({length:10},(_,i)=>`<i class="gp${i<3?" on":""}" style="--d:${i*.08}s">${i<3?ico("jc","cart"):ico("jc","person")}</i>`).join("")}</div>
           <p><b>3 in 10 people</b> don't check their fridge before they shop. Jiak Clean shows what you already have on the shopping list, so you skip the double buy.</p></div>
       </div>
       <p class="pp-src">WRAP / Love Food Hate Waste, as cited in the app.</p>`;
@@ -2758,10 +2842,10 @@ const IG = {
   /* Jiak Clean: the rescue flow */
   "jc-flow"(el){
     el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>One rescue, start to finish</b></div></div>
-      <div class="ig-flow jc"><div class="gp" style="--d:0s"><em>👀</em><b>Spot</b><span>Today shows what's due tonight.</span></div><i class="gf" style="--d:.2s"></i>
-      <div class="gp" style="--d:.3s"><em>🤔</em><b>Decide</b><span>Eat it, freeze it or share it.</span></div><i class="gf" style="--d:.5s"></i>
-      <div class="gp" style="--d:.6s"><em>🍳</em><b>Cook</b><span>A recipe from what's due, with timers.</span></div><i class="gf" style="--d:.8s"></i>
-      <div class="gp" style="--d:.9s"><em>📊</em><b>Count it</b><span>Money and meals saved this week.</span></div></div>`;
+      <div class="ig-flow jc"><div class="gp" style="--d:0s"><em>${ico("jc","spot")}</em><b>Spot</b><span>Today shows what's due tonight.</span></div><i class="gf" style="--d:.2s"></i>
+      <div class="gp" style="--d:.3s"><em>${ico("jc","decide")}</em><b>Decide</b><span>Eat it, freeze it or share it.</span></div><i class="gf" style="--d:.5s"></i>
+      <div class="gp" style="--d:.6s"><em>${ico("jc","cook")}</em><b>Cook</b><span>A recipe from what's due, with timers.</span></div><i class="gf" style="--d:.8s"></i>
+      <div class="gp" style="--d:.9s"><em>${ico("jc","count")}</em><b>Count it</b><span>Money and meals saved this week.</span></div></div>`;
   }
   ,
   /* Chope!: who visits */
@@ -2780,23 +2864,23 @@ const IG = {
   },
   /* Chope!: six struggles */
   "ch-struggles"(el){
-    const S=[["💵","Paying","Cash or QR? Every stall is different.","11,500+","hawkers take SGQR codes, but some stalls still take only cash.","Every dish card says how to pay, and to bring small notes and coins."],
-      ["🧻","Unwritten rules","Tissues save seats. Trays go back.","30% → 65%","of trays returned during NEA's 2021 clean tables campaign. Returning them is now the law.","Chope a Seat and Tray Return are corners on the board, and meal time walks you through both."],
-      ["🍜","Choosing and ordering","Hundreds of stalls, not much English.","11am–2pm","and 6–8pm: the lunch and dinner rushes, when queues are longest.","The board picks the dish, and “Show the uncle” gives you the words to order it."],
-      ["☀️","Heat","Many hawker centres have no air-con.","44%","of Asia-Pacific travellers changed or cancelled plans over extreme weather last year.","Tell it it's hot, and today's tip suggests cooler times, air-con food courts and chendol."],
-      ["💸","Cost","A pricey city, with cheap hawker food.","S$16.89","a day for three hawker or coffee shop meals (IPS, 2022–23). Prices have risen since.","Every dish shows a price range in S$, so visitors from Australia or the US don't misread it."],
-      ["🕌","Halal and diet","Halal needs to be clear and certain.","#1","non-OIC destination for Muslim travellers (GMTI 2025). Indonesia is the second-biggest market.","A halal filter builds the board from dishes with halal options."]];
+    const S=[["pay","Paying","Cash or QR? Every stall is different.","11,500+","hawkers take SGQR codes, but some stalls still take only cash.","Every dish card says how to pay, and to bring small notes and coins."],
+      ["tissue","Unwritten rules","Tissues save seats. Trays go back.","30% → 65%","of trays returned during NEA's 2021 clean tables campaign. Returning them is now the law.","Chope a Seat and Tray Return are corners on the board, and meal time walks you through both."],
+      ["order","Choosing and ordering","Hundreds of stalls, not much English.","11am–2pm","and 6–8pm: the lunch and dinner rushes, when queues are longest.","The board picks the dish, and “Show the uncle” gives you the words to order it."],
+      ["heat","Heat","Many hawker centres have no air-con.","44%","of Asia-Pacific travellers changed or cancelled plans over extreme weather last year.","Tell it it's hot, and today's tip suggests cooler times, air-con food courts and chendol."],
+      ["cost","Cost","A pricey city, with cheap hawker food.","S$16.89","a day for three hawker or coffee shop meals (IPS, 2022–23). Prices have risen since.","Every dish shows a price range in S$, so visitors from Australia or the US don't misread it."],
+      ["halal","Halal and diet","Halal needs to be clear and certain.","#1","non-OIC destination for Muslim travellers (GMTI 2025). Indonesia is the second-biggest market.","A halal filter builds the board from dishes with halal options."]];
     el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Six things that trip up first-timers at a hawker centre</b></div></div>
-      <div class="ch-six">${S.map(([e,k,t,n,s,a],i)=>`<div class="gp" style="--d:${i*.1}s"><small><em>${e}</em>${i+1} · ${k}</small><b>${t}</b><strong>${n}</strong><span>${s}</span><p><i>In Chope!</i> ${a}</p></div>`).join("")}</div>
+      <div class="ch-six">${S.map(([e,k,t,n,s,a],i)=>`<div class="gp" style="--d:${i*.1}s"><small><em>${ico("ch",e)}</em>${i+1} · ${k}</small><b>${t}</b><strong>${n}</strong><span>${s}</span><p><i>In Chope!</i> ${a}</p></div>`).join("")}</div>
       <p class="pp-src">The Straits Times via ANN (Nov 2024); NEA (Aug 2021); AllAboutPlanners first-timer's guide; Booking.com via Eco-Business (May 2026); IPS Makan Index via Mothership (Mar 2023); Mastercard-CrescentRating GMTI 2025.</p>`;
   },
   /* Chope!: one round */
   "ch-round"(el){
     el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>One round of Makan Around</b></div></div>
-      <div class="ig-flow jc"><div class="gp" style="--d:0s"><em>🎲</em><b>Roll</b><span>Move round a board of real Singapore dishes.</span></div><i class="gf" style="--d:.2s"></i>
-      <div class="gp" style="--d:.3s"><em>❓</em><b>Answer</b><span>Get the question right to win the stall and a ★.</span></div><i class="gf" style="--d:.5s"></i>
-      <div class="gp" style="--d:.6s"><em>🍜</em><b>Eat</b><span>Once everyone has rolled, go and eat your dish for real.</span></div><i class="gf" style="--d:.8s"></i>
-      <div class="gp" style="--d:.9s"><em>📸</em><b>Snap</b><span>A photo of your meal wins a ★ before the next round.</span></div></div>
+      <div class="ig-flow jc"><div class="gp" style="--d:0s"><em>${ico("ch","dice")}</em><b>Roll</b><span>Move round a board of real Singapore dishes.</span></div><i class="gf" style="--d:.2s"></i>
+      <div class="gp" style="--d:.3s"><em>${ico("ch","question")}</em><b>Answer</b><span>Get the question right to win the stall and a ★.</span></div><i class="gf" style="--d:.5s"></i>
+      <div class="gp" style="--d:.6s"><em>${ico("ch","bowl")}</em><b>Eat</b><span>Once everyone has rolled, go and eat your dish for real.</span></div><i class="gf" style="--d:.8s"></i>
+      <div class="gp" style="--d:.9s"><em>${ico("ch","camera")}</em><b>Snap</b><span>A photo of your meal wins a ★ before the next round.</span></div></div>
       <div class="ig-earn" style="max-width:none"><b>Ways to earn ★</b><span>Win a stall<u>★</u></span><span>A friend lands on your stall<u>★</u></span><span>Eat and snap your dish<u>★</u></span><span>Changi, Chope a Seat, Tray Return<u>+1</u></span></div>`;
   },
   /* Chope!: the board grows with the trip */
