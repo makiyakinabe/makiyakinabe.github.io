@@ -1348,6 +1348,36 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 @media (prefers-reduced-motion:reduce){
   .ig *{transition:none!important;animation:none!important}
 }
+.ig-facts.ch-top{margin:0 0 26px}
+.ch-lab{font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.ch-six{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ch-six>div{background:var(--bg);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.ch-six small{display:flex;align-items:center;gap:8px;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ch-six small em{font-style:normal;font-size:22px;letter-spacing:0}
+.ch-six b{font-family:var(--display);font-size:17px;line-height:1.3;margin-top:4px}
+.ch-six strong{font-family:var(--display);font-size:28px;color:var(--pa);line-height:1.1;margin-top:8px}
+.ch-six span{font-size:14px;color:var(--ink-2);line-height:1.45}
+.ch-six p{margin:auto 0 0;padding-top:12px;border-top:1px dashed var(--line,rgba(0,0,0,.15));font-size:14px;line-height:1.45;color:var(--ink)}
+.ch-six>div>span{margin-bottom:10px}
+.ch-six p i{font-style:normal;font-weight:800;color:var(--pa)}
+.ch-fix{display:grid;gap:8px}
+.ch-fix>div{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr) 64px;align-items:center;gap:12px;background:var(--bg);border-radius:14px;padding:12px 16px}
+.ch-fix span{font-size:14.5px;color:var(--muted);line-height:1.4}
+.ch-fix i::after{content:"→";color:var(--pa);font-style:normal;font-weight:700;font-size:20px}
+.ch-fix b{font-size:15px;line-height:1.4;font-weight:700}
+.ch-fix em{font-style:normal;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;text-align:center;border-radius:999px;padding:5px 0;background:var(--p);color:#fff}
+.ch-fix .next em{background:none;color:var(--pa);box-shadow:inset 0 0 0 2px var(--pa)}
+.ch-fix .later em{background:none;color:var(--muted);box-shadow:inset 0 0 0 2px var(--muted)}
+.ch-fix .done span{text-decoration:line-through;text-decoration-color:var(--muted)}
+@media (max-width:860px){.ch-six{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){
+  .ch-six{grid-template-columns:1fr}
+  .ch-fix>div{grid-template-columns:minmax(0,1fr) auto;row-gap:4px}
+  .ch-fix i{display:none}
+  .ch-fix span{grid-column:1;grid-row:1}
+  .ch-fix b{grid-column:1;grid-row:2}
+  .ch-fix em{grid-column:2;grid-row:1/3;padding:5px 10px}
+}
 /* passion projects */
 .pp-dev{position:relative;background:#16181d;border-radius:clamp(14px,2vw,26px);padding:clamp(8px,1.1vw,14px);box-shadow:0 30px 60px -22px rgba(0,0,0,.45);max-width:1040px;margin:0 auto}
 .pp-dev.ppm{max-width:340px;border-radius:46px;padding:11px}
@@ -1649,7 +1679,11 @@ const PROJECTS = [
  {id:"jiak-clean", role:"Solo · research, design &amp; code", num:"17", name:"Jiak Clean", sub:"Food Rescue App", p:"#1F6B45", pd:"#7FC79B",
   cat:"UI/UX · Mobile App", year:"2026", ctx:"Passion project · App prototype", tags:["uiux","passion"], tagLabels:["UI/UX","Mobile App","Sustainability"],
   hero:"jc-cover.jpg", thumb:"jc-cover.jpg", thumbPos:"0% 50%",
-  blurb:"A household food-rescue app for Singapore. It shows what to eat first, turns it into dinner, and helps you freeze or share the rest."}
+  blurb:"A household food-rescue app for Singapore. It shows what to eat first, turns it into dinner, and helps you freeze or share the rest."},
+ {id:"chope", role:"Solo · research, design &amp; code", num:"18", name:"Chope!", sub:"Makan Around Singapore", p:"#C8322A", pd:"#F2867A",
+  cat:"Game Design · Mobile App", year:"2026", ctx:"Passion project · Phone game for tourists", tags:["game","uiux","passion"], tagLabels:["Game Design","UI/UX","Food &amp; Travel"],
+  hero:"ch-cover.jpg", thumb:"ch-cover.jpg", thumbPos:"0% 50%",
+  blurb:"A board game for tourists in Singapore: roll the dice, land on a real dish, then go to a hawker centre and eat it for real."}
 ];
 const IMG = n => "img/" + n;
 const $ = (s, el=document) => el.querySelector(s);
@@ -2422,6 +2456,16 @@ const JC_TOUR = [
   {t:"Learn and donate", k:"Right answers fund meals", img:"jc-learn.jpg", d:"Flashcards and quick games. The first right answers each day earn points that a sponsor would turn into meals for a food charity you choose (demo only)."},
   {t:"Impact", k:"This week, progress, community", img:"jc-impact.jpg", d:"Money saved, food kept from the bin and items used before their date, in everyday terms, with the price of waste against your goal."}
 ];
+const CH_TOUR = [
+  {t:"How long are you here?", k:"From a stopover to a week", img:"ch-days.jpg", d:"Say how many days you're in Singapore, and the board size and number of meals are set to match the trip."},
+  {t:"Who's playing?", k:"Tokens from Singapore's story", img:"ch-who.jpg", d:"Friends pass one phone, and each picks a token: Sang Nila Utama, Badang, a Samsui woman, the Merlion, Lau Pa Sat or Marina Bay Sands."},
+  {t:"Anything you can't eat?", k:"Halal, vegetarian, allergies", img:"ch-diet.jpg", d:"Halal, vegetarian, no pork, no seafood or a nut allergy keeps those dishes off the board. Kids mode switches to picture questions."},
+  {t:"The board", k:"Real dishes, four corners", img:"ch-board.jpg", d:"Dishes run round the edge, with Changi, Uncle Says, Chope a Seat and Tray Return in the corners. Roll stays on screen, right above the tabs."},
+  {t:"Answer to win the stall", k:"Learn as you play", img:"ch-answer.jpg", d:"Land on a dish and answer a question about it, like how locals eat roti prata. A right answer wins the stall and a ★."},
+  {t:"Quick game first?", k:"Win a Lucky Roll", img:"ch-steam.jpg", d:"Short games before you roll, like rubbing the steam off a bowl and guessing the dish underneath."},
+  {t:"Time to eat!", k:"Eat it for real, then snap it", img:"ch-eat.jpg", d:"Once everyone has rolled, each player eats their dish for real and snaps a photo for a ★, with the three hawker rules and a tip for today's weather."},
+  {t:"Show the uncle", k:"Order in 中文, Melayu or English", img:"ch-uncle.jpg", d:"Tap your dish for an order card to show at the stall, with no peanuts, no pork or less spicy added in, read aloud if you like, plus where to eat it and how to pay."}
+];
 
 /* ---------- passion projects: animated infographics ---------- */
 const SUN_DAYS = {"21 Mar":{"n":792.6,"m":88.6,"e":[-3.2,4.3,11.8,19.3,26.8,34.3,41.8,49.3,56.8,64.3,71.8,79.3,86.6,85.4,78.1,70.6,63.1,55.6,48.1,40.6,33.1,25.6,18.1,10.6,3.1]},"21 Jun":{"n":786.0,"m":67.9,"e":[-0.8,6.0,12.9,19.8,26.5,33.3,39.8,46.2,52.3,57.9,62.7,66.2,67.9,67.2,64.3,60.0,54.6,48.7,42.4,35.9,29.3,22.5,15.7,8.8,1.9]},"21 Dec":{"n":782.6,"m":65.2,"e":[-1.1,5.8,12.6,19.4,26.1,32.8,39.2,45.4,51.3,56.5,60.9,64.0,65.2,64.3,61.6,57.4,52.2,46.4,40.3,33.9,27.3,20.6,13.8,6.9,0.1]}};
@@ -2604,6 +2648,86 @@ const IG = {
       <div class="gp" style="--d:.3s"><em>🤔</em><b>Decide</b><span>Eat it, freeze it or share it.</span></div><i class="gf" style="--d:.5s"></i>
       <div class="gp" style="--d:.6s"><em>🍳</em><b>Cook</b><span>A recipe from what's due, with timers.</span></div><i class="gf" style="--d:.8s"></i>
       <div class="gp" style="--d:.9s"><em>📊</em><b>Count it</b><span>Money and meals saved this week.</span></div></div>`;
+  }
+  ,
+  /* Chope!: who visits */
+  "ch-visitors"(el){
+    const M=[["China",3.1],["Indonesia",2.4],["Malaysia",1.3],["Australia",1.3],["India",1.2]];
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Who visits Singapore, and for how long</b></div></div>
+      <div class="ig-facts ch-top">
+        <div class="gp" style="--d:0s"><b>16.9M</b><span>international visitors in 2025, up 2.3% on the year before.</span></div>
+        <div class="gp" style="--d:.15s"><b>3.49 days</b><span>the average stay. Every meal counts, so the board is sized to the trip.</span></div>
+        <div class="gp" style="--d:.3s"><b>+15%</b><span>growth in what tourists spent on food and drink, January to September 2025.</span></div>
+      </div>
+      <p class="ch-lab">Top five markets, visitors in 2025</p>
+      <div class="ig-bars">${M.map(([n,v],i)=>`<div><span>${n}</span><i><u class="gx" style="width:${(v/3.1*100).toFixed(1)}%;--d:${.2+i*.12}s;${i>1?"background:var(--muted);opacity:.55":""}"></u></i><b>${v}M</b></div>`).join("")}</div>
+      <p class="ig-note"><b>1 in 3 visitors comes from China or Indonesia.</b> That's why the “Show the uncle” order card speaks 中文 and Melayu as well as English.</p>
+      <p class="pp-src">Singapore Tourism Board (Feb 2026); GGRAsia, citing STB (Dec 2025).</p>`;
+  },
+  /* Chope!: six struggles */
+  "ch-struggles"(el){
+    const S=[["💵","Paying","Cash or QR? Every stall is different.","11,500+","hawkers take SGQR codes, but some stalls still take only cash.","Every dish card says how to pay, and to bring small notes and coins."],
+      ["🧻","Unwritten rules","Tissues save seats. Trays go back.","30% → 65%","of trays returned during NEA's 2021 clean tables campaign. Returning them is now the law.","Chope a Seat and Tray Return are corners on the board, and meal time walks you through both."],
+      ["🍜","Choosing and ordering","Hundreds of stalls, not much English.","11am–2pm","and 6–8pm: the lunch and dinner rushes, when queues are longest.","The board picks the dish, and “Show the uncle” gives you the words to order it."],
+      ["☀️","Heat","Many hawker centres have no air-con.","44%","of Asia-Pacific travellers changed or cancelled plans over extreme weather last year.","Tell it it's hot, and today's tip suggests cooler times, air-con food courts and chendol."],
+      ["💸","Cost","A pricey city, with cheap hawker food.","S$16.89","a day for three hawker or coffee shop meals (IPS, 2022–23). Prices have risen since.","Every dish shows a price range in S$, so visitors from Australia or the US don't misread it."],
+      ["🕌","Halal and diet","Halal needs to be clear and certain.","#1","non-OIC destination for Muslim travellers (GMTI 2025). Indonesia is the second-biggest market.","A halal filter builds the board from dishes with halal options."]];
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Six things that trip up first-timers at a hawker centre</b></div></div>
+      <div class="ch-six">${S.map(([e,k,t,n,s,a],i)=>`<div class="gp" style="--d:${i*.1}s"><small><em>${e}</em>${i+1} · ${k}</small><b>${t}</b><strong>${n}</strong><span>${s}</span><p><i>In Chope!</i> ${a}</p></div>`).join("")}</div>
+      <p class="pp-src">The Straits Times via ANN (Nov 2024); NEA (Aug 2021); AllAboutPlanners first-timer's guide; Booking.com via Eco-Business (May 2026); IPS Makan Index via Mothership (Mar 2023); Mastercard-CrescentRating GMTI 2025.</p>`;
+  },
+  /* Chope!: one round */
+  "ch-round"(el){
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>One round of Makan Around</b></div></div>
+      <div class="ig-flow jc"><div class="gp" style="--d:0s"><em>🎲</em><b>Roll</b><span>Move round a board of real Singapore dishes.</span></div><i class="gf" style="--d:.2s"></i>
+      <div class="gp" style="--d:.3s"><em>❓</em><b>Answer</b><span>Get the question right to win the stall and a ★.</span></div><i class="gf" style="--d:.5s"></i>
+      <div class="gp" style="--d:.6s"><em>🍜</em><b>Eat</b><span>Once everyone has rolled, go and eat your dish for real.</span></div><i class="gf" style="--d:.8s"></i>
+      <div class="gp" style="--d:.9s"><em>📸</em><b>Snap</b><span>A photo of your meal wins a ★ before the next round.</span></div></div>
+      <div class="ig-earn" style="max-width:none"><b>Ways to earn ★</b><span>Win a stall<u>★</u></span><span>A friend lands on your stall<u>★</u></span><span>Eat and snap your dish<u>★</u></span><span>Changi, Chope a Seat, Tray Return<u>+1</u></span></div>`;
+  },
+  /* Chope!: the board grows with the trip */
+  "ch-boards"(el){
+    const B=[[4,"Up to 2 days","Small board","8 dishes","2 to 4 meals"],[5,"3 or 4 days","Medium board","12 dishes","6 to 8 meals"],[6,"5 days or more","Big board","16 dishes","10 to 14 meals"]];
+    const CORN=["#F2B33D","#F3A6B8","#BFE3D3","#E3CBB0"], BAND=["#C8322A","#17676B","#F2B33D","#F3A6B8"];
+    const sm=IGSM.matches, W=230, gap=sm?40:60, x0=sm?10:25, y0=20;
+    let svg="", k=0;
+    B.forEach(([n,d,name,dish,meals],b)=>{
+      const x=sm?x0:x0+b*(W+gap), y=sm?y0+b*(W+gap):y0, c=W/n, cells=[];
+      for(let r=0;r<n;r++) for(let q=0;q<n;q++){ if(r>0&&r<n-1&&q>0&&q<n-1) continue; cells.push([r,q]); }
+      const pos=([r,q])=>r===0?q:q===n-1?n-1+r:r===n-1?3*(n-1)-q:4*(n-1)-r;
+      cells.sort((A,Z)=>pos(A)-pos(Z));
+      svg+=`<rect class="gp" x="${x+c}" y="${y+c}" width="${W-2*c}" height="${W-2*c}" rx="10" fill="#17676B" stroke="currentColor" stroke-width="2" style="--d:${b*.25}s"/>`;
+      svg+=`<text class="gf" x="${x+W/2}" y="${y+W/2+9}" text-anchor="middle" style="font-size:26px;font-weight:800;fill:#FBF4E6;--d:${b*.25+.5}s">${n}×${n}</text>`;
+      cells.forEach(([r,q],i)=>{ const corner=(r===0||r===n-1)&&(q===0||q===n-1); const cx=x+q*c, cy=y+r*c;
+        svg+=`<g class="gp" style="--d:${b*.25+i*.03}s"><rect x="${cx+2}" y="${cy+2}" width="${c-4}" height="${c-4}" rx="6" fill="${corner?CORN[k++%4]:"#FFFDF7"}" stroke="currentColor" stroke-width="1.6"/>${corner?"":`<rect x="${cx+2}" y="${cy+2}" width="${c-4}" height="5" rx="2" fill="${BAND[i%4]}"/><circle cx="${cx+c/2}" cy="${cy+c/2+2}" r="${c*.18}" fill="#F2B33D" opacity=".75"/>`}</g>`; });
+      if (sm) {
+        const tx=x+W+30, ty=y+W/2;
+        svg+=`<text x="${tx}" y="${ty-34}" style="font-size:34px;font-weight:800">${d}</text><text x="${tx}" y="${ty+10}" class="mu" style="font-size:28px">${name}</text><text x="${tx}" y="${ty+46}" class="mu" style="font-size:28px">${dish}</text><text x="${tx}" y="${ty+82}" class="mu" style="font-size:28px">${meals}</text>`;
+      } else {
+        svg+=`<text x="${x+W/2}" y="${y+W+34}" text-anchor="middle" style="font-size:18px;font-weight:800">${d}</text><text x="${x+W/2}" y="${y+W+58}" text-anchor="middle" class="mu" style="font-size:15px">${name} · ${dish}</text><text x="${x+W/2}" y="${y+W+80}" text-anchor="middle" class="mu" style="font-size:15px">${meals}</text>`;
+      }
+    });
+    const vw=sm?560:x0*2+3*W+2*gap, vh=sm?y0*2+3*W+2*gap:y0+W+96;
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>The board grows with the trip</b></div></div>
+      <svg viewBox="0 0 ${vw} ${vh}" role="img" aria-label="Up to 2 days: small board, 8 dishes. 3 or 4 days: medium board, 12 dishes. 5 days or more: big board, 16 dishes.">${svg}</svg>
+      <p class="ig-note">Players say how long they're in Singapore, and the game sets the board and the number of meals to match: two meals for a stopover, two a day after that, up to fourteen. The four corners are Changi, Uncle Says, Chope a Seat and Tray Return. A diet filter swaps in dishes that suit everyone, and shrinks the board if there aren't enough.</p>`;
+  },
+  /* Chope!: playtest fixes */
+  "ch-fixes"(el){
+    const F2=[["done","Roll sat 60 to 180px below the screen on every phone","Pinned just above the tabs, even on a small iPhone SE"],
+      ["done","The game waited for every player's meal photo","“Eat later, keep playing” saves the meal for your next stop"],
+      ["done","Prices said “$”, not “S$”","Every price is in Singapore dollars"],
+      ["done","How to pay was on card 3 of 6 in Hawker 101","Cash or QR is on every dish card, with a reminder to bring coins"],
+      ["done","Tray and seat rules were taught once, before the first meal","Meal time walks through chope a seat, order and pay, return tray"],
+      ["done","Each dish pointed to one hawker centre, maybe far away","Pick your area or Near me for the closest place, and whether it's open now"],
+      ["next","Some buttons were only 35 to 36px tall","Most are now 44px or taller. The language chips on order cards are next"],
+      ["next","English only, apart from the order card","The whole app in 中文 and Bahasa Indonesia"],
+      ["later","A 4-day halal game got the small board, so dishes repeated","MUIS-certified stalls and more halal dishes"],
+      ["later","Stories are read by a computer voice","Recorded uncles and aunties telling the stories"]];
+    const L={done:"Fixed",next:"Next",later:"Later"};
+    el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>What the playtest found, and what changed</b></div></div>
+      <div class="ch-fix">${F2.map(([s,a,b],i)=>`<div class="gp ${s}" style="--d:${i*.07}s"><span>${a}</span><i aria-hidden="true"></i><b>${b}</b><em>${L[s]}</em></div>`).join("")}</div>
+      <p class="pp-src">Playtest of Chope! version 9 on 10 November 2026, as three tourists on three phone sizes. “Fixed” items are checked in the version you can play below.</p>`;
   }
 };
 IGSM.addEventListener && IGSM.addEventListener("change", () => $$(".ig[data-ig]").forEach(el => { if (IG[el.dataset.ig]) { IG[el.dataset.ig](el); } }));
@@ -3539,6 +3663,51 @@ const CONTENT = {
       <div>
         <p class="body-strong">The working prototype, running live. Tap “Explore with a sample kitchen” to jump in. Open it full screen on a laptop to see the guide with 27 journeys to walk through, from first open to the caregiver view.</p>
         <p class="pp-src">Sample data: foods, prices, people and partners are made up. Progress is kept in your browser only.</p>
+      </div>
+    </div>`)}
+`,
+"chope": () => `
+  ${blk("Concept","Eat your way around Singapore",`
+    <div class="two pp-jc">
+      <div>
+        <p class="body-strong">Chope! is a phone game and food guide for tourists in Singapore. Its board game, Makan Around, turns a trip into a game: roll the dice, land on a real dish, then go to a hawker centre and eat it for real.</p>
+        <p class="hmw">How might we help first-time visitors choose what to eat, order it with confidence, and follow the unwritten rules of a hawker centre?</p>
+        <p class="body-strong" style="margin-top:26px">“Chope” is Singlish for saving a seat, usually with a packet of tissues. It's the first rule every visitor needs, so it's the name.</p>
+      </div>
+      ${ppPhones([["ch-home.jpg","Home","Roll, eat, snap. Play now, or plan a game around your trip."]],true)}
+    </div>
+    ${ppRender("ch-render.jpg","Chope! on three phones: the home screen, the Makan Around board, and the chicken rice card with its order in Chinese","Home, the board, and a dish card with its order ready to show the uncle.")}`)}
+  ${blk("Research","Who visits, and what trips them up",`
+    <p class="body-strong">I started with the numbers on who comes to Singapore and how long they stay, then gathered what first-timers struggle with at hawker centres. Every struggle became something the app does.</p>
+    <div class="ig" data-ig="ch-visitors"></div>
+    <div class="ig" data-ig="ch-struggles"></div>`)}
+  ${blk("Where it started","From a food collection app to a board game",`
+    <p class="body-strong" style="margin-bottom:22px">The first concept was thirteen screens: a Makan-dex of dish characters to collect, trail passports, a kopi order game, a hawker survival guide and a card game. The Makan Around board game was screen 13. In the built app it moved to the front, and the dish cards, order card, Hawker 101 and kopi builder now sit around it.</p>
+    ${ppPhones([["chc-home.jpg","Home","A plan for the day: the next trail stop and what's good for breakfast."],["chc-dex.jpg","Makan-dex","Every dish is a character to collect, like Ah Kai the chicken rice."],["chc-dish.jpg","Dish card","Ah Kai's story, how to order him, and where to find him."],["chc-kopi.jpg","Kopi order game","Make the drink the customer wants, like kopi-o kosong."],["chc-trail.jpg","Trail passport","Five Chinatown hawker stops to stamp."],["chc-uncle.jpg","Show the uncle","A big order card in Chinese, Malay, English or Tamil."],["chc-basics.jpg","Survival guide","Level 0: what do locals do with an empty table?"],["chc-tray.jpg","Hawker Tray","A card game: build a balanced tray against Kopi Kaki."]],true)}`)}
+  ${blk("How it plays","Roll, answer, eat, snap",`
+    <div class="ig" data-ig="ch-round"></div>
+    <div class="ig" data-ig="ch-boards"></div>
+    <p class="body-strong" style="margin-top:34px">Pick a screen to see how each part works.</p>
+    ${ppTour("chTour", CH_TOUR, {phone:true, ratio:"390/844"})}`)}
+  ${blk("In motion","One round, start to finish",`
+    <div class="pp-duo">
+      ${ppMotion("ch-play.mp4","ch-play.jpg","540/1168","Recorded in the live app.",{phone:true})}
+      <p class="body-strong">A two-player game for a three-day trip: the loading screen, setting up the trip, two rolls and two questions, then time to eat, and the roti prata order card in Malay to show the uncle.</p>
+    </div>`)}
+  ${blk("Beyond the board","Help for every part of the trip",`
+    <p class="body-strong" style="margin-bottom:22px">Outside the game, four more tabs help visitors explore, learn the lingo and order with confidence.</p>
+    ${ppPhones([["ch-explore.jpg","Explore in 3D","A toy map of Singapore with 14 places to tap, old-school snacks in 3D and 20 short stories."],["ch-word.jpg","Singlish Corner","24 words like chope, dabao and shiok, each with a picture, how to say it and a game."],["ch-dish.jpg","Dishes","24 dishes with prices in S$, an order card, where to eat and how to pay."],["ch-kopi.jpg","My kopi","Build your coffee order, then say it like a local."],["ch-101.jpg","Hawker 101","Six cards for first-timers, from choping a seat to returning your tray."]],true)}`)}
+  ${blk("Playtest","Three tourists, three phones",`
+    <p class="body-strong" style="margin-bottom:22px">I played Chope! as three visitors who match the biggest markets and needs from the research, each on a different phone size.</p>
+    ${ppCards([["China · solo","Mei, 3 days","First visit. Plays against Kopi Kaki on an iPhone 13 set to Chinese."],["Indonesia · family","Ahmad, Siti and Rafi, 4 days","They eat halal. Three players share one Android phone."],["Australia · retiree","Margaret, 70, 2 days","A short stopover. Turns on bigger text on a small iPhone SE."]])}
+    <div class="ig" data-ig="ch-fixes"></div>
+    <p class="body-strong" style="margin-top:28px">This was a walkthrough, not real tourists. Next, I want to watch visitors play at Maxwell or Lau Pa Sat, timing how long it takes to the first roll and seeing where they get stuck, and check every price, halal label and story with locals, STB, NEA and MUIS.</p>`)}
+  ${blk("Try it","Play Chope! right here",`
+    <div class="pp-duo">
+      <div>${ppPlay("/play/chope/","ch-home.jpg","390/844","Play it here","",{phone:true})}</div>
+      <div>
+        <p class="body-strong">The real app, running live. Tap “Play now” to start straight away, or “Plan a game for my trip” to set it up for your stay. Open it full screen on your phone for the best fit.</p>
+        <p class="pp-src">Asking Kopi Kaki your own questions, checking meal photos, photo stories and online group games only work in the original Claude version. Here, Kopi Kaki answers the suggested questions and any meal photo counts. Progress is kept in your browser only.</p>
       </div>
     </div>`)}
 `,
@@ -4715,6 +4884,7 @@ const INIT = {
 "last-chair"(){ initTour("lcTour", LC_TOUR); initPlay(); initIG(); initMotion(); },
 "bitsy"(){ initTour("bitTour", BIT_TOUR); initPlay(); initIG(); initMotion(); },
 "jiak-clean"(){ initTour("jcTour", JC_TOUR); initPlay(); initIG(); initMotion(); },
+"chope"(){ initTour("chTour", CH_TOUR); initPlay(); initIG(); initMotion(); },
 "vase"(){},
 "ae-queue"(){
   initSmap("aeMap");
@@ -4799,7 +4969,7 @@ function viewWorks(){
   return `<section class="wrap p-head">
     <p class="eyebrow">2023 – 2026</p>
     <h1 style="margin-top:10px">My Works</h1>
-    <p class="lead">Seventeen projects across games, product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital and the Ministry of Education, to studio briefs and the passion projects I design and build myself.</p>
+    <p class="lead">Eighteen projects across games, product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital and the Ministry of Education, to studio briefs and the passion projects I design and build myself.</p>
   </section>
   <section class="wrap" style="padding-top:44px">
     <div class="grid">${PROJECTS.map(p=>card(p)).join("")}</div>
