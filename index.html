@@ -3662,7 +3662,7 @@ const CONTENT = {
       <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("sw-plan.jpg")}" alt="shade,where? planning a walk from a hawker centre to Tampines MRT on a 3D map of Tampines, with the shade route in lilac and a time slider set to 3pm" loading="lazy"></div>
     </div>
     ${ppCards([["3D map","159,206 buildings","Every building footprint in Singapore, with real heights for 12,022 HDB blocks and the tallest towers."],["Any minute","Leave now, or later","Slide the time, play the whole day, or compare the longest and shortest days of the year."],["Private","Stays on your device","No account and no tracking. Searches and routes are worked out in the browser and never sent anywhere."]])}
-    ${ppRender("sw-render.jpg","shade,where? on a laptop and a phone, both showing a shade route through Tampines on a dark 3D map","The same planner on a laptop and a phone.")}`)}
+    ${ppRender("sw-ad.jpg","Ad-style render of shade,where? on a laptop and a phone, with its four main features","The planner on a laptop and a phone.")}`)}
   ${blk("Why it matters","Singapore is heating up. Shade helps, fast.",`
     <p class="body-strong">I started with the numbers. Singapore's hottest years are the recent ones, and a few degrees in the shade make a real difference to how a walk feels.</p>
     ${ppStats([["28.4°C","Hottest year on record, reached in 2016, 2019 and 2024"],["+0.24°C","Warmer every decade, from 1984 to 2022"],["29 days","Of high heat stress in 2025, up from 21 in 2024"],["3.1°C","Cooler to the body in street shade, in a one-north study"]])}
@@ -3707,6 +3707,8 @@ const CONTENT = {
           <li><span><b>Weather isn't included yet.</b> Live NEA heat readings are on the roadmap.</span></li>
         </ul></div>
     </div>`)}
+  ${blk("Design system","The look and feel",`
+    ${ppRender("sw-ds.jpg","shade,where? design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Plan a shady walk right here",`
     ${ppPlay("/play/shade-where/","sw-plan.jpg","16/10","Play shade,where? here","The real web app, running live. It loads a 3D map of all of Singapore, so give it a few seconds.")}
     <h3 class="pp-h3">On a phone</h3>
@@ -3726,7 +3728,7 @@ const CONTENT = {
       <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("b88-estate.jpg")}" alt="A 3D HDB estate with Block 88 in front, a playground, trees and a covered walkway" loading="lazy"></div>
     </div>
     ${ppCards([["The estate","A full neighbourhood","Void deck, kopitiam, provision shop, food centre, wet market, MRT, bus interchange and a reservoir park."],["Old-school games","Five stones and chapteh","Plus pick-up sticks, goli, hopscotch and zero point, played with friends at the void deck."],["The story","Seven chapters","A torn 1985 photograph of the block, and the night every window was lit."]])}
-    ${ppRender("b88-render.jpg","Block 88 on two tablets: the 3D HDB estate with its playground, and the void deck with the community notice board","Made for tablets, held sideways.")}`)}
+    ${ppRender("b88-ad.jpg","Ad-style render of Block 88 on two tablets, with its four main features","Made for tablets, held sideways.")}`)}
   ${blk("Gameplay","A day in Tembusu",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
     ${appHTML("b88Show","tab","16/10")}`)}
@@ -3738,6 +3740,8 @@ const CONTENT = {
     <div class="ig" data-ig="b88-levels"></div>
     ${ppCards([["Levels","Seven community levels","From New Neighbour to Heart of Tembusu. Each level opens bigger projects: a block clean-up, a get-together, a donation drive, a residents' meeting and Tembusu Day."],["Town projects","Kampung points","Points from helping fund estate upgrades the player votes on, including lift upgrading."],["Introductions","Who knows who","Bring together neighbours who have never spoken, and watch the web of friendships grow."],["Journal","Kindness journal","Fills in as you help, with six questions to ask a parent, grandparent or neighbour in real life, and their answers kept."],["Singapore, everywhere","Small local details","Kopi lingo, a lift that only stops at certain floors, festival decorations for Chinese New Year, Hari Raya, National Day, Deepavali and Christmas, and sudden rain showers."],["Made for tablets","Comfortable to play","Landscape layout, a thumb stick, guide arrows that can be switched off, and settings for look speed and camera distance. Progress stays on the device."]])}
     <div class="ig" data-ig="b88-town"></div>`)}
+  ${blk("Design system","The look and feel",`
+    ${ppRender("b88-ds.jpg","Block 88 design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Play Block 88 right here",`
     ${ppPlay("/play/block-88/","b88-title.jpg","16/10","Play Block 88 here","The real game, running live in 3D. Best on a tablet or laptop held sideways; use W A S D or the on-screen stick to walk.", {tablet:true})}`)}
 `,
@@ -3752,7 +3756,7 @@ const CONTENT = {
       <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("lc-hero.jpg")}" alt="The Last Chair title screen over an illustrated living room on a rainy evening" loading="lazy"></div>
     </div>
     ${ppCards([["Ten stories","Play in any order","Each one is complete on its own and says what it contains before you start."],["No pressure","No timers, no way to fail","Take as long as you need. Pause, skip a memory or leave at any time."],["Sound","Best with sound on","Each room has its own sounds, with subtitles for every one."]])}
-    ${ppRender("lc-render.jpg","The Last Chair on a laptop, showing a dim bedroom scene, with a memory film of a couple sharing an umbrella in front","A room to walk through, and a memory film from one of the objects in it.")}`)}
+    ${ppRender("lc-ad.jpg","Ad-style render of The Last Chair on a laptop and a tablet, with its four main features","Quiet, warm and dark, like a room at night.")}`)}
   ${blk("Ten homes","Ten homes, ten goodbyes",`
     <p class="body-strong">Each story is a different kind of loss, from an expected goodbye to grieving someone who is still alive, or a home that is about to be torn down.</p>
     <div class="pp-stories">${LC_STORIES.map(([t,w,d],i)=>`<div><small>${String(i+1).padStart(2,"0")}</small><b>${t}</b><em>${w}</em><p>${d}</p></div>`).join("")}</div>
@@ -3779,6 +3783,8 @@ const CONTENT = {
       </div>
       <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("lc-care.jpg")}" alt="The Made with care section listing pause, text size, subtitles, reduce motion and support resources" loading="lazy"></div>
     </div>`)}
+  ${blk("Design system","The look and feel",`
+    ${ppRender("lc-ds.jpg","The Last Chair design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Play The Last Chair right here",`
     ${ppPlay("/play/last-chair/","lc-hero.jpg","16/10","Play The Last Chair here","The real game, running live. Best with sound on, on a laptop or tablet. Take as long as you need.")}`)}
 `,
@@ -3793,7 +3799,7 @@ const CONTENT = {
       <div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("bit-home.jpg")}" alt="Bitsy's Maker Bin home screen with Bitsy greeting Mei over a pastel HDB neighbourhood strung with festive lights" loading="lazy"></div>
     </div>
     ${ppCards([["Show me","I'll show you every step","A pointing hand and Bitsy's voice lead the way, for children trying something for the first time."],["Hints please","I'll help if you get stuck","Children try on their own, and Bitsy steps in with a hint when they pause."],["I can do it!","Tap ? if you need me","For confident helpers. Help is always one tap away."]])}
-    ${ppRender("bit-render.jpg","Bitsy's Maker Bin on two tablets: Bitsy greeting Mei over the neighbourhood, and the Where does it go sorting game","Built for tablets, for small hands.")}`)}
+    ${ppRender("bit-ad.jpg","Ad-style render of Bitsy's Maker Bin on two tablets, with its four main features","Built for tablets and small hands.")}`)}
   ${blk("Gameplay","Sort it, clean it, make it",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
     ${appHTML("bitShow","tab","1194/834")}`)}
@@ -3806,6 +3812,8 @@ const CONTENT = {
     <div class="ig" data-ig="bit-matrix"></div>`)}
   ${blk("Designing for 4 to 6 year olds","Big buttons, kind voices, grown-ups nearby",`
     ${ppCards([["No reading needed","Everything is read aloud","Big picture tabs, one simple job per screen, and a speaker button on every line."],["Small hands","Touch targets of 60 px or more","Large, rounded buttons with soft feedback: a gentle wobble for “try again” and a sparkle for “yes”."],["Safety first","Grown-up jobs are marked","Cutting, rinsing and small parts always show a “Grown-up helps” label."],["Real rules","Follows NEA guidance","Blue bin items must be empty, clean and dry. The game teaches why, not just where."],["For grown-ups","Hold 3 seconds to open","A grown-ups area for settings and approving photos. Pilot sessions use labels like “Child B”, never names."],["Inclusive","Options for every child","Strong outlines for bright rooms or low vision, a left-handed layout, quiet mode and a gentler pace."]])}`)}
+  ${blk("Design system","The look and feel",`
+    ${ppRender("bit-ds.jpg","Bitsy&#39;s Maker Bin design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Play with Bitsy right here",`
     ${ppPlay("/play/bitsy/","bit-boot.jpg","1194/834","Play Bitsy's Maker Bin here","The real game, running live. Turn your sound on: Bitsy talks. The shared class garden and photo checking only work in the original Claude version, so they are hidden here.", {tablet:true})}`)}
 `,
@@ -3819,7 +3827,7 @@ const CONTENT = {
       </div>
       ${ppPhones([["jc-welcome.jpg","First open","“Turn what you already have into dinner.” Try it with a sample kitchen, no account needed."]])}
     </div>
-    ${ppRender("jc-render.jpg","Jiak Clean on three phones: the Kitchen list, tonight's rescue on the Today screen, and the Impact screen","Kitchen, Today and Impact: the three screens people open most.")}`)}
+    ${ppRender("jc-ad.jpg","Ad-style render of Jiak Clean on three phones, with its four main features","Today, Kitchen and Impact: the screens people open most.")}`)}
   ${blk("The problem","Most food waste starts at home",`
     <p class="body-strong">Before designing anything, I looked at where Singapore's food waste goes and which small habits make the biggest difference in a home kitchen.</p>
     <div class="ig" data-ig="jc-waste"></div>
@@ -3849,6 +3857,8 @@ const CONTENT = {
         <li><span><b>Something new each week.</b> A kitchen garden, mystery basket, festive weeks and Bao the fridge buddy</span></li>
       </ul>
     </div>`)}
+  ${blk("Design system","The look and feel",`
+    ${ppRender("jc-ds.jpg","Jiak Clean design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Try Jiak Clean right here",`
     <div class="pp-duo">
       <div>${ppPlay("/play/jiak-clean/","jc-phone.jpg","390/844","Try it here","",{phone:true})}</div>
@@ -3868,7 +3878,7 @@ const CONTENT = {
       </div>
       ${ppPhones([["ch-home.jpg","Home","Roll, eat, snap. Play now, or plan a game around your trip."]],true)}
     </div>
-    ${ppRender("ch-render.jpg","Chope! on three phones: the home screen, the Makan Around board, and the chicken rice card with its order in Chinese","Home, the board, and a dish card with its order ready to show the uncle.")}`)}
+    ${ppRender("ch-ad.jpg","Ad-style render of Chope! on three phones, with its four main features","The board, Explore and the order card.")}`)}
   ${blk("Research","Who visits, and what trips them up",`
     <p class="body-strong">I started with the numbers on who comes to Singapore and how long they stay, then gathered what first-timers struggle with at hawker centres. Every struggle became something the app does.</p>
     <div class="ig" data-ig="ch-visitors"></div>
@@ -3891,6 +3901,8 @@ const CONTENT = {
     ${ppCards([["China · solo","Mei, 3 days","First visit. Plays against Kopi Kaki on an iPhone 13 set to Chinese."],["Indonesia · family","Ahmad, Siti and Rafi, 4 days","They eat halal. Three players share one Android phone."],["Australia · retiree","Margaret, 70, 2 days","A short stopover. Turns on bigger text on a small iPhone SE."]])}
     <div class="ig" data-ig="ch-fixes"></div>
     <p class="body-strong" style="margin-top:28px">This was a walkthrough, not real tourists. Next, I want to watch visitors play at Maxwell or Lau Pa Sat, timing how long it takes to the first roll and seeing where they get stuck, and check every price, halal label and story with locals, STB, NEA and MUIS.</p>`)}
+  ${blk("Design system","The look and feel",`
+    ${ppRender("ch-ds.jpg","Chope! design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Play Chope! right here",`
     <div class="pp-duo">
       <div>${ppPlay("/play/chope/","ch-home.jpg","390/844","Play it here","",{phone:true})}</div>
