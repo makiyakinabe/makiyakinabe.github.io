@@ -1413,6 +1413,19 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .ccm-g{position:relative;height:100%;border-radius:35px;overflow:hidden;background:none}
 .ccm-g .sb{position:absolute;inset:0 0 auto;background:none!important}
 .ccm-g .ccm-scr{border-radius:0}
+.proto-wrap.wide{grid-template-columns:minmax(0,1fr);justify-items:stretch}
+.proto-wrap.wide .pstage{width:100%}
+.proto-wrap.wide .pinfo{width:100%}
+.proto-wrap.wide .pdesc{max-width:70ch;min-height:3.2em}
+.pstage .device.tab,.pstage .device.lap{flex:1 1 auto;width:auto;max-width:900px;transform:perspective(2600px) rotateX(calc(var(--rx) * .3)) rotateY(calc(var(--ry) * .3))}
+.device.tab{padding:clamp(9px,1.3vw,15px);border-radius:clamp(20px,2.6vw,34px)}
+.device.tab .screen{border-radius:clamp(10px,1.4vw,20px)}
+.device.tab::before,.device.tab::after,.device.lap::before,.device.lap::after{display:none}
+.device.lap{padding:clamp(8px,1vw,12px);border-radius:clamp(12px,1.4vw,18px) clamp(12px,1.4vw,18px) 4px 4px;margin-bottom:clamp(14px,1.8vw,20px)}
+.device.lap .screen{border-radius:4px}
+.device.lap .lap-base{position:absolute;left:-7%;right:-7%;bottom:calc(-1 * clamp(14px,1.8vw,20px));height:clamp(14px,1.8vw,20px);border-radius:2px 2px 14px 14px;background:linear-gradient(#d9dde2,#a9afb7);box-shadow:0 18px 26px -16px rgba(0,0,0,.55)}
+.device.lap .lap-base::before{content:"";position:absolute;left:42%;right:42%;top:0;height:5px;border-radius:0 0 6px 6px;background:#9aa0a8}
+@media (max-width:480px){.pstage .device.tab,.pstage .device.lap{width:auto;padding:7px}.proto-wrap.wide .pnav{display:none}}
 /* passion projects */
 .pp-dev{position:relative;background:#16181d;border-radius:clamp(14px,2vw,26px);padding:clamp(8px,1.1vw,14px);box-shadow:0 30px 60px -22px rgba(0,0,0,.45);max-width:1040px;margin:0 auto}
 .pp-dev.ppm{max-width:340px;border-radius:46px;padding:11px}
@@ -2045,7 +2058,7 @@ function initHome(){
 function projectShell(p, inner){
   const i = PROJECTS.indexOf(p);
   const nexts = [PROJECTS[(i+1)%PROJECTS.length], PROJECTS[(i+2)%PROJECTS.length]];
-  const meta = [["Category",p.cat], p.year?["Year",p.year]:null, ["Context",p.ctx], p.role?["My role",p.role]:null].filter(Boolean);
+  const meta = [["Category",p.cat], p.year?["Year",p.year]:null, ["Context",p.ctx], p.role && !(p.tags||[]).includes("passion")?["My role",p.role]:null].filter(Boolean);
   return `<article class="proj" style="--p:${p.p};--p-d:${p.pd}">
     <header class="wrap p-head">
       <h1>${p.name} <em>–</em> ${p.sub}</h1>
@@ -2150,7 +2163,7 @@ const SB = (tab, time="9:41") => tab
   ? `<div class="sb tb" aria-hidden="true"><b>${time}</b><span class="sb-day">Tue 9 Jan</span><i></i>${SB_ICON.wifi}<span class="sb-pc">100%</span>${SB_ICON.bat}</div>`
   : `<div class="sb" aria-hidden="true"><b>${time}</b><i class="sb-isl"></i><span>${SB_ICON.sig}${SB_ICON.wifi}${SB_ICON.bat}</span></div>`;
 /* some mockups were exported with their own status bar: crop it off (fraction of the screen width) so only one bar shows */
-const SB_CROP = (() => { const c = {"jc-phone.jpg":.11, "jc-walk.jpg":.11, "c57-1.jpg":.085, "c57-2.jpg":.085, "c58-1.jpg":.06, "c59-1.jpg":.085, "c59-2.jpg":.025, "c60-1.jpg":.025,
+const SB_CROP = (() => { const c = {"jc-phone.jpg":.11, "jc-s-today.jpg":.125, "jc-s-fridge.jpg":.125, "jc-s-putaway.jpg":.125, "jc-s-temp.jpg":.125, "jc-s-lst.jpg":.125, "jc-s-rice.jpg":.125, "jc-s-learn.jpg":.125, "jc-s-impact.jpg":.125, "jc-s-welcome.jpg":.125, "jc-s-simple.jpg":.125, "jc-s-helper.jpg":.125, "jc-s-kids.jpg":.125, "jc-walk.jpg":.11, "c57-1.jpg":.085, "c57-2.jpg":.085, "c58-1.jpg":.06, "c59-1.jpg":.085, "c59-2.jpg":.025, "c60-1.jpg":.025,
     "c61-1.jpg":.075, "c61-2.jpg":.05, "c62-1.jpg":.075, "c63-1.jpg":.085, "c63-2.jpg":.035, "c64-1.jpg":.08, "c65-1.jpg":.025};
   for (let i=1;i<=8;i++) c[`s${i}.jpg`] = .12;
   for (let i=1;i<=6;i++) for (let j=1;j<=4;j++) c[`m${i}-${j}.jpg`] = .085;
@@ -2194,16 +2207,16 @@ function sbInit(){
     else run();
   });
 }
-const protoHTML = id => `<div class="pstage" id="${id}">
+const protoHTML = (id, kind="", ratio="") => `<div class="pstage" id="${id}">
       <button class="pnav prev" aria-label="Previous screen">‹</button>
-      <div class="device"><div class="screen dvg">${SB()}<div class="vp"><div class="track"></div></div></div></div>
+      <div class="device${kind?" "+kind:""}"><div class="screen dvg">${kind==="lap"?"":SB(kind==="tab")}<div class="vp"${ratio?` style="aspect-ratio:${ratio}"`:""}><div class="track"></div></div></div>${kind==="lap"?'<i class="lap-base" aria-hidden="true"></i>':""}</div>
       <button class="pnav next" aria-label="Next screen">›</button>
     </div>`;
 function initProto(id, screens, opts={}){
   const root = $("#"+id), track = $(".track", root), dev = $(".device", root), scr = $(".screen", root);
   track.innerHTML = screens.map((sc,i)=>{ const im = `<img src="${sc.src}" alt="${sc.label}" draggable="false" ${i>2?'loading="lazy"':''}>`; return `<div class="${sc.tall?"tallshot":"sl"}" style="--c:${sbCrop(sc.src)}">${im}</div>`; }).join("");
   const sbar = $(".sb", root), slides = [...track.children];
-  const tint = n => sbColours(screens[n].src, sbCrop(screens[n].src)).then(c => { if (c){ slides[n].style.setProperty("--bb", sbRGB(c.bot)); if (n === i) sbPaint(sbar, c, scr); } });
+  const tint = n => sbColours(screens[n].src, sbCrop(screens[n].src)).then(c => { if (c){ slides[n].style.setProperty("--bb", sbRGB(c.bot)); if (n === i && sbar) sbPaint(sbar, c, scr); } });
   let i = 0, dx = 0, sx = null, sy = 0, moved = false;
   const paint = (anim=true) => { track.style.transition = anim ? "" : "none"; track.style.transform = `translateX(calc(${-i*100}% + ${dx}px))`; };
   const go = (n, user=false) => { i = (n + screens.length) % screens.length; dx = 0; paint(); tint(i); opts.onChange && opts.onChange(i, user); };
@@ -2244,20 +2257,20 @@ function initDx(id, items){
   im.onclick = () => openLB(im.src, im.alt); if (tvi) tvi.onclick = () => openLB(tvi.src, tvi.alt);
   set(0);
 }
-const appHTML = k => `<div class="proto-wrap">
-      ${protoHTML(k+"Proto")}
+const appHTML = (k, kind="", ratio="") => `<div class="proto-wrap${kind?" wide":""}">
+      ${protoHTML(k+"Proto", kind, ratio)}
       <div class="pinfo">
         <p class="pstep" id="${k}Step"></p>
         <h3 id="${k}Title"></h3>
         <p class="pdesc" id="${k}Desc" aria-live="polite"></p>
         <div class="chips" id="${k}Chips"></div>
-        <p class="phint" id="${k}Hint">Tap the screen, swipe, or pick a screen above.</p>
+        <p class="phint" id="${k}Hint">Tap the screen, swipe, or pick a screen.</p>
       </div>
     </div>`;
 function initApp(k, A){
   $("#"+k+"Chips").innerHTML = A.map((a,i)=>`<button class="chip" aria-pressed="false" data-i="${i}">${a[1]}</button>`).join("");
   const show = i => { $("#"+k+"Step").textContent = `Screen ${i+1} of ${A.length}`; $("#"+k+"Title").textContent = A[i][1]; $("#"+k+"Desc").textContent = A[i][2]; $$("#"+k+"Chips .chip").forEach((c,j)=>c.setAttribute("aria-pressed", i===j));
-    $("#"+k+"Hint").textContent = A[i][3] ? "Scroll inside the phone to see the whole screen. Swipe or pick a screen above to move on." : "Tap the screen, swipe, or pick a screen above."; };
+    $("#"+k+"Hint").textContent = A[i][3] ? "Scroll inside the phone to see the whole screen. Swipe or pick a screen to move on." : "Tap the screen, swipe, or pick a screen."; };
   const P = initProto(k+"Proto", A.map(a=>({src:IMG(a[0]), label:a[1], tall:!!a[3]})), {onChange: show});
   $$("#"+k+"Chips .chip").forEach(c => c.onclick = () => P.go(+c.dataset.i, true));
 }
@@ -2539,14 +2552,23 @@ const BIT_TOUR = [
   {t:"Inspection station", k:"Shake it, look, turn, feel", img:"bit-inspect.jpg", d:"Children play detective with an item before they sort it: is it empty, clean and dry?"}
 ];
 const JC_TOUR = [
-  {t:"Daily rescue", k:"One next action", img:"jc-today.jpg", d:"Today leads with a single rescue for tonight, like clear-the-fridge fried rice from rice, kai lan and chicken that are due. Everything else waits in Later."},
-  {t:"Live fridge", k:"See every food on its shelf", img:"jc-fridge.jpg", d:"A drawn fridge, freezer, cupboard and counter. Bananas brown, greens wilt and frozen food frosts over as the days pass, with a fridge health score."},
-  {t:"Put groceries away", k:"Older food to the front", img:"jc-putaway.jpg", d:"After shopping, each item is guided to its zone in the fridge, with older food moved forward so it gets eaten first."},
-  {t:"Fridge temperature", k:"Below 5°C keeps food longer", img:"jc-temp.jpg", d:"A quick check with a thermometer, showing how much longer milk, cucumber and broccoli last in a colder fridge."},
-  {t:"Look, smell, taste", k:"Is it still good?", img:"jc-lst.jpg", d:"A three-step check for best-before food. Use-by food, raw meat and leftovers follow the date instead."},
-  {t:"Rice planner", k:"Cook just enough", img:"jc-rice.jpg", d:"Who's eating tonight and how hungry they are becomes the number of rice-cooker cups to cook."},
-  {t:"Learn and donate", k:"Right answers fund meals", img:"jc-learn.jpg", d:"Flashcards and quick games. The first right answers each day earn points that a sponsor would turn into meals for a food charity you choose (demo only)."},
-  {t:"Impact", k:"This week, progress, community", img:"jc-impact.jpg", d:"Money saved, food kept from the bin and items used before their date, in everyday terms, with the price of waste against your goal."}
+  {t:"First open", img:"jc-s-welcome.jpg", d:"“Turn what you already have into dinner.” Try it with a sample kitchen, no account needed."},
+  {t:"Daily rescue", k:"One next action", img:"jc-s-today.jpg", d:"Today leads with a single rescue for tonight, like clear-the-fridge fried rice from rice, kai lan and chicken that are due. Everything else waits in Later."},
+  {t:"Live fridge", k:"See every food on its shelf", img:"jc-s-fridge.jpg", d:"A drawn fridge, freezer, cupboard and counter. Bananas brown, greens wilt and frozen food frosts over as the days pass, with a fridge health score."},
+  {t:"Put groceries away", k:"Older food to the front", img:"jc-s-putaway.jpg", d:"After shopping, each item is guided to its zone in the fridge, with older food moved forward so it gets eaten first."},
+  {t:"Fridge temperature", k:"Below 5°C keeps food longer", img:"jc-s-temp.jpg", d:"A quick check with a thermometer, showing how much longer milk, cucumber and broccoli last in a colder fridge."},
+  {t:"Look, smell, taste", k:"Is it still good?", img:"jc-s-lst.jpg", d:"A three-step check for best-before food. Use-by food, raw meat and leftovers follow the date instead."},
+  {t:"Rice planner", k:"Cook just enough", img:"jc-s-rice.jpg", d:"Who's eating tonight and how hungry they are becomes the number of rice-cooker cups to cook."},
+  {t:"Learn and donate", k:"Right answers fund meals", img:"jc-s-learn.jpg", d:"Flashcards and quick games. The first right answers each day earn points that a sponsor would turn into meals for a food charity you choose (demo only)."},
+  {t:"Impact", k:"This week, progress, community", img:"jc-s-impact.jpg", d:"Money saved, food kept from the bin and items used before their date, in everyday terms, with the price of waste against your goal."}
+];
+const tA = T => T.map(f => [f.img, f.t, f.d]);
+const CH_MORE = [
+  {t:"Explore in 3D", img:"ch-explore.jpg", d:"A toy map of Singapore with 14 places to tap, old-school snacks in 3D and 20 short stories."},
+  {t:"Singlish Corner", img:"ch-word.jpg", d:"24 words like chope, dabao and shiok, each with a picture, how to say it and a game."},
+  {t:"Dishes", img:"ch-dish.jpg", d:"24 dishes with prices in S$, an order card, where to eat and how to pay."},
+  {t:"My kopi", img:"ch-kopi.jpg", d:"Build your coffee order, then say it like a local."},
+  {t:"Hawker 101", img:"ch-101.jpg", d:"Six cards for first-timers, from choping a seat to returning your tray."}
 ];
 const CH_TOUR = [
   {t:"How long are you here?", k:"From a stopover to a week", img:"ch-days.jpg", d:"Say how many days you're in Singapore, and the board size and number of meals are set to match the trip."},
@@ -3098,12 +3120,6 @@ const CONTENT = {
         <h3>Private and free</h3><p>Everything stays on the tablet and Lumi works offline. It's free for everyone, with no app store needed.</p>
       </div>
     </div>`)}
-  ${blk("My role","From idea to companion app",`
-    <ul class="list">
-      <li><span>Planned the features around communication, routines and emotional regulation, for ages 3 to 18</span></li>
-      <li><span>Designed the UI, the Lumi character, and a full set of drawn symbols and story characters</span></li>
-      <li><span>Made it free to use in any browser, so families can try it on the tablet or phone they already have</span></li>
-    </ul>`)}
   ${blk("Follow along","Lumi on Instagram",`
     <a class="lumi-ig" href="https://www.instagram.com/eggsperimenting/" target="_blank" rel="noopener">
       <span class="lumi-egg" aria-hidden="true"><span><svg viewBox="0 0 40 40"><circle cx="13.5" cy="16" r="2.6"/><circle cx="26.5" cy="16" r="2.6"/><path d="M12 24.5c2.2 3.4 5 5 8 5s5.8-1.6 8-5"/></svg></span></span>
@@ -3587,7 +3603,7 @@ const CONTENT = {
     ${ppMotion("sw-day.mp4","sw-day.jpg","16/10","Play the day, recorded in the live app. Tampines, from 7am to 7pm.")}`)}
   ${blk("Inside the app","Plan it, compare it, walk it",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
-    ${ppTour("swTour", SW_TOUR)}`)}
+    ${appHTML("swShow","lap","16/10")}`)}
   ${blk("Accuracy","Checked against official maps",`
     <p class="body-strong">A shade map is only useful if people trust it, so every layer is built from open government and community data and checked against an official source.</p>
     <div class="ig" data-ig="sw-layers"></div>
@@ -3629,7 +3645,7 @@ const CONTENT = {
     ${ppRender("b88-render.jpg","Block 88 on two tablets: the 3D HDB estate with its playground, and the void deck with the community notice board","Made for tablets, held sideways.")}`)}
   ${blk("Gameplay","A day in Tembusu",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
-    ${ppTour("b88Tour", B88_TOUR, {tablet:true})}`)}
+    ${appHTML("b88Show","tab","16/10")}`)}
   ${blk("In motion","A walk around Tembusu",`
     ${ppMotion("b88-tour.mp4","b88-tour.jpg","16/10","From the estate to the void deck, then planning the day, the estate menu, the My Singapore map and choosing who you are today.", {tablet:true})}`)}
   ${blk("Systems","Kindness that adds up",`
@@ -3661,7 +3677,7 @@ const CONTENT = {
     <div class="plate" style="aspect-ratio:16/10;margin-top:28px"><img class="zoom" src="${IMG("lc-stories.jpg")}" alt="Story cards for The Last Chair, Left on Read, Closing Time and Still Here, each with an illustration, a content note and a Play button" loading="lazy"></div>`)}
   ${blk("How it plays","Rooms, phones and memories",`
     ${ppCards([["01","Step into their world","Walk through a grandmother's house, a hawker stall, a bedroom or a park, as them, at your own pace."],["02","Read what they left","Their phone opens up as you explore: messages, voice notes, photos, and an unsent message that slowly makes sense."],["03","Click to remember","Any object plays a short memory film, from its oldest moment to today, with the sounds of the life around it."],["04","Choose how to remember","Decide how to read each memory and what to do with their last words. There are no right answers."]])}
-    ${ppTour("lcTour", LC_TOUR)}`)}
+    ${appHTML("lcShow","lap","16/10")}`)}
   ${blk("In motion","A memory, played back",`
     <p class="body-strong">Tap an object and its memory plays as a short film. This one opens on the title, walks down the hallway, and plays “Her umbrella”, from its oldest moment to today.</p>
     ${ppMotion("lc-film.mp4","lc-film.jpg","16/10","Recorded in the live game, with the sound off here. In the game, every sound has a caption.")}`)}
@@ -3696,7 +3712,7 @@ const CONTENT = {
     ${ppRender("bit-render.jpg","Bitsy's Maker Bin on two tablets: Bitsy greeting Mei over the neighbourhood, and the Where does it go sorting game","Built for tablets, for small hands.")}`)}
   ${blk("Gameplay","Sort it, clean it, make it",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
-    ${ppTour("bitTour", BIT_TOUR, {ratio:"1194/834", tablet:true})}`)}
+    ${appHTML("bitShow","tab","1194/834")}`)}
   ${blk("In motion","Bitsy at play",`
     ${ppMotion("bit-play.mp4","bit-play.jpg","1194/834","Recorded in the live game: Bitsy's hello, the home screen, making a pencil pot with a grown-up, and sorting a toilet roll tube.", {tablet:true})}`)}
   ${blk("What children learn","From caring to using less",`
@@ -3727,7 +3743,7 @@ const CONTENT = {
   ${blk("Inside the app","From fridge to dinner",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
     <div class="ig" data-ig="jc-flow"></div>
-    ${ppTour("jcTour", JC_TOUR, {phone:true, bare:true, ratio:"820/1704"})}`)}
+    ${appHTML("jcShow")}`)}
   ${blk("In motion","One evening, one rescue",`
     <div class="pp-duo">
       ${ppMotion("jc-walk.mp4","jc-walk.jpg","540/1168","Recorded in the live prototype.",{phone:true})}
@@ -3780,15 +3796,12 @@ const CONTENT = {
     <div class="ig" data-ig="ch-round"></div>
     <div class="ig" data-ig="ch-boards"></div>
     <p class="body-strong" style="margin-top:34px">Pick a screen to see how each part works.</p>
-    ${ppTour("chTour", CH_TOUR, {phone:true, ratio:"390/844"})}`)}
+    ${appHTML("chShow")}`)}
   ${blk("In motion","One round, start to finish",`
     <div class="pp-duo">
       ${ppMotion("ch-play.mp4","ch-play.jpg","540/1168","Recorded in the live app.",{phone:true})}
       <p class="body-strong">A two-player game for a three-day trip: the loading screen, setting up the trip, two rolls and two questions, then time to eat, and the roti prata order card in Malay to show the uncle.</p>
     </div>`)}
-  ${blk("Beyond the board","Help for every part of the trip",`
-    <p class="body-strong" style="margin-bottom:22px">Outside the game, four more tabs help visitors explore, learn the lingo and order with confidence.</p>
-    ${ppPhones([["ch-explore.jpg","Explore in 3D","A toy map of Singapore with 14 places to tap, old-school snacks in 3D and 20 short stories."],["ch-word.jpg","Singlish Corner","24 words like chope, dabao and shiok, each with a picture, how to say it and a game."],["ch-dish.jpg","Dishes","24 dishes with prices in S$, an order card, where to eat and how to pay."],["ch-kopi.jpg","My kopi","Build your coffee order, then say it like a local."],["ch-101.jpg","Hawker 101","Six cards for first-timers, from choping a seat to returning your tray."]],true)}`)}
   ${blk("Playtest","Three tourists, three phones",`
     <p class="body-strong" style="margin-bottom:22px">I played Chope! as three visitors who match the biggest markets and needs from the research, each on a different phone size.</p>
     ${ppCards([["China · solo","Mei, 3 days","First visit. Plays against Kopi Kaki on an iPhone 13 set to Chinese."],["Indonesia · family","Ahmad, Siti and Rafi, 4 days","They eat halal. Three players share one Android phone."],["Australia · retiree","Margaret, 70, 2 days","A short stopover. Turns on bigger text on a small iPhone SE."]])}
@@ -4972,12 +4985,12 @@ const INIT = {
     const shown = x ? $("#hotX") : $("#hot"); shown.classList.remove("swap"); void shown.offsetWidth; shown.classList.add("swap");
   });
 },
-"shade-where"(){ initTour("swTour", SW_TOUR); initPlay(); initIG(); initMotion(); },
-"block-88"(){ initTour("b88Tour", B88_TOUR); initPlay(); initIG(); initMotion(); },
-"last-chair"(){ initTour("lcTour", LC_TOUR); initPlay(); initIG(); initMotion(); },
-"bitsy"(){ initTour("bitTour", BIT_TOUR); initPlay(); initIG(); initMotion(); },
-"jiak-clean"(){ initTour("jcTour", JC_TOUR); initPlay(); initIG(); initMotion(); },
-"chope"(){ initTour("chTour", CH_TOUR); initPlay(); initIG(); initMotion(); },
+"shade-where"(){ initApp("swShow", tA(SW_TOUR)); initPlay(); initIG(); initMotion(); },
+"block-88"(){ initApp("b88Show", tA(B88_TOUR)); initPlay(); initIG(); initMotion(); },
+"last-chair"(){ initApp("lcShow", tA(LC_TOUR)); initPlay(); initIG(); initMotion(); },
+"bitsy"(){ initApp("bitShow", tA(BIT_TOUR)); initPlay(); initIG(); initMotion(); },
+"jiak-clean"(){ initApp("jcShow", tA(JC_TOUR)); initPlay(); initIG(); initMotion(); },
+"chope"(){ initApp("chShow", tA([{t:"Home", img:"ch-home.jpg", d:"Roll, eat, snap. Play now, or plan a game around your trip."}, ...CH_TOUR, ...CH_MORE])); initPlay(); initIG(); initMotion(); },
 "vase"(){},
 "ae-queue"(){
   initSmap("aeMap");
