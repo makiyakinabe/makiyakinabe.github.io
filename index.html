@@ -535,7 +535,7 @@ p{margin:0}
 .ccm-wrap{display:flex;justify-content:center}
 .ccm-phone{width:min(290px,78vw);aspect-ratio:9/18.5;border-radius:44px;padding:10px;background:#111;box-shadow:0 30px 50px -24px rgba(0,0,0,.6)}
 .ccm-scr{position:relative;width:100%;height:100%;border-radius:35px;overflow:hidden;background:#F7F1F4;color:#2A1A22;font-size:13px}
-.ccm-lock{position:absolute;inset:0;background:linear-gradient(160deg,#5B6B8F,#2F3A55);color:#fff;padding:22px 12px}
+.ccm-lock{position:absolute;inset:0;background:linear-gradient(160deg,#5B6B8F,#2F3A55);color:#fff;padding:calc(12.6cqw + 10px) 12px 22px}
 .ccm-time{text-align:center;font-size:44px;font-weight:300;letter-spacing:-.02em;line-height:1}
 .ccm-date{text-align:center;font-size:13px;opacity:.85;margin-bottom:14px}
 .ccm-list{display:flex;flex-direction:column;gap:7px}
@@ -544,8 +544,8 @@ p{margin:0}
 .ccm-n b{display:block;font-size:11px;color:#6B6B70;font-weight:600}
 .ccm-n span{display:block;font-size:12.5px;line-height:1.3}
 @keyframes ccmIn{from{opacity:0;transform:translateY(-12px) scale(.96)}}
-.ccm-badge{position:absolute;top:10px;right:14px;background:#E5484D;color:#fff;font-weight:800;font-size:12px;border-radius:999px;padding:2px 8px}
-.ccm-app{position:absolute;inset:0;padding:22px 14px;display:flex;flex-direction:column;gap:10px;overflow:auto;scrollbar-width:none}
+.ccm-badge{position:absolute;top:calc(12.6cqw + 2px);right:14px;background:#E5484D;color:#fff;font-weight:800;font-size:12px;border-radius:999px;padding:2px 8px}
+.ccm-app{position:absolute;inset:0;padding:calc(12.6cqw + 6px) 14px 22px;display:flex;flex-direction:column;gap:10px;overflow:auto;scrollbar-width:none}
 .ccm-card{background:#FFFFFF;border-radius:16px;padding:12px;box-shadow:0 2px 0 #EAD9E2}
 .ccm-card h5{margin:0 0 6px;font-size:12px;color:#8B5A72;text-transform:uppercase;letter-spacing:.06em}
 .ccm-faces{display:flex;justify-content:space-between}
@@ -1378,6 +1378,41 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
   .ch-fix b{grid-column:1;grid-row:2}
   .ch-fix em{grid-column:2;grid-row:1/3;padding:5px 10px}
 }
+/* status bars on phone and tablet mockups */
+.dvg{container-type:inline-size;position:relative;overflow:hidden;display:flex;flex-direction:column;background:var(--sbg,#fff)}
+.sb{position:relative;z-index:2;flex:none;height:12.6cqw;display:grid;grid-template-columns:minmax(0,1fr) 31.5cqw minmax(0,1fr);padding-top:2.9cqw;color:#111;transition:background-color .35s,color .35s;font:600 4.3cqw/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;letter-spacing:-.01em;pointer-events:none}
+.sb>*{height:9.2cqw;display:flex;align-items:center;justify-content:center}
+.sb>b{font-weight:600;padding-left:2.4cqw}
+.sb .sb-isl{background:#000;border-radius:4.6cqw}
+.sb>span{gap:1.3cqw;padding-right:2.2cqw}
+.sb svg{display:block;fill:currentColor;flex:none}
+.sb .sb-sig{width:4.6cqw}.sb .sb-wifi{width:4.3cqw}.sb .sb-bat{width:6.9cqw}
+.sb.lt{color:#fff}
+.sb.tb{height:2.7cqw;display:flex;align-items:center;gap:.65cqw;padding:0 2.3cqw;font-size:1.22cqw}
+.sb.tb>*{height:auto}
+.sb.tb>b{padding:0}
+.sb.tb .sb-day{font-weight:600}
+.sb.tb i{flex:1}
+.sb.tb .sb-wifi{width:1.45cqw}.sb.tb .sb-bat{width:2.25cqw}
+.sb.tb .sb-pc{font-size:1.1cqw}
+.sb.tb>span{padding:0;gap:0}
+.dvg .pp-scr,.dvg .pv{background:var(--sbg,#0b0b0b)}
+.sb.nt>b{visibility:hidden}
+.dvg .pp-scr,.dvg .lumi-scr,.pp-dev .dvg .pp-scr,.pp-dev.ppm .dvg .pp-scr{border-radius:0}
+.pp-dev .dvg{border-radius:clamp(8px,1.2vw,16px)}
+.pp-dev.ppm .dvg{border-radius:36px}
+.lumi-tab .dvg{border-radius:clamp(10px,1.4vw,20px)}
+.pp-phones.framed .plate{aspect-ratio:auto;padding:8px;overflow:hidden}
+.pp-phones.framed .dvg{border-radius:27px}
+.pp-phones .pv{position:relative;aspect-ratio:390/844;overflow:hidden}
+.pp-phones.framed .pv img{position:absolute;inset:0;width:100%;height:100%;border-radius:0}
+.screen.dvg{aspect-ratio:auto}
+.screen .vp{position:relative;aspect-ratio:9/19.5;overflow:hidden}
+.track>.sl{flex:0 0 100%;height:100%;overflow:hidden;background:var(--bb,#fff);transition:background-color .3s}
+.track>.sl img,.tallshot img{flex:none;width:100%;height:auto;display:block;margin-top:calc(var(--c,0) * -100cqw);pointer-events:none}
+.ccm-g{position:relative;height:100%;border-radius:35px;overflow:hidden;background:none}
+.ccm-g .sb{position:absolute;inset:0 0 auto;background:none!important}
+.ccm-g .ccm-scr{border-radius:0}
 /* passion projects */
 .pp-dev{position:relative;background:#16181d;border-radius:clamp(14px,2vw,26px);padding:clamp(8px,1.1vw,14px);box-shadow:0 30px 60px -22px rgba(0,0,0,.45);max-width:1040px;margin:0 auto}
 .pp-dev.ppm{max-width:340px;border-radius:46px;padding:11px}
@@ -1426,12 +1461,12 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .pp-scr img.fade{animation:ppIn .4s ease both}
 .pp-scr img.zoom{cursor:zoom-in}
 @keyframes ppIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.pp-phones{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:clamp(16px,2vw,24px)}
+.pp-phones{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:clamp(28px,3.4vw,44px) clamp(22px,3vw,40px)}
 .pp-phones figure{margin:0;max-width:280px}
 .pp-phones .plate{aspect-ratio:820/1704;background:none;border-radius:0;overflow:visible}
 .pp-phones .plate img{border-radius:13.2%/6.3%;object-fit:contain;filter:drop-shadow(0 18px 24px rgba(0,0,0,.22))}
-.pp-phones.framed .plate{aspect-ratio:390/844;background:#121613;border-radius:34px;padding:8px;overflow:hidden}
-.pp-phones.framed .plate img{border-radius:27px;object-fit:cover;object-position:top;filter:none}
+.pp-phones.framed .plate{background:#121613;border-radius:34px}
+.pp-phones.framed .plate img{object-fit:cover;object-position:top;filter:none}
 .pp-phones figcaption{margin-top:10px;font-size:14px;line-height:1.45;color:var(--muted)}
 .pp-phones figcaption b{display:block;color:var(--ink,inherit);font-size:16px;margin-bottom:2px}
 .pp-jc .pp-phones{justify-items:center}
@@ -2105,17 +2140,73 @@ function initBoard(id, full, alt){
   const fb = $(`[data-board-full="${id}"]`); if (fb) fb.onclick = () => openLB(full, alt);
   syncView();
 }
+/* ---------- status bars on phone and tablet mockups ---------- */
+const SB_ICON = {
+  sig:`<svg class="sb-sig" viewBox="0 0 18 12"><rect x="0" y="7.6" width="3.2" height="4.4" rx="1"/><rect x="4.9" y="5.1" width="3.2" height="6.9" rx="1"/><rect x="9.8" y="2.6" width="3.2" height="9.4" rx="1"/><rect x="14.7" y="0" width="3.2" height="12" rx="1"/></svg>`,
+  wifi:`<svg class="sb-wifi" viewBox="0 0 16 12"><path d="M8 .6c2.9 0 5.6 1.1 7.6 3l-1.5 1.6A8.8 8.8 0 0 0 8 2.8 8.8 8.8 0 0 0 1.9 5.2L.4 3.6A11 11 0 0 1 8 .6Zm0 3.9c1.8 0 3.5.7 4.8 1.9l-1.5 1.6A4.8 4.8 0 0 0 8 6.7c-1.3 0-2.4.5-3.3 1.3L3.2 6.4A6.9 6.9 0 0 1 8 4.5Zm0 4c.8 0 1.4.3 1.9.8L8 11.4 6.1 9.3c.5-.5 1.1-.8 1.9-.8Z"/></svg>`,
+  bat:`<svg class="sb-bat" viewBox="0 0 27 13"><rect x=".6" y=".6" width="22.6" height="11.8" rx="3.6" fill="none" stroke="currentColor" stroke-width="1.1" opacity=".42"/><rect x="2.5" y="2.5" width="18.8" height="8" rx="2"/><path d="M24.6 4.4v4.2c.9-.3 1.5-1.1 1.5-2.1s-.6-1.8-1.5-2.1Z" opacity=".45"/></svg>`
+};
+const SB = (tab, time="9:41") => tab
+  ? `<div class="sb tb" aria-hidden="true"><b>${time}</b><span class="sb-day">Tue 9 Jan</span><i></i>${SB_ICON.wifi}<span class="sb-pc">100%</span>${SB_ICON.bat}</div>`
+  : `<div class="sb" aria-hidden="true"><b>${time}</b><i class="sb-isl"></i><span>${SB_ICON.sig}${SB_ICON.wifi}${SB_ICON.bat}</span></div>`;
+/* some mockups were exported with their own status bar: crop it off (fraction of the screen width) so only one bar shows */
+const SB_CROP = (() => { const c = {"jc-phone.jpg":.11, "jc-walk.jpg":.11, "c57-1.jpg":.085, "c57-2.jpg":.085, "c58-1.jpg":.06, "c59-1.jpg":.085, "c59-2.jpg":.025, "c60-1.jpg":.025,
+    "c61-1.jpg":.075, "c61-2.jpg":.05, "c62-1.jpg":.075, "c63-1.jpg":.085, "c63-2.jpg":.035, "c64-1.jpg":.08, "c65-1.jpg":.025};
+  for (let i=1;i<=8;i++) c[`s${i}.jpg`] = .12;
+  for (let i=1;i<=6;i++) for (let j=1;j<=4;j++) c[`m${i}-${j}.jpg`] = .085;
+  c["m2-1.jpg"] = 0;
+  ["p1-home","p1-read","p1-stars","p1-trail-full","p1-picture","p1-holidays","p4-home","p4-talk","p4-feedback","s-home","s-talk","s-feedback","s-video","parent"].forEach(n => c[`oe-p-${n}.webp`] = .1);
+  return c; })();
+const sbCrop = src => SB_CROP[(src||"").split("/").pop().split("?")[0]] || 0;
+const sbCache = new Map();
+function sbColours(src, crop){
+  const key = src + "|" + crop; if (sbCache.has(key)) return sbCache.get(key);
+  const p = new Promise(res => { const im = new Image(); im.onload = () => { try {
+      const w = 48, h = Math.max(4, Math.round(w * im.naturalHeight / im.naturalWidth)), cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+      const x = cv.getContext("2d", {willReadFrequently:true}); x.drawImage(im, 0, 0, w, h);
+      const pick = y => { const d = x.getImageData(0, Math.min(h-1, Math.max(0, y)), w, 1).data, b = new Map();
+        for (let i=0;i<d.length;i+=4){ const k = (d[i]>>4)<<8 | (d[i+1]>>4)<<4 | (d[i+2]>>4); const o = b.get(k) || [0,0,0,0]; o[0]+=d[i]; o[1]+=d[i+1]; o[2]+=d[i+2]; o[3]++; b.set(k,o); }
+        const o = [...b.values()].sort((a,c)=>c[3]-a[3])[0]; return [o[0]/o[3], o[1]/o[3], o[2]/o[3]].map(Math.round); };
+      res({top: pick(Math.round(crop * w) + 1), bot: pick(h - 2)}); } catch(e){ res(null); } };
+    im.onerror = () => res(null); im.src = src; });
+  sbCache.set(key, p); return p;
+}
+const sbRGB = c => `rgb(${c.join(",")})`;
+const sbLight = c => (0.2126*c[0] + 0.7152*c[1] + 0.0722*c[2]) / 255 < 0.58;
+function sbPaint(bar, cols, box){
+  if (!cols) return;
+  bar.style.backgroundColor = sbRGB(cols.top); bar.classList.toggle("lt", sbLight(cols.top));
+  if (box) box.style.setProperty("--sbg", sbRGB(cols.bot));
+}
+/* single-screen frames: colour the bar from the picture under it (re-done when the picture changes) */
+function sbInit(){
+  $$(".dvg:not(.ccm-g):not([data-sb])").forEach(g => {
+    if ($(".track", g)) return;
+    g.dataset.sb = "1"; const bar = $(".sb", g);
+    const m = $(".pp-scr img, .lumi-scr img, .pv img, .pp-scr video, .lumi-scr video", g); if (!m || !bar) return;
+    const run = () => { const src = m.tagName === "VIDEO" ? m.poster : (m.currentSrc || m.src); if (!src) return;
+      const c = sbCrop(src), box = m.closest(".pp-scr,.pv");
+      if (box){ const [rw, rh] = (box.style.aspectRatio || "390/844").split("/").map(Number);
+        m.style.top = c ? `calc(${-c*100}cqw)` : ""; m.style.bottom = c ? "auto" : "";
+        m.style.height = c ? (m.tagName === "VIDEO" ? `calc(${(rh/rw*100).toFixed(3)}cqw)` : "auto") : ""; }
+      sbColours(src, c).then(cols => sbPaint(bar, cols, g)); };
+    if (m.tagName === "IMG") { m.addEventListener("load", run); if (m.complete && m.naturalWidth) run(); }
+    else run();
+  });
+}
 const protoHTML = id => `<div class="pstage" id="${id}">
       <button class="pnav prev" aria-label="Previous screen">‹</button>
-      <div class="device"><div class="screen"><div class="track"></div></div></div>
+      <div class="device"><div class="screen dvg">${SB()}<div class="vp"><div class="track"></div></div></div></div>
       <button class="pnav next" aria-label="Next screen">›</button>
     </div>`;
 function initProto(id, screens, opts={}){
   const root = $("#"+id), track = $(".track", root), dev = $(".device", root), scr = $(".screen", root);
-  track.innerHTML = screens.map((sc,i)=>{ const im = `<img src="${sc.src}" alt="${sc.label}" draggable="false" ${i>2?'loading="lazy"':''}>`; return sc.tall ? `<div class="tallshot">${im}</div>` : im; }).join("");
+  track.innerHTML = screens.map((sc,i)=>{ const im = `<img src="${sc.src}" alt="${sc.label}" draggable="false" ${i>2?'loading="lazy"':''}>`; return `<div class="${sc.tall?"tallshot":"sl"}" style="--c:${sbCrop(sc.src)}">${im}</div>`; }).join("");
+  const sbar = $(".sb", root), slides = [...track.children];
+  const tint = n => sbColours(screens[n].src, sbCrop(screens[n].src)).then(c => { if (c){ slides[n].style.setProperty("--bb", sbRGB(c.bot)); if (n === i) sbPaint(sbar, c, scr); } });
   let i = 0, dx = 0, sx = null, sy = 0, moved = false;
   const paint = (anim=true) => { track.style.transition = anim ? "" : "none"; track.style.transform = `translateX(calc(${-i*100}% + ${dx}px))`; };
-  const go = (n, user=false) => { i = (n + screens.length) % screens.length; dx = 0; paint(); opts.onChange && opts.onChange(i, user); };
+  const go = (n, user=false) => { i = (n + screens.length) % screens.length; dx = 0; paint(); tint(i); opts.onChange && opts.onChange(i, user); };
   $(".prev", root).onclick = () => go(i-1, true); $(".next", root).onclick = () => go(i+1, true);
   scr.addEventListener("pointerdown", e => { sx = e.clientX; sy = e.clientY; moved = false; if (e.pointerType === "mouse") scr.setPointerCapture(e.pointerId); });
   scr.addEventListener("pointermove", e => { if (sx == null) return; dx = e.clientX - sx; if (Math.abs(dx) > 6 || Math.abs(e.clientY - sy) > 6) moved = true; paint(false); });
@@ -2362,18 +2453,19 @@ const BUS_SCENES = [
 ];
 /* ---------- passion projects: shared bits ---------- */
 const PLAY_SVG = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>`;
+const ppGlass = (opts, inner) => (opts.phone || opts.tablet) && !opts.bare ? `<div class="dvg">${SB(opts.tablet)}${inner}</div>` : inner;
 const ppPlay = (src, poster, ratio, label, note, opts={}) => `
-    <div class="pp-dev${opts.phone?" ppm":""}"><div class="pp-scr" style="aspect-ratio:${ratio}">
+    <div class="pp-dev${opts.phone?" ppm":""}">${ppGlass(opts, `<div class="pp-scr" style="aspect-ratio:${ratio}">
       <img src="${IMG(poster)}" alt="" loading="lazy">
       <button class="pp-play" data-src="${src}" data-title="${label}" type="button"><span>${PLAY_SVG}${label}</span></button>
-    </div></div>
+    </div>`)}</div>
     <div class="lumi-bar"><p>${note}</p><a class="btn" href="${src}" target="_blank" rel="noopener">Open full screen <span class="arr">${arrow}</span></a></div>`;
 const ppCards = (items) => `<div class="pp-cards">${items.map(([k,t,d])=>`<div>${k?`<small>${k}</small>`:""}<b>${t}</b><p>${d}</p></div>`).join("")}</div>`;
 const ppStats = (items) => `<div class="stats pp-stats">${items.map(([n,t])=>`<div class="stat"><div class="n">${n}</div><p>${t}</p></div>`).join("")}</div>`;
 const ppTour = (id, items, opts={}) => `<div class="pp-tour" id="${id}">
       <div class="pp-tl" role="tablist" aria-label="Screens">${items.map((f,i)=>`<button role="tab" type="button" aria-selected="${i===0}" data-i="${i}"><b>${f.t}</b><span>${f.k}</span></button>`).join("")}</div>
       <div class="pp-ts${opts.phone?" ppm":""}">
-        <div class="pp-dev${opts.phone?" ppm":""}${opts.bare?" bare":""}"><div class="pp-scr" style="aspect-ratio:${opts.ratio||"16/10"}"><img class="zoom" alt="" loading="lazy"></div></div>
+        <div class="pp-dev${opts.phone?" ppm":""}${opts.bare?" bare":""}">${ppGlass(opts, `<div class="pp-scr" style="aspect-ratio:${opts.ratio||"16/10"}"><img class="zoom" alt="" loading="lazy"></div>`)}</div>
         <div class="pp-ti"><h3></h3><p aria-live="polite"></p></div>
       </div>
     </div>`;
@@ -2396,7 +2488,7 @@ function initPlay(){
   });
 }
 const ppGallery = (items, ratio) => `<div class="lumi-new">${items.map(([img,k,t,d,alt])=>`<figure><div class="plate" style="aspect-ratio:${ratio}"><img class="zoom" src="${IMG(img)}" alt="${alt||t}" loading="lazy"></div><figcaption>${k?`<small>${k}</small>`:""}<b>${t}</b>${d}</figcaption></figure>`).join("")}</div>`;
-const ppPhones = (items, framed) => `<div class="pp-phones${framed?" framed":""}">${items.map(([img,t,d])=>`<figure><div class="plate"><img class="zoom" src="${IMG(img)}" alt="${t}" loading="lazy"></div><figcaption><b>${t}</b>${d}</figcaption></figure>`).join("")}</div>`;
+const ppPhones = (items, framed) => `<div class="pp-phones${framed?" framed":""}">${items.map(([img,t,d])=>`<figure><div class="plate">${framed ? `<div class="dvg">${SB()}<div class="pv"><img class="zoom" src="${IMG(img)}" alt="${t}" loading="lazy"></div></div>` : `<img class="zoom" src="${IMG(img)}" alt="${t}" loading="lazy">`}</div><figcaption><b>${t}</b>${d}</figcaption></figure>`).join("")}</div>`;
 
 const SW_TOUR = [
   {t:"Plan a walk", k:"Start, end and when you leave", img:"sw-plan.jpg", d:"Search 126,000 addresses, postcodes, stations and places, or tap the map. The shady route is drawn in lilac against the shortest route in coral, with the shadows for that minute laid over a live 3D map of Singapore."},
@@ -2740,7 +2832,7 @@ function initIG(){
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { go(e.target); io.unobserve(e.target); } }), {threshold:.25});
   $$(".ig").forEach(el => io.observe(el));
 }
-const ppMotion = (src, poster, ratio, cap, opts={}) => `<figure class="pp-motion${opts.phone?" ppm":""}"><div class="pp-dev${opts.phone?" ppm":""}"><div class="pp-scr" style="aspect-ratio:${ratio}"><video src="${IMG("motion/"+src)}" poster="${IMG("motion/"+poster)}" muted loop playsinline preload="metadata" aria-label="${cap}"></video></div></div><figcaption>${cap}</figcaption></figure>`;
+const ppMotion = (src, poster, ratio, cap, opts={}) => `<figure class="pp-motion${opts.phone?" ppm":""}"><div class="pp-dev${opts.phone?" ppm":""}">${ppGlass(opts, `<div class="pp-scr" style="aspect-ratio:${ratio}"><video src="${IMG("motion/"+src)}" poster="${IMG("motion/"+poster)}" muted loop playsinline preload="metadata" aria-label="${cap}"></video></div>`)}</div><figcaption>${cap}</figcaption></figure>`;
 function initMotion(){
   const vids = $$(".pp-motion video"); if (!vids.length) return;
   if (reduce) { vids.forEach(v => v.controls = true); return; }
@@ -2897,7 +2989,7 @@ const CONTENT = {
         <div class="lr-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v15M6 13l6 6 6-6"/></svg></div>
         <div class="lr-pair">
           <div class="lr-box does"><small>What Lumi does</small><p id="lrD"></p><div class="lr-chips" id="lrC"></div></div>
-          <figure class="lr-shot"><div class="lumi-tab"><div class="lumi-scr"><img id="lrS" class="zoom" alt="" loading="lazy"></div></div><figcaption>In Lumi: <b id="lrSC"></b></figcaption></figure>
+          <figure class="lr-shot"><div class="lumi-tab"><div class="dvg">${SB(1)}<div class="lumi-scr"><img id="lrS" class="zoom" alt="" loading="lazy"></div></div></div><figcaption>In Lumi: <b id="lrSC"></b></figcaption></figure>
         </div>
       </div>
     </div>
@@ -2909,10 +3001,10 @@ const CONTENT = {
       <div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-n-focus.jpg")}" alt="Grown-ups page asking What should Lumi help with, showing nine areas such as Communicating, Feelings and calm, and Going out and new places" loading="lazy"></div>
     </div>`)}
   ${blk("Try it","Play Lumi right here",`
-    <div class="lumi-tab"><div class="lumi-scr" id="lumiScr">
+    <div class="lumi-tab"><div class="dvg">${SB(1)}<div class="lumi-scr" id="lumiScr">
       <img src="${IMG("lumi-home.jpg")}" alt="Lumi's home screen" loading="lazy">
       <button class="lumi-play" id="lumiPlay" type="button"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>Play Lumi here</span></button>
-    </div></div>
+    </div></div></div>
     <div class="lumi-bar"><p>The real app, running live. Turn your sound on: Lumi talks. Works best on a tablet or laptop.</p>
       <a class="btn" href="https://makiyakinabe.github.io/lumi/" target="_blank" rel="noopener">Open full screen <span class="arr">${arrow}</span></a></div>`)}
   ${blk("Inside Lumi","See how each part works",`
@@ -2920,7 +3012,7 @@ const CONTENT = {
     <div class="lumi-tour" id="lumiTour">
       <div class="lumi-tlist" role="tablist" aria-label="Lumi features">${LUMI_FEATS.map((f,i)=>`<button role="tab" aria-selected="${i===0}" data-i="${i}"><b>${f.t}</b><span>${f.k}</span><i class="lt-bar"><i></i></i></button>`).join("")}</div>
       <div class="lumi-tstage">
-        <div class="lumi-tab"><div class="lumi-scr"><video id="lumiVid" muted playsinline preload="metadata" poster="${IMG("lumi-v-talk.jpg")}" aria-label="Lumi feature demo"></video></div></div>
+        <div class="lumi-tab"><div class="dvg">${SB(1)}<div class="lumi-scr"><video id="lumiVid" muted playsinline preload="metadata" poster="${IMG("lumi-v-talk.jpg")}" aria-label="Lumi feature demo"></video></div></div></div>
         <div class="lumi-tinfo"><h3 id="lumiTT"></h3><p id="lumiTD" aria-live="polite"></p></div>
       </div>
     </div>`)}
@@ -3185,7 +3277,7 @@ const CONTENT = {
     </div>`)}
   ${blk("Feel the difference","A caregiver's morning",`
     <div class="feel" id="ccm">
-      <div class="ccm-wrap"><div class="ccm-phone"><div class="ccm-scr" id="ccmScr"></div></div></div>
+      <div class="ccm-wrap"><div class="ccm-phone"><div class="dvg ccm-g">${SB(0,"8:02")}<div class="ccm-scr" id="ccmScr"></div></div></div></div>
       <div>
         <p class="body-strong">Jane cares for her mum, Mdm Lim. Before 9am, her phone is already full. See her morning across five apps, then with CareCircle+.</p>
         <div class="seg" role="group" aria-label="Phone">
@@ -3537,9 +3629,9 @@ const CONTENT = {
     ${ppRender("b88-render.jpg","Block 88 on two tablets: the 3D HDB estate with its playground, and the void deck with the community notice board","Made for tablets, held sideways.")}`)}
   ${blk("Gameplay","A day in Tembusu",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
-    ${ppTour("b88Tour", B88_TOUR)}`)}
+    ${ppTour("b88Tour", B88_TOUR, {tablet:true})}`)}
   ${blk("In motion","A walk around Tembusu",`
-    ${ppMotion("b88-tour.mp4","b88-tour.jpg","16/10","From the estate to the void deck, then planning the day, the estate menu, the My Singapore map and choosing who you are today.")}`)}
+    ${ppMotion("b88-tour.mp4","b88-tour.jpg","16/10","From the estate to the void deck, then planning the day, the estate menu, the My Singapore map and choosing who you are today.", {tablet:true})}`)}
   ${blk("Systems","Kindness that adds up",`
     <p class="body-strong">Underneath the errands is a set of systems that reward getting to know people, not just finishing tasks.</p>
     <div class="ig" data-ig="b88-loop"></div>
@@ -3547,7 +3639,7 @@ const CONTENT = {
     ${ppCards([["Levels","Seven community levels","From New Neighbour to Heart of Tembusu. Each level opens bigger projects: a block clean-up, a get-together, a donation drive, a residents' meeting and Tembusu Day."],["Town projects","Kampung points","Points from helping fund estate upgrades the player votes on, including lift upgrading."],["Introductions","Who knows who","Bring together neighbours who have never spoken, and watch the web of friendships grow."],["Journal","Kindness journal","Fills in as you help, with six questions to ask a parent, grandparent or neighbour in real life, and their answers kept."],["Singapore, everywhere","Small local details","Kopi lingo, a lift that only stops at certain floors, festival decorations for Chinese New Year, Hari Raya, National Day, Deepavali and Christmas, and sudden rain showers."],["Made for tablets","Comfortable to play","Landscape layout, a thumb stick, guide arrows that can be switched off, and settings for look speed and camera distance. Progress stays on the device."]])}
     <div class="ig" data-ig="b88-town"></div>`)}
   ${blk("Try it","Play Block 88 right here",`
-    ${ppPlay("/play/block-88/","b88-title.jpg","16/10","Play Block 88 here","The real game, running live in 3D. Best on a tablet or laptop held sideways; use W A S D or the on-screen stick to walk.")}`)}
+    ${ppPlay("/play/block-88/","b88-title.jpg","16/10","Play Block 88 here","The real game, running live in 3D. Best on a tablet or laptop held sideways; use W A S D or the on-screen stick to walk.", {tablet:true})}`)}
 `,
 "last-chair": () => `
   ${blk("Concept","The people we lose stay in the places they leave",`
@@ -3604,9 +3696,9 @@ const CONTENT = {
     ${ppRender("bit-render.jpg","Bitsy's Maker Bin on two tablets: Bitsy greeting Mei over the neighbourhood, and the Where does it go sorting game","Built for tablets, for small hands.")}`)}
   ${blk("Gameplay","Sort it, clean it, make it",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
-    ${ppTour("bitTour", BIT_TOUR, {ratio:"1194/834"})}`)}
+    ${ppTour("bitTour", BIT_TOUR, {ratio:"1194/834", tablet:true})}`)}
   ${blk("In motion","Bitsy at play",`
-    ${ppMotion("bit-play.mp4","bit-play.jpg","1194/834","Recorded in the live game: Bitsy's hello, the home screen, making a pencil pot with a grown-up, and sorting a toilet roll tube.")}`)}
+    ${ppMotion("bit-play.mp4","bit-play.jpg","1194/834","Recorded in the live game: Bitsy's hello, the home screen, making a pencil pot with a grown-up, and sorting a toilet roll tube.", {tablet:true})}`)}
   ${blk("What children learn","From caring to using less",`
     <p class="body-strong">The learning is laid out as a path, and every game ties back to one simple habit children can repeat at home.</p>
     <div class="ig" data-ig="bit-path"></div>
@@ -3615,7 +3707,7 @@ const CONTENT = {
   ${blk("Designing for 4 to 6 year olds","Big buttons, kind voices, grown-ups nearby",`
     ${ppCards([["No reading needed","Everything is read aloud","Big picture tabs, one simple job per screen, and a speaker button on every line."],["Small hands","Touch targets of 60 px or more","Large, rounded buttons with soft feedback: a gentle wobble for “try again” and a sparkle for “yes”."],["Safety first","Grown-up jobs are marked","Cutting, rinsing and small parts always show a “Grown-up helps” label."],["Real rules","Follows NEA guidance","Blue bin items must be empty, clean and dry. The game teaches why, not just where."],["For grown-ups","Hold 3 seconds to open","A grown-ups area for settings and approving photos. Pilot sessions use labels like “Child B”, never names."],["Inclusive","Options for every child","Strong outlines for bright rooms or low vision, a left-handed layout, quiet mode and a gentler pace."]])}`)}
   ${blk("Try it","Play with Bitsy right here",`
-    ${ppPlay("/play/bitsy/","bit-boot.jpg","1194/834","Play Bitsy's Maker Bin here","The real game, running live. Turn your sound on: Bitsy talks. The shared class garden and photo checking only work in the original Claude version, so they are hidden here.")}`)}
+    ${ppPlay("/play/bitsy/","bit-boot.jpg","1194/834","Play Bitsy's Maker Bin here","The real game, running live. Turn your sound on: Bitsy talks. The shared class garden and photo checking only work in the original Claude version, so they are hidden here.", {tablet:true})}`)}
 `,
 "jiak-clean": () => `
   ${blk("Concept","Eat it clean, waste nothing",`
@@ -4362,7 +4454,8 @@ function initMorning(){
     </div>`;
     $$(".ccm-faces button", scr).forEach(b => b.onclick = () => { mood = +b.dataset.m; cc(); });
     $$(".ccm-check", scr).forEach(b => b.onclick = () => { done[b.dataset.i] = !done[b.dataset.i]; cc(); }); };
-  const set = m => { mode = m; $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x.dataset.m===m)); $("#ccmRead").textContent = TXT[m];
+  const ccmBar = $(".ccm-g .sb", root);
+  const set = m => { mode = m; if (ccmBar){ ccmBar.classList.toggle("lt", m==="chaos"); ccmBar.classList.toggle("nt", m==="chaos"); } $$(".seg button", root).forEach(x=>x.setAttribute("aria-pressed", x.dataset.m===m)); $("#ccmRead").textContent = TXT[m];
     $("#ccmApps").textContent = m==="chaos" ? "5" : "1"; $("#ccmThings").textContent = m==="chaos" ? "8" : "0"; m==="chaos" ? chaos() : cc(); };
   $$(".seg button", root).forEach(b => b.onclick = () => set(b.dataset.m));
   set("chaos"); onCleanup(()=>clearInterval(t));
@@ -5082,7 +5175,7 @@ function render(){
   const app = $("#app");
   let navKey = "home";
   const p = PROJECTS.find(x=>x.id===h);
-  if (p){ app.innerHTML = projectShell(p, CONTENT[p.id]()); INIT[p.id](); navKey = "works"; document.title = p.name.replace(/&amp;/g,"&") + " · Natalie Ang"; }
+  if (p){ app.innerHTML = projectShell(p, CONTENT[p.id]()); INIT[p.id](); sbInit(); navKey = "works"; document.title = p.name.replace(/&amp;/g,"&") + " · Natalie Ang"; }
   else if (h === "journey"){ app.innerHTML = viewJourney(); initJourney(); navKey = "journey"; document.title = "My Journey · Natalie Ang"; }
   else if (h === "works"){ app.innerHTML = viewWorks(); initWorks(); navKey = "works"; document.title = "My Works · Natalie Ang"; }
   else { app.innerHTML = viewHome(); initHome(); document.title = "Natalie Ang Portfolio"; if (h === "recognition") navKey = "recognition"; }
