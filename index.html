@@ -1450,6 +1450,11 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .pp-cards b{display:block;font-family:var(--display);font-size:18px;margin-bottom:4px}
 .pp-cards p{margin:0;font-size:14.5px;line-height:1.5;color:var(--muted)}
 .pp-stats .stat .n{font-size:clamp(40px,4.6vw,60px)}
+.why{margin-top:34px;padding-top:6px}
+.why-h{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--pa);margin:0}
+.why .stats{margin-top:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}
+@media (max-width:600px){.why .stats{grid-template-columns:1fr 1fr;gap:16px}.why .stat .n{font-size:38px}}
+.why .stat p{font-size:15px;line-height:1.45;color:var(--ink-2);margin-top:8px;max-width:30ch}
 .pp-src{font-size:13px;color:var(--muted);margin-top:16px;max-width:70ch}
 .pp-h3{font-family:var(--display);font-size:clamp(19px,2vw,23px);margin:40px 0 0}
 .pp-steps{list-style:none;margin:0;padding:0;display:grid;gap:14px;counter-reset:s}
@@ -1669,15 +1674,15 @@ const PROJECTS = [
  {id:"synapsys", num:"01", name:"SynapSys", sub:"Designing Calm Within Daily Flow", p:"#2E6F9E", pd:"#7DB3DA",
   cat:"Product Design · App", year:"2025–26", ctx:"Final year project · Temasek Polytechnic", tags:["product","uiux","game"], tagLabels:["Product Design","Play Design","Research"],
   hero:"syn-cover.jpg", thumb:"syn-cover.jpg", thumbPos:"0% 50%",
-  blurb:"A modular play system that helps children with ADHD turn restless energy into purposeful play, building coordination, confidence and focus at home."},
+  blurb:"A play system that turns restless energy into focus and coordination for children with ADHD."},
  {id:"lumi", role:"Solo · design, art &amp; code", num:"02", name:"Lumi", sub:"A Calm Companion App", p:"#2F7E79", pd:"#7CC9C2",
   cat:"UI/UX · Game &amp; App Design", year:"2026", ctx:"Passion project · Companion app", tags:["uiux","game","passion"], tagLabels:["UI/UX","Game Design","Accessibility"],
   hero:"lumi-cover.jpg", thumb:"lumi-cover.jpg", thumbPos:"0% 50%",
-  blurb:"A free tablet game for non-speaking children and young people: talk with pictures, plan the day, calm down, and practise real life with Lumi."},
+  blurb:"A free tablet app for non-speaking children: talk with pictures, plan the day and practise real life."},
  {id:"bus", role:"Solo designer", num:"03", name:"SG Bus Displays", sub:"Reading the Bus, for Everyone", p:"#8A6A00", pd:"#FFD400",
   cat:"UI/UX · Wayfinding", year:"2026", ctx:"Self-initiated concept redesign", tags:["uiux"], tagLabels:["UI/UX","Wayfinding","Accessibility"],
   hero:"bus-cover.jpg", thumb:"bus-thumb.jpg", thumbPos:"0% 50%",
-  blurb:"A redesign of every display a Singapore bus rider reads in one trip, from the stop panel to the interchange, easier to understand and easier to see for everyone."},
+  blurb:"Every display a bus rider reads in one trip, redesigned to be easier to understand and to see."},
  {id:"gift-set", role:"Team lead · team of 3", num:"04", name:"Corporate Gift Set", sub:"Air Force Museum", p:"#2B47A8", pd:"#8EA6F0",
   cat:"Product Design", year:"2025", ctx:"Industry studio · Singapore Air Force Museum", tags:["product"], tagLabels:["Product Design","Industry Project"],
   hero:"safm-cover.jpg", thumb:"safm-cover.jpg", thumbPos:"0% 50%",
@@ -1697,7 +1702,7 @@ const PROJECTS = [
  {id:"oral-exam", role:"UI/UX design intern", num:"08", name:"Oral Exam Mastery", sub:"AI Oral Practice", p:"#D4561A", pd:"#FFAE6E",
   cat:"UI/UX · Web &amp; Mobile App", year:"2025", ctx:"UI/UX internship · Ministry of Education", tags:["uiux","game"], tagLabels:["UI/UX","Gamification","EdTech"],
   hero:"oe-cover.jpg", thumb:"oe-cover.jpg", thumbPos:"0% 50%",
-  blurb:"AI-marked oral practice for primary and secondary students, with Echo as a friendly examiner and one place for teachers to manage every class."},
+  blurb:"AI-marked oral practice for students, with Echo as a friendly examiner and one place for teachers."},
  {id:"tray-dispenser", role:"Project manager · team of 5", num:"09", name:"Tray Dispenser", sub:"Mandai Wildlife Reserve", p:"#3D7A4C", pd:"#86C796",
   cat:"Service & Product Design", year:"2024–25", ctx:"Industry studio · Mandai Wildlife Group", tags:["service","product"], tagLabels:["Service Design","Product Design"],
   hero:"tray-cover4.jpg", thumb:"tray-cover4.jpg", thumbPos:"0% 50%",
@@ -1705,7 +1710,7 @@ const PROJECTS = [
  {id:"lafex", num:"10", name:"LAFEX", sub:"Latte Art for Steadier Hands", p:"#3B4A8A", pd:"#9DABEA",
   cat:"Product Design · App", year:"2024", ctx:"Studio Project 2 · mock Electrolux brief", tags:["product","uiux"], tagLabels:["Product Design","App","Redesign"],
   hero:"lafex-cover.jpg", thumb:"lafex-cover.jpg", thumbPos:"0% 50%",
-  blurb:"A latte-art device, wristband and app for older adults with Parkinson's, redesigned after user testing so shaking hands can still pour a heart."},
+  blurb:"A latte-art device, wristband and app so older adults with Parkinson's can still pour a heart."},
  {id:"bon", num:"11", name:"BON", sub:"Crochet Storage", p:"#A0703A", pd:"#D9AC74",
   cat:"Product Design", year:"2023–24", ctx:"Studio project", tags:["product"], tagLabels:["Product Design","Prototyping"],
   hero:"bon-cover.jpg", thumb:"bon-cover.jpg", thumbPos:"0% 50%",
@@ -1717,7 +1722,7 @@ const PROJECTS = [
  {id:"shade-where", role:"Solo · research, design &amp; code", num:"13", name:"shade,where?", sub:"Walk in the Shade", p:"#5B3FD0", pd:"#B9A6FF",
   cat:"UI/UX · Web App &amp; Data Viz", year:"2026", ctx:"Passion project · Web app", tags:["uiux","passion"], tagLabels:["Web App","Data Viz","Wayfinding"],
   hero:"sw-cover.jpg", thumb:"sw-cover.jpg", thumbPos:"0% 50%",
-  blurb:"A walking planner for Singapore's heat. It casts real shadows from 159,000 buildings for the minute you leave, and finds the walk that keeps you out of the sun."},
+  blurb:"A walking planner for Singapore's heat. It casts real shadows for the minute you leave and finds the shadiest walk."},
  {id:"block-88", role:"Solo · design, art &amp; code", num:"14", name:"Block 88", sub:"A Neighbourhood Game", p:"#23806D", pd:"#7FD1B9",
   cat:"Game Design · 3D", year:"2026", ctx:"Passion project · Tablet game", tags:["game","passion"], tagLabels:["Game Design","3D","Community"],
   hero:"b88-cover.jpg", thumb:"b88-cover.jpg", thumbPos:"0% 50%",
@@ -1725,7 +1730,7 @@ const PROJECTS = [
  {id:"last-chair", role:"Solo · writing, design, art &amp; code", num:"15", name:"The Last Chair", sub:"A Game About Grief", p:"#9A5A2C", pd:"#E8A85C",
   cat:"Narrative Game Design", year:"2026", ctx:"Passion project · Narrative game", tags:["game","passion"], tagLabels:["Narrative Design","Game Design","Writing"],
   hero:"lc-cover.jpg", thumb:"lc-cover.jpg", thumbPos:"0% 50%",
-  blurb:"A narrative game about grief, memory and the words we leave unsaid: ten stories told through the rooms, phones and objects people leave behind."},
+  blurb:"A narrative game about grief: ten stories told through the rooms and objects people leave behind."},
  {id:"bitsy", role:"Solo · design, art &amp; code", num:"16", name:"Bitsy's Maker Bin", sub:"Recycling for Kids", p:"#6E50C0", pd:"#C5B2F4",
   cat:"Game Design · EdTech", year:"2026", ctx:"Passion project · Kindergarten tablet game", tags:["game","passion"], tagLabels:["Game Design","Children","Sustainability"],
   hero:"bit-cover.jpg", thumb:"bit-cover.jpg", thumbPos:"0% 50%",
@@ -1937,7 +1942,7 @@ function viewHome(){
           </div>
           <h1 class="sx-role">Game <em>&amp;</em> Product Designer</h1>
           <p class="sx-kw">Game design · Product design · UI/UX · User research</p>
-          <p class="sx-p">I design games, products and apps around the people who use them, from the first sketch and cardboard mock-up to a tested prototype. Now studying Computer Science (Interactive Media &amp; Game Development) at SIT &amp; DigiPen, so I can build what I design.</p>
+          <p class="sx-p">I design games, products and apps around the people who use them, from first sketch to tested prototype. Now studying Computer Science (Interactive Media &amp; Game Development) at SIT &amp; DigiPen, so I can build what I design.</p>
           <div class="sx-btns">
             <button class="hbtn" style="background:#FFB38A" id="heroWorks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>See my works</button>
             <a class="hbtn" style="background:#FFDB6E" href="cv/Natalie-Ang-CV.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>My CV</a>
@@ -2108,11 +2113,11 @@ function initViewer(id, items, opts={}){
   set(0);
 }
 const SAFM_STORY = [
-  {t:"Turbine fan", x:18.2, y:51, k:"Piece 1 · Cooling", d:"A desk fan shaped like a jet engine, with a heptagon interior that keeps to the set's sharp-edged theme. It evokes turbine power and airflow, standing for agility and cool precision.", f:"Jet engine turbines on display at the museum"},
+  {t:"Turbine fan", x:18.2, y:51, k:"Piece 1 · Cooling", d:"A desk fan shaped like a jet engine, with a heptagon interior to match the set's sharp edges.", f:"Jet engine turbines on display at the museum"},
   {t:"Faceted holder", x:42.6, y:56, k:"Piece 2 · Stationery", d:"An angular stationery holder that symbolises structured design and adaptability. Its blue shifts from dark to light, the way gallery lights fall on the museum's walls.", f:"Blue-lit, geometric galleries"},
   {t:"Wireless charger", x:71.2, y:54, k:"Piece 3 · Charging", d:"A round charging pad framed like a radar screen, a nod to the vigilance of Singapore's air defence.", f:"Radar systems"},
   {t:"Faceted base", x:24.8, y:85, k:"The base", d:"Deep navy facets tie the three pieces together, evoking the sky and the RSAF's legacy of excellence. The museum's mark sits on the front.", f:"The museum's faceted gallery walls"},
-  {t:"Jet models", x:63.7, y:69, k:"The details", d:"F-16, F-15 and F-35 models climb upward across the set, for ambition and breaking limits. The F-16 stands for agility and reliability, the F-15 for air dominance and strike power, and the F-35 for the air force's future of stealth and innovation.", f:"Aircraft flown by the RSAF"}
+  {t:"Jet models", x:63.7, y:69, k:"The details", d:"F-16, F-15 and F-35 models climb across the set: agility, strike power and the stealth of the future.", f:"Aircraft flown by the RSAF"}
 ];
 function initStory(){
   const root=$("#story"); if(!root) return;
@@ -2321,14 +2326,14 @@ const OE_GROUPS = [
 ];
 const LUMI_RES = [
   {img:"lumi-talk.jpg", cap:"Talk board", tint:"#DDF0EC", ink:"#2F7E79", ic:'<path d="M4 5h16v11H10l-4 4v-4H4z"/><path d="M8 9h8M8 12h5"/>', t:"Being understood", f:"Many non-speaking children understand far more than they can say, so people underestimate them. Even simple needs like “I'm in pain” or “I want the other one” are hard to get across.", d:"A talk board where tapping pictures builds a sentence that Lumi says out loud, with whole phrases ready to go and the family's home-language words underneath.", c:["Talk board","Phrases","Home languages"]},
-  {img:"lumi-calm.jpg", cap:"Calm corner", tint:"#ECE7F8", ink:"#7E64C8", ic:'<path d="M12 20s-7-4.4-7-9.5A4 4 0 0 1 12 8a4 4 0 0 1 7 2.5C19 15.6 12 20 12 20z"/>', t:"Big feelings", f:"Naming a feeling is hard, and behaviour often stands in for words. A meltdown might really mean “this is too loud” or “I didn't know this was happening”.", d:"Lumi helps name the feeling first, then calms down together. Stories ask how the child feels before and after, and a Break button sits on every screen.", c:["Feelings check","Calm corner","Break button"]},
+  {img:"lumi-calm.jpg", cap:"Calm corner", tint:"#ECE7F8", ink:"#7E64C8", ic:'<path d="M12 20s-7-4.4-7-9.5A4 4 0 0 1 12 8a4 4 0 0 1 7 2.5C19 15.6 12 20 12 20z"/>', t:"Big feelings", f:"Naming a feeling is hard, so behaviour stands in for words. A meltdown might mean “this is too loud”.", d:"Lumi helps name the feeling first, then calms down together. Stories ask how the child feels before and after, and a Break button sits on every screen.", c:["Feelings check","Calm corner","Break button"]},
   {img:"lumi-story.jpg", cap:"Hawker centre story", tint:"#F3EBDD", ink:"#9A6A2A", ic:'<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>', t:"Noise, light and crowds", f:"Hawker centres, malls and the MRT can be overwhelming. Sudden sounds and fast movement on a screen can be too much as well.", d:"A sensory comfort setting turns the sound down, slows Lumi's voice and reduces motion. In stories, the child chooses what helps, like putting on headphones.", c:["Softer sound","Less motion","Low-colour theme"]},
   {img:"lumi-nownext.jpg", cap:"Now and Next", tint:"#E1ECF7", ink:"#4A78A8", ic:'<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M8 3v4M16 3v4M9 15l2 2 4-4"/>', t:"Changes to the day", f:"An unexpected change, like a different bus route or a new teacher, can cause real distress. Stopping one activity to start the next is hard too.", d:"A picture timetable shows the whole day, Now and Next shows just two things, and Coming up prepares the child for something new before it happens.", c:["My day","Now and Next","Coming up"]},
-  {img:"lumi-wait.jpg", cap:"Waiting game", tint:"#FBEFD9", ink:"#B07A12", ic:'<path d="M7 3h10M7 21h10M8 3c0 5 8 5 8 9s-8 4-8 9M16 3c0 5-8 5-8 9s8 4 8 9"/>', t:"Waiting and focus", f:"Waiting for the bus or for food with nothing to do is hard, and so is staying with one task when the body wants to move.", d:"A waiting game that starts at ten seconds and grows a little each time, with things to do while waiting, plus movement breaks when the child is restless.", c:["Waiting game","Move breaks","A slower guide hand"]},
+  {img:"lumi-wait.jpg", cap:"Waiting game", tint:"#FBEFD9", ink:"#B07A12", ic:'<path d="M7 3h10M7 21h10M8 3c0 5 8 5 8 9s-8 4-8 9M16 3c0 5-8 5-8 9s8 4 8 9"/>', t:"Waiting and focus", f:"Waiting for the bus or for food with nothing to do is hard, and so is staying with one task when the body wants to move.", d:"A waiting game that starts at ten seconds and grows a little each time, with movement breaks.", c:["Waiting game","Move breaks","A slower guide hand"]},
   {img:"lumi-together.jpg", cap:"Together mode", tint:"#F8E4EC", ink:"#C2577A", ic:'<circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M2.5 20c.5-3.5 2.7-5 5.5-5s5 1.5 5.5 5M13 15.3c.9-.2 1.9-.3 3-.3 2.800 0 5 1.5 5.5 5"/>', t:"Playing with others", f:"Joining in, taking turns and sharing attention don't come easily, and other children often don't know how to include them.", d:"A Together mode for a grown-up, sibling or friend, with turn-taking games, and stories that practise a birthday party or meeting a new teacher.", c:["Together mode","Turn-taking games","Party story"]},
-  {img:"lumi-n-road.jpg", cap:"Cross the road game", tint:"#E6E8FA", ink:"#5B6ABF", ic:'<path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.3 1.3L7 5M3.5 12l1.3 1.3L7 11M3.5 18l1.3 1.3L7 17"/>', t:"Everyday tasks", f:"Tasks with many steps, like brushing teeth, getting dressed or packing a bag, are hard. So are money, shopping and crossing the road safely.", d:"Lessons acted out one small step at a time, and everyday games for shopping with money, crossing the road, telling the time and doing up zips and buttons.", c:["Learn with Lumi","Everyday games","Try it for real"]},
+  {img:"lumi-n-road.jpg", cap:"Cross the road game", tint:"#E6E8FA", ink:"#5B6ABF", ic:'<path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.3 1.3L7 5M3.5 12l1.3 1.3L7 11M3.5 18l1.3 1.3L7 17"/>', t:"Everyday tasks", f:"Tasks with many steps, like brushing teeth, getting dressed or packing a bag, are hard. So are money, shopping and crossing the road safely.", d:"Lessons acted out step by step, plus games for money, crossing the road, telling time and zips.", c:["Learn with Lumi","Everyday games","Try it for real"]},
   {img:"lumi-learn.jpg", cap:"Learn with Lumi", tint:"#EEF2E6", ink:"#5E7A3A", ic:'<path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V11m0-.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.5a6 6 0 0 1-5-2.7L4 14.5a1.5 1.5 0 0 1 2.5-1.7L9 15"/>', t:"Small, precise touches", f:"Small buttons and precise drags make many apps impossible to use for children with fine-motor difficulties.", d:"Big buttons everywhere, an “easier touch” setting that swaps every drag for a tap and makes text bigger, and “Do it with me” so nobody gets stuck.", c:["Tap instead of drag","Bigger text","Do it with me"]},
-  {img:"lumi-setup.jpg", cap:"Three age looks", tint:"#E3F1FA", ink:"#3E6E9A", ic:'<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.3 6L12 16.4 6.6 19.4l1.3-6L3.4 9.3l6-.7z"/>', t:"Being treated their age", f:"Teenagers are often handed content made for toddlers, and other people make most of their decisions for them.", d:"Three looks that grow up with the child. Teens get a calmer look and real life skills, and every story has choices and ends with the child's own plan.", c:["Three age looks","Teen life skills","Choices in stories"]}
+  {img:"lumi-setup.jpg", cap:"Three age looks", tint:"#E3F1FA", ink:"#3E6E9A", ic:'<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.3 6L12 16.4 6.6 19.4l1.3-6L3.4 9.3l6-.7z"/>', t:"Being treated their age", f:"Teenagers are often handed content made for toddlers, and other people make most of their decisions for them.", d:"Three looks that grow with the child. Every story has choices and ends with the child's own plan.", c:["Three age looks","Teen life skills","Choices in stories"]}
 ];
 function initLumiResearch(){
   const root = $("#lumiRes"); if (!root) return;
@@ -2347,7 +2352,7 @@ function initLumiResearch(){
   show(0);
 }
 const LUMI_FEATS = [
-  {v:"talk", t:"Talk board", k:"Communication", d:"Tap pictures to build a sentence, like “I want eat chicken”, then press the speaker and Lumi says it out loud. Words are sorted into folders like Food, Feelings and Places."},
+  {v:"talk", t:"Talk board", k:"Communication", d:"Tap pictures to build a sentence like “I want eat chicken”, and Lumi says it out loud."},
   {v:"myday", t:"My day", k:"Routines", d:"A picture timetable for the day. At lunch, the child slides or taps each food to Lumi, then taps “I ate!” once they've really eaten."},
   {v:"nownext", t:"Now and Next", k:"Routines", d:"Only what's happening now and what comes next, with a timer ring that empties as time passes. “Done early” moves straight on to the next thing."},
   {v:"calm", t:"Calm corner", k:"Emotional regulation", d:"Breathe with Lumi: the balloon grows on “In” and shrinks on “Out”, with soft music like rain or ocean waves."},
@@ -2480,6 +2485,7 @@ const ppPlay = (src, poster, ratio, label, note, opts={}) => `
     </div>`)}</div>
     <div class="lumi-bar"><p>${note}</p><a class="btn" href="${src}" target="_blank" rel="noopener">Open full screen <span class="arr">${arrow}</span></a></div>`;
 const ppCards = (items) => `<div class="pp-cards">${items.map(([k,t,d])=>`<div>${k?`<small>${k}</small>`:""}<b>${t}</b><p>${d}</p></div>`).join("")}</div>`;
+const ppWhy = (items, src, head="Why it matters") => `<div class="why"><p class="why-h">${head}</p>${ppStats(items)}<p class="pp-src">${src}</p></div>`;
 const ppStats = (items) => `<div class="stats pp-stats">${items.map(([n,t])=>`<div class="stat"><div class="n">${n}</div><p>${t}</p></div>`).join("")}</div>`;
 const ppTour = (id, items, opts={}) => `<div class="pp-tour" id="${id}">
       <div class="pp-tl" role="tablist" aria-label="Screens">${items.map((f,i)=>`<button role="tab" type="button" aria-selected="${i===0}" data-i="${i}"><b>${f.t}</b><span>${f.k}</span></button>`).join("")}</div>
@@ -2510,20 +2516,20 @@ const ppGallery = (items, ratio) => `<div class="lumi-new">${items.map(([img,k,t
 const ppPhones = (items, framed) => `<div class="pp-phones${framed?" framed":""}">${items.map(([img,t,d])=>`<figure><div class="plate">${framed ? `<div class="dvg">${SB()}<div class="pv"><img class="zoom" src="${IMG(img)}" alt="${t}" loading="lazy"></div></div>` : `<img class="zoom" src="${IMG(img)}" alt="${t}" loading="lazy">`}</div><figcaption><b>${t}</b>${d}</figcaption></figure>`).join("")}</div>`;
 
 const SW_TOUR = [
-  {t:"Plan a walk", k:"Start, end and when you leave", img:"sw-plan.jpg", d:"Search 126,000 addresses, postcodes, stations and places, or tap the map. The shady route is drawn in lilac against the shortest route in coral, with the shadows for that minute laid over a live 3D map of Singapore."},
-  {t:"Best time to leave", k:"Minutes in the sun, all day", img:"sw-best.jpg", d:"A chart of how many minutes you'd spend in the sun for every departure time, so you can see that leaving at 8am, or after 5pm, beats the 1pm glare."},
+  {t:"Plan a walk", k:"Start, end and when you leave", img:"sw-plan.jpg", d:"Search any address, station or place. The shady route is drawn in lilac against the shortest in coral, on a live 3D map."},
+  {t:"Best time to leave", k:"Minutes in the sun, all day", img:"sw-best.jpg", d:"Minutes in the sun for every departure time. Leaving at 8am, or after 5pm, beats the 1pm glare."},
   {t:"Walk it, step by step", k:"Turn-by-turn directions", img:"sw-walk.jpg", d:"Each step says how long it is and whether it's covered, like “Go through the underpass”. Play the walk to fly along the route in 3D."},
   {t:"Why shade", k:"Interactive heat stories", img:"sw-why.jpg", d:"Five short chapters on Singapore's heat, with real numbers from the Met Service and researchers. Hover the hottest years, drag the sun, read a heat alert."},
   {t:"Sun and shadow", k:"A live solar simulator", img:"sw-sim.jpg", d:"Drag the time and watch a 12-storey block's shadow swing and shrink, using the same solar maths as the route planner."},
-  {t:"Step into the shade", k:"What shade really does", img:"sw-shade.jpg", d:"Flip between sun and shade to see what street shade did in a real one-north study: 3.1°C cooler to the body, and up to 92% less extreme heat stress."},
+  {t:"Step into the shade", k:"What shade really does", img:"sw-shade.jpg", d:"Flip between sun and shade to see a real one-north study: 3.1°C cooler to the body, and up to 92% less extreme heat stress."},
   {t:"Accuracy", k:"Checked against official data", img:"sw-acc.jpg", d:"Every layer is compared with OneMap, HDB's records, published tower heights and independent sun calculators, with the known limits listed plainly."},
   {t:"Privacy", k:"Your trips stay on your device", img:"sw-priv.jpg", d:"No sign-in, no cookies, no analytics and no location tracking. Searches, routes and times are worked out inside the browser and never sent anywhere."}
 ];
 const B88_TOUR = [
-  {t:"The void deck", k:"Explore in 3D", img:"b88-voiddeck.jpg", d:"Walk around Tembusu Estate with a thumb stick. The jump button is a lift button and the action button is a red bus bell. A to-do list and a yellow arrow show who needs help."},
-  {t:"Plan my day", k:"Morning, afternoon, evening", img:"b88-plan.jpg", d:"Pick up to two things for each part of the day: help neighbours, spend time with family, or play five stones, pick-up sticks and chapteh at the void deck."},
+  {t:"The void deck", k:"Explore in 3D", img:"b88-voiddeck.jpg", d:"Walk the estate with a thumb stick. The jump button is a lift button and the action button is a bus bell."},
+  {t:"Plan my day", k:"Morning, afternoon, evening", img:"b88-plan.jpg", d:"Pick up to two things per part of the day: help neighbours, family time, or five stones and chapteh."},
   {t:"The block phone", k:"Chats, neighbours, passport", img:"b88-neighbours.jpg", d:"Mei's phone has the block group chat, a list of neighbours with hearts and gifts, a food passport, an album, and things to try in real life."},
-  {t:"Food passport", k:"Nine dishes to taste", img:"b88-passport.jpg", d:"Chicken rice, mee pok, nasi lemak, rojak, wanton mee, economic rice, kaya bun, and kopi you made yourself at Ah Seng's stall, with a kopi lingo cheat sheet."},
+  {t:"Food passport", k:"Nine dishes to taste", img:"b88-passport.jpg", d:"Nine dishes to taste, from chicken rice to kopi you make yourself at Ah Seng's stall."},
   {t:"Ride bus 36", k:"A loop round Singapore", img:"b88-map.jpg", d:"Take the bus to Katong, Bras Basah, Marina Bay, Haw Par Villa and Little India, with daily goals and a bus 36 photo trail."},
   {t:"Be someone else today", k:"Six neighbours to play", img:"b88-role.jpg", d:"Spend a day as Uncle Rahim, Ah Ma Lim, Auntie Kavitha, Kopi Uncle, Uncle Muthu or the karung guni uncle, each with three missions of their own."},
   {t:"Story chapters", k:"Four doors, one block", img:"b88-cast.jpg", d:"Meet the neighbours, then follow a seven-chapter story about a torn 1985 photograph of the block and the night every window was lit."}
@@ -2545,11 +2551,11 @@ const LC_TOUR = [
   {t:"Step inside", k:"Walk through their home", img:"lc-room2.jpg", d:"Walk with the keys or the on-screen pad, look around, and pick up whatever catches your eye. Short narration sets the scene: “The house smells the same.”"},
   {t:"Her bedroom", k:"Rooms that change with the light", img:"lc-bedroom.jpg", d:"Every room has its own sound and light, with captions for sounds like rain at night and the lamp buzzing softly."},
   {t:"Memory lane", k:"Objects that remember", img:"lc-memory.jpg", d:"Click an object and its memory plays as a short film, from its oldest moment to today. Tap the people to hear them."},
-  {t:"A room for your own person", k:"Make their room", img:"lc-makeroom.jpg", d:"Choose a room, place a few of their things and write what each one holds, then walk through it as many times as you like. It stays only in your browser."},
+  {t:"A room for your own person", k:"Make their room", img:"lc-makeroom.jpg", d:"Choose a room, place their things and write what each one holds. It stays only in your browser."},
   {t:"One Singapore, ten families", k:"Where their lives touched", img:"lc-map.jpg", d:"Every story happens somewhere real, from Tiong Bahru to Punggol. Finish two stories and you may find where their lives crossed."}
 ];
 const BIT_TOUR = [
-  {t:"My world", k:"A neighbourhood that grows", img:"bit-home.jpg", d:"An HDB neighbourhood that grows with every good choice: plants to water, litter to pick up, animal friends like a community cat, an otter, a hornbill and a pangolin, with weather and day and night."},
+  {t:"My world", k:"A neighbourhood that grows", img:"bit-home.jpg", d:"An HDB neighbourhood that grows with every good choice, with plants, litter, animal friends and weather."},
   {t:"My bin", k:"Count what's at home", img:"bit-bin.jpg", d:"Children count the tubes, boxes, caps, bottles and cartons in their recycling bin at home, or ask a grown-up to take a photo."},
   {t:"Make", k:"12 crafts, plus invent", img:"bit-make.jpg", d:"Crafts they can make from what they counted, from a counting caterpillar to a box racing car, and an “Invent your own” mode for free play."},
   {t:"Step by step", k:"Grown-up jobs marked", img:"bit-step.jpg", d:"Each step is shown, animated and read aloud. Cutting, rinsing and small parts are always marked as a grown-up job."},
@@ -2583,8 +2589,8 @@ const CH_TOUR = [
   {t:"The board", k:"Real dishes, four corners", img:"ch-board.jpg", d:"Dishes run round the edge, with Changi, Uncle Says, Chope a Seat and Tray Return in the corners. Roll stays on screen, right above the tabs."},
   {t:"Answer to win the stall", k:"Learn as you play", img:"ch-answer.jpg", d:"Land on a dish and answer a question about it, like how locals eat roti prata. A right answer wins the stall and a ★."},
   {t:"Quick game first?", k:"Win a Lucky Roll", img:"ch-steam.jpg", d:"Short games before you roll, like rubbing the steam off a bowl and guessing the dish underneath."},
-  {t:"Time to eat!", k:"Eat it for real, then snap it", img:"ch-eat.jpg", d:"Once everyone has rolled, each player eats their dish for real and snaps a photo for a ★, with the three hawker rules and a tip for today's weather."},
-  {t:"Show the uncle", k:"Order in 中文, Melayu or English", img:"ch-uncle.jpg", d:"Tap your dish for an order card to show at the stall, with no peanuts, no pork or less spicy added in, read aloud if you like, plus where to eat it and how to pay."}
+  {t:"Time to eat!", k:"Eat it for real, then snap it", img:"ch-eat.jpg", d:"Once everyone has rolled, each player eats their dish for real and snaps it for a ★."},
+  {t:"Show the uncle", k:"Order in 中文, Melayu or English", img:"ch-uncle.jpg", d:"An order card to show at the stall, with no peanuts, no pork or less spicy added, plus how to pay."}
 ];
 
 /* ---------- passion projects: animated infographics ---------- */
@@ -2788,7 +2794,7 @@ const IG = {
     el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>What a recycling bin can become</b></div></div>
       <div class="ig-scroll"><table class="ig-mx"><thead><tr><th></th>${M.map(([k,ic,n])=>`<th><em>${ico("bit",ic)}</em>${n}</th>`).join("")}</tr></thead>
       <tbody>${C.map(([n,need],r)=>`<tr><th>${n}</th>${M.map(([k])=>`<td>${need[k]?`<span class="gp" style="--d:${r*.06}s;--s:${Math.min(1,.55+need[k]*.08)}">${need[k]}</span>`:""}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
-      <p class="ig-note">The 12 crafts and how many of each item they need. Paper turns up in 8 of them, and tubes, boxes and caps in 3 each, so children learn to keep these instead of binning them.</p>`;
+      <p class="ig-note">How many of each item the 12 crafts need. Paper is in 8, so children learn to keep it out of the bin.</p>`;
   },
   /* Bitsy: learning path */
   "bit-path"(el){
@@ -2801,7 +2807,7 @@ const IG = {
       <circle class="ig-orbit" r="10" fill="#FFDD73" stroke="#4A3F6B" stroke-width="3" style="offset-path:path('${d}');animation-duration:7s"/>
       ${P.map(([ic,n],i)=>`<g class="gp" style="--d:${.3+i*.15}s"><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="44" fill="var(--bg,#fff)" stroke="var(--pa)" stroke-width="4"/>${icoAt("bit",ic,pts[i][0]-31,pts[i][1]-31,62)}<circle cx="${pts[i][0]+32}" cy="${pts[i][1]-32}" r="15" fill="var(--pa)"/><text x="${pts[i][0]+32}" y="${pts[i][1]-26.5}" text-anchor="middle" style="font-size:16px;font-weight:800;fill:var(--bg,#fff)">${i+1}</text></g>`).join("")}
     </svg><ol class="ig-legend six">${P.map(([ic,n,idea,c])=>`<li><b>${n}</b><span>${idea} · ${c} activities</span></li>`).join("")}</ol>
-    <p class="ig-note">The game follows a ladder of six ideas, from caring for things to making less rubbish. Twenty games and activities sit along it, and each one teaches one of the six.</p>`;
+    <p class="ig-note">Six ideas, from caring for things to using less. Twenty games sit along the path, each teaching one.</p>`;
   },
   /* Bitsy: blue bin check */
   "bit-bin"(el){
@@ -2908,7 +2914,7 @@ const IG = {
     const vw=sm?560:x0*2+3*W+2*gap, vh=sm?y0*2+3*W+2*gap:y0+W+96;
     el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>The board grows with the trip</b></div></div>
       <svg viewBox="0 0 ${vw} ${vh}" role="img" aria-label="Up to 2 days: small board, 8 dishes. 3 or 4 days: medium board, 12 dishes. 5 days or more: big board, 16 dishes.">${svg}</svg>
-      <p class="ig-note">Players say how long they're in Singapore, and the game sets the board and the number of meals to match: two meals for a stopover, two a day after that, up to fourteen. The four corners are Changi, Uncle Says, Chope a Seat and Tray Return. A diet filter swaps in dishes that suit everyone, and shrinks the board if there aren't enough.</p>`;
+      <p class="ig-note">The board and number of meals match the trip: two meals for a stopover, then two a day, up to fourteen. A diet filter swaps in dishes that suit everyone.</p>`;
   },
   /* Chope!: playtest fixes */
   "ch-fixes"(el){
@@ -2954,7 +2960,7 @@ const CONTENT = {
       <div>
         <p class="bigquote">“Imagine a Ferrari… but with the brakes of a bicycle?”</p>
         <p class="note" style="margin-top:10px">How psychiatrist Dr. Edward Hallowell describes the brain of a person with ADHD.</p>
-        <p class="body-strong" style="margin-top:22px">Their brain can be so fast and full of ideas, but it is sometimes hard to slow down or stay in control. Many also face a <b>coordination gap</b>: weaker gross and fine motor skills that make cutlery, writing and sports harder, and chip away at confidence and independence.</p>
+        <p class="body-strong" style="margin-top:22px">Their brains race ahead but struggle to brake. Many also have a <b>coordination gap</b>: weaker motor skills that make cutlery, writing and sport harder.</p>
       </div>
       <div class="c2list">
         <div class="c2item"><h4>Rejection Sensitive Dysphoria</h4><p>Intense emotional pain, often felt as unbearable, with reactions out of proportion to the situation.</p></div>
@@ -2963,6 +2969,7 @@ const CONTENT = {
         <div class="c2item" style="border-color:var(--pa)"><h4>The missing piece: proprioception</h4><p>Many neurodivergent children seek deep pressure and resistance to regulate attention and emotions. Intentional proprioceptive play can improve coordination, body awareness and emotional regulation.</p></div>
       </div>
     </div>
+    ${ppWhy([["~1 in 2","children with ADHD also have a coordination disorder (DCD)"],["9,114","children seen for neurodevelopmental conditions at Singapore's public hospitals in 2025"]],"CHADD, Attention magazine (Aug 2024); Ministry of Health (Feb 2026).")}
     <p class="hmw">How can we support children with ADHD and their caregivers to help them complete daily routines more independently and with less conflict?</p>
     <div class="users">
       <div><small>Primary user</small><b>Children with ADHD, aged 7–12</b></div>
@@ -3062,7 +3069,7 @@ const CONTENT = {
   ${blk("TP Design Show 2026","The exhibition board",`
     <div class="showgrid">
       <div>
-        <p class="body-strong">The two-panel board I showed at the TP Design Show 2026, from the friction loop and research to all three games, activity cards and the app. Scroll the board, or click the overview to jump to a section.</p>
+        <p class="body-strong">My two-panel board from the TP Design Show 2026. Scroll it, or click the overview to jump to a section.</p>
         <figure class="show-photo"><div class="plate"><img class="zoom" src="assets/syn-show.jpg" alt="SynapSys board and prototypes on display at the TP Design Show 2026" loading="lazy"></div><figcaption>On display at the show, with the working prototypes on the table.</figcaption></figure>
         <button class="btn" style="margin-top:16px" data-board-full="synBoard">See both panels side by side <span class="arr">${arrow}</span></button>
       </div>
@@ -3075,9 +3082,9 @@ const CONTENT = {
   ${blk("Concept","Every child has something to say",`
     <div class="two">
       <div>
-        <p class="body-strong">Many non-speaking children have plenty to say, but no easy way to say it. Small changes to the day can feel huge, and everyday places like a busy hawker centre or the dentist can be overwhelming.</p>
+        <p class="body-strong">Many non-speaking children have plenty to say, but no easy way to say it. Small changes and busy places can feel overwhelming.</p>
         <p class="hmw">How might we help non-speaking children express themselves, cope with change and practise everyday life, at their own pace?</p>
-        <p class="body-strong" style="margin-top:26px">Lumi is a gentle friend on the tablet. It grows with the child, with three looks for different ages, and three ways to play: on their own, together with a grown-up, and a Grown-ups area for parents and teachers.</p>
+        <p class="body-strong" style="margin-top:26px">Lumi is a gentle friend on the tablet. It has three looks for different ages, and a locked area for parents and teachers.</p>
       </div>
       <div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-setup.jpg")}" alt="Lumi's welcome screen, where a grown-up picks Little ones, Primary or Teens, a difficulty and a colour theme" loading="lazy"></div>
     </div>
@@ -3087,7 +3094,8 @@ const CONTENT = {
       <div><b>Teens</b><small>Ages 13 to 18</small><p>A calmer, grown-up look with more words and choices, and life skills like ordering food or asking for help at work.</p></div>
     </div>`)}
   ${blk("Research","Nine everyday hurdles, and what Lumi does about each",`
-    <p class="body-strong">Before designing anything, I read up on what daily life is like for non-speaking children and young people with special needs. Nine hurdles came up again and again, and each one became part of Lumi. Pick one to see how.</p>
+    <p class="body-strong">I read up on daily life for non-speaking children. Nine hurdles kept coming up, and each one became part of Lumi.</p>
+    ${ppWhy([["1 in 150","people in Singapore are autistic"],["~30%","of autistic children stay minimally verbal, even after years of support"],["9,114","children seen for neurodevelopmental conditions at public hospitals in 2025, up 16% since 2021"]],"Ministry of Health (Jul 2023, Feb 2026); Tager-Flusberg &amp; Kasari, Autism Research (2013).")}
     <div class="lumi-res" id="lumiRes">
       <div class="lr-list" role="tablist" aria-label="Everyday hurdles">${LUMI_RES.map((r,i)=>`<button role="tab" aria-selected="${i===0}" type="button" style="--t:${r.tint};--k:${r.ink}"><i><svg viewBox="0 0 24 24" aria-hidden="true">${r.ic}</svg></i><b>${r.t}</b></button>`).join("")}</div>
       <div class="lr-panel">
@@ -3101,8 +3109,8 @@ const CONTENT = {
     </div>
     <div class="two lumi-ask">
       <div>
-        <p class="body-strong">No two children face the same mix, so Lumi asks first. A grown-up picks what Lumi should help with, and Lumi sets itself up: those parts show first, matching stories are suggested, and settings like softer sound or tap instead of drag switch on.</p>
-        <p class="body-strong" style="margin-top:18px">This also means Lumi isn't only for non-speaking children. A child who speaks but finds waiting, new places or getting dressed hard can use the parts that fit.</p>
+        <p class="body-strong">No two children face the same mix, so a grown-up picks what Lumi should help with, and Lumi sets itself up to match.</p>
+        <p class="body-strong" style="margin-top:18px">So Lumi isn't only for non-speaking children. Any child who finds waiting or new places hard can use the parts that fit.</p>
       </div>
       <div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-n-focus.jpg")}" alt="Grown-ups page asking What should Lumi help with, showing nine areas such as Communicating, Feelings and calm, and Going out and new places" loading="lazy"></div>
     </div>`)}
@@ -3131,26 +3139,26 @@ const CONTENT = {
         <figcaption><b>Learn with Lumi</b>Brush teeth, wash hands, get dressed, pack a bag or buy food at the canteen. Lumi shows each step first, then "Do it with me" helps if the child gets stuck.</figcaption></figure>
     </div>`)}
   ${blk("What's new","Lumi keeps growing",`
-    <p class="body-strong" style="margin-bottom:22px">Since the first public version, Lumi has grown a lot. It now fills the whole screen on any device, including phones held sideways. Tap any picture to zoom in.</p>
+    <p class="body-strong" style="margin-bottom:22px">Lumi now fills the whole screen on any device, even phones held sideways. Tap any picture to zoom in.</p>
     <div class="lumi-new">
       <figure><div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-n-title.jpg")}" alt="Lumi's title page with Play and Lumi's story buttons under a night sky" loading="lazy"></div>
-        <figcaption><small>Hello story</small><b>Lumi's own story</b>A title page with Lumi's story to watch any time. The child makes choices in it, then tells Lumi their name.</figcaption></figure>
+        <figcaption><small>Hello story</small><b>Lumi's own story</b>Lumi's own story, where the child makes choices and tells Lumi their name.</figcaption></figure>
       <figure><div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-n-bus.jpg")}" alt="Start of the Taking the bus story, asking the child whether they have taken the bus before" loading="lazy"></div>
-        <figcaption><small>6 new stories</small><b>More real-life stories</b>Taking the bus, the library, a vaccination, thunder, a swimming lesson and getting lost. Each asks how the child feels before and after, and ends with their own plan.</figcaption></figure>
+        <figcaption><small>6 new stories</small><b>More real-life stories</b>The bus, the library, a vaccination, thunder, swimming and getting lost, each ending with the child's own plan.</figcaption></figure>
       <figure><div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-n-games.jpg")}" alt="The Everyday games shelf with Sort it, Weather, Lumi's kitchen, Go shopping, Cross the road, Tell the time and Zip and button" loading="lazy"></div>
-        <figcaption><small>Games</small><b>Games on five shelves</b>More than 20 games sorted into Calm, Think, Everyday, Go! and With Lumi, each with Easy, Medium and Hard levels.</figcaption></figure>
+        <figcaption><small>Games</small><b>Games on five shelves</b>20+ games on five shelves, each with three levels.</figcaption></figure>
       <figure><div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-n-road.jpg")}" alt="Cross the road game, with Lumi waiting at the kerb by a zebra crossing" loading="lazy"></div>
-        <figcaption><small>Everyday skills</small><b>Practice for real life</b>Cross the road, go shopping with money, tell the time, zip and button, and cook in Lumi's kitchen.</figcaption></figure>
+        <figcaption><small>Everyday skills</small><b>Practice for real life</b>Crossing the road, shopping, telling time, zips and buttons, and cooking.</figcaption></figure>
       <figure><div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-n-music.jpg")}" alt="Music corner with five drum pads and a list of instruments" loading="lazy"></div>
-        <figcaption><small>Music corner</small><b>Six instruments to play</b>Drums, xylophone, piano, ukulele, kompang and shakers. Play freely, keep the beat, or copy Lumi's rhythm.</figcaption></figure>
+        <figcaption><small>Music corner</small><b>Six instruments to play</b>Six instruments, including the kompang. Play freely or copy Lumi's rhythm.</figcaption></figure>
       <figure><div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-n-rkitchen.jpg")}" alt="Rhythm kitchen game, chopping a carrot to the beat" loading="lazy"></div>
-        <figcaption><small>Rhythm kitchen</small><b>Cook to the beat</b>Lumi cooks in time with the music: tap on the beat to chop, one course at a time.</figcaption></figure>
+        <figcaption><small>Rhythm kitchen</small><b>Cook to the beat</b>Tap on the beat to chop, one course at a time.</figcaption></figure>
       <figure><div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-n-pet.jpg")}" alt="Pet corner with a puppy and buttons to feed, play, wash and sleep" loading="lazy"></div>
-        <figcaption><small>Pet corner</small><b>A pet to look after</b>Drag food to feed it, throw a toy to play, give it a bath with soap, shower and towel, then tuck it into bed.</figcaption></figure>
+        <figcaption><small>Pet corner</small><b>A pet to look after</b>Feed it, play with it, bathe it, and tuck it into bed.</figcaption></figure>
       <figure><div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-n-room.jpg")}" alt="Lumi's room with a grid of things to buy with stars" loading="lazy"></div>
-        <figcaption><small>Lumi's room</small><b>Decorate with stars</b>Drag things anywhere, make them bigger or smaller, turn them, and change the wallpaper and floor, with calm music playing.</figcaption></figure>
+        <figcaption><small>Lumi's room</small><b>Decorate with stars</b>Place, resize and turn things, and change the walls and floor.</figcaption></figure>
       <figure><div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("lumi-n-overview.jpg")}" alt="Grown-ups overview page with a getting started checklist and this week's numbers" loading="lazy"></div>
-        <figcaption><small>Grown-ups</small><b>Simpler for grown-ups</b>Opens on one overview with a getting-started checklist and progress in plain sentences. A one-page report can be shared with a teacher, therapist or doctor, and the area is locked with a password.</figcaption></figure>
+        <figcaption><small>Grown-ups</small><b>Simpler for grown-ups</b>One overview with progress in plain sentences, and a one-page report to share with a teacher or therapist.</figcaption></figure>
     </div>`)}
   ${blk("Design principles","Calm by design",`
     <p class="body-strong" style="margin-bottom:22px">Six rules every screen follows. Try each one.</p>
@@ -3215,7 +3223,7 @@ const CONTENT = {
   ${blk("Concept","Three questions, at a glance",`
     <div class="two">
       <div>
-        <p class="body-strong">Singapore's bus displays were added one at a time: the stop panel, the front sign, the screen on board, the interchange board. Each works on its own, but together they speak different languages, and they're hardest to read exactly when riders need them most.</p>
+        <p class="body-strong">Singapore's bus displays were added one at a time. Each works alone, but together they speak different languages, and fail exactly when riders need them most.</p>
         <p class="hmw">How might we redesign Singapore's bus displays to make travel information more intuitive, accessible and easy to understand for every passenger?</p>
       </div>
       <div class="plate" style="aspect-ratio:16/9"><img class="zoom" src="${IMG("bus-film-morning.jpg")}" alt="Illustrated morning at Blk 237: commuters read the redesigned stop panel as bus 3 pulls in" loading="lazy"></div>
@@ -3250,7 +3258,7 @@ const CONTENT = {
       </div>`).join("")}
     </div>`)}
   ${blk("Ride along","One trip on bus 3",`
-    <p class="body-strong" style="margin-bottom:22px">Follow service 3 from Blk 237 in Tampines. Pick a step to see each display on the real thing. Tap a glowing display to zoom in, then switch to see what it says when something changes.</p>
+    <p class="body-strong" style="margin-bottom:22px">Follow service 3 from Blk 237, Tampines. Tap a glowing display to zoom in, then see what it says when plans change.</p>
     <div class="bus-ride" id="busRide">
       <ol class="bus-steps" role="tablist" aria-label="Steps in the trip">${BUS_STEPS.map((st,i)=>`<li><button role="tab" type="button" aria-selected="${i===0}" data-i="${i}"><span>${i+1}</span>${st.t}</button></li>`).join("")}</ol>
       <div class="bus-view">
@@ -3374,7 +3382,8 @@ const CONTENT = {
         </ul>
       </div>
       <div class="plate" style="aspect-ratio:4/3"><img class="zoom" src="assets/cc-caregiver.jpg" alt="A caregiver at her dining table with medicine boxes, a care checklist and a phone full of notifications, her hand on her forehead, while her elderly mother rests in a wheelchair by the window" loading="lazy"></div>
-    </div>`)}
+    </div>
+    ${ppWhy([["1 in 7","older adults surveyed in Singapore is a caregiver"],["45%","of these caregivers care every single day"],["3 in 4","caregivers of people with mental health conditions feel exhausted"],["23.8%","of citizens will be 65 or older by 2030"]],"SMU ROSA caregiver brief (Mar 2025); SMU survey, cited by MOH (Sep 2025); Population in Brief 2022.")}`)}
   ${blk("Feel the difference","A caregiver's morning",`
     <div class="feel" id="ccm">
       <div class="ccm-wrap"><div class="ccm-phone"><div class="dvg ccm-g">${SB(0,"8:02")}<div class="ccm-scr" id="ccmScr"></div></div></div></div>
@@ -3389,7 +3398,7 @@ const CONTENT = {
       </div>
     </div>`)}
   ${blk("Redesign","CareCircle+, redesigned",`
-    <p class="body-strong" style="margin-bottom:6px">A calmer, clearer version of the app. Every screen leads with one main task, the person being cared for stays in view, and support for the caregiver sits right on the home screen.</p>
+    <p class="body-strong" style="margin-bottom:6px">A calmer version. Every screen leads with one task, the person being cared for stays in view, and caregiver support sits on the home screen.</p>
     <div class="proto-wrap">
       ${protoHTML("ccNewProto")}
       <div class="pinfo">
@@ -3485,7 +3494,7 @@ const CONTENT = {
       <div class="ctx-grid">${[1,2,3].map(i=>`<div class="plate"><img class="zoom" src="mandai/ctx-ulu-${i}.jpg" alt="Tray dispenser prototype at Ulu Ulu Safari Restaurant, photo ${i}" loading="lazy"></div>`).join("")}</div>
     </div>`)}
   ${blk("Digital prototype","Reimagining the Mandai app",`
-    <p class="body-strong">Alongside the dispenser, we redesigned the app's information architecture and ordering flow, and built a working prototype in Figma. Tap each step of the journey to see its wireframes.</p>
+    <p class="body-strong">We also redesigned the app's ordering flow and built a Figma prototype. Tap a step to see its wireframes.</p>
     <div class="flow" id="flow"></div>
     <div class="proto-wrap">
       ${protoHTML("mandaiProto")}
@@ -3498,7 +3507,7 @@ const CONTENT = {
       </div>
     </div>`)}
   ${blk("Physical model UI","The dispenser's screens",`
-    <p class="body-strong">Each restaurant got its own themed interface: a kitchen display for staff (orders, history and settings) and a guest-facing screen on the back showing ready and missed orders. Scroll sideways to see them all.</p>
+    <p class="body-strong">Each restaurant got its own themed interface: a kitchen display for staff, and a screen for guests showing ready and missed orders.</p>
     <div class="uitabs" role="group" aria-label="Jump to restaurant">
       <button class="chip" aria-pressed="true" data-g="ahmeng">Ah Meng Restaurant</button>
       <button class="chip" aria-pressed="false" data-g="ulu">Ulu Ulu Safari Restaurant</button>
@@ -3527,11 +3536,12 @@ const CONTENT = {
   ${blk("Concept","Coffee, without the shake",`
     <div class="two">
       <div>
-        <p class="body-strong">Coffee is a daily joy for many older adults, but hand tremors from Parkinson's make pouring and latte art frustrating. LAFEX pairs a device that holds the cup (LAF), a wristband that senses the tremor (CHRONO) and an app that guides each pour.</p>
+        <p class="body-strong">Hand tremors from Parkinson's turn a daily coffee into a struggle. LAFEX pairs a cup holder (LAF), a tremor-sensing wristband (CHRONO) and a guiding app.</p>
         <p class="note">Studio Project 2, set as a mock Electrolux brief for school.</p>
       </div>
       <div class="plate" style="aspect-ratio:1456/1088;background:#C9D8F1"><img class="zoom" src="lafex/render.jpg" alt="LAFEX redesign product render" loading="lazy"></div>
-    </div>`)}
+    </div>
+    ${ppWhy([["~8,000","people in Singapore live with Parkinson's"],["3 in 1,000","adults aged 50 and above have it"],["70–90%","of people with Parkinson's get a tremor"]],"Ministry of Health (2019); Parkinson's Foundation.")}`)}
   ${blk("Feel the difference","Pour a heart",`
     <div class="latte">
       <canvas id="latte" width="600" height="600" aria-label="Animated latte art pour"></canvas>
@@ -3566,7 +3576,7 @@ const CONTENT = {
       ${fcard("lafex-t3.jpg","Following the app","Pouring milk while the app guides each move.")}
     </div>`)}
   ${blk("Redesign","Redesigned for hands that shake",`
-    <p class="body-strong" style="margin-bottom:20px">Testing showed the base was too low to pour into, the cup had nowhere to live, and small controls asked for a steady pinch. These four principles shaped three new concepts.</p>
+    <p class="body-strong" style="margin-bottom:20px">Testing showed the base was too low, the cup had nowhere to live, and small controls needed a steady pinch. Four principles came out of it.</p>
     <div class="needs">
       ${[["Height","Bring the cup up to the pour. Testers found the base too low."],["Storage","Every part has a home. Testers asked where the cup goes."],["Grip","Whole-hand and forearm controls. Nothing needs a pinch."],["Feedback","Big type, a click you can feel, a buzz when it's done."]].map(([h,t])=>`<div class="c2item"><h4>${h}</h4><p>${t}</p></div>`).join("")}
     </div>
@@ -3579,11 +3589,11 @@ const CONTENT = {
   ${blk("The wearable","CHRONO, re-thought for putting on",`
     <p class="body-strong" style="margin-bottom:20px">Threading and tightening velcro is a fine-motor task, exactly what tremor makes hard. Two ways around it: a band that closes itself, or no band at all.</p>
     <div class="duo">
-      <figure class="c2item"><div class="plate" style="aspect-ratio:1000/427;background:#DCE3F1"><img class="zoom" src="lafex/chrono-band.jpg" alt="CHRONO band with magnetic clasp" loading="lazy"></div><h4 style="margin-top:14px">Option 1 · CHRONO Band, magnetic clasp</h4><p>Slip the hand through and let go. The magnet halves find each other, so there's nothing to thread. A pull loop big enough for a bent finger or a knuckle opens it again. Haptics carry the feedback: a tap to start, a steady pulse while pouring, a long buzz when the pattern is done.</p></figure>
-      <figure class="c2item"><div class="plate" style="aspect-ratio:1000/427;background:#DCE3F1"><img class="zoom" src="lafex/chrono-grip.jpg" alt="CHRONO grip sleeve on the pitcher" loading="lazy"></div><h4 style="margin-top:14px">Option 2 · CHRONO Grip, a sleeve on the pitcher</h4><p>Nothing to wear. Tremor sensing moves into the handle the user is already holding. A 4 cm, foam-soft grip needs far less squeeze than a thin steel handle. It clips onto the pitcher, charges on the base, and pairs with Concept A or C.</p></figure>
+      <figure class="c2item"><div class="plate" style="aspect-ratio:1000/427;background:#DCE3F1"><img class="zoom" src="lafex/chrono-band.jpg" alt="CHRONO band with magnetic clasp" loading="lazy"></div><h4 style="margin-top:14px">Option 1 · CHRONO Band, magnetic clasp</h4><p>Slip the hand in and let go: magnets close it, so there's nothing to thread. A big pull loop opens it again. Haptics replace the screen: a tap to start, a pulse while pouring, a long buzz when done.</p></figure>
+      <figure class="c2item"><div class="plate" style="aspect-ratio:1000/427;background:#DCE3F1"><img class="zoom" src="lafex/chrono-grip.jpg" alt="CHRONO grip sleeve on the pitcher" loading="lazy"></div><h4 style="margin-top:14px">Option 2 · CHRONO Grip, a sleeve on the pitcher</h4><p>Nothing to wear. Tremor sensing moves into a soft 4 cm handle that needs far less squeeze, clips onto the pitcher and charges on the base.</p></figure>
     </div>`)}
   ${blk("Redesign · App","The app, redesigned to match",`
-    <p class="body-strong" style="margin-bottom:6px">Bigger type, bigger targets and fewer choices per screen. The app follows the same six moves as the device, and CHRONO reports how steady the pour is in real time.</p>
+    <p class="body-strong" style="margin-bottom:6px">Bigger type, bigger targets, fewer choices. CHRONO shows how steady the pour is in real time.</p>
     <div class="proto-wrap">
       ${protoHTML("lafexNewProto")}
       <div class="pinfo">
@@ -3655,9 +3665,9 @@ const CONTENT = {
   ${blk("Concept","The shortest walk isn't always the kindest",`
     <div class="two">
       <div>
-        <p class="body-strong">Map apps send you the shortest way. In Singapore that is often a long stretch in full sun, when a covered linkway, a void deck or the shady side of a block was one street over.</p>
+        <p class="body-strong">Map apps send you the shortest way. In Singapore, that is often a long walk in full sun, with shade just one street over.</p>
         <p class="hmw">How might we help people walking in Singapore's heat find the shadiest way, for the exact minute they leave?</p>
-        <p class="body-strong" style="margin-top:26px">shade,where? is a walking planner that knows where the shadows are. Pick a start and an end, choose when you leave, and it casts real shadows from every building, tree and roof to find the walk that keeps you out of the sun.</p>
+        <p class="body-strong" style="margin-top:26px">shade,where? casts real shadows from every building, tree and roof for the minute you leave, then finds the walk with the least sun.</p>
       </div>
       <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("sw-plan.jpg")}" alt="shade,where? planning a walk from a hawker centre to Tampines MRT on a 3D map of Tampines, with the shade route in lilac and a time slider set to 3pm" loading="lazy"></div>
     </div>
@@ -3672,18 +3682,18 @@ const CONTENT = {
     <div class="two">
       <div>
         <ol class="pp-steps">
-          <li><b>Find the sun</b><p>Solar formulas give the sun's height and direction over Singapore for any minute, checked against four sun calculators.</p></li>
-          <li><b>Cast the shadows</b><p>Every 4 m of path fires a ray at the sun. If a block, tree or roof is in the way, that spot is shaded.</p></li>
-          <li><b>Weigh the walk</b><p>Sunny metres count as longer than shady ones. Gentle, Balanced or Avoid all sun decides how far it detours for shade.</p></li>
+          <li><b>Find the sun</b><p>Solar formulas give the sun's position for any minute, checked against four sun calculators.</p></li>
+          <li><b>Cast the shadows</b><p>Every 4 m of path fires a ray at the sun. If something blocks it, that spot is shaded.</p></li>
+          <li><b>Weigh the walk</b><p>Sunny metres count as longer than shady ones, so the route detours for shade.</p></li>
         </ol>
       </div>
       <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("sw-how.jpg")}" alt="How it works page showing the sun's path over a row of buildings from 7am to 7pm" loading="lazy"></div>
     </div>
     <div class="ig" data-ig="sw-day"></div>
     <h3 class="pp-h3">Built for how Singapore walks</h3>
-    ${ppCards([["Shelter","Void decks","A path under an HDB block counts as sheltered, so the planner happily cuts through void decks."],["7,222 roofs","Covered linkways","LTA's linkway outlines stand as 3D roofs and count as full shade at any hour, rain or shine."],["847 roofed","Overhead bridges","3,161 footbridge sections stand in 3D, and the ones with a roof count as shade on the way across."],["1 pm","The 1 pm problem","Singapore's sun peaks near 1pm, not noon, and almost overhead. Shadows shrink to a puddle, so only roofs really help."]])}`)}
+    ${ppCards([["Shelter","Void decks","Paths under HDB blocks count as sheltered, so routes cut through void decks."],["7,222 roofs","Covered linkways","LTA's linkways stand as 3D roofs: full shade at any hour."],["847 roofed","Overhead bridges","3,161 footbridge sections in 3D; the roofed ones count as shade."],["1 pm","The 1 pm problem","The sun peaks near 1pm, almost overhead. Shadows shrink to a puddle, so only roofs help."]])}`)}
   ${blk("In motion","Watch the shade move through a day",`
-    <p class="body-strong">“Play the day” runs the clock from sunrise to sunset. Shadows swing from west to east, shrink to almost nothing around 1pm, then stretch out again, and the route shading updates as they go.</p>
+    <p class="body-strong">“Play the day” runs from sunrise to sunset. Shadows swing west to east, almost vanish around 1pm, and the route updates as they move.</p>
     ${ppMotion("sw-day.mp4","sw-day.jpg","16/10","Play the day, recorded in the live app. Tampines, from 7am to 7pm.")}`)}
   ${blk("Inside the app","Plan it, compare it, walk it",`
     <p class="body-strong">Pick a screen to see how each part works.</p>
@@ -3714,14 +3724,14 @@ const CONTENT = {
     <h3 class="pp-h3">On a phone</h3>
     <div class="pp-duo">
       ${ppPhones([["swm-plan.jpg","Map first","On a phone the map comes first, then the trip panel below it."],["swm-panel.jpg","Trip panel","Start, end, leaving time and the route summary, all within thumb reach."]],true)}
-      <p class="body-strong">The same planner works on a phone. The 3D map sits on top and the trip controls stack underneath, with large touch targets and a 2D button for a flat view when you're on the move.</p>
+      <p class="body-strong">On a phone, the 3D map sits on top with the trip controls below, all within thumb reach.</p>
     </div>`)}
 `,
 "block-88": () => `
   ${blk("Concept","A whole HDB estate to grow up in",`
     <div class="two">
       <div>
-        <p class="body-strong">Block 88 is a 3D neighbourhood game set in Tembusu Estate, built for tablets. You play Mei, ten years old, who has lived at #12-34 for three months and knows exactly four of her neighbours by name.</p>
+        <p class="body-strong">A 3D tablet game set in an HDB estate. You play Mei, ten, who has lived at #12-34 for three months and knows four neighbours by name.</p>
         <p class="hmw">How might a game turn the people we pass at the void deck every day into neighbours we actually know?</p>
         <p class="body-strong" style="margin-top:26px">Every errand you run for a neighbour lights up a window on Blk 88. Light them all, and the whole block comes together for its 40th anniversary.</p>
       </div>
@@ -3735,10 +3745,10 @@ const CONTENT = {
   ${blk("In motion","A walk around Tembusu",`
     ${ppMotion("b88-tour.mp4","b88-tour.jpg","16/10","From the estate to the void deck, then planning the day, the estate menu, the My Singapore map and choosing who you are today.", {tablet:true})}`)}
   ${blk("Systems","Kindness that adds up",`
-    <p class="body-strong">Underneath the errands is a set of systems that reward getting to know people, not just finishing tasks.</p>
+    <p class="body-strong">The game rewards getting to know people, not just finishing tasks.</p>
     <div class="ig" data-ig="b88-loop"></div>
     <div class="ig" data-ig="b88-levels"></div>
-    ${ppCards([["Levels","Seven community levels","From New Neighbour to Heart of Tembusu. Each level opens bigger projects: a block clean-up, a get-together, a donation drive, a residents' meeting and Tembusu Day."],["Town projects","Kampung points","Points from helping fund estate upgrades the player votes on, including lift upgrading."],["Introductions","Who knows who","Bring together neighbours who have never spoken, and watch the web of friendships grow."],["Journal","Kindness journal","Fills in as you help, with six questions to ask a parent, grandparent or neighbour in real life, and their answers kept."],["Singapore, everywhere","Small local details","Kopi lingo, a lift that only stops at certain floors, festival decorations for Chinese New Year, Hari Raya, National Day, Deepavali and Christmas, and sudden rain showers."],["Made for tablets","Comfortable to play","Landscape layout, a thumb stick, guide arrows that can be switched off, and settings for look speed and camera distance. Progress stays on the device."]])}
+    ${ppCards([["Levels","Seven community levels","From New Neighbour to Heart of Tembusu. Each level opens a bigger project."],["Town projects","Kampung points","Helping earns points that fund upgrades the player votes for."],["Introductions","Who knows who","Introduce neighbours who have never spoken, and watch friendships grow."],["Journal","Kindness journal","Six questions to ask a grown-up in real life, with their answers kept."],["Singapore, everywhere","Small local details","Kopi lingo, a lift that skips floors, festival decorations and sudden rain."],["Made for tablets","Comfortable to play","Landscape, a thumb stick, optional guide arrows, and progress saved on the device."]])}
     <div class="ig" data-ig="b88-town"></div>`)}
   ${blk("Design system","The look and feel",`
     ${ppRender("b88-ds.jpg","Block 88 design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
@@ -3749,7 +3759,7 @@ const CONTENT = {
   ${blk("Concept","The people we lose stay in the places they leave",`
     <div class="two">
       <div>
-        <p class="body-strong">The Last Chair is a narrative game about grief, memory and the words we leave unsaid. Ten short stories go back to the places people leave behind, in homes across Singapore.</p>
+        <p class="body-strong">A narrative game about grief, memory and the words we leave unsaid: ten short stories set in homes across Singapore.</p>
         <p class="hmw">How might a game make space for grief, gently, without ever asking the player to win or to fail?</p>
         <p class="pp-quote">“The people we lose stay with us through the spaces, objects, words and memories they leave behind.”</p>
       </div>
@@ -3758,7 +3768,7 @@ const CONTENT = {
     ${ppCards([["Ten stories","Play in any order","Each one is complete on its own and says what it contains before you start."],["No pressure","No timers, no way to fail","Take as long as you need. Pause, skip a memory or leave at any time."],["Sound","Best with sound on","Each room has its own sounds, with subtitles for every one."]])}
     ${ppRender("lc-ad.jpg","Ad-style render of The Last Chair on a laptop and a tablet, with its four main features","Quiet, warm and dark, like a room at night.")}`)}
   ${blk("Ten homes","Ten homes, ten goodbyes",`
-    <p class="body-strong">Each story is a different kind of loss, from an expected goodbye to grieving someone who is still alive, or a home that is about to be torn down.</p>
+    <p class="body-strong">Each story is a different kind of loss, from an expected goodbye to a home about to be torn down.</p>
     <div class="pp-stories">${LC_STORIES.map(([t,w,d],i)=>`<div><small>${String(i+1).padStart(2,"0")}</small><b>${t}</b><em>${w}</em><p>${d}</p></div>`).join("")}</div>
     <div class="ig" data-ig="lc-map"></div>
     <div class="ig" data-ig="lc-who"></div>
@@ -3767,7 +3777,7 @@ const CONTENT = {
     ${ppCards([["01","Step into their world","Walk through a grandmother's house, a hawker stall, a bedroom or a park, as them, at your own pace."],["02","Read what they left","Their phone opens up as you explore: messages, voice notes, photos, and an unsent message that slowly makes sense."],["03","Click to remember","Any object plays a short memory film, from its oldest moment to today, with the sounds of the life around it."],["04","Choose how to remember","Decide how to read each memory and what to do with their last words. There are no right answers."]])}
     ${appHTML("lcShow","lap","16/10")}`)}
   ${blk("In motion","A memory, played back",`
-    <p class="body-strong">Tap an object and its memory plays as a short film. This one opens on the title, walks down the hallway, and plays “Her umbrella”, from its oldest moment to today.</p>
+    <p class="body-strong">Tap an object and its memory plays as a short film, from its oldest moment to today.</p>
     ${ppMotion("lc-film.mp4","lc-film.jpg","16/10","Recorded in the live game, with the sound off here. In the game, every sound has a caption.")}`)}
   ${blk("Made with care","Designing for people who are grieving",`
     <div class="two">
@@ -3792,9 +3802,9 @@ const CONTENT = {
   ${blk("Concept","Little hands, big helpers",`
     <div class="two">
       <div>
-        <p class="body-strong">Bitsy's Maker Bin is a tablet game for kindergarten children, ages 4 to 6, in Singapore, about reusing, recycling and making crafts from things at home. Bitsy the robot guides every step, out loud.</p>
+        <p class="body-strong">A tablet game for children aged 4 to 6 about reusing, recycling and making crafts from things at home. Bitsy the robot guides every step, out loud.</p>
         <p class="hmw">How might we help young children see their recycling bin as a box of materials, and learn to sort it right?</p>
-        <p class="body-strong" style="margin-top:26px">Children count what is in their bin at home, make something from it, learn where things really go, and watch their HDB neighbourhood grow with every good choice.</p>
+        <p class="body-strong" style="margin-top:26px">Count what's in the bin at home, make something from it, learn where things really go, and watch the neighbourhood grow.</p>
       </div>
       <div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("bit-home.jpg")}" alt="Bitsy's Maker Bin home screen with Bitsy greeting Mei over a pastel HDB neighbourhood strung with festive lights" loading="lazy"></div>
     </div>
@@ -3806,7 +3816,7 @@ const CONTENT = {
   ${blk("In motion","Bitsy at play",`
     ${ppMotion("bit-play.mp4","bit-play.jpg","1194/834","Recorded in the live game: Bitsy's hello, the home screen, making a pencil pot with a grown-up, and sorting a toilet roll tube.", {tablet:true})}`)}
   ${blk("What children learn","From caring to using less",`
-    <p class="body-strong">The learning is laid out as a path, and every game ties back to one simple habit children can repeat at home.</p>
+    <p class="body-strong">Every game ties back to one simple habit children can repeat at home.</p>
     <div class="ig" data-ig="bit-path"></div>
     <div class="ig" data-ig="bit-bin"></div>
     <div class="ig" data-ig="bit-matrix"></div>`)}
@@ -3815,13 +3825,13 @@ const CONTENT = {
   ${blk("Design system","The look and feel",`
     ${ppRender("bit-ds.jpg","Bitsy&#39;s Maker Bin design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Play with Bitsy right here",`
-    ${ppPlay("/play/bitsy/","bit-boot.jpg","1194/834","Play Bitsy's Maker Bin here","The real game, running live. Turn your sound on: Bitsy talks. The shared class garden and photo checking only work in the original Claude version, so they are hidden here.", {tablet:true})}`)}
+    ${ppPlay("/play/bitsy/","bit-boot.jpg","1194/834","Play Bitsy's Maker Bin here","The real game, live. Turn your sound on: Bitsy talks. The class garden and photo checks need the Claude version, so they're hidden here.", {tablet:true})}`)}
 `,
 "jiak-clean": () => `
   ${blk("Concept","Eat it clean, waste nothing",`
     <div class="two pp-jc">
       <div>
-        <p class="body-strong">“Jiak” means eat in Hokkien. Jiak Clean is a working prototype of a household food-rescue app. It makes the next right thing to do with your food fast, positive and local, and works even when your kitchen list is incomplete.</p>
+        <p class="body-strong">“Jiak” means eat in Hokkien. Jiak Clean is a working food-rescue app that tells you the one next thing to do with the food you have.</p>
         <p class="hmw">How might we help Singapore households use up the food they already have, before it ends up in the bin?</p>
         <p class="body-strong" style="margin-top:26px">Instead of a fridge spreadsheet, it leads with one rescue at a time: what to eat tonight, how to cook it, and what to freeze or share.</p>
       </div>
@@ -3839,7 +3849,7 @@ const CONTENT = {
   ${blk("In motion","One evening, one rescue",`
     <div class="pp-duo">
       ${ppMotion("jc-walk.mp4","jc-walk.jpg","540/1168","Recorded in the live prototype.",{phone:true})}
-      <p class="body-strong">A quick walk through the prototype: the first screen, tonight's rescue on Today, the kitchen list with its fridge health score, the rice planner, the fridge temperature check, this week's impact, and a rescue mission in kids mode.</p>
+      <p class="body-strong">The first screen, tonight's rescue, the kitchen list, the rice planner, this week's impact and a kids' rescue mission.</p>
     </div>`)}
   ${blk("Fits real homes","Designed for everyone in the kitchen",`
     <p class="body-strong" style="margin-bottom:22px">Singapore households are mixed: grandparents, helpers, teens and young children all touch the same fridge. Jiak Clean gives each of them a way in.</p>
@@ -3863,7 +3873,7 @@ const CONTENT = {
     <div class="pp-duo">
       <div>${ppPlay("/play/jiak-clean/","jc-phone.jpg","390/844","Try it here","",{phone:true})}</div>
       <div>
-        <p class="body-strong">The working prototype, running live. Tap “Explore with a sample kitchen” to jump in. Open it full screen on a laptop to see the guide with 27 journeys to walk through, from first open to the caregiver view.</p>
+        <p class="body-strong">The working prototype, live. Tap “Explore with a sample kitchen” to jump in.</p>
         <p class="pp-src">Sample data: foods, prices, people and partners are made up. Progress is kept in your browser only.</p>
       </div>
     </div>`)}
@@ -3872,7 +3882,7 @@ const CONTENT = {
   ${blk("Concept","Eat your way around Singapore",`
     <div class="two pp-jc">
       <div>
-        <p class="body-strong">Chope! is a phone game and food guide for tourists in Singapore. Its board game, Makan Around, turns a trip into a game: roll the dice, land on a real dish, then go to a hawker centre and eat it for real.</p>
+        <p class="body-strong">A phone game and food guide for tourists. Roll the dice, land on a real dish, then go to a hawker centre and eat it for real.</p>
         <p class="hmw">How might we help first-time visitors choose what to eat, order it with confidence, and follow the unwritten rules of a hawker centre?</p>
         <p class="body-strong" style="margin-top:26px">“Chope” is Singlish for saving a seat, usually with a packet of tissues. It's the first rule every visitor needs, so it's the name.</p>
       </div>
@@ -3880,11 +3890,11 @@ const CONTENT = {
     </div>
     ${ppRender("ch-ad.jpg","Ad-style render of Chope! on three phones, with its four main features","The board, Explore and the order card.")}`)}
   ${blk("Research","Who visits, and what trips them up",`
-    <p class="body-strong">I started with the numbers on who comes to Singapore and how long they stay, then gathered what first-timers struggle with at hawker centres. Every struggle became something the app does.</p>
+    <p class="body-strong">I started with who visits Singapore and for how long, then what trips first-timers up. Every struggle became a feature.</p>
     <div class="ig" data-ig="ch-visitors"></div>
     <div class="ig" data-ig="ch-struggles"></div>`)}
   ${blk("Where it started","From a food collection app to a board game",`
-    <p class="body-strong" style="margin-bottom:22px">The first concept was thirteen screens: a Makan-dex of dish characters to collect, trail passports, a kopi order game, a hawker survival guide and a card game. The Makan Around board game was screen 13. In the built app it moved to the front, and the dish cards, order card, Hawker 101 and kopi builder now sit around it.</p>
+    <p class="body-strong" style="margin-bottom:22px">The first concept had thirteen screens, with the board game last. In the built app, the board moved to the front and the best of the rest sits around it.</p>
     ${ppPhones([["chc-home.jpg","Home","A plan for the day: the next trail stop and what's good for breakfast."],["chc-dex.jpg","Makan-dex","Every dish is a character to collect, like Ah Kai the chicken rice."],["chc-dish.jpg","Dish card","Ah Kai's story, how to order him, and where to find him."],["chc-kopi.jpg","Kopi order game","Make the drink the customer wants, like kopi-o kosong."],["chc-trail.jpg","Trail passport","Five Chinatown hawker stops to stamp."],["chc-uncle.jpg","Show the uncle","A big order card in Chinese, Malay, English or Tamil."],["chc-basics.jpg","Survival guide","Level 0: what do locals do with an empty table?"],["chc-tray.jpg","Hawker Tray","A card game: build a balanced tray against Kopi Kaki."]],true)}`)}
   ${blk("How it plays","Roll, answer, eat, snap",`
     <div class="ig" data-ig="ch-round"></div>
@@ -3894,21 +3904,21 @@ const CONTENT = {
   ${blk("In motion","One round, start to finish",`
     <div class="pp-duo">
       ${ppMotion("ch-play.mp4","ch-play.jpg","540/1168","Recorded in the live app.",{phone:true})}
-      <p class="body-strong">A two-player game for a three-day trip: the loading screen, setting up the trip, two rolls and two questions, then time to eat, and the roti prata order card in Malay to show the uncle.</p>
+      <p class="body-strong">A two-player, three-day game: set up the trip, two rolls, two questions, then the roti prata order card in Malay.</p>
     </div>`)}
   ${blk("Playtest","Three tourists, three phones",`
     <p class="body-strong" style="margin-bottom:22px">I played Chope! as three visitors who match the biggest markets and needs from the research, each on a different phone size.</p>
     ${ppCards([["China · solo","Mei, 3 days","First visit. Plays against Kopi Kaki on an iPhone 13 set to Chinese."],["Indonesia · family","Ahmad, Siti and Rafi, 4 days","They eat halal. Three players share one Android phone."],["Australia · retiree","Margaret, 70, 2 days","A short stopover. Turns on bigger text on a small iPhone SE."]])}
     <div class="ig" data-ig="ch-fixes"></div>
-    <p class="body-strong" style="margin-top:28px">This was a walkthrough, not real tourists. Next, I want to watch visitors play at Maxwell or Lau Pa Sat, timing how long it takes to the first roll and seeing where they get stuck, and check every price, halal label and story with locals, STB, NEA and MUIS.</p>`)}
+    <p class="body-strong" style="margin-top:28px">This was a walkthrough, not real tourists. Next: watch visitors play at Maxwell or Lau Pa Sat, and check every price and halal label with STB, NEA and MUIS.</p>`)}
   ${blk("Design system","The look and feel",`
     ${ppRender("ch-ds.jpg","Chope! design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Play Chope! right here",`
     <div class="pp-duo">
       <div>${ppPlay("/play/chope/","ch-home.jpg","390/844","Play it here","",{phone:true})}</div>
       <div>
-        <p class="body-strong">The real app, running live. Tap “Play now” to start straight away, or “Plan a game for my trip” to set it up for your stay. Open it full screen on your phone for the best fit.</p>
-        <p class="pp-src">Asking Kopi Kaki your own questions, checking meal photos, photo stories and online group games only work in the original Claude version. Here, Kopi Kaki answers the suggested questions and any meal photo counts. Progress is kept in your browser only.</p>
+        <p class="body-strong">The real app, live. Tap “Play now” to start, or “Plan a game for my trip” to set it up for your stay.</p>
+        <p class="pp-src">Your own questions to Kopi Kaki, photo checks and online group games need the Claude version. Here, Kopi Kaki answers the suggested questions, and progress stays in your browser.</p>
       </div>
     </div>`)}
 `,
@@ -3934,7 +3944,7 @@ const CONTENT = {
   ${blk("Overview","One live queue for everyone in A&amp;E",`
     <div class="two">
       <div>
-        <p class="body-strong">During my UI/UX internship at Temasek Polytechnic's School of Engineering, I designed wireframes for Changi General Hospital's A&amp;E dynamic queue system, refined with A&amp;E staff. Here, I redesigned it as one connected system: screens for triage nurses, doctors and duty managers, a waiting-room TV, and a companion app for patients and their families.</p>
+        <p class="body-strong">In my internship I designed wireframes for CGH's A&amp;E queue system with A&amp;E staff. Here, I redesigned it as one connected system for nurses, doctors, managers, the waiting room and patients' families.</p>
         <p class="hmw">How might we make long A&amp;E waits feel clearer and fairer, while giving staff one live picture of the queue?</p>
       </div>
       <ul class="list" style="margin-top:0">
@@ -3943,7 +3953,8 @@ const CONTENT = {
         <li><span>Anyone who feels worse can tell the triage team from their phone</span></li>
         <li><span>Family can follow the visit without endless texting</span></li>
       </ul>
-    </div>`)}
+    </div>
+    ${ppWhy([["85%+","of P3 (minor) patients at NUHS in 2024 didn't need a hospital stay"],["+2.4 h","rise in the median wait for a ward bed in one month, Nov to Dec 2023"],["P1 → P3","seen by medical need, not arrival, so waits must be explained"]],"NUHS (Jun 2025); Ministry of Health (Jan 2024).")}`)}
   ${blk("Feel the difference","Who gets seen first?",`
     <div class="feel" id="qsim">
       <div class="q-board">
@@ -3982,7 +3993,7 @@ const CONTENT = {
   ${blk("Overview","Lung sounds, made readable",`
     <div class="two">
       <div>
-        <p class="body-strong">Also during my internship, I designed wireframes and data visualisations for the Lung FFT project. A vest with 11 sensors records a patient's lung sounds, and an FFT (Fast Fourier Transform) turns each recording into a frequency spectrum. In this redesign, I made those readings easier for doctors to check and trust, and added an app for patients to record at home.</p>
+        <p class="body-strong">In my internship I designed the Lung FFT screens: a vest with 11 sensors records lung sounds, and an FFT turns each into a frequency chart. This redesign makes readings easier for doctors to trust, and lets patients record at home.</p>
         <p class="hmw">How might we help doctors read complex lung sound data quickly, and understand why the AI suggests what it does?</p>
       </div>
       <ul class="list" style="margin-top:0">
@@ -3991,7 +4002,8 @@ const CONTENT = {
         <li><span>The AI shows its reasoning, and the doctor always decides</span></li>
         <li><span>Home recordings and symptom diaries reach the doctor's inbox</span></li>
       </ul>
-    </div>`)}
+    </div>
+    ${ppWhy([["22.9%","of deaths in Singapore in 2025 were from pneumonia, the second leading cause"],["11","sensors on the vest, each recording its own point on the lungs"]],"Ministry of Health, principal causes of death (2025).")}`)}
   ${blk("Feel the difference","Hear it, see it",`
     <div class="feel lsim-wrap">
       <div><canvas id="lsim" width="760" height="460" aria-label="Animated breath waveform and its frequency spectrum"></canvas></div>
@@ -4025,7 +4037,7 @@ const CONTENT = {
   ${blk("Overview","Oral practice students actually want to do",`
     <div class="two">
       <div>
-        <p class="body-strong">During my internship at Temasek Polytechnic's School of Engineering, I redesigned the logo, wireframes and dashboards for Oral Exam Mastery, an MOE oral-exam practice site, then ran user tests with students. This second version makes it more appealing for students of every age, and easier for teachers to manage each class.</p>
+        <p class="body-strong">In my internship I redesigned the logo, wireframes and dashboards for Oral Exam Mastery, an MOE oral-practice site, and tested them with students. This version appeals to every age and is easier for teachers to run.</p>
         <p class="hmw">How might we make oral practice something students look forward to, at every age, while giving teachers one place to manage each class?</p>
       </div>
       <ul class="list" style="margin-top:0">
@@ -4034,7 +4046,8 @@ const CONTENT = {
         <li><span>English and Chinese oral components, with pinyin support</span></li>
         <li><span>AI marks are checked by teachers before they're final</span></li>
       </ul>
-    </div>`)}
+    </div>
+    ${ppWhy([["15%","of the PSLE English grade is the oral exam"],["20 of 30","oral marks come from conversation, so Echo talks back"],["10","marks for reading aloud, so Echo coaches stress and pace"]],"SEAB PSLE English Language syllabus.")}`)}
   ${blk("Feel the difference","Clap it out",`
     <div class="feel" id="clap">
       <div class="cl-stage">
@@ -4066,7 +4079,7 @@ const CONTENT = {
 "internship": () => `
   ${blk("Overview","Five months, four highlights",`
     <div class="two">
-      <p class="body-strong">At Temasek Polytechnic's School of Engineering, I created user-centred interfaces for teachers, students, doctors and nurses, balancing usability with technical feasibility. I worked with engineers and developers to turn design systems into working web interfaces, then tested and iterated for clarity and accessibility.</p>
+      <p class="body-strong">I designed interfaces for teachers, students, doctors and nurses, built them with engineers and developers, then tested for clarity and accessibility.</p>
       <ul class="list" style="margin-top:0">
         <li><span>Wireframes and dashboards for Oral Exam Mastery and CGH A&amp;E systems</span></li>
         <li><span>Data visualisations for complex medical data from Lung FFT projects</span></li>
@@ -4182,7 +4195,7 @@ function initQueueSim(){
     $("#qClock").textContent = fmt(clock);
     $(".q-read",root).textContent = mode==="fcfs"
       ? (p1.length ? "First come, first served: the P1 patient waits behind everyone who arrived earlier, even with a life-threatening condition." : "First come, first served: everyone waits in arrival order. Add a P1 patient to see what goes wrong.")
-      : (p1.length ? "By medical priority: the P1 patient goes straight to the front and is seen now. Others wait a little longer, which is why every screen in the system explains the order." : "By medical priority: P1 first, then P2, then P3, each in arrival order. Add a P1 patient to see them go straight to the front.");
+      : (p1.length ? "By medical priority: P1 goes straight in. Others wait a little longer, so every screen explains the order." : "By medical priority: P1 first, then P2, then P3, each in arrival order. Add a P1 patient to see them go straight to the front.");
   };
   $$(".q-ctrl [data-p]", root).forEach(b => b.onclick = () => { clock += 4; Q.push({q:"A"+(seq++), p:+b.dataset.p, t:clock}); if (Q.length > 9){ const o = order(); Q = Q.filter(x=>x!==o[0]); } render(); });
   $(".q-ctrl [data-act=serve]", root).onclick = () => { const o = order(); if (o.length){ Q = Q.filter(x=>x!==o[0]); clock += 6; } render(); };
@@ -4224,7 +4237,7 @@ function initLungSim(){
   const TXT = {normal:"Healthy breath sounds spread their energy smoothly across 200–800 Hz, rising and falling with each breath.",
     wheeze:"A wheeze is a musical, continuous sound, so it shows up as a sharp, narrow peak around 400 Hz while breathing out.",
     crackle:"Crackles are short pops near the end of breathing in. Each one adds a brief burst of higher-frequency energy."};
-  const LOOSE = " With a loose sensor, rumble and rustle swamp the signal. The spectrum looks busy, but it's noise, not a lung change. That's why the dashboard flags signal quality before anyone reads it.";
+  const LOOSE = "With a loose sensor, rumble and rustle swamp the signal. It looks busy, but it's noise, so the dashboard flags signal quality first.";
   const read = () => { $("#lsRead").textContent = TXT[type] + (loose ? LOOSE : ""); };
   const playhead = () => playing && ac ? ((ac.currentTime - acStart) % DUR + DUR) % DUR : ((performance.now()-t0)/1000) % DUR;
   const startAudio = () => { const at = playhead(); if (src){ try{ src.stop(); }catch(e){} }
@@ -4301,8 +4314,8 @@ function initTrayGame(){
   const cup = d => `<svg viewBox="0 0 40 40" class="tg-drink" aria-hidden="true"><circle cx="20" cy="21" r="18" fill="rgba(0,0,0,.15)"/><circle cx="20" cy="20" r="18" fill="#F5F0E6"/><circle cx="20" cy="20" r="13" fill="${d[0]}"/><circle cx="17" cy="17" r="6" fill="${d[1]}" opacity=".7"/><path d="M36 14 q6 6 0 12" fill="none" stroke="#F5F0E6" stroke-width="4"/></svg>`;
   let mode = "before", base = 124, trays = [], target = null, lock = false; const sc = {before:[0,0], disp:[0,0]};
   const stage = $(".tg-stage", root), counter = $("#tgCounter");
-  const TXT = {before:"Some dishes look almost the same, sometimes two guests order exactly the same meal, and none of the trays are labelled, so guests have to guess, or crowd the counter asking staff in a language they may not share.",
-    disp:"The dispenser shows each order number on its tray and slides the right one out, so guests grab it first time, even when someone else ordered the exact same meal."};
+  const TXT = {before:"Dishes look alike, two guests may order the same meal, and trays aren't labelled. Guests guess, or crowd the counter.",
+    disp:"The dispenser shows each order number on its tray and slides the right one out, so guests grab it first time."};
   const shuffle = a => a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
   const num = n => String(n).padStart(4,"0");
   const round = () => { lock = false;
@@ -4336,7 +4349,7 @@ function initClap(){
     $("#clBubble").textContent = mode==="beats" ? "Clap once for each beat!" : "How many claps is this word?"; };
   const score = () => { $("#clA").textContent = sc.plain[0]+" / "+sc.plain[1]; $("#clB").textContent = sc.beats[0]+" / "+sc.beats[1]; };
   const TXT = {plain:"Without help, you have to guess where one sound ends and the next begins. Most people clap the wrong number of beats on long words.",
-    beats:"Echo splits the word into beats and makes the stressed one bigger, so children can hear it, see it and clap it, the way teachers do in class."};
+    beats:"Echo splits the word into beats and makes the stressed one bigger, so children can hear, see and clap it."};
   const finish = () => { const d = W[wi], n = d.s.length; const ok = taps === n;
     if (!tried){ sc[mode][1]++; if (ok) sc[mode][0]++; tried = true; score(); }
     stars(ok ? 3 : Math.abs(taps-n)===1 ? 2 : 1);
@@ -4363,9 +4376,9 @@ function initKit(){
   const PAL = ["#F4A6C4","#FBE08C","#A9DCC3","#8FC5EE","#C7A7EC"], INK = "#24306B";
   const star = on => `<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${on?"#FFC531":"#E7E2D3"}" stroke="${on?"#D99A00":"#D6D0BE"}" stroke-width="1.2"/></svg>`;
   const stars = n => { $("#kitStars").innerHTML = [0,1,2].map(i=>star(i<n)).join(""); };
-  const INFO = {dot:{lbl:"Marble drops", skill:"Impulse control & working memory", txt:"Drag the magnetic pen to guide the marble along the dots, following the glowing dot ahead. Rush it and the magnet loses the marble, which drops back to the last purple checkpoint. Six paths, from a gentle wave to a spiral. Tap Next path for a new one."},
-    snap:{lbl:"Sticks that didn't match", skill:"Spatial reasoning & two-handed coordination", txt:"Complete the symmetry: the left half is already built. Tap one peg, then the next, to snap a stick that mirrors the left side. Comparing both sides builds spatial reasoning and pattern recognition. Tap the card to flip it and see the sticks you need."},
-    thread:{lbl:"Threading mistakes", skill:"Pincer grip & patience", txt:"Follow the pattern card from the dark dot and tap the holes in order to thread the tile. A wrong hole pulls the last stitch back out, so mistakes are a chance to slow down, not to give up. Tap the card to flip it."}};
+  const INFO = {dot:{lbl:"Marble drops", skill:"Impulse control & working memory", txt:"Guide the marble along the dots with the magnetic pen. Rush it and the marble drops back to the last checkpoint. Six paths, from a wave to a spiral."},
+    snap:{lbl:"Sticks that didn't match", skill:"Spatial reasoning & two-handed coordination", txt:"Complete the symmetry: tap one peg, then another, to mirror the left side. Tap the card to see the sticks you need."},
+    thread:{lbl:"Threading mistakes", skill:"Pincer grip & patience", txt:"Tap the holes in the card's order to thread the tile. A wrong hole undoes the last stitch: a chance to slow down, not give up."}};
   let game = "dot", cleanupGame = null, count = 0;
   const pt = e => { const r = svg.getBoundingClientRect(); return [(e.clientX-r.left)*420/r.width, (e.clientY-r.top)*300/r.height]; };
   const setCount = n => { count = n; $("#kitA").textContent = n; };
@@ -4603,7 +4616,7 @@ function initTangle(){
       s += `</g>`; tang.bon = 0; }
     svg.innerHTML = s; $("#btA").textContent = tang.basket; $("#btB").textContent = tang.bon;
     $("#btRead").textContent = mode==="basket" ? (tang.basket ? "Every strand runs to your hook across the same space, so they cross and knot. "+tang.basket+(tang.basket===1?" tangle":" tangles")+" already, and it gets worse every time the basket is moved." : "With one or two balls it's fine. Add more yarn, or shake it, and watch the strands start to cross.")
-      : "Each ball sits in its own compartment and feeds out through its own hole, so strands never cross. Drag the tier to swivel it and reach any colour.";
+      : "Each ball has its own compartment and hole, so strands never cross. Drag the tier to reach any colour.";
     $("#btShake").textContent = mode==="basket" ? "Shake it" : "Swivel the tier"; };
   $("#btAdd").onclick = () => { if (n < 5){ n++; draw(); } };
   $("#btShake").onclick = () => { if (mode==="basket"){ place(); draw(); } else { const r0 = rot, t0 = performance.now(); const go = now => { const k = Math.min(1,(now-t0)/700); rot = r0 + 72*(1-Math.pow(1-k,3)); draw(); if (k<1) requestAnimationFrame(go); }; requestAnimationFrame(go); } };
@@ -4877,8 +4890,8 @@ const INIT = {
 },
 "carecircle"(){
   initMorning();
-  const RA = [["Sign up","A warm welcome with one clear way in: email, Google or biometrics. Users can hide their email behind a private relay, and a plain-language note explains how data is protected under the PDPA."],
-    ["Home","Greets Jane by name and shows who she's caring for. The daily MoodDot check-in leads, followed by quick actions, the next appointment and progress on today's care plan."],
+  const RA = [["Sign up","One clear way in: email, Google or biometrics, with a plain note on how data is protected."],
+    ["Home","Greets Jane and shows who she cares for. The MoodDot check-in leads, then the next appointment and today's care plan."],
     ["Services","Everything in two groups: 'Look after yourself' for mood, progress, peer support and live chat, and 'Get things done' for booking, wayfinding, workshops and rewards."],
     ["Profile","The care recipient, the care team (with an invite for family members), personal details and settings like biometric login and PDPA privacy controls."],
     ["MoodDot","A 30-second check-in: pick a mood face and how long you slept, see the last 7 days at a glance, and earn 5 points for saving."],
@@ -4929,7 +4942,7 @@ const INIT = {
   bs.forEach(b => b.onclick = () => { auto = false; set(+b.dataset.i); });
   const iv = setInterval(()=>{ if (auto && !reduce) set((cur+1)%3); }, 3600);
   onCleanup(()=>clearInterval(iv));
-  const S = [["Sign In","Users sign in when they enter the app to unlock personalised features. Logging in lets them earn rewards and track progress, with settings, FAQs and notifications close at hand."],
+  const S = [["Sign In","Sign in to unlock rewards and progress, with settings, FAQs and notifications close at hand."],
     ["Dashboard","Favourite restaurants, check opening hours and see crowd indicators straight from the dashboard, with a search bar to find a specific restaurant."],
     ["Local Cuisine","Tourists are often unsure what to order. Swipeable flashcards of local dishes help them learn what to expect and decide."],
     ["Ordering","Order in the app with ingredient customisation, for a quick, hassle-free meal without queuing."],
@@ -5024,9 +5037,9 @@ const INIT = {
   const sIv = setInterval(()=>{ if (sAuto && !reduce) sset((si+1)%SCN.length); }, 4500); onCleanup(()=>clearInterval(sIv));
   // redesigned app
   const NA = [["Welcome","Sign in with a phone number and a 6-digit code, so there's no password to remember. One large button for returning users, one for new ones."],
-    ["Home","A greeting, live status for LAFEX and CHRONO, and one big Make a latte button. Last time's pattern is one tap away, with a reminder to rest an elbow before pulling the bar."],
-    ["Choose a pattern","Six patterns as large cards with clear icons and a three-dot difficulty, from Easy to Practice. The selected card is outlined and ticked, and the button names the choice."],
-    ["Pouring","One instruction at a time in large type, a 3-step progress bar and an animation of the pull. CHRONO shows how steady the hand is while LAF smooths the shakes."],
+    ["Home","Live status for LAFEX and CHRONO, one big Make a latte button, and a reminder to rest an elbow."],
+    ["Choose a pattern","Six patterns as large cards with a three-dot difficulty. The chosen card is ticked."],
+    ["Pouring","One instruction at a time, a 3-step progress bar, and CHRONO showing how steady the hand is."],
     ["Done","A clear result with pour time and shakes smoothed, then simple next steps: share with the community, make another or go home."],
     ["My devices","LAFEX and CHRONO at a glance: connection, pour speed and battery life in days, with a shortcut to call a family member for help."]];
   $("#nChips").innerHTML = NA.map((a,i)=>`<button class="chip" aria-pressed="false" data-i="${i}">${a[0]}</button>`).join("");
@@ -5034,9 +5047,9 @@ const INIT = {
   const nP = initProto("lafexNewProto", NA.map((a,i)=>({src:SC(`lr${i+1}`), label:a[0]})), {onChange: nShow});
   $$("#nChips .chip").forEach(c => c.onclick = () => nP.go(+c.dataset.i, true));
   // concepts
-  const CON = [{img:"concept-rise.jpg", n:"LAFEX Rise", lead:"The original form, lifted. The cup comes up to elbow height so a seated user pours with a bent arm braced on the table, not a raised, shaking one.", tags:["Height","Grip","Feedback"],
+  const CON = [{img:"concept-rise.jpg", n:"LAFEX Rise", lead:"The cup comes up to elbow height, so a seated user pours with an arm braced on the table.", tags:["Height","Grip","Feedback"],
       f:[["Telescoping column","Raises the cup 12 cm. Push down on the top with a flat palm to step through three locked heights."],["Tilted, high-contrast screen","Angled up toward a seated eye line. One pattern at a time, in type large enough to read without glasses."],["Palm dial","A 7 cm knurled dial replaces small buttons. Turn with the whole hand, press to start, with a firm click at each step."],["Weighted, non-slip foot","A heavy wide base with a silicone ring, so a bump from a shaking hand doesn't move the cup."],["Catch-lip cradle","A wider bowl guides the cup into place and catches drips from a wobbly pour."]]},
-    {img:"concept-pour.jpg", n:"LAFEX Pour", lead:"Testing showed the pour itself is the hardest moment. Here the user never lifts the milk: the pitcher rides in a hinged cradle and the arm only pulls.", tags:["Height","Grip","Steadiness"],
+    {img:"concept-pour.jpg", n:"LAFEX Pour", lead:"The pour is the hardest moment, so the user never lifts the milk: the pitcher rides in a cradle and the arm only pulls.", tags:["Height","Grip","Steadiness"],
       f:[["Padded pull-bar","A wide, cork-soft bar you hook with the whole hand or forearm. Pull toward you to tip; let go and it springs back upright."],["Damped hinge","Caps how fast the pitcher can tip, so a tremor or sudden jerk can't slosh milk. The flow stays a thin, even stream."],["LAF cup dock","The cup sits right under the spout. LAF moves it in the pattern's path while the milk flows."],["Lift-out pitcher with fill line","Fill it at the sink, drop it in the cradle. A marked line shows one cup's worth of milk."],["Low, wide body","Everything happens at table level, with the screen facing the user from the front."]]},
     {img:"concept-nest.jpg", n:"LAFEX Nest", lead:"Answers \"where does the cup go?\" Keeps the drawer idea but makes it easy to open with stiff fingers, with a shaped home for every part.", tags:["Storage","Grip","Feedback"],
       f:[["Full-height loop handle","Hook it with any finger, a knuckle or the side of the hand. Light pull force, soft-close on the way back."],["Shaped pockets","The cup, CHRONO band and cloth each drop into a moulded spot. The band charges in its slot, so there's no cable."],["Magnetic snap dock","Set the cup down roughly and a magnet pulls it to centre with a click you can feel."],["One-piece, wipe-clean top","No seams around the cradle for spilt milk to collect in. One wipe with the stored cloth."]]}];
@@ -5092,11 +5105,11 @@ const INIT = {
   initSmap("aeMap");
   initQueueSim();
   initDx("aeDx", [
-    {src:"ae-d-triage.webp", who:"Triage nurse", t:"Triage intake", url:"cgh-ae / intake", d:"Scan the patient's wristband, choose P1, P2 or P3, and add them to the queue. Capacity settings, like how many doctors are on duty, keep every wait estimate honest."},
-    {src:"ae-d-reassess.webp", who:"Triage nurse", t:"Reassessment desk", url:"cgh-ae / reassessment", d:"Patients who report feeling worse come first, with their pain score over time and what they said in the app. Nurses log new observations and can change the priority on the spot."},
+    {src:"ae-d-triage.webp", who:"Triage nurse", t:"Triage intake", url:"cgh-ae / intake", d:"Scan the wristband, choose P1, P2 or P3, and add them to the queue. Staffing settings keep wait estimates honest."},
+    {src:"ae-d-reassess.webp", who:"Triage nurse", t:"Reassessment desk", url:"cgh-ae / reassessment", d:"Patients who feel worse come first, with their pain score over time. Nurses can change the priority on the spot."},
     {src:"ae-d-doctor.webp", who:"Doctor", t:"Doctor queue", url:"cgh-ae / queue", d:"The current patient, who's next with a one-tap Call in, and the full queue sorted by priority, then arrival time, with live wait estimates."},
-    {src:"ae-d-manager.webp", who:"Duty manager", t:"Department overview", url:"cgh-ae / overview", d:"The whole department at a glance: patients waiting by hour with a forecast, zones that need attention, and quick actions like paging the on-call doctor or posting a notice to the TV and patient app."},
-    {src:"ae-d-tv.webp", frame:"tv", who:"Waiting room", t:"Waiting-area TV", url:"cgh-ae / waiting-display", d:"Big, readable numbers for who's being called and to which room, who's up next and the estimated wait for each priority, plus three plain reminders for everyone waiting."}
+    {src:"ae-d-manager.webp", who:"Duty manager", t:"Department overview", url:"cgh-ae / overview", d:"The whole department at a glance: waiting by hour with a forecast, busy zones, and one-tap pages and notices."},
+    {src:"ae-d-tv.webp", frame:"tv", who:"Waiting room", t:"Waiting-area TV", url:"cgh-ae / waiting-display", d:"Big numbers for who's called to which room, who's next, and the wait for each priority."}
   ]);
   initApp("ae", [
     ["ae-p-arrive-full.webp","Before you come","Shows how busy A&E is right now and suggests faster options for non-emergencies. A 995 button stays at the top for real emergencies.",1],
@@ -5119,7 +5132,7 @@ const INIT = {
   initSmap("lfMap");
   initLungSim();
   initDx("lfDx", [
-    {src:"lf-d-point.webp", who:"Doctor", t:"Point detail", url:"lung-evaluation / point", d:"One recording at a single point: the lung map on the left, the frequency spectrum in the middle and the diagnosis panel on the right. A warning appears when signal quality is too low to trust."},
+    {src:"lf-d-point.webp", who:"Doctor", t:"Point detail", url:"lung-evaluation / point", d:"One recording: the lung map, the frequency spectrum and the diagnosis panel, with a warning when the signal is too weak to trust."},
     {src:"lf-d-all.webp", who:"Doctor", t:"All 11 points", url:"lung-evaluation / all-points", d:"A small spectrum for every recording point, colour-coded by signal quality, so doctors can spot which points need a closer look."},
     {src:"lf-d-compare.webp", who:"Doctor", t:"Compare two recordings", url:"lung-evaluation / compare", d:"Two recordings side by side, with the change in band energy at every point and both spectra overlaid."},
     {src:"lf-d-ai.webp", who:"Doctor", t:"Why the AI predicted this", url:"lung-evaluation / ai-explained", d:"Which sensors and frequency bands most influenced the AI's suggestion, what data it couldn't trust, and a simple question: do you agree?"},
@@ -5127,7 +5140,7 @@ const INIT = {
     {src:"lf-d-patient.webp", who:"Doctor", t:"Patient home data", url:"lung-evaluation / patient", d:"30 days of symptom diary, band energy and sensor contact for one patient, with a plain-language note the doctor sends back to the patient's app."}
   ]);
   initApp("lfS", [
-    ["lf-s-unsent.webp","Recording couldn't send","If the phone is offline, the recording stays safe on the phone and is sent to Dr. Lim's team as soon as it's back online, so the patient never has to record again."],
+    ["lf-s-unsent.webp","Recording couldn't send","Offline? The recording waits on the phone and sends itself later, so the patient never records twice."],
     ["lf-s-vest.webp","Vest disconnected","If the vest drops its connection mid-recording, the app pauses, gives three simple fixes, and continues from the same step instead of starting over."],
     ["lf-s-empty.webp","No results yet","Before the first result arrives, the app explains what will appear and when, and points to the one thing to do now: set up the vest."]
   ]);
@@ -5171,7 +5184,7 @@ function viewWorks(){
   return `<section class="wrap p-head">
     <p class="eyebrow">2023 – 2026</p>
     <h1 style="margin-top:10px">My Works</h1>
-    <p class="lead">Eighteen projects across games, product, service and interface design, from industry studios with Mandai and the Singapore Air Force Museum, to internship work with Changi General Hospital and the Ministry of Education, to studio briefs and the passion projects I design and build myself.</p>
+    <p class="lead">Eighteen projects across games, products, services and apps: industry work with Mandai and the Air Force Museum, internship work for CGH and MOE, and passion projects I design and build myself.</p>
   </section>
   <section class="wrap" style="padding-top:44px">
     <div class="grid">${PROJECTS.map(p=>card(p)).join("")}</div>
