@@ -792,8 +792,9 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .appslide{aspect-ratio:1440/710;background:#E9E6E0}
 .appslide img{object-fit:contain}
 /* phone prototype */
-.proto-wrap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(24px,5vw,64px);align-items:center;background:var(--plate);border-radius:var(--r-lg);padding:clamp(24px,4vw,52px);margin-top:14px}
-.proto-wrap.flip{grid-template-columns:minmax(0,1fr) auto}
+.proto-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(22px,3vw,36px);justify-items:center;align-items:start;background:var(--plate);border-radius:var(--r-lg);padding:clamp(24px,4vw,52px);margin-top:14px}
+.proto-wrap.flip{grid-template-columns:minmax(0,1fr)}
+.proto-wrap.flip .pstage{order:0!important}
 .pstage{display:flex;align-items:center;gap:clamp(8px,2vw,18px);justify-content:center;touch-action:pan-y}
 .pnav{width:42px;height:42px;flex:none;border-radius:50%;border:1px solid var(--line);background:var(--chip);color:var(--ink);cursor:pointer;font-size:24px;line-height:1;display:grid;place-items:center;padding-bottom:3px;transition:transform .2s}
 .pnav:hover{transform:scale(1.08)}
@@ -1258,6 +1259,18 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .ig-earn span{display:inline-flex;align-items:center}
 .ig .ig-note svg.ic,.ig .ig-earn>b svg.ic{width:1.25em;height:1.25em;vertical-align:-.3em}
 .ig .ig-facts svg.ic{width:46px;height:46px;margin-right:4px}
+.bp{cursor:pointer;outline:none}
+.bp .bp-ring{transition:stroke-width .2s,fill .2s}
+.bp:hover .bp-ring,.bp:focus-visible .bp-ring{stroke-width:7}
+.bp.on .bp-ring{stroke-width:8;fill:color-mix(in srgb,var(--pa) 22%,var(--bg,#fff))}
+.ig-tip{margin:6px 0 0;font-size:15px;color:var(--ink-2)}
+.bp-card{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;margin:8px auto 0;max-width:640px;padding:18px 22px;border-radius:20px;background:color-mix(in srgb,var(--pa) 12%,transparent);border:2px solid color-mix(in srgb,var(--pa) 45%,transparent)}
+.bp-card .bp-ic svg.ic{width:64px;height:64px}
+.bp-card small{display:block;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pa)}
+.bp-card b{display:block;font-size:20px;margin:4px 0 6px}
+.bp-card p{margin:0;font-size:16px;line-height:1.5;color:var(--ink-2)}
+.bp-card .bp-games{margin-top:8px;font-size:14px;font-weight:600}
+
 .ig .ig-flow.jc svg.ic{width:54px;height:54px}.ig .ch-six svg.ic{width:58px;height:58px}.ig .ig-mx svg.ic{width:42px;height:42px}.ig .ig-stars svg.ic{width:52px;height:52px}.ig .ig-cycle svg.ic{width:40px;height:40px}.ig .ig-people svg.ic{width:44px;height:44px}
 .ig-earn{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:22px auto 0;max-width:860px}
 .ig-earn>b{font-family:var(--display);font-size:16px;margin-right:6px}
@@ -1422,6 +1435,10 @@ footer h4{font-family:var(--display);font-weight:600;font-size:20px;margin:0 0 1
 .proto-wrap.wide{grid-template-columns:minmax(0,1fr);justify-items:stretch}
 .proto-wrap.wide .pstage{width:100%}
 .proto-wrap.wide .pinfo{width:100%}
+.proto-wrap .pinfo{order:-1;width:100%;max-width:none}
+.proto-wrap .pstage{order:0}
+.solo{max-width:820px}
+.pp-phones figure{display:flex;flex-direction:column}.pp-phones figcaption{order:-1;margin:0 0 14px}
 .proto-wrap.wide .pdesc{max-width:70ch;min-height:3.2em}
 .pstage .device.tab,.pstage .device.lap{flex:1 1 auto;width:auto;max-width:900px;transform:perspective(2600px) rotateX(calc(var(--rx) * .3)) rotateY(calc(var(--ry) * .3))}
 .device.tab{padding:clamp(9px,1.3vw,15px);border-radius:clamp(20px,2.6vw,34px)}
@@ -2174,7 +2191,7 @@ const SB = (tab, time="9:41") => tab
   ? `<div class="sb tb" aria-hidden="true"><b>${time}</b><span class="sb-day">Tue 9 Jan</span><i></i>${SB_ICON.wifi}<span class="sb-pc">100%</span>${SB_ICON.bat}</div>`
   : `<div class="sb" aria-hidden="true"><b>${time}</b><i class="sb-isl"></i><span>${SB_ICON.sig}${SB_ICON.wifi}${SB_ICON.bat}</span></div>`;
 /* some mockups were exported with their own status bar: crop it off (fraction of the screen width) so only one bar shows */
-const SB_CROP = (() => { const c = {"jc-phone.jpg":.11, "jc-s-today.jpg":.125, "jc-s-fridge.jpg":.125, "jc-s-putaway.jpg":.125, "jc-s-temp.jpg":.125, "jc-s-lst.jpg":.125, "jc-s-rice.jpg":.125, "jc-s-learn.jpg":.125, "jc-s-impact.jpg":.125, "jc-s-welcome.jpg":.125, "jc-s-simple.jpg":.125, "jc-s-helper.jpg":.125, "jc-s-kids.jpg":.125, "jc-walk.jpg":.11, "c57-1.jpg":.085, "c57-2.jpg":.085, "c58-1.jpg":.06, "c59-1.jpg":.085, "c59-2.jpg":.025, "c60-1.jpg":.025,
+const SB_CROP = (() => { const c = {"jc-phone.jpg":.11, "jc-s-today.jpg":.125, "jc-s-fridge.jpg":.125, "jc-s-putaway.jpg":.125, "jc-s-temp.jpg":.125, "jc-s-lst.jpg":.125, "jc-s-rice.jpg":.125, "jc-s-learn.jpg":.125, "jc-s-impact.jpg":.125, "jc-s-welcome.jpg":.125, "jc-s-simple.jpg":.125, "jc-s-helper.jpg":.125, "jc-s-kids.jpg":.125, "jc-s-lock.jpg":.125, "jc-walk.jpg":.11, "c57-1.jpg":.085, "c57-2.jpg":.085, "c58-1.jpg":.06, "c59-1.jpg":.085, "c59-2.jpg":.025, "c60-1.jpg":.025,
     "c61-1.jpg":.075, "c61-2.jpg":.05, "c62-1.jpg":.075, "c63-1.jpg":.085, "c63-2.jpg":.035, "c64-1.jpg":.08, "c65-1.jpg":.025};
   for (let i=1;i<=8;i++) c[`s${i}.jpg`] = .12;
   for (let i=1;i<=6;i++) for (let j=1;j<=4;j++) c[`m${i}-${j}.jpg`] = .085;
@@ -2563,6 +2580,12 @@ const BIT_TOUR = [
   {t:"Where does it go?", k:"Use again, blue bin or rubbish", img:"bit-sort.jpg", d:"A sorting game that follows NEA guidance, so a styrofoam box or a juice bottle with juice still inside isn't ready for the blue bin."},
   {t:"Inspection station", k:"Shake it, look, turn, feel", img:"bit-inspect.jpg", d:"Children play detective with an item before they sort it: is it empty, clean and dry?"}
 ];
+const JC_HOMES = [
+  {t:"Simple mode in 中文", img:"jc-s-simple.jpg", d:"Large text in Mandarin, Malay or Tamil, with one big action per food."},
+  {t:"Helper view", img:"jc-s-helper.jpg", d:"Maria's own view, in Tagalog or Bahasa Indonesia."},
+  {t:"Kids mode", img:"jc-s-kids.jpg", d:"Rescue missions, a fridge detective, stickers and a kitchen garden."},
+  {t:"Lock-screen widget", img:"jc-s-lock.jpg", d:"Eat-today items you can mark as used without opening the app."}
+];
 const JC_TOUR = [
   {t:"First open", img:"jc-s-welcome.jpg", d:"“Turn what you already have into dinner.” Try it with a sample kitchen, no account needed."},
   {t:"Daily rescue", k:"One next action", img:"jc-s-today.jpg", d:"Today leads with a single rescue for tonight, like clear-the-fridge fried rice from rice, kai lan and chicken that are due. Everything else waits in Later."},
@@ -2575,6 +2598,16 @@ const JC_TOUR = [
   {t:"Impact", k:"This week, progress, community", img:"jc-s-impact.jpg", d:"Money saved, food kept from the bin and items used before their date, in everyday terms, with the price of waste against your goal."}
 ];
 const tA = T => T.map(f => [f.img, f.t, f.d]);
+const CH_CONCEPT = [
+  {t:"Concept: Home", img:"chc-home.jpg", d:"A plan for the day: the next trail stop and what's good for breakfast."},
+  {t:"Concept: Makan-dex", img:"chc-dex.jpg", d:"Every dish is a character to collect, like Ah Kai the chicken rice."},
+  {t:"Concept: Dish card", img:"chc-dish.jpg", d:"Ah Kai's story, how to order him, and where to find him."},
+  {t:"Concept: Kopi order game", img:"chc-kopi.jpg", d:"Make the drink the customer wants, like kopi-o kosong."},
+  {t:"Concept: Trail passport", img:"chc-trail.jpg", d:"Five Chinatown hawker stops to stamp."},
+  {t:"Concept: Show the uncle", img:"chc-uncle.jpg", d:"A big order card in Chinese, Malay, English or Tamil."},
+  {t:"Concept: Survival guide", img:"chc-basics.jpg", d:"Level 0: what do locals do with an empty table?"},
+  {t:"Concept: Hawker Tray", img:"chc-tray.jpg", d:"A card game: build a balanced tray against Kopi Kaki."}
+];
 const CH_MORE = [
   {t:"Explore in 3D", img:"ch-explore.jpg", d:"A toy map of Singapore with 14 places to tap, old-school snacks in 3D and 20 short stories."},
   {t:"Singlish Corner", img:"ch-word.jpg", d:"24 words like chope, dabao and shiok, each with a picture, how to say it and a game."},
@@ -2798,16 +2831,28 @@ const IG = {
   },
   /* Bitsy: learning path */
   "bit-path"(el){
-    const P=[["care","Care","Look after things",2],["reuse","Reuse","Old things become new",4],["sort","Sort","Everything has a place",4],["recycle","Recycle right","Clean and dry for the blue bin",5],["together","Together","We help together",3],["earth","Use less","Make less rubbish",2]];
+    const P=[["care","Care","Look after things","Get things ready and look after old toys, so they last.",2,"Bella gets ready · Teddy's new friend"],
+      ["reuse","Reuse","Old things become new","Tubes, boxes and caps get a second life as something new.",4,"Save Tubby! · Find the pair · Invent! · Make a craft"],
+      ["sort","Sort","Everything has a place","Spot what each thing is made of, and where it goes.",4,"Where does it go? · What am I made of? · Spot it! · Treasure hunt"],
+      ["recycle","Recycle right","Clean and dry for the blue bin","Empty, clean and dry: only then does it go in the blue bin.",5,"Bella's big trip · Help Blue Bin! · Catch it! · Hold it up! · Get it ready"],
+      ["together","Together","We help together","Clean up the beach, make a plan with the class, and do it for real.",3,"Tilly's beach · Do it for real! · Our plan"],
+      ["earth","Use less","Make less rubbish","Pack a lunchbox with nothing to throw away, and fix things instead of binning them.",2,"Lunchbox day · Fix-it bench"]];
     const pts=P.map((p,i)=>[70+i*116, i%2?120:200]);
     const d="M"+pts.map(p=>p.join(" ")).join(" L");
     el.innerHTML = `<div class="ig-head"><div><small>Infographic</small><b>Bitsy's learning path</b></div></div>
-    <svg viewBox="0 40 720 230" role="img" aria-label="Six learning stages: Care, Reuse, Sort, Recycle right, Together, Use less">
+    <p class="ig-tip">Tap a circle to learn more.</p>
+    <svg viewBox="0 40 720 230" role="group" aria-label="Six learning stages. Choose one to learn more.">
       <path class="gd" pathLength="1" d="${d}" fill="none" stroke="var(--pa)" stroke-width="6" stroke-dasharray="1" stroke-linecap="round" opacity=".5"/>
       <circle class="ig-orbit" r="10" fill="#FFDD73" stroke="#4A3F6B" stroke-width="3" style="offset-path:path('${d}');animation-duration:7s"/>
-      ${P.map(([ic,n],i)=>`<g class="gp" style="--d:${.3+i*.15}s"><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="44" fill="var(--bg,#fff)" stroke="var(--pa)" stroke-width="4"/>${icoAt("bit",ic,pts[i][0]-31,pts[i][1]-31,62)}<circle cx="${pts[i][0]+32}" cy="${pts[i][1]-32}" r="15" fill="var(--pa)"/><text x="${pts[i][0]+32}" y="${pts[i][1]-26.5}" text-anchor="middle" style="font-size:16px;font-weight:800;fill:var(--bg,#fff)">${i+1}</text></g>`).join("")}
-    </svg><ol class="ig-legend six">${P.map(([ic,n,idea,c])=>`<li><b>${n}</b><span>${idea} · ${c} activities</span></li>`).join("")}</ol>
+      ${P.map(([ic,n],i)=>`<g class="gp bp" data-i="${i}" role="button" tabindex="0" aria-label="${i+1}. ${n}" style="--d:${.3+i*.15}s"><circle class="bp-ring" cx="${pts[i][0]}" cy="${pts[i][1]}" r="44" fill="var(--bg,#fff)" stroke="var(--pa)" stroke-width="4"/>${icoAt("bit",ic,pts[i][0]-31,pts[i][1]-31,62)}<circle cx="${pts[i][0]+32}" cy="${pts[i][1]-32}" r="15" fill="var(--pa)"/><text x="${pts[i][0]+32}" y="${pts[i][1]-26.5}" text-anchor="middle" style="font-size:16px;font-weight:800;fill:var(--bg,#fff)">${i+1}</text></g>`).join("")}
+    </svg>
+    <div class="bp-card" aria-live="polite"></div>
     <p class="ig-note">Six ideas, from caring for things to using less. Twenty games sit along the path, each teaching one.</p>`;
+    const card=el.querySelector(".bp-card"), gs=[...el.querySelectorAll(".bp")];
+    const show=i=>{ const [ic,n,idea,txt,c,games]=P[i]; gs.forEach((g,k)=>g.classList.toggle("on",k===i));
+      card.innerHTML=`<div class="bp-ic">${ico("bit",ic)}</div><div><small>Step ${i+1} of 6 · ${c} activities</small><b>${n}: ${idea}</b><p>${txt}</p><p class="bp-games">${games}</p></div>`; };
+    gs.forEach((g,i)=>{ g.addEventListener("click",()=>show(i)); g.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(i); } }); });
+    show(0);
   },
   /* Bitsy: blue bin check */
   "bit-bin"(el){
@@ -3663,13 +3708,12 @@ const CONTENT = {
 `,
 "shade-where": () => `
   ${blk("Concept","The shortest walk isn't always the kindest",`
-    <div class="two">
+    <div class="solo">
       <div>
         <p class="body-strong">Map apps send you the shortest way. In Singapore, that is often a long walk in full sun, with shade just one street over.</p>
         <p class="hmw">How might we help people walking in Singapore's heat find the shadiest way, for the exact minute they leave?</p>
         <p class="body-strong" style="margin-top:26px">shade,where? casts real shadows from every building, tree and roof for the minute you leave, then finds the walk with the least sun.</p>
       </div>
-      <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("sw-plan.jpg")}" alt="shade,where? planning a walk from a hawker centre to Tampines MRT on a 3D map of Tampines, with the shade route in lilac and a time slider set to 3pm" loading="lazy"></div>
     </div>
     ${ppCards([["3D map","159,206 buildings","Every building footprint in Singapore, with real heights for 12,022 HDB blocks and the tallest towers."],["Any minute","Leave now, or later","Slide the time, play the whole day, or compare the longest and shortest days of the year."],["Private","Stays on your device","No account and no tracking. Searches and routes are worked out in the browser and never sent anywhere."]])}
     ${ppRender("sw-ad.jpg","Ad-style render of shade,where? on a laptop and a phone, with its four main features","The planner on a laptop and a phone.")}`)}
@@ -3679,7 +3723,7 @@ const CONTENT = {
     <p class="pp-src">Sources cited in the app: Meteorological Service Singapore, Cooling Singapore, and Xu, Bardhan et al. (one-north, August 2023).</p>
     <div class="ig" data-ig="sw-years"></div>`)}
   ${blk("How it works","From sun angle to a cooler walk",`
-    <div class="two">
+    <div class="solo">
       <div>
         <ol class="pp-steps">
           <li><b>Find the sun</b><p>Solar formulas give the sun's position for any minute, checked against four sun calculators.</p></li>
@@ -3687,7 +3731,6 @@ const CONTENT = {
           <li><b>Weigh the walk</b><p>Sunny metres count as longer than shady ones, so the route detours for shade.</p></li>
         </ol>
       </div>
-      <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("sw-how.jpg")}" alt="How it works page showing the sun's path over a row of buildings from 7am to 7pm" loading="lazy"></div>
     </div>
     <div class="ig" data-ig="sw-day"></div>
     <h3 class="pp-h3">Built for how Singapore walks</h3>
@@ -3717,8 +3760,6 @@ const CONTENT = {
           <li><span><b>Weather isn't included yet.</b> Live NEA heat readings are on the roadmap.</span></li>
         </ul></div>
     </div>`)}
-  ${blk("Design system","The look and feel",`
-    ${ppRender("sw-ds.jpg","shade,where? design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Plan a shady walk right here",`
     ${ppPlay("/play/shade-where/","sw-plan.jpg","16/10","Play shade,where? here","The real web app, running live. It loads a 3D map of all of Singapore, so give it a few seconds.")}
     <h3 class="pp-h3">On a phone</h3>
@@ -3729,13 +3770,12 @@ const CONTENT = {
 `,
 "block-88": () => `
   ${blk("Concept","A whole HDB estate to grow up in",`
-    <div class="two">
+    <div class="solo">
       <div>
         <p class="body-strong">A 3D tablet game set in an HDB estate. You play Mei, ten, who has lived at #12-34 for three months and knows four neighbours by name.</p>
         <p class="hmw">How might a game turn the people we pass at the void deck every day into neighbours we actually know?</p>
         <p class="body-strong" style="margin-top:26px">Every errand you run for a neighbour lights up a window on Blk 88. Light them all, and the whole block comes together for its 40th anniversary.</p>
       </div>
-      <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("b88-estate.jpg")}" alt="A 3D HDB estate with Block 88 in front, a playground, trees and a covered walkway" loading="lazy"></div>
     </div>
     ${ppCards([["The estate","A full neighbourhood","Void deck, kopitiam, provision shop, food centre, wet market, MRT, bus interchange and a reservoir park."],["Old-school games","Five stones and chapteh","Plus pick-up sticks, goli, hopscotch and zero point, played with friends at the void deck."],["The story","Seven chapters","A torn 1985 photograph of the block, and the night every window was lit."]])}
     ${ppRender("b88-ad.jpg","Ad-style render of Block 88 on two tablets, with its four main features","Made for tablets, held sideways.")}`)}
@@ -3750,20 +3790,17 @@ const CONTENT = {
     <div class="ig" data-ig="b88-levels"></div>
     ${ppCards([["Levels","Seven community levels","From New Neighbour to Heart of Tembusu. Each level opens a bigger project."],["Town projects","Kampung points","Helping earns points that fund upgrades the player votes for."],["Introductions","Who knows who","Introduce neighbours who have never spoken, and watch friendships grow."],["Journal","Kindness journal","Six questions to ask a grown-up in real life, with their answers kept."],["Singapore, everywhere","Small local details","Kopi lingo, a lift that skips floors, festival decorations and sudden rain."],["Made for tablets","Comfortable to play","Landscape, a thumb stick, optional guide arrows, and progress saved on the device."]])}
     <div class="ig" data-ig="b88-town"></div>`)}
-  ${blk("Design system","The look and feel",`
-    ${ppRender("b88-ds.jpg","Block 88 design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Play Block 88 right here",`
     ${ppPlay("/play/block-88/","b88-title.jpg","16/10","Play Block 88 here","The real game, running live in 3D. Best on a tablet or laptop held sideways; use W A S D or the on-screen stick to walk.", {tablet:true})}`)}
 `,
 "last-chair": () => `
   ${blk("Concept","The people we lose stay in the places they leave",`
-    <div class="two">
+    <div class="solo">
       <div>
         <p class="body-strong">A narrative game about grief, memory and the words we leave unsaid: ten short stories set in homes across Singapore.</p>
         <p class="hmw">How might a game make space for grief, gently, without ever asking the player to win or to fail?</p>
         <p class="pp-quote">“The people we lose stay with us through the spaces, objects, words and memories they leave behind.”</p>
       </div>
-      <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("lc-hero.jpg")}" alt="The Last Chair title screen over an illustrated living room on a rainy evening" loading="lazy"></div>
     </div>
     ${ppCards([["Ten stories","Play in any order","Each one is complete on its own and says what it contains before you start."],["No pressure","No timers, no way to fail","Take as long as you need. Pause, skip a memory or leave at any time."],["Sound","Best with sound on","Each room has its own sounds, with subtitles for every one."]])}
     ${ppRender("lc-ad.jpg","Ad-style render of The Last Chair on a laptop and a tablet, with its four main features","Quiet, warm and dark, like a room at night.")}`)}
@@ -3771,8 +3808,7 @@ const CONTENT = {
     <p class="body-strong">Each story is a different kind of loss, from an expected goodbye to a home about to be torn down.</p>
     <div class="pp-stories">${LC_STORIES.map(([t,w,d],i)=>`<div><small>${String(i+1).padStart(2,"0")}</small><b>${t}</b><em>${w}</em><p>${d}</p></div>`).join("")}</div>
     <div class="ig" data-ig="lc-map"></div>
-    <div class="ig" data-ig="lc-who"></div>
-    <div class="plate" style="aspect-ratio:16/10;margin-top:28px"><img class="zoom" src="${IMG("lc-stories.jpg")}" alt="Story cards for The Last Chair, Left on Read, Closing Time and Still Here, each with an illustration, a content note and a Play button" loading="lazy"></div>`)}
+    <div class="ig" data-ig="lc-who"></div>`)}
   ${blk("How it plays","Rooms, phones and memories",`
     ${ppCards([["01","Step into their world","Walk through a grandmother's house, a hawker stall, a bedroom or a park, as them, at your own pace."],["02","Read what they left","Their phone opens up as you explore: messages, voice notes, photos, and an unsent message that slowly makes sense."],["03","Click to remember","Any object plays a short memory film, from its oldest moment to today, with the sounds of the life around it."],["04","Choose how to remember","Decide how to read each memory and what to do with their last words. There are no right answers."]])}
     ${appHTML("lcShow","lap","16/10")}`)}
@@ -3780,7 +3816,7 @@ const CONTENT = {
     <p class="body-strong">Tap an object and its memory plays as a short film, from its oldest moment to today.</p>
     ${ppMotion("lc-film.mp4","lc-film.jpg","16/10","Recorded in the live game, with the sound off here. In the game, every sound has a caption.")}`)}
   ${blk("Made with care","Designing for people who are grieving",`
-    <div class="two">
+    <div class="solo">
       <div>
         <p class="body-strong">These stories deal with death, illness and loss, and some players will be grieving themselves. So care is built into every screen, not added at the end.</p>
         <ul class="list" style="margin-top:18px">
@@ -3791,22 +3827,18 @@ const CONTENT = {
           <li><span><b>Real support services</b> are kept separate from the stories, with notes for educators and counsellors</span></li>
         </ul>
       </div>
-      <div class="plate" style="aspect-ratio:16/10"><img class="zoom" src="${IMG("lc-care.jpg")}" alt="The Made with care section listing pause, text size, subtitles, reduce motion and support resources" loading="lazy"></div>
     </div>`)}
-  ${blk("Design system","The look and feel",`
-    ${ppRender("lc-ds.jpg","The Last Chair design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Play The Last Chair right here",`
     ${ppPlay("/play/last-chair/","lc-hero.jpg","16/10","Play The Last Chair here","The real game, running live. Best with sound on, on a laptop or tablet. Take as long as you need.")}`)}
 `,
 "bitsy": () => `
   ${blk("Concept","Little hands, big helpers",`
-    <div class="two">
+    <div class="solo">
       <div>
         <p class="body-strong">A tablet game for children aged 4 to 6 about reusing, recycling and making crafts from things at home. Bitsy the robot guides every step, out loud.</p>
         <p class="hmw">How might we help young children see their recycling bin as a box of materials, and learn to sort it right?</p>
         <p class="body-strong" style="margin-top:26px">Count what's in the bin at home, make something from it, learn where things really go, and watch the neighbourhood grow.</p>
       </div>
-      <div class="plate" style="aspect-ratio:1194/834"><img class="zoom" src="${IMG("bit-home.jpg")}" alt="Bitsy's Maker Bin home screen with Bitsy greeting Mei over a pastel HDB neighbourhood strung with festive lights" loading="lazy"></div>
     </div>
     ${ppCards([["Show me","I'll show you every step","A pointing hand and Bitsy's voice lead the way, for children trying something for the first time."],["Hints please","I'll help if you get stuck","Children try on their own, and Bitsy steps in with a hint when they pause."],["I can do it!","Tap ? if you need me","For confident helpers. Help is always one tap away."]])}
     ${ppRender("bit-ad.jpg","Ad-style render of Bitsy's Maker Bin on two tablets, with its four main features","Built for tablets and small hands.")}`)}
@@ -3822,20 +3854,17 @@ const CONTENT = {
     <div class="ig" data-ig="bit-matrix"></div>`)}
   ${blk("Designing for 4 to 6 year olds","Big buttons, kind voices, grown-ups nearby",`
     ${ppCards([["No reading needed","Everything is read aloud","Big picture tabs, one simple job per screen, and a speaker button on every line."],["Small hands","Touch targets of 60 px or more","Large, rounded buttons with soft feedback: a gentle wobble for “try again” and a sparkle for “yes”."],["Safety first","Grown-up jobs are marked","Cutting, rinsing and small parts always show a “Grown-up helps” label."],["Real rules","Follows NEA guidance","Blue bin items must be empty, clean and dry. The game teaches why, not just where."],["For grown-ups","Hold 3 seconds to open","A grown-ups area for settings and approving photos. Pilot sessions use labels like “Child B”, never names."],["Inclusive","Options for every child","Strong outlines for bright rooms or low vision, a left-handed layout, quiet mode and a gentler pace."]])}`)}
-  ${blk("Design system","The look and feel",`
-    ${ppRender("bit-ds.jpg","Bitsy&#39;s Maker Bin design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Play with Bitsy right here",`
     ${ppPlay("/play/bitsy/","bit-boot.jpg","1194/834","Play Bitsy's Maker Bin here","The real game, live. Turn your sound on: Bitsy talks. The class garden and photo checks need the Claude version, so they're hidden here.", {tablet:true})}`)}
 `,
 "jiak-clean": () => `
   ${blk("Concept","Eat it clean, waste nothing",`
-    <div class="two pp-jc">
+    <div class="solo">
       <div>
         <p class="body-strong">“Jiak” means eat in Hokkien. Jiak Clean is a working food-rescue app that tells you the one next thing to do with the food you have.</p>
         <p class="hmw">How might we help Singapore households use up the food they already have, before it ends up in the bin?</p>
         <p class="body-strong" style="margin-top:26px">Instead of a fridge spreadsheet, it leads with one rescue at a time: what to eat tonight, how to cook it, and what to freeze or share.</p>
       </div>
-      ${ppPhones([["jc-welcome.jpg","First open","“Turn what you already have into dinner.” Try it with a sample kitchen, no account needed."]])}
     </div>
     ${ppRender("jc-ad.jpg","Ad-style render of Jiak Clean on three phones, with its four main features","Today, Kitchen and Impact: the screens people open most.")}`)}
   ${blk("The problem","Most food waste starts at home",`
@@ -3852,8 +3881,7 @@ const CONTENT = {
       <p class="body-strong">The first screen, tonight's rescue, the kitchen list, the rice planner, this week's impact and a kids' rescue mission.</p>
     </div>`)}
   ${blk("Fits real homes","Designed for everyone in the kitchen",`
-    <p class="body-strong" style="margin-bottom:22px">Singapore households are mixed: grandparents, helpers, teens and young children all touch the same fridge. Jiak Clean gives each of them a way in.</p>
-    ${ppPhones([["jc-simple.jpg","Simple mode in 中文","Large text in Mandarin, Malay or Tamil, with one big action per food."],["jc-helper.jpg","Helper view","Maria's own view, in Tagalog or Bahasa Indonesia."],["jc-kids.jpg","Kids mode","Rescue missions, a fridge detective, stickers and a kitchen garden."],["jc-lock.jpg","Lock-screen widget","Eat-today items you can mark as used without opening the app."]])}`)}
+    <p class="body-strong" style="margin-bottom:22px">Singapore households are mixed: grandparents, helpers, teens and young children all touch the same fridge. Jiak Clean gives each of them a way in.</p>`)}
   ${blk("Playtest","What changed after testing with personas",`
     <div class="two">
       <ul class="list">
@@ -3867,8 +3895,6 @@ const CONTENT = {
         <li><span><b>Something new each week.</b> A kitchen garden, mystery basket, festive weeks and Bao the fridge buddy</span></li>
       </ul>
     </div>`)}
-  ${blk("Design system","The look and feel",`
-    ${ppRender("jc-ds.jpg","Jiak Clean design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Try Jiak Clean right here",`
     <div class="pp-duo">
       <div>${ppPlay("/play/jiak-clean/","jc-phone.jpg","390/844","Try it here","",{phone:true})}</div>
@@ -3880,13 +3906,12 @@ const CONTENT = {
 `,
 "chope": () => `
   ${blk("Concept","Eat your way around Singapore",`
-    <div class="two pp-jc">
+    <div class="solo">
       <div>
         <p class="body-strong">A phone game and food guide for tourists. Roll the dice, land on a real dish, then go to a hawker centre and eat it for real.</p>
         <p class="hmw">How might we help first-time visitors choose what to eat, order it with confidence, and follow the unwritten rules of a hawker centre?</p>
         <p class="body-strong" style="margin-top:26px">“Chope” is Singlish for saving a seat, usually with a packet of tissues. It's the first rule every visitor needs, so it's the name.</p>
       </div>
-      ${ppPhones([["ch-home.jpg","Home","Roll, eat, snap. Play now, or plan a game around your trip."]],true)}
     </div>
     ${ppRender("ch-ad.jpg","Ad-style render of Chope! on three phones, with its four main features","The board, Explore and the order card.")}`)}
   ${blk("Research","Who visits, and what trips them up",`
@@ -3894,8 +3919,7 @@ const CONTENT = {
     <div class="ig" data-ig="ch-visitors"></div>
     <div class="ig" data-ig="ch-struggles"></div>`)}
   ${blk("Where it started","From a food collection app to a board game",`
-    <p class="body-strong" style="margin-bottom:22px">The first concept had thirteen screens, with the board game last. In the built app, the board moved to the front and the best of the rest sits around it.</p>
-    ${ppPhones([["chc-home.jpg","Home","A plan for the day: the next trail stop and what's good for breakfast."],["chc-dex.jpg","Makan-dex","Every dish is a character to collect, like Ah Kai the chicken rice."],["chc-dish.jpg","Dish card","Ah Kai's story, how to order him, and where to find him."],["chc-kopi.jpg","Kopi order game","Make the drink the customer wants, like kopi-o kosong."],["chc-trail.jpg","Trail passport","Five Chinatown hawker stops to stamp."],["chc-uncle.jpg","Show the uncle","A big order card in Chinese, Malay, English or Tamil."],["chc-basics.jpg","Survival guide","Level 0: what do locals do with an empty table?"],["chc-tray.jpg","Hawker Tray","A card game: build a balanced tray against Kopi Kaki."]],true)}`)}
+    <p class="body-strong" style="margin-bottom:22px">The first concept had thirteen screens, with the board game last. In the built app, the board moved to the front and the best of the rest sits around it.</p>`)}
   ${blk("How it plays","Roll, answer, eat, snap",`
     <div class="ig" data-ig="ch-round"></div>
     <div class="ig" data-ig="ch-boards"></div>
@@ -3911,8 +3935,6 @@ const CONTENT = {
     ${ppCards([["China · solo","Mei, 3 days","First visit. Plays against Kopi Kaki on an iPhone 13 set to Chinese."],["Indonesia · family","Ahmad, Siti and Rafi, 4 days","They eat halal. Three players share one Android phone."],["Australia · retiree","Margaret, 70, 2 days","A short stopover. Turns on bigger text on a small iPhone SE."]])}
     <div class="ig" data-ig="ch-fixes"></div>
     <p class="body-strong" style="margin-top:28px">This was a walkthrough, not real tourists. Next: watch visitors play at Maxwell or Lau Pa Sat, and check every price and halal label with STB, NEA and MUIS.</p>`)}
-  ${blk("Design system","The look and feel",`
-    ${ppRender("ch-ds.jpg","Chope! design system: colours, type, icons and components","Colours, type, icons and components, taken from the app itself.")}`)}
   ${blk("Try it","Play Chope! right here",`
     <div class="pp-duo">
       <div>${ppPlay("/play/chope/","ch-home.jpg","390/844","Play it here","",{phone:true})}</div>
@@ -5094,12 +5116,12 @@ const INIT = {
     const shown = x ? $("#hotX") : $("#hot"); shown.classList.remove("swap"); void shown.offsetWidth; shown.classList.add("swap");
   });
 },
-"shade-where"(){ initApp("swShow", tA(SW_TOUR)); initPlay(); initIG(); initMotion(); },
-"block-88"(){ initApp("b88Show", tA(B88_TOUR)); initPlay(); initIG(); initMotion(); },
-"last-chair"(){ initApp("lcShow", tA(LC_TOUR)); initPlay(); initIG(); initMotion(); },
+"shade-where"(){ initApp("swShow", tA([...SW_TOUR, {t:"How it works", img:"sw-how.jpg", d:"The sun's path over a row of buildings, from 7am to 7pm."}])); initPlay(); initIG(); initMotion(); },
+"block-88"(){ initApp("b88Show", tA([{t:"Tembusu estate", img:"b88-estate.jpg", d:"Block 88 in front, with the playground, trees and the bus stop."}, ...B88_TOUR])); initPlay(); initIG(); initMotion(); },
+"last-chair"(){ initApp("lcShow", tA([{t:"Title screen", img:"lc-hero.jpg", d:"An illustrated living room, waiting for you."}, ...LC_TOUR, {t:"Ten stories", img:"lc-stories.jpg", d:"Pick any story, in any order."}, {t:"Made with care", img:"lc-care.jpg", d:"Pause, text size, subtitles and content notes, all in one place."}])); initPlay(); initIG(); initMotion(); },
 "bitsy"(){ initApp("bitShow", tA(BIT_TOUR)); initPlay(); initIG(); initMotion(); },
-"jiak-clean"(){ initApp("jcShow", tA(JC_TOUR)); initPlay(); initIG(); initMotion(); },
-"chope"(){ initApp("chShow", tA([{t:"Home", img:"ch-home.jpg", d:"Roll, eat, snap. Play now, or plan a game around your trip."}, ...CH_TOUR, ...CH_MORE])); initPlay(); initIG(); initMotion(); },
+"jiak-clean"(){ initApp("jcShow", tA([...JC_TOUR, ...JC_HOMES])); initPlay(); initIG(); initMotion(); },
+"chope"(){ initApp("chShow", tA([{t:"Home", img:"ch-home.jpg", d:"Roll, eat, snap. Play now, or plan a game around your trip."}, ...CH_TOUR, ...CH_MORE, ...CH_CONCEPT])); initPlay(); initIG(); initMotion(); },
 "vase"(){},
 "ae-queue"(){
   initSmap("aeMap");
